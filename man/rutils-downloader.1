@@ -1,0 +1,154 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH rutils-downloader 1  "rutils-downloader 0.1.0" 
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.SH NAME
+rutils\-downloader \- Installs or updates CLI utilities directly from GitHub releases
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.SH SYNOPSIS
+\fBrutils\-downloader\fR [\fB\-p\fR|\fB\-\-prefix\fR] [\fB\-a\fR|\fB\-\-apps\fR] [\fB\-\-gh\-token\-source\fR] [\fB\-\-cb\-token\-source\fR] [\fB\-\-minimal\-set\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] [\fIsubcommands\fR]
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.SH DESCRIPTION
+Installs or updates CLI utilities directly from GitHub releases
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.PP
+Installing into /usr/local does not interfere with packages managed by the system package manager. Both can coexist; which one takes precedence depends on $PATH ordering. In most Linux distributions /usr/local takes priority over /usr.
+.PP
+Only Linux on x86_64 is supported.
+.PP
+Shell completions can be generated for ZSH, Bash, and Fish.
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.SH OPTIONS
+.TP
+\fB\-p\fR, \fB\-\-prefix\fR \fI<PREFIX>\fR [default: /usr/local]
+Install prefix (e.g. /usr/local or ~/.local)
+.TP
+\fB\-a\fR, \fB\-\-apps\fR \fI<NAME>\fR
+App(s) to install; may be repeated. Defaults to all apps
+.TP
+\fB\-\-gh\-token\-source\fR \fI<GH_TOKEN_SOURCE>\fR [default: prompt]
+Where to load GitHub API token from (prompt or load)
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+prompt
+.IP \(bu 2
+load
+.RE
+.TP
+\fB\-\-cb\-token\-source\fR \fI<CB_TOKEN_SOURCE>\fR [default: load]
+Where to load Codeberg API token from (prompt or load)
+.br
+
+.br
+\fIPossible values:\fR
+.RS 14
+.IP \(bu 2
+prompt
+.IP \(bu 2
+load
+.RE
+.TP
+\fB\-\-minimal\-set\fR
+Install a hand\-picked minimal set of apps (overrides \-\-apps)
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Print version
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.SH SUBCOMMANDS
+.TP
+rutils\-downloader\-list\-apps\-ids(1)
+Print all supported app identifiers
+.TP
+rutils\-downloader\-completions(1)
+Print shell completion script to stdout
+.TP
+rutils\-downloader\-help(1)
+Print this message or the help of the given subcommand(s)
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.SH EXAMPLES
+.PP
+Install or update all apps (requires write access to /usr/local):
+.RS 4
+.nf
+\fBrutils\-downloader\fR
+.fi
+.RE
+.PP
+Install a subset of apps:
+.RS 4
+.nf
+\fBrutils\-downloader\fR \-\-apps rg \-\-apps bat \-\-apps fzf
+.fi
+.RE
+.PP
+Install the predefined minimal set:
+.RS 4
+.nf
+\fBrutils\-downloader\fR \-\-minimal\-set
+.fi
+.RE
+.PP
+Install into a user\-local prefix (no root required):
+.RS 4
+.nf
+\fBrutils\-downloader\fR \-\-prefix ~/.local
+.fi
+.RE
+.PP
+List all supported app identifiers:
+.RS 4
+.nf
+\fBrutils\-downloader\fR list\-apps\-ids
+.fi
+.RE
+.PP
+Generate ZSH completions:
+.RS 4
+.nf
+\fBrutils\-downloader\fR completions zsh
+.fi
+.RE
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.SH "API TOKENS"
+.PP
+GitHub applies rate limiting to unauthenticated API requests. Providing a token avoids hitting those limits.
+.PP
+GitHub token sources (\fB\-\-gh\-token\-source\fR):
+.TP
+\fBprompt\fR
+Read the token from stdin (default).
+.TP
+\fBload\fR
+Read from the GITHUB_API_TOKEN environment variable, falling back to ~/.config/github/api_token.
+.PP
+Codeberg token sources (\fB\-\-cb\-token\-source\fR):
+.TP
+\fBload\fR
+Read from the CODEBERG_API_TOKEN environment variable, falling back to ~/.config/codeberg/api_token (default).
+.TP
+\fBprompt\fR
+Read the token from stdin.
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.SH CACHE
+.PP
+Downloaded data is cached under ~/.cache/rutils\-downloader/. Release metadata has a one\-hour TTL. Downloaded assets are cached permanently, keyed by asset ID; the cache is invalidated automatically when a new release is published.
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.SH VERSION
+v0.1.0
