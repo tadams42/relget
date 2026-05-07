@@ -1,5 +1,6 @@
 use anyhow::Result;
-use clap::{Parser, Subcommand};
+use clap::{CommandFactory, Parser, Subcommand};
+use clap_complete::{generate, Shell};
 use std::path::PathBuf;
 
 use rutils_downloader::{
@@ -39,6 +40,11 @@ struct Cli {
 enum Commands {
     /// Print all supported app identifiers
     ListAppsIds,
+    /// Print shell completion script to stdout
+    Completions {
+        /// Shell to generate completions for
+        shell: Shell,
+    },
 }
 
 fn main() -> Result<()> {
@@ -63,6 +69,9 @@ fn main() -> Result<()> {
             for id in known_apps_identifiers() {
                 println!("{}", id);
             }
+        }
+        Some(Commands::Completions { shell }) => {
+            generate(shell, &mut Cli::command(), "rutils-downloader", &mut std::io::stdout());
         }
         None => {
             log::info!("Installing into: {:?}", cli.prefix);
