@@ -52,7 +52,7 @@ impl CodebergClient {
 
         let mut req = ureq::get(&url)
             .header("Accept", "application/json")
-            .header("User-Agent", "rutils-downloader");
+            .header("User-Agent", "binup");
         if let Some(token) = &self.token {
             req = req.header("Authorization", &format!("token {}", token));
         }
@@ -100,7 +100,7 @@ impl CodebergClient {
         }
 
         log::info!("app={} msg=Downloading {}", repo, name);
-        let mut req = ureq::get(&url).header("User-Agent", "rutils-downloader");
+        let mut req = ureq::get(&url).header("User-Agent", "binup");
         if let Some(token) = &self.token {
             req = req.header("Authorization", &format!("token {}", token));
         }

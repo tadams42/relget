@@ -1,4 +1,4 @@
-# rutils-downloader
+# binup
 
 Installs bunch of cmdline utilities into `/usr/local` directly from GitHub and Codeberg releases.
 
@@ -80,22 +80,22 @@ Install or update apps (needs to be run as `root` to write into `/usr/local`):
 sudo su -
 
 # copy the binary somewhere on PATH
-cp target/release/rutils-downloader /usr/local/bin/
+cp target/release/binup /usr/local/bin/
 
 # install everything
-rutils-downloader
+binup
 
 # install a subset
-rutils-downloader --apps rg --apps bat --apps fzf
+binup --apps rg --apps bat --apps fzf
 
 # install the hand-picked minimal set
-rutils-downloader --minimal-set
+binup --minimal-set
 
 # install into a different prefix (no sudo needed)
-rutils-downloader --prefix ~/.local
+binup --prefix ~/.local
 
 # list all supported app identifiers
-rutils-downloader list-apps-ids
+binup list-apps-ids
 ```
 
 ## API tokens
@@ -104,18 +104,18 @@ GitHub applies rate limiting to unauthenticated API requests. Providing a token 
 
 ```sh
 # prompt for GitHub token interactively (default)
-rutils-downloader --gh-token-source prompt
+binup --gh-token-source prompt
 
 # load GitHub token from GITHUB_API_TOKEN env var or ~/.config/github/api_token
-rutils-downloader --gh-token-source load
+binup --gh-token-source load
 
 # load Codeberg token from CODEBERG_API_TOKEN env var or ~/.config/codeberg/api_token (default)
-rutils-downloader --cb-token-source load
+binup --cb-token-source load
 
 # prompt for Codeberg token interactively
-rutils-downloader --cb-token-source prompt
+binup --cb-token-source prompt
 ```
 
 ## Other side-effects
 
-- uses `~/.cache/rutils-downloader` for stuff downloaded from GitHub and Codeberg
+- uses `~/.cache/binup` for stuff downloaded from GitHub and Codeberg

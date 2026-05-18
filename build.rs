@@ -63,7 +63,7 @@ fn generate_man_page(manifest_dir: &Path) -> std::io::Result<()> {
     let cmd = cli::Cli::command();
     let man = Man::new(cmd);
 
-    let out_path = manifest_dir.join("man").join("rutils-downloader.1");
+    let out_path = manifest_dir.join("man").join("binup.1");
     fs::create_dir_all(out_path.parent().unwrap())?;
 
     let mut buf = Vec::<u8>::new();
@@ -99,7 +99,7 @@ fn generate_man_page(manifest_dir: &Path) -> std::io::Result<()> {
         )])
         .control("RS", ["4"])
         .control("nf", std::iter::empty::<&str>())
-        .text(vec![bold("rutils-downloader")])
+        .text(vec![bold("binup")])
         .control("fi", std::iter::empty::<&str>())
         .control("RE", std::iter::empty::<&str>())
         .control("PP", std::iter::empty::<&str>())
@@ -107,7 +107,7 @@ fn generate_man_page(manifest_dir: &Path) -> std::io::Result<()> {
         .control("RS", ["4"])
         .control("nf", std::iter::empty::<&str>())
         .text(vec![
-            bold("rutils-downloader"),
+            bold("binup"),
             roman(" --apps rg --apps bat --apps fzf"),
         ])
         .control("fi", std::iter::empty::<&str>())
@@ -116,7 +116,7 @@ fn generate_man_page(manifest_dir: &Path) -> std::io::Result<()> {
         .text(vec![roman("Install the predefined minimal set:")])
         .control("RS", ["4"])
         .control("nf", std::iter::empty::<&str>())
-        .text(vec![bold("rutils-downloader"), roman(" --minimal-set")])
+        .text(vec![bold("binup"), roman(" --minimal-set")])
         .control("fi", std::iter::empty::<&str>())
         .control("RE", std::iter::empty::<&str>())
         .control("PP", std::iter::empty::<&str>())
@@ -125,21 +125,21 @@ fn generate_man_page(manifest_dir: &Path) -> std::io::Result<()> {
         )])
         .control("RS", ["4"])
         .control("nf", std::iter::empty::<&str>())
-        .text(vec![bold("rutils-downloader"), roman(" --prefix ~/.local")])
+        .text(vec![bold("binup"), roman(" --prefix ~/.local")])
         .control("fi", std::iter::empty::<&str>())
         .control("RE", std::iter::empty::<&str>())
         .control("PP", std::iter::empty::<&str>())
         .text(vec![roman("List all supported app identifiers:")])
         .control("RS", ["4"])
         .control("nf", std::iter::empty::<&str>())
-        .text(vec![bold("rutils-downloader"), roman(" list-apps-ids")])
+        .text(vec![bold("binup"), roman(" list-apps-ids")])
         .control("fi", std::iter::empty::<&str>())
         .control("RE", std::iter::empty::<&str>())
         .control("PP", std::iter::empty::<&str>())
         .text(vec![roman("Generate ZSH completions:")])
         .control("RS", ["4"])
         .control("nf", std::iter::empty::<&str>())
-        .text(vec![bold("rutils-downloader"), roman(" completions zsh")])
+        .text(vec![bold("binup"), roman(" completions zsh")])
         .control("fi", std::iter::empty::<&str>())
         .control("RE", std::iter::empty::<&str>());
     roff.to_writer(&mut buf)?;
@@ -179,7 +179,7 @@ fn generate_man_page(manifest_dir: &Path) -> std::io::Result<()> {
     roff.control("SH", ["CACHE"])
         .control("PP", std::iter::empty::<&str>())
         .text(vec![roman(
-            "Downloaded data is cached under ~/.cache/rutils-downloader/. \
+            "Downloaded data is cached under ~/.cache/binup/. \
              Release metadata has a one-hour TTL. \
              Downloaded assets are cached permanently, keyed by asset ID; \
              the cache is invalidated automatically when a new release is published.",

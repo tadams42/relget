@@ -1,14 +1,14 @@
 .ie \n(.g .ds Aq \(aq
 .el .ds Aq '
-.TH rutils-downloader 1  "rutils-downloader 0.1.0" 
+.TH binup 1  "binup 0.1.0" 
 .ie \n(.g .ds Aq \(aq
 .el .ds Aq '
 .SH NAME
-rutils\-downloader \- Installs or updates CLI utilities directly from GitHub releases
+binup \- Installs or updates CLI utilities directly from GitHub releases
 .ie \n(.g .ds Aq \(aq
 .el .ds Aq '
 .SH SYNOPSIS
-\fBrutils\-downloader\fR [\fB\-p\fR|\fB\-\-prefix\fR] [\fB\-a\fR|\fB\-\-apps\fR] [\fB\-\-gh\-token\-source\fR] [\fB\-\-cb\-token\-source\fR] [\fB\-\-minimal\-set\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] [\fIsubcommands\fR]
+\fBbinup\fR [\fB\-p\fR|\fB\-\-prefix\fR] [\fB\-a\fR|\fB\-\-apps\fR] [\fB\-\-gh\-token\-source\fR] [\fB\-\-cb\-token\-source\fR] [\fB\-\-minimal\-set\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] [\fIsubcommands\fR]
 .ie \n(.g .ds Aq \(aq
 .el .ds Aq '
 .SH DESCRIPTION
@@ -69,13 +69,13 @@ Print version
 .el .ds Aq '
 .SH SUBCOMMANDS
 .TP
-rutils\-downloader\-list\-apps\-ids(1)
+binup\-list\-apps\-ids(1)
 Print all supported app identifiers
 .TP
-rutils\-downloader\-completions(1)
+binup\-completions(1)
 Print shell completion script to stdout
 .TP
-rutils\-downloader\-help(1)
+binup\-help(1)
 Print this message or the help of the given subcommand(s)
 .ie \n(.g .ds Aq \(aq
 .el .ds Aq '
@@ -84,42 +84,42 @@ Print this message or the help of the given subcommand(s)
 Install or update all apps (requires write access to /usr/local):
 .RS 4
 .nf
-\fBrutils\-downloader\fR
+\fBbinup\fR
 .fi
 .RE
 .PP
 Install a subset of apps:
 .RS 4
 .nf
-\fBrutils\-downloader\fR \-\-apps rg \-\-apps bat \-\-apps fzf
+\fBbinup\fR \-\-apps rg \-\-apps bat \-\-apps fzf
 .fi
 .RE
 .PP
 Install the predefined minimal set:
 .RS 4
 .nf
-\fBrutils\-downloader\fR \-\-minimal\-set
+\fBbinup\fR \-\-minimal\-set
 .fi
 .RE
 .PP
 Install into a user\-local prefix (no root required):
 .RS 4
 .nf
-\fBrutils\-downloader\fR \-\-prefix ~/.local
+\fBbinup\fR \-\-prefix ~/.local
 .fi
 .RE
 .PP
 List all supported app identifiers:
 .RS 4
 .nf
-\fBrutils\-downloader\fR list\-apps\-ids
+\fBbinup\fR list\-apps\-ids
 .fi
 .RE
 .PP
 Generate ZSH completions:
 .RS 4
 .nf
-\fBrutils\-downloader\fR completions zsh
+\fBbinup\fR completions zsh
 .fi
 .RE
 .ie \n(.g .ds Aq \(aq
@@ -147,7 +147,7 @@ Read the token from stdin.
 .el .ds Aq '
 .SH CACHE
 .PP
-Downloaded data is cached under ~/.cache/rutils\-downloader/. Release metadata has a one\-hour TTL. Downloaded assets are cached permanently, keyed by asset ID; the cache is invalidated automatically when a new release is published.
+Downloaded data is cached under ~/.cache/binup/. Release metadata has a one\-hour TTL. Downloaded assets are cached permanently, keyed by asset ID; the cache is invalidated automatically when a new release is published.
 .ie \n(.g .ds Aq \(aq
 .el .ds Aq '
 .SH VERSION

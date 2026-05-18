@@ -5,7 +5,7 @@ use clap_complete::generate;
 mod cli;
 use cli::{Cli, Commands};
 
-use rutils_downloader::{
+use binup::{
     install_apps, known_apps_identifiers, load_codeberg_token, load_github_token, select_apps,
 };
 
@@ -26,7 +26,7 @@ fn main() -> Result<()> {
             }
         }
         Some(Commands::Completions { shell }) => {
-            generate(shell, &mut Cli::command(), "rutils-downloader", &mut std::io::stdout());
+            generate(shell, &mut Cli::command(), "binup", &mut std::io::stdout());
         }
         None => {
             log::info!("Installing into: {:?}", cli.prefix);

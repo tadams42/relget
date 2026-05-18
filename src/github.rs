@@ -30,7 +30,7 @@ impl GithubClient {
 
         let mut req = ureq::get(&url)
             .header("Accept", "application/vnd.github+json")
-            .header("User-Agent", "rutils-downloader");
+            .header("User-Agent", "binup");
         if let Some(token) = &self.token {
             req = req.header("Authorization", &format!("Bearer {}", token));
         }
@@ -90,7 +90,7 @@ impl GithubClient {
 
         log::info!("app={} msg=Downloading {}", repo, name);
         let resp = ureq::get(&url)
-            .header("User-Agent", "rutils-downloader")
+            .header("User-Agent", "binup")
             .call()
             .with_context(|| format!("Couldn't download '{}' from GitHub", name))?;
 

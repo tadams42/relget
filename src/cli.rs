@@ -3,7 +3,7 @@ use clap_complete::Shell;
 use std::path::PathBuf;
 
 #[derive(Parser)]
-#[command(name = "rutils-downloader")]
+#[command(name = "binup")]
 #[command(version)]
 #[command(about = "Installs or updates CLI utilities directly from GitHub releases")]
 pub struct Cli {

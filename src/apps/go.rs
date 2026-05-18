@@ -17,7 +17,7 @@ impl Go {
         let cache_dir = dirs::home_dir()
             .unwrap_or_else(|| PathBuf::from("."))
             .join(".cache")
-            .join("rutils-downloader");
+            .join("binup");
         Self { cache_path: cache_dir.join(DOWNLOAD_TARBALL) }
     }
 }
@@ -47,7 +47,7 @@ impl App for Go {
                 std::fs::create_dir_all(parent)?;
             }
             let resp = ureq::get(DOWNLOAD_URL)
-                .header("User-Agent", "rutils-downloader")
+                .header("User-Agent", "binup")
                 .call()
                 .context("Downloading Go tarball")?;
             let buf = resp.into_body().read_to_vec().context("Downloading Go tarball body")?;
