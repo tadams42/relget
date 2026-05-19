@@ -8,8 +8,11 @@ Rust CLI that installs/updates CLI utilities directly from GitHub and Codeberg r
 cargo build
 cargo run -- --help
 cargo run -- --apps rg --gh-token-source load
+cargo run -- --apps rg,bat --gh-token-source load   # comma-separated
 cargo run -- list-apps-ids
 ```
+
+Use `--prefix /tmp/try-binup/` to avoid needing `sudo` during local testing.
 
 ## Architecture
 

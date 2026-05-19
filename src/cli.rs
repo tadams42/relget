@@ -14,8 +14,8 @@ pub struct Cli {
     #[arg(short = 'p', long, default_value = "/usr/local")]
     pub prefix: PathBuf,
 
-    /// App(s) to install; may be repeated. Defaults to all apps.
-    #[arg(short = 'a', long = "apps", value_name = "NAME")]
+    /// App(s) to install; comma-separated. Defaults to all apps.
+    #[arg(short = 'a', long = "apps", value_name = "NAME[,NAME...]", value_delimiter = ',')]
     pub apps: Vec<String>,
 
     /// Where to load GitHub API token from (prompt or load)
