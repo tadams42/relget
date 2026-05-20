@@ -129,7 +129,7 @@ with_temp_exe("myapp", &data, |path| { ... })
 `GhCache` is reused for both GitHub and Codeberg:
 - GitHub: `~/.cache/relget/{owner}/{repo}/release.json` and `asset.{id}`
 - Codeberg: `~/.cache/relget/codeberg/{owner}/{repo}/release.json` and `asset.{id}`
-- Release cache TTL: 1 hour
+- Release cache TTL: 1 day
 - Asset cache: permanent (keyed by asset ID, which changes when a new release is published)
 
 ## Special cases

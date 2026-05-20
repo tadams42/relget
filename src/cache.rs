@@ -7,7 +7,7 @@ use std::path::PathBuf;
 
 use crate::version::AppVersion;
 
-const RELEASE_CACHE_SECONDS: i64 = 3600;
+const RELEASE_CACHE_SECONDS: i64 = 86400;
 
 // ── GhRelease ────────────────────────────────────────────────────────────────
 
