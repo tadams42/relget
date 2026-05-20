@@ -16,10 +16,7 @@ fn update_readme(manifest_dir: &Path) {
 
     let mod_content = fs::read_to_string(&mod_path).expect("Failed to read src/apps/mod.rs");
 
-    let mut entries: Vec<(String, String)> = mod_content
-        .lines()
-        .filter_map(parse_app_entry)
-        .collect();
+    let mut entries: Vec<(String, String)> = parse_app_entries(&mod_content);
     entries.sort_by(|a, b| a.0.cmp(&b.0));
 
     let app_lines: Vec<String> = entries
@@ -36,11 +33,10 @@ fn update_readme(manifest_dir: &Path) {
         .expect("'Supported apps' marker not found in README.md");
     let idx_last = lines
         .iter()
-        .position(|l| l.starts_with("[^1]: ") )
+        .position(|l| l.starts_with("[^1]: "))
         .expect("'[^1]:' marker not found in README.md");
 
-    let mut new_lines: Vec<String> =
-        lines[..=idx_first].iter().map(|l| l.to_string()).collect();
+    let mut new_lines: Vec<String> = lines[..=idx_first].iter().map(|l| l.to_string()).collect();
     new_lines.push(String::new());
     new_lines.extend(app_lines);
     new_lines.push(String::new());
@@ -50,14 +46,34 @@ fn update_readme(manifest_dir: &Path) {
     fs::write(&readme_path, new_content).expect("Failed to write README.md");
 }
 
-fn parse_app_entry(line: &str) -> Option<(String, String)> {
-    let line = line.trim();
-    if !line.starts_with("AppEntry {") {
-        return None;
+fn parse_app_entries(content: &str) -> Vec<(String, String)> {
+    let mut entries = Vec::new();
+    let mut pending: Option<(Option<String>, Option<String>)> = None;
+
+    for line in content.lines() {
+        let line = line.trim();
+        if line.starts_with("AppEntry {") {
+            let id = extract_quoted_field(line, "id:");
+            let url = extract_quoted_field(line, "url:");
+            if let (Some(id), Some(url)) = (id.clone(), url.clone()) {
+                entries.push((id, url));
+            } else {
+                pending = Some((id, url));
+            }
+        } else if let Some((ref mut id, ref mut url)) = pending {
+            if id.is_none() {
+                *id = extract_quoted_field(line, "id:");
+            }
+            if url.is_none() {
+                *url = extract_quoted_field(line, "url:");
+            }
+            if id.is_some() && url.is_some() {
+                entries.push((id.take().unwrap(), url.take().unwrap()));
+                pending = None;
+            }
+        }
     }
-    let id = extract_quoted_field(line, "id:")?;
-    let url = extract_quoted_field(line, "url:")?;
-    Some((id, url))
+    entries
 }
 
 fn extract_quoted_field(line: &str, field: &str) -> Option<String> {

@@ -152,7 +152,7 @@ for the full list of caveats.
 - [zoxide](https://github.com/ajeetdsouza/zoxide)
 
 [^1]: Previously, `relget` had been written in Python.
-      Workflow that required me to deploy Python to be able to deploy `relget` to be able
-      to deploy various CLI utilities was not one of my brightest ideas. Luckily, Claude
-      was able to rewrite the whole thing in Rust so I was able to abandon that silly
-      Python project. 😎
+      Workflow that required me to deploy Python to be able to deploy `relget` to be
+      able to deploy various CLI utilities was not one of my brightest ideas. Luckily,
+      Claude was able to rewrite the whole thing in Rust so I was able to abandon that
+      silly Python project. 😎
