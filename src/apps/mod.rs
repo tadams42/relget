@@ -24,6 +24,7 @@ pub mod fnm;
 pub mod fx;
 pub mod fzf;
 pub mod gitleaks;
+#[allow(dead_code)]
 pub mod go;
 pub mod gojq;
 pub mod gonzo;
@@ -207,10 +208,6 @@ pub fn all_app_entries() -> Vec<AppEntry> {
             url: "https://github.com/gitleaks/gitleaks",
         },
         AppEntry {
-            id:  "go",
-            url: "https://go.dev/",
-        },
-        AppEntry {
             id:  "gojq",
             url: "https://github.com/itchyny/gojq",
         },
@@ -336,7 +333,6 @@ pub fn create_app(
         "fx" => Some(Box::new(fx::Fx::new(client))),
         "fzf" => Some(Box::new(fzf::Fzf::new(client))),
         "gitleaks" => Some(Box::new(gitleaks::Gitleaks::new(client))),
-        "go" => Some(Box::new(go::Go::new())),
         "gojq" => Some(Box::new(gojq::GoJq::new(client))),
         "gonzo" => Some(Box::new(gonzo::Gonzo::new(client))),
         "jid" => Some(Box::new(jid::Jid::new(client))),

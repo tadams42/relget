@@ -125,7 +125,6 @@ for the full list of caveats.
 - [fx](https://github.com/antonmedv/fx)
 - [fzf](https://github.com/junegunn/fzf)
 - [gitleaks](https://github.com/gitleaks/gitleaks)
-- [go](https://go.dev/)
 - [gojq](https://github.com/itchyny/gojq)
 - [gonzo](https://github.com/control-theory/gonzo)
 - [jid](https://github.com/simeji/jid)
