@@ -7,6 +7,7 @@ use cli::{Cli, Commands};
 
 use relget::{
     install_apps, known_apps_identifiers, load_codeberg_token, load_github_token, select_apps,
+    uninstall_apps,
 };
 
 fn main() -> Result<()> {
@@ -27,6 +28,40 @@ fn main() -> Result<()> {
         }
         Some(Commands::Completions { shell }) => {
             generate(shell, &mut Cli::command(), "relget", &mut std::io::stdout());
+        }
+        Some(Commands::Uninstall) => {
+            let selected = select_apps(&cli.apps, cli.minimal_set)?;
+            let removed = uninstall_apps(&cli.prefix, &selected)?;
+            if removed.is_empty() {
+                println!("No files removed.");
+            } else {
+                println!("Removed files:");
+                for path in removed {
+                    println!("- {}", path.display());
+                }
+            }
+        }
+        Some(Commands::Reinstall) => {
+            let selected = select_apps(&cli.apps, cli.minimal_set)?;
+            let removed = uninstall_apps(&cli.prefix, &selected)?;
+            if removed.is_empty() {
+                println!("No files removed.");
+            } else {
+                println!("Removed files:");
+                for path in &removed {
+                    println!("- {}", path.display());
+                }
+            }
+            log::info!("Reinstalling into: {:?}", cli.prefix);
+            let gh_token = load_github_token(&cli.gh_token_source)?;
+            let cb_token = load_codeberg_token(&cli.cb_token_source)?;
+            let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token)?;
+            if !installed.is_empty() {
+                println!("Installed files:");
+                for path in installed {
+                    println!("- {}", path.display());
+                }
+            }
         }
         None => {
             log::info!("Installing into: {:?}", cli.prefix);

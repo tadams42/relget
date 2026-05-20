@@ -5,12 +5,14 @@ pub mod codeberg;
 pub mod github;
 pub mod installer;
 pub mod types;
+pub mod uninstaller;
 pub mod version;
 
 use anyhow::{anyhow, Result};
 use std::path::{Path, PathBuf};
 
 use apps::{all_app_entries, create_app};
+use uninstaller::uninstall_app;
 
 pub const DEFAULT_PREFIX: &str = "/usr/local";
 
@@ -57,6 +59,17 @@ pub fn install_apps(
         }
     }
     Ok(installed)
+}
+
+pub fn uninstall_apps(prefix: &Path, selected: &[String]) -> Result<Vec<PathBuf>> {
+    let validated = select_apps(selected, false)?;
+    let mut removed = Vec::new();
+    for app_id in &validated {
+        let app = create_app(app_id, None, None)
+            .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
+        removed.extend(uninstall_app(prefix, app.exe_name()));
+    }
+    Ok(removed)
 }
 
 pub fn load_github_token(source: &str) -> Result<Option<String>> {

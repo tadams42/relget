@@ -41,8 +41,9 @@ from your shell, depends on your `$PATH`. In most modern distros, stuff from
     `relget` had just this moment installed it to location that makes sure this broken
     version is called by everything 😎
   - or ...
-- there is no way to uninstall installed files (except by deleting manually from
-  `/usr/local`)
+- `relget uninstall` is best-effort: it removes the primary binary, standard
+  completions, and man pages matched by name, but does not guarantee complete
+  removal (see `relget uninstall --help` for details)
 - `relget` works on and installs utilities for **Linux only**; you may be able to make it
   work on some other systems, but it was never intended to be used like that [^1]
 - `relget` downloads only `x86_64` binaries
@@ -79,6 +80,27 @@ relget --cb-token-source load
 # prompt for Codeberg token interactively
 relget --cb-token-source prompt
 ```
+
+## Uninstall
+
+```sh
+# uninstall specific apps
+relget uninstall --prefix ~/.local --apps rg,bat
+
+# uninstall the minimal set
+relget uninstall --prefix ~/.local --minimal-set
+
+# force a clean reinstall (uninstall + install in one step)
+relget reinstall --prefix ~/.local --apps rg --gh-token-source load
+```
+
+`uninstall` is best-effort: it removes the primary binary, standard shell
+completions, and man pages whose names match `{exe}-{anything}.N[.gz]`. Apps
+that install additional binaries under different names (e.g. `uv` also installs
+`uvx`) will have only the primary binary removed. Run `relget uninstall --help`
+for the full list of caveats.
+
+## Caching
 
 `relget` always uses `~/.cache/relget` for stuff downloaded from `GitHub` and `Codeberg`.
 
