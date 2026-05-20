@@ -32,7 +32,7 @@ impl App for Eza {
         let bin_name = release
             .asset_names()
             .into_iter()
-            .find(|a| a == "eza_x86_64-unknown-linux-gnu.tar.gz")
+            .find(|a| a == "eza_x86_64-unknown-linux-musl.tar.gz")
             .ok_or_else(|| anyhow!("Can't find eza binary asset"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &bin_name)?;
         let extractor = ArchiveExtractor::new(&bin_name, asset.data);

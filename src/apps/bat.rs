@@ -31,7 +31,7 @@ impl App for Bat {
         let name = release
             .asset_names()
             .into_iter()
-            .find(|a| a.starts_with("bat-") && a.ends_with("-x86_64-unknown-linux-gnu.tar.gz"))
+            .find(|a| a.starts_with("bat-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz"))
             .ok_or_else(|| anyhow!("Can't find bat asset"))?;
 
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;

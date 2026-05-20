@@ -29,7 +29,7 @@ any of them will not overwrite the other. Which one gets used when you call `rip
 from your shell, depends on your `$PATH`. In most modern distros, stuff from
 `/usr/local` has priority.
 
-## Non goals
+## Non goals and limitations
 
 - `binup` is **NOT** a fully blown package manager
 - there is no way to select the version of installed binary - `binup` **ALWAYS**

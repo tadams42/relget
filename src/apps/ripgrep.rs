@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Result};
+use std::path::Path;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -27,29 +28,27 @@ impl App for Ripgrep {
 
     fn download(&self) -> Result<DownloadedAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let deb_name = release
+        let name = release
             .asset_names()
             .into_iter()
-            .find(|a| a.starts_with("ripgrep_") && a.ends_with("_amd64.deb"))
-            .ok_or_else(|| anyhow!("Can't find ripgrep .deb asset"))?;
+            .find(|a| a.starts_with("ripgrep-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz"))
+            .ok_or_else(|| anyhow!("Can't find ripgrep musl asset"))?;
 
-        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &deb_name)?;
-        let deb = ArchiveExtractor::new(&deb_name, asset.data);
-        let xz_data = deb.extract("data.tar.xz")?;
-        let inner = ArchiveExtractor::new("data.tar.xz", xz_data);
-        let members = inner.members()?;
+        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
+        let extractor = ArchiveExtractor::new(&name, asset.data);
+        let members = extractor.members()?;
 
-        let exe_path = members.iter()
-            .find(|m| *m == "./usr/bin/rg")
+        let exe = members.iter()
+            .find(|m| Path::new(m).file_name().map(|f| f == "rg").unwrap_or(false))
             .cloned()
-            .ok_or_else(|| anyhow!("Can't find ./usr/bin/rg"))?;
-        let binary_data = inner.extract(&exe_path)?;
-
-        let man_path = members.iter()
-            .find(|m| *m == "./usr/share/man/man1/rg.1.gz")
+            .ok_or_else(|| anyhow!("Can't find rg in archive"))?;
+        let man = members.iter()
+            .find(|m| Path::new(m).file_name().map(|f| f == "rg.1").unwrap_or(false))
             .cloned()
-            .ok_or_else(|| anyhow!("Can't find rg.1.gz"))?;
-        let man_data = inner.extract(&man_path)?;
+            .ok_or_else(|| anyhow!("Can't find rg.1 in archive"))?;
+
+        let binary_data = extractor.extract(&exe)?;
+        let man_data = extractor.extract(&man)?;
 
         let completions = with_temp_exe("rg", &binary_data, |exe| {
             Ok(vec![
@@ -61,7 +60,7 @@ impl App for Ripgrep {
 
         Ok(DownloadedAssets {
             binary: Some(AppBinary::new("rg", binary_data)),
-            man_pages: vec![ManPage::new(1, "rg.1.gz", man_data)],
+            man_pages: vec![ManPage::new(1, "rg.1", man_data)],
             completions,
             ..Default::default()
         })

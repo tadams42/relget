@@ -31,7 +31,7 @@ impl App for Uv {
         let name = release
             .asset_names()
             .into_iter()
-            .find(|a| a == "uv-x86_64-unknown-linux-gnu.tar.gz")
+            .find(|a| a == "uv-x86_64-unknown-linux-musl.tar.gz")
             .ok_or_else(|| anyhow!("Can't find uv asset"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);

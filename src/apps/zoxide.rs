@@ -26,32 +26,30 @@ impl App for Zoxide {
 
     fn download(&self) -> Result<DownloadedAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let deb_name = release
+        let name = release
             .asset_names()
             .into_iter()
-            .find(|a| a.ends_with("_amd64.deb"))
-            .ok_or_else(|| anyhow!("Can't find zoxide .deb asset"))?;
+            .find(|a| a.starts_with("zoxide-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz"))
+            .ok_or_else(|| anyhow!("Can't find zoxide musl asset"))?;
 
-        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &deb_name)?;
-        let deb = ArchiveExtractor::new(&deb_name, asset.data);
-        let xz_data = deb.extract("data.tar.xz")?;
-        let inner = ArchiveExtractor::new("data.tar.xz", xz_data);
-        let members = inner.members()?;
+        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
+        let extractor = ArchiveExtractor::new(&name, asset.data);
+        let members = extractor.members()?;
 
-        let exe_path = members.iter()
-            .find(|m| *m == "./usr/bin/zoxide")
+        let exe = members.iter()
+            .find(|m| Path::new(m).file_name().map(|f| f == "zoxide").unwrap_or(false))
             .cloned()
-            .ok_or_else(|| anyhow!("Can't find ./usr/bin/zoxide"))?;
-        let binary_data = inner.extract(&exe_path)?;
+            .ok_or_else(|| anyhow!("Can't find zoxide in archive"))?;
+        let binary_data = extractor.extract(&exe)?;
 
         let mut man_pages = Vec::new();
         for member in &members {
-            if member.starts_with("./usr/share/man/man1/") && member.ends_with(".1.gz") {
-                let fname = Path::new(member).file_name()
-                    .and_then(|f| f.to_str())
-                    .unwrap_or("")
-                    .to_string();
-                man_pages.push(ManPage::new(1, fname, inner.extract(member)?));
+            let path = Path::new(member);
+            let file_name = path.file_name().and_then(|f| f.to_str()).unwrap_or("");
+            if let Some(section_str) = path.extension().and_then(|e| e.to_str()) {
+                if let Ok(section) = section_str.parse::<u8>() {
+                    man_pages.push(ManPage::new(section, file_name, extractor.extract(member)?));
+                }
             }
         }
 
