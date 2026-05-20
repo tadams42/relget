@@ -18,7 +18,7 @@ impl CodebergClient {
         let token = if offline {
             token
         } else {
-            token.or_else(|| Self::load_token())
+            token.or_else(Self::load_token)
         };
         Self { token, offline }
     }

@@ -95,6 +95,10 @@ pub struct GhCache {
     cache_dir: PathBuf,
 }
 
+impl Default for GhCache {
+    fn default() -> Self { Self::new() }
+}
+
 impl GhCache {
     pub fn new() -> Self { Self::new_with_prefix("") }
 

@@ -12,6 +12,10 @@ pub struct Go {
     cache_path: PathBuf,
 }
 
+impl Default for Go {
+    fn default() -> Self { Self::new() }
+}
+
 impl Go {
     pub fn new() -> Self {
         let cache_dir = dirs::home_dir()

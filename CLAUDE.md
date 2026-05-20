@@ -137,3 +137,8 @@ with_temp_exe("myapp", &data, |path| { ... })
 - `go.rs`: does not use GithubClient; downloads from go.dev, extracts a directory to `prefix/go/`, symlinks `prefix/bin/go`
 - `uv.rs`: installs two binaries (`uv` + `uvx`) and generates completions for both
 - Apps with man pages: `caddy`, `dasel`, `eza`, `rclone` — use `ManPage::new(section, filename, data)`
+
+## Code conventions
+
+- use `cargo +nightly fmt` to format the code
+- use `cargo check --workspace` and `cargo clippy --no-deps` to lint the code
