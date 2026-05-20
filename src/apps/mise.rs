@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::gen_completions_subcommand;
 use crate::types::{AppBinary, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 
-pub struct Mise { client: Arc<GithubClient> }
+pub struct Mise {
+    client: Arc<GithubClient>,
+}
 
 impl Mise {
     const OWNER: &'static str = "jdx";
-    const REPO:  &'static str = "mise";
+    const REPO: &'static str = "mise";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -24,7 +26,9 @@ impl App for Mise {
     fn installed_version_word_index(&self) -> isize { 0 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -38,12 +42,24 @@ impl App for Mise {
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
 
-        let exe = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "mise").unwrap_or(false))
+        let exe = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "mise")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find mise in archive"))?;
-        let man = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "mise.1").unwrap_or(false))
+        let man = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "mise.1")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find mise.1 in archive"))?;
 

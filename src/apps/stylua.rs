@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -8,11 +8,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct Stylua { client: Arc<GithubClient> }
+pub struct Stylua {
+    client: Arc<GithubClient>,
+}
 
 impl Stylua {
     const OWNER: &'static str = "JohnnyMorganz";
-    const REPO:  &'static str = "stylua";
+    const REPO: &'static str = "stylua";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -21,7 +23,9 @@ impl App for Stylua {
     fn url(&self) -> &str { "https://github.com/JohnnyMorganz/stylua" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -36,7 +40,12 @@ impl App for Stylua {
         let members = extractor.members()?;
         let exe = members
             .iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "stylua").unwrap_or(false))
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "stylua")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find stylua in archive"))?;
         Ok(DownloadedAssets {

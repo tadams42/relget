@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -6,11 +6,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct DockMate { client: Arc<GithubClient> }
+pub struct DockMate {
+    client: Arc<GithubClient>,
+}
 
 impl DockMate {
     const OWNER: &'static str = "shubh-io";
-    const REPO:  &'static str = "DockMate";
+    const REPO: &'static str = "DockMate";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -20,7 +22,9 @@ impl App for DockMate {
     fn installed_version_word_index(&self) -> isize { 2 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {

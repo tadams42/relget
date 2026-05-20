@@ -8,24 +8,29 @@ pub struct AppBinary {
 
 impl AppBinary {
     pub fn new(name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self { name: name.into(), data }
+        Self {
+            name: name.into(),
+            data,
+        }
     }
 
-    pub fn install_path(&self, prefix: &Path) -> PathBuf {
-        prefix.join("bin").join(&self.name)
-    }
+    pub fn install_path(&self, prefix: &Path) -> PathBuf { prefix.join("bin").join(&self.name) }
 }
 
 #[derive(Debug, Clone)]
 pub struct ManPage {
-    pub section: u8,
+    pub section:   u8,
     pub file_name: String,
-    pub data: Vec<u8>,
+    pub data:      Vec<u8>,
 }
 
 impl ManPage {
     pub fn new(section: u8, file_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self { section, file_name: file_name.into(), data }
+        Self {
+            section,
+            file_name: file_name.into(),
+            data,
+        }
     }
 
     pub fn install_path(&self, prefix: &Path) -> PathBuf {
@@ -46,22 +51,34 @@ pub enum Shell {
 
 #[derive(Debug, Clone)]
 pub struct Completion {
-    pub shell: Shell,
+    pub shell:    Shell,
     pub app_name: String,
-    pub data: Vec<u8>,
+    pub data:     Vec<u8>,
 }
 
 impl Completion {
     pub fn zsh(app_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self { shell: Shell::Zsh, app_name: app_name.into(), data }
+        Self {
+            shell: Shell::Zsh,
+            app_name: app_name.into(),
+            data,
+        }
     }
 
     pub fn bash(app_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self { shell: Shell::Bash, app_name: app_name.into(), data }
+        Self {
+            shell: Shell::Bash,
+            app_name: app_name.into(),
+            data,
+        }
     }
 
     pub fn fish(app_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self { shell: Shell::Fish, app_name: app_name.into(), data }
+        Self {
+            shell: Shell::Fish,
+            app_name: app_name.into(),
+            data,
+        }
     }
 
     pub fn file_name(&self) -> String {
@@ -74,29 +91,35 @@ impl Completion {
 
     pub fn install_path(&self, prefix: &Path) -> PathBuf {
         match self.shell {
-            Shell::Zsh => prefix
-                .join("share")
-                .join("zsh")
-                .join("site-functions")
-                .join(self.file_name()),
-            Shell::Fish => prefix
-                .join("share")
-                .join("fish")
-                .join("vendor_completions.d")
-                .join(self.file_name()),
-            Shell::Bash => prefix
-                .join("share")
-                .join("bash-completion")
-                .join("completions")
-                .join(self.file_name()),
+            Shell::Zsh => {
+                prefix
+                    .join("share")
+                    .join("zsh")
+                    .join("site-functions")
+                    .join(self.file_name())
+            }
+            Shell::Fish => {
+                prefix
+                    .join("share")
+                    .join("fish")
+                    .join("vendor_completions.d")
+                    .join(self.file_name())
+            }
+            Shell::Bash => {
+                prefix
+                    .join("share")
+                    .join("bash-completion")
+                    .join("completions")
+                    .join(self.file_name())
+            }
         }
     }
 }
 
 #[derive(Debug, Default)]
 pub struct DownloadedAssets {
-    pub binary: Option<AppBinary>,
-    pub other_bins: Vec<AppBinary>,
-    pub man_pages: Vec<ManPage>,
+    pub binary:      Option<AppBinary>,
+    pub other_bins:  Vec<AppBinary>,
+    pub man_pages:   Vec<ManPage>,
     pub completions: Vec<Completion>,
 }

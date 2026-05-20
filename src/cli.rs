@@ -15,7 +15,13 @@ pub struct Cli {
     pub prefix: PathBuf,
 
     /// App(s) to install; comma-separated. Defaults to all apps.
-    #[arg(short = 'a', long = "apps", value_name = "NAME[,NAME...]", value_delimiter = ',', global = true)]
+    #[arg(
+        short = 'a',
+        long = "apps",
+        value_name = "NAME[,NAME...]",
+        value_delimiter = ',',
+        global = true
+    )]
     pub apps: Vec<String>,
 
     /// Where to load GitHub API token from (prompt or load)
@@ -50,16 +56,15 @@ pub enum Commands {
     /// the app's executable name under the given prefix. This is a
     /// best-effort operation:
     ///
-    ///   - Only files that follow relget's standard installation layout are
-    ///     searched. Files placed elsewhere will not be touched.
+    ///   - Only files that follow relget's standard installation layout are searched. Files placed
+    ///     elsewhere will not be touched.
     ///
-    ///   - Apps that install multiple binaries under different names (e.g.
-    ///     `uv` also installs `uvx`) will have only the primary binary
-    ///     removed. The secondary binaries and their completions are left
-    ///     behind.
+    ///   - Apps that install multiple binaries under different names (e.g. `uv` also installs
+    ///     `uvx`) will have only the primary binary removed. The secondary binaries and their
+    ///     completions are left behind.
     ///
-    ///   - Man pages with a separator other than `-` (e.g. `eza_colors.5`)
-    ///     are not matched and will not be removed.
+    ///   - Man pages with a separator other than `-` (e.g. `eza_colors.5`) are not matched and will
+    ///     not be removed.
     ///
     /// Token flags (--gh-token-source, --cb-token-source) are accepted but
     /// ignored for this command.

@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::{run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 
-pub struct Skim { client: Arc<GithubClient> }
+pub struct Skim {
+    client: Arc<GithubClient>,
+}
 
 impl Skim {
     const OWNER: &'static str = "skim-rs";
-    const REPO:  &'static str = "skim";
+    const REPO: &'static str = "skim";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -22,7 +24,9 @@ impl App for Skim {
     fn url(&self) -> &str { "https://github.com/skim-rs/skim" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -36,7 +40,8 @@ impl App for Skim {
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
 
-        let exe = members.iter()
+        let exe = members
+            .iter()
             .find(|m| Path::new(m).file_name().map(|f| f == "sk").unwrap_or(false))
             .cloned()
             .ok_or_else(|| anyhow!("Can't find sk in archive"))?;
@@ -45,7 +50,10 @@ impl App for Skim {
         let mut man_pages = Vec::new();
         for man_name in &["sk.1", "sk-tmux.1"] {
             if let Some(m) = members.iter().find(|m| {
-                Path::new(m).file_name().map(|f| f.to_str().unwrap_or("") == *man_name).unwrap_or(false)
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f.to_str().unwrap_or("") == *man_name)
+                    .unwrap_or(false)
             }) {
                 man_pages.push(ManPage::new(1, *man_name, extractor.extract(m)?));
             }

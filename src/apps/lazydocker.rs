@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -8,11 +8,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct LazyDocker { client: Arc<GithubClient> }
+pub struct LazyDocker {
+    client: Arc<GithubClient>,
+}
 
 impl LazyDocker {
     const OWNER: &'static str = "jesseduffield";
-    const REPO:  &'static str = "lazydocker";
+    const REPO: &'static str = "lazydocker";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -21,7 +23,9 @@ impl App for LazyDocker {
     fn url(&self) -> &str { "https://github.com/jesseduffield/lazydocker" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
@@ -43,7 +47,12 @@ impl App for LazyDocker {
         let members = extractor.members()?;
         let exe = members
             .iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "lazydocker").unwrap_or(false))
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "lazydocker")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find lazydocker in archive"))?;
         Ok(DownloadedAssets {

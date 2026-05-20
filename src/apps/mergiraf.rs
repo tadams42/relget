@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -16,9 +16,7 @@ impl Mergiraf {
     const OWNER: &'static str = "mergiraf";
     const REPO: &'static str = "mergiraf";
 
-    pub fn new(client: Arc<CodebergClient>) -> Self {
-        Self { client }
-    }
+    pub fn new(client: Arc<CodebergClient>) -> Self { Self { client } }
 }
 
 impl App for Mergiraf {
@@ -26,7 +24,9 @@ impl App for Mergiraf {
     fn url(&self) -> &str { "https://codeberg.org/mergiraf/mergiraf" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -42,7 +42,12 @@ impl App for Mergiraf {
 
         let exe_entry = members
             .iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "mergiraf").unwrap_or(false))
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "mergiraf")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find mergiraf binary in archive"))?;
 

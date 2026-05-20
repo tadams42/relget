@@ -34,8 +34,7 @@ pub fn install_assets(prefix: &Path, assets: &DownloadedAssets) -> Result<Vec<Pa
 fn install_binary(prefix: &Path, bin: &AppBinary) -> Result<PathBuf> {
     let dest = bin.install_path(prefix);
     ensure_parent(&dest)?;
-    fs::write(&dest, &bin.data)
-        .with_context(|| format!("Writing binary to {:?}", dest))?;
+    fs::write(&dest, &bin.data).with_context(|| format!("Writing binary to {:?}", dest))?;
     fs::set_permissions(&dest, fs::Permissions::from_mode(BIN_MODE))?;
     Ok(dest)
 }
@@ -43,8 +42,7 @@ fn install_binary(prefix: &Path, bin: &AppBinary) -> Result<PathBuf> {
 fn install_man_page(prefix: &Path, man: &ManPage) -> Result<PathBuf> {
     let dest = man.install_path(prefix);
     ensure_parent(&dest)?;
-    fs::write(&dest, &man.data)
-        .with_context(|| format!("Writing man page to {:?}", dest))?;
+    fs::write(&dest, &man.data).with_context(|| format!("Writing man page to {:?}", dest))?;
     fs::set_permissions(&dest, fs::Permissions::from_mode(DOC_MODE))?;
     Ok(dest)
 }
@@ -52,8 +50,7 @@ fn install_man_page(prefix: &Path, man: &ManPage) -> Result<PathBuf> {
 fn install_completion(prefix: &Path, comp: &Completion) -> Result<PathBuf> {
     let dest = comp.install_path(prefix);
     ensure_parent(&dest)?;
-    fs::write(&dest, &comp.data)
-        .with_context(|| format!("Writing completion to {:?}", dest))?;
+    fs::write(&dest, &comp.data).with_context(|| format!("Writing completion to {:?}", dest))?;
     fs::set_permissions(&dest, fs::Permissions::from_mode(DOC_MODE))?;
     Ok(dest)
 }
@@ -90,9 +87,7 @@ pub fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
 /// Generate zsh + bash + fish completions from a single binary with a
 /// uniform `[prefix_args..., shell_name]` invocation pattern.
 pub fn gen_completions_with_shell_arg(
-    exe_name: &str,
-    data: &[u8],
-    prefix_args: &[&str],
+    exe_name: &str, data: &[u8], prefix_args: &[&str],
 ) -> Result<Vec<Completion>> {
     with_temp_exe(exe_name, data, |exe| {
         let mut completions = Vec::new();
@@ -106,9 +101,9 @@ pub fn gen_completions_with_shell_arg(
             args.push(shell_name);
             let stdout = run_cmd(exe, &args)?;
             completions.push(Completion {
-                shell: *shell,
+                shell:    *shell,
                 app_name: exe_name.to_string(),
-                data: stdout,
+                data:     stdout,
             });
         }
         Ok(completions)
@@ -118,11 +113,7 @@ pub fn gen_completions_with_shell_arg(
 /// Generate zsh + bash + fish completions where each shell gets its own flag
 /// e.g. ("--zsh", "--bash", "--fish").
 pub fn gen_completions_with_flags(
-    exe_name: &str,
-    data: &[u8],
-    zsh_flag: &str,
-    bash_flag: &str,
-    fish_flag: &str,
+    exe_name: &str, data: &[u8], zsh_flag: &str, bash_flag: &str, fish_flag: &str,
 ) -> Result<Vec<Completion>> {
     with_temp_exe(exe_name, data, |exe| {
         let mut completions = Vec::new();
@@ -133,9 +124,9 @@ pub fn gen_completions_with_flags(
         ] {
             let stdout = run_cmd(exe, &[flag])?;
             completions.push(Completion {
-                shell: *shell,
+                shell:    *shell,
                 app_name: exe_name.to_string(),
-                data: stdout,
+                data:     stdout,
             });
         }
         Ok(completions)
@@ -144,19 +135,14 @@ pub fn gen_completions_with_flags(
 
 /// `[cmd, subcommand, shell]` pattern (e.g. "starship completions zsh").
 pub fn gen_completions_subcommand(
-    exe_name: &str,
-    data: &[u8],
-    subcommand: &str,
+    exe_name: &str, data: &[u8], subcommand: &str,
 ) -> Result<Vec<Completion>> {
     gen_completions_with_shell_arg(exe_name, data, &[subcommand])
 }
 
 /// `[cmd, subcommand, --shell, shell]` pattern (e.g. "atuin gen-completions --shell zsh").
 pub fn gen_completions_shell_flag(
-    exe_name: &str,
-    data: &[u8],
-    subcommand: &str,
-    flag: &str,
+    exe_name: &str, data: &[u8], subcommand: &str, flag: &str,
 ) -> Result<Vec<Completion>> {
     with_temp_exe(exe_name, data, |exe| {
         let mut completions = Vec::new();
@@ -167,9 +153,9 @@ pub fn gen_completions_shell_flag(
         ] {
             let stdout = run_cmd(exe, &[subcommand, flag, shell_name])?;
             completions.push(Completion {
-                shell: *shell,
+                shell:    *shell,
                 app_name: exe_name.to_string(),
-                data: stdout,
+                data:     stdout,
             });
         }
         Ok(completions)

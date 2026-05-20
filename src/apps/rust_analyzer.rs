@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -7,11 +7,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct RustAnalyzer { client: Arc<GithubClient> }
+pub struct RustAnalyzer {
+    client: Arc<GithubClient>,
+}
 
 impl RustAnalyzer {
     const OWNER: &'static str = "rust-lang";
-    const REPO:  &'static str = "rust-analyzer";
+    const REPO: &'static str = "rust-analyzer";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -21,7 +23,9 @@ impl App for RustAnalyzer {
     fn installed_version_word_index(&self) -> isize { -2 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {

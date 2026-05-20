@@ -6,8 +6,8 @@ mod cli;
 use cli::{Cli, Commands};
 
 use relget::{
-    install_apps, known_apps_identifiers, load_codeberg_token, load_github_token, select_apps,
-    uninstall_apps, MINIMAL_SET,
+    MINIMAL_SET, install_apps, known_apps_identifiers, load_codeberg_token, load_github_token,
+    select_apps, uninstall_apps,
 };
 
 fn main() -> Result<()> {
@@ -61,7 +61,10 @@ fn main() -> Result<()> {
             let (gh_token, cb_token) = if cli.offline {
                 (None, None)
             } else {
-                (load_github_token(&cli.gh_token_source)?, load_codeberg_token(&cli.cb_token_source)?)
+                (
+                    load_github_token(&cli.gh_token_source)?,
+                    load_codeberg_token(&cli.cb_token_source)?,
+                )
             };
             let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, cli.offline)?;
             if !installed.is_empty() {
@@ -76,7 +79,10 @@ fn main() -> Result<()> {
             let (gh_token, cb_token) = if cli.offline {
                 (None, None)
             } else {
-                (load_github_token(&cli.gh_token_source)?, load_codeberg_token(&cli.cb_token_source)?)
+                (
+                    load_github_token(&cli.gh_token_source)?,
+                    load_codeberg_token(&cli.cb_token_source)?,
+                )
             };
             let selected = select_apps(&cli.apps, cli.minimal_set)?;
             let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, cli.offline)?;

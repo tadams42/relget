@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::{run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 
-pub struct Bat { client: Arc<GithubClient> }
+pub struct Bat {
+    client: Arc<GithubClient>,
+}
 
 impl Bat {
     const OWNER: &'static str = "sharkdp";
-    const REPO:  &'static str = "bat";
+    const REPO: &'static str = "bat";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -23,7 +25,9 @@ impl App for Bat {
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -38,12 +42,24 @@ impl App for Bat {
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
 
-        let exe = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "bat").unwrap_or(false))
+        let exe = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "bat")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find bat in archive"))?;
-        let man = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "bat.1").unwrap_or(false))
+        let man = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "bat.1")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find bat.1 in archive"))?;
 

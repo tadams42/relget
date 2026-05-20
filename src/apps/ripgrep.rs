@@ -1,19 +1,21 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::github::GithubClient;
-use crate::installer::{with_temp_exe, run_cmd};
+use crate::installer::{run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 
-pub struct Ripgrep { client: Arc<GithubClient> }
+pub struct Ripgrep {
+    client: Arc<GithubClient>,
+}
 
 impl Ripgrep {
     const OWNER: &'static str = "BurntSushi";
-    const REPO:  &'static str = "ripgrep";
+    const REPO: &'static str = "ripgrep";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -23,7 +25,9 @@ impl App for Ripgrep {
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -38,12 +42,19 @@ impl App for Ripgrep {
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
 
-        let exe = members.iter()
+        let exe = members
+            .iter()
             .find(|m| Path::new(m).file_name().map(|f| f == "rg").unwrap_or(false))
             .cloned()
             .ok_or_else(|| anyhow!("Can't find rg in archive"))?;
-        let man = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "rg.1").unwrap_or(false))
+        let man = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "rg.1")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find rg.1 in archive"))?;
 

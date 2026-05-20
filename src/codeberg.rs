@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 
@@ -9,13 +9,17 @@ static CACHE: Lazy<Mutex<GhCache>> = Lazy::new(|| Mutex::new(GhCache::new_with_p
 const CB_API_URL: &str = "https://codeberg.org/api/v1/repos";
 
 pub struct CodebergClient {
-    pub token: Option<String>,
+    pub token:   Option<String>,
     pub offline: bool,
 }
 
 impl CodebergClient {
     pub fn new(token: Option<String>, offline: bool) -> Self {
-        let token = if offline { token } else { token.or_else(|| Self::load_token()) };
+        let token = if offline {
+            token
+        } else {
+            token.or_else(|| Self::load_token())
+        };
         Self { token, offline }
     }
 
@@ -45,9 +49,9 @@ impl CodebergClient {
         {
             let mut cache = CACHE.lock().unwrap();
             if self.offline {
-                return cache
-                    .get_release_any_age(owner, repo)
-                    .ok_or_else(|| anyhow!("offline mode: no cached release for {}/{}", owner, repo));
+                return cache.get_release_any_age(owner, repo).ok_or_else(|| {
+                    anyhow!("offline mode: no cached release for {}/{}", owner, repo)
+                });
             }
             if let Some(r) = cache.get_release(owner, repo) {
                 return Ok(r);
@@ -73,7 +77,10 @@ impl CodebergClient {
         let data = releases
             .into_iter()
             .find(|r| {
-                r["assets"].as_array().map(|a| !a.is_empty()).unwrap_or(false)
+                r["assets"]
+                    .as_array()
+                    .map(|a| !a.is_empty())
+                    .unwrap_or(false)
                     && !r["draft"].as_bool().unwrap_or(false)
                     && !r["prerelease"].as_bool().unwrap_or(false)
             })
@@ -101,7 +108,9 @@ impl CodebergClient {
         if self.offline {
             return Err(anyhow!(
                 "offline mode: no cached asset '{}' for {}/{}",
-                name, owner, repo
+                name,
+                owner,
+                repo
             ));
         }
 
@@ -131,9 +140,9 @@ impl CodebergClient {
         let asset = GhDownloadedAsset {
             gh_id: asset_id,
             owner: owner.to_string(),
-            repo: repo.to_string(),
-            name: name.to_string(),
-            data: buf,
+            repo:  repo.to_string(),
+            name:  name.to_string(),
+            data:  buf,
         };
         CACHE.lock().unwrap().store_asset(asset.clone())?;
         Ok(asset)

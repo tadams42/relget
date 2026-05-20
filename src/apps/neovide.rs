@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -8,11 +8,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct Neovide { client: Arc<GithubClient> }
+pub struct Neovide {
+    client: Arc<GithubClient>,
+}
 
 impl Neovide {
     const OWNER: &'static str = "neovide";
-    const REPO:  &'static str = "neovide";
+    const REPO: &'static str = "neovide";
     const FALLBACK_VERSION: &'static str = "0.15.2";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
@@ -22,7 +24,9 @@ impl App for Neovide {
     fn url(&self) -> &str { "https://github.com/neovide/neovide" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn installed_version(&self, prefix: &Path) -> Result<Option<AppVersion>> {
@@ -37,7 +41,10 @@ impl App for Neovide {
             Err(_) => Ok(Some(AppVersion::parse(Self::FALLBACK_VERSION).unwrap())),
             Ok(o) => {
                 if !o.status.success() {
-                    log::warn!("neovide --version failed (known bug), assuming {}", Self::FALLBACK_VERSION);
+                    log::warn!(
+                        "neovide --version failed (known bug), assuming {}",
+                        Self::FALLBACK_VERSION
+                    );
                     return Ok(Some(AppVersion::parse(Self::FALLBACK_VERSION).unwrap()));
                 }
                 let text = String::from_utf8_lossy(&o.stdout);
@@ -60,7 +67,12 @@ impl App for Neovide {
         let members = extractor.members()?;
         let exe = members
             .iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "neovide").unwrap_or(false))
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "neovide")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find neovide in archive"))?;
         Ok(DownloadedAssets {

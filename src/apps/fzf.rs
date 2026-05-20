@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::{run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 
-pub struct Fzf { client: Arc<GithubClient> }
+pub struct Fzf {
+    client: Arc<GithubClient>,
+}
 
 impl Fzf {
     const OWNER: &'static str = "junegunn";
-    const REPO:  &'static str = "fzf";
+    const REPO: &'static str = "fzf";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -23,7 +25,9 @@ impl App for Fzf {
     fn installed_version_word_index(&self) -> isize { 0 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -35,11 +39,19 @@ impl App for Fzf {
             .into_iter()
             .find(|a| a.starts_with("fzf-") && a.ends_with("-linux_amd64.tar.gz"))
             .ok_or_else(|| anyhow!("Can't find fzf binary asset"))?;
-        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &bin_name)?;
+        let asset = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, &bin_name)?;
         let extractor = ArchiveExtractor::new(&bin_name, asset.data);
         let members = extractor.members()?;
-        let exe_entry = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "fzf").unwrap_or(false))
+        let exe_entry = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "fzf")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find fzf executable in archive"))?;
         let binary_data = extractor.extract(&exe_entry)?;
@@ -54,13 +66,18 @@ impl App for Fzf {
         })?;
 
         // Man pages from tarball source
-        let tarball = self.client.download_asset(Self::OWNER, Self::REPO, "tarball")?;
+        let tarball = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, "tarball")?;
         let tb_name = format!("{}.tar.gz", tarball.name);
         let tb_extractor = ArchiveExtractor::new(&tb_name, tarball.data);
         let tb_members = tb_extractor.members()?;
         let mut man_pages = Vec::new();
         for member in &tb_members {
-            let fname = Path::new(member).file_name().and_then(|f| f.to_str()).unwrap_or("");
+            let fname = Path::new(member)
+                .file_name()
+                .and_then(|f| f.to_str())
+                .unwrap_or("");
             if fname == "fzf.1" || fname == "fzf-tmux.1" {
                 let data = tb_extractor.extract(member)?;
                 man_pages.push(ManPage::new(1, fname.to_string(), data));

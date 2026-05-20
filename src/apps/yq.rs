@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::gen_completions_subcommand;
 use crate::types::{AppBinary, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 
-pub struct Yq { client: Arc<GithubClient> }
+pub struct Yq {
+    client: Arc<GithubClient>,
+}
 
 impl Yq {
     const OWNER: &'static str = "mikefarah";
-    const REPO:  &'static str = "yq";
+    const REPO: &'static str = "yq";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -22,7 +24,9 @@ impl App for Yq {
     fn url(&self) -> &str { "https://github.com/mikefarah/yq" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -36,12 +40,24 @@ impl App for Yq {
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
 
-        let exe = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "yq_linux_amd64").unwrap_or(false))
+        let exe = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "yq_linux_amd64")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find yq_linux_amd64 in archive"))?;
-        let man = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "yq.1").unwrap_or(false))
+        let man = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "yq.1")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find yq.1 in archive"))?;
 

@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::{run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 
-pub struct Rclone { client: Arc<GithubClient> }
+pub struct Rclone {
+    client: Arc<GithubClient>,
+}
 
 impl Rclone {
     const OWNER: &'static str = "rclone";
-    const REPO:  &'static str = "rclone";
+    const REPO: &'static str = "rclone";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -23,13 +25,14 @@ impl App for Rclone {
     fn installed_version_flag(&self) -> &str { "version" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
         let first_line = data.lines().next()?.trim();
-        let version_str = first_line.split_whitespace()
-            .find(|s| s.starts_with('v'))?;
+        let version_str = first_line.split_whitespace().find(|s| s.starts_with('v'))?;
         AppVersion::parse(version_str)
     }
 
@@ -44,12 +47,24 @@ impl App for Rclone {
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
 
-        let exe = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "rclone").unwrap_or(false))
+        let exe = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "rclone")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find rclone in archive"))?;
-        let man = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "rclone.1").unwrap_or(false))
+        let man = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "rclone.1")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find rclone.1 in archive"))?;
 

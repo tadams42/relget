@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::gen_completions_shell_flag;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct Atuin { client: Arc<GithubClient> }
+pub struct Atuin {
+    client: Arc<GithubClient>,
+}
 
 impl Atuin {
     const OWNER: &'static str = "atuinsh";
-    const REPO:  &'static str = "atuin";
+    const REPO: &'static str = "atuin";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -23,7 +25,9 @@ impl App for Atuin {
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -36,12 +40,19 @@ impl App for Atuin {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
-        let exe = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "atuin").unwrap_or(false))
+        let exe = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "atuin")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find atuin in archive"))?;
         let binary_data = extractor.extract(&exe)?;
-        let completions = gen_completions_shell_flag("atuin", &binary_data, "gen-completions", "--shell")?;
+        let completions =
+            gen_completions_shell_flag("atuin", &binary_data, "gen-completions", "--shell")?;
         Ok(DownloadedAssets {
             binary: Some(AppBinary::new("atuin", binary_data)),
             completions,

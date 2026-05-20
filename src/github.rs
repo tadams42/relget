@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 
@@ -9,22 +9,20 @@ static CACHE: Lazy<Mutex<GhCache>> = Lazy::new(|| Mutex::new(GhCache::new()));
 const GH_API_URL: &str = "https://api.github.com/repos";
 
 pub struct GithubClient {
-    pub token: Option<String>,
+    pub token:   Option<String>,
     pub offline: bool,
 }
 
 impl GithubClient {
-    pub fn new(token: Option<String>, offline: bool) -> Self {
-        Self { token, offline }
-    }
+    pub fn new(token: Option<String>, offline: bool) -> Self { Self { token, offline } }
 
     pub fn latest_release(&self, owner: &str, repo: &str) -> Result<GhRelease> {
         {
             let mut cache = CACHE.lock().unwrap();
             if self.offline {
-                return cache
-                    .get_release_any_age(owner, repo)
-                    .ok_or_else(|| anyhow!("offline mode: no cached release for {}/{}", owner, repo));
+                return cache.get_release_any_age(owner, repo).ok_or_else(|| {
+                    anyhow!("offline mode: no cached release for {}/{}", owner, repo)
+                });
             }
             if let Some(r) = cache.get_release(owner, repo) {
                 return Ok(r);
@@ -52,7 +50,10 @@ impl GithubClient {
         let data = releases
             .into_iter()
             .find(|r| {
-                r["assets"].as_array().map(|a| !a.is_empty()).unwrap_or(false)
+                r["assets"]
+                    .as_array()
+                    .map(|a| !a.is_empty())
+                    .unwrap_or(false)
                     && r["tag_name"].as_str() != Some("nightly")
             })
             .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
@@ -83,7 +84,9 @@ impl GithubClient {
         if self.offline {
             return Err(anyhow!(
                 "offline mode: no cached asset '{}' for {}/{}",
-                name, owner, repo
+                name,
+                owner,
+                repo
             ));
         }
 
@@ -92,9 +95,9 @@ impl GithubClient {
                 .tarball_url()
                 .ok_or_else(|| anyhow!("No tarball URL for {}/{}", owner, repo))?
         } else {
-            release
-                .asset_download_url(name)
-                .ok_or_else(|| anyhow!("No download URL for asset '{}' in {}/{}", name, owner, repo))?
+            release.asset_download_url(name).ok_or_else(|| {
+                anyhow!("No download URL for asset '{}' in {}/{}", name, owner, repo)
+            })?
         };
 
         if !url.starts_with("http:") && !url.starts_with("https:") {

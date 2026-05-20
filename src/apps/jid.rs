@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -8,11 +8,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct Jid { client: Arc<GithubClient> }
+pub struct Jid {
+    client: Arc<GithubClient>,
+}
 
 impl Jid {
     const OWNER: &'static str = "simeji";
-    const REPO:  &'static str = "jid";
+    const REPO: &'static str = "jid";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -21,7 +23,9 @@ impl App for Jid {
     fn url(&self) -> &str { "https://github.com/simeji/jid" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -36,7 +40,12 @@ impl App for Jid {
         let members = extractor.members()?;
         let exe = members
             .iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "jid").unwrap_or(false))
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "jid")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find jid in archive"))?;
         Ok(DownloadedAssets {

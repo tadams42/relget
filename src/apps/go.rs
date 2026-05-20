@@ -1,8 +1,8 @@
-use anyhow::{anyhow, Context, Result};
-use std::path::{Path, PathBuf};
 use crate::apps::App;
 use crate::types::DownloadedAssets;
 use crate::version::AppVersion;
+use anyhow::{Context, Result, anyhow};
+use std::path::{Path, PathBuf};
 
 const DOWNLOAD_VERSION: &str = "1.26.0";
 const DOWNLOAD_URL: &str = "https://go.dev/dl/go1.26.0.linux-amd64.tar.gz";
@@ -18,7 +18,9 @@ impl Go {
             .unwrap_or_else(|| PathBuf::from("."))
             .join(".cache")
             .join("relget");
-        Self { cache_path: cache_dir.join(DOWNLOAD_TARBALL) }
+        Self {
+            cache_path: cache_dir.join(DOWNLOAD_TARBALL),
+        }
     }
 }
 
@@ -50,7 +52,10 @@ impl App for Go {
                 .header("User-Agent", "relget")
                 .call()
                 .context("Downloading Go tarball")?;
-            let buf = resp.into_body().read_to_vec().context("Downloading Go tarball body")?;
+            let buf = resp
+                .into_body()
+                .read_to_vec()
+                .context("Downloading Go tarball body")?;
             std::fs::write(&self.cache_path, &buf)?;
             log::info!("app=go msg=Downloaded Go v{}", DOWNLOAD_VERSION);
         } else {
@@ -96,4 +101,3 @@ impl App for Go {
         Ok(vec![installed_dir, installed_symlink])
     }
 }
-

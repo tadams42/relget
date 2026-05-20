@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -8,11 +8,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 
-pub struct Zoxide { client: Arc<GithubClient> }
+pub struct Zoxide {
+    client: Arc<GithubClient>,
+}
 
 impl Zoxide {
     const OWNER: &'static str = "ajeetdsouza";
-    const REPO:  &'static str = "zoxide";
+    const REPO: &'static str = "zoxide";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -21,7 +23,9 @@ impl App for Zoxide {
     fn url(&self) -> &str { "https://github.com/ajeetdsouza/zoxide" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -36,8 +40,14 @@ impl App for Zoxide {
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
 
-        let exe = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "zoxide").unwrap_or(false))
+        let exe = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "zoxide")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find zoxide in archive"))?;
         let binary_data = extractor.extract(&exe)?;

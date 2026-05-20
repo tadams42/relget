@@ -13,9 +13,9 @@ const RELEASE_CACHE_SECONDS: i64 = 3600;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GhRelease {
-    pub owner: String,
-    pub repo: String,
-    pub data: Value,
+    pub owner:         String,
+    pub repo:          String,
+    pub data:          Value,
     pub downloaded_at: DateTime<Utc>,
 }
 
@@ -69,9 +69,7 @@ impl GhRelease {
         self.data["tarball_url"].as_str().map(|s| s.to_string())
     }
 
-    pub fn gh_id(&self) -> Option<u64> {
-        self.data["id"].as_u64()
-    }
+    pub fn gh_id(&self) -> Option<u64> { self.data["id"].as_u64() }
 
     pub fn is_expired(&self) -> bool {
         Utc::now() - self.downloaded_at > Duration::seconds(RELEASE_CACHE_SECONDS)
@@ -84,23 +82,21 @@ impl GhRelease {
 pub struct GhDownloadedAsset {
     pub gh_id: u64,
     pub owner: String,
-    pub repo: String,
-    pub name: String,
-    pub data: Vec<u8>,
+    pub repo:  String,
+    pub name:  String,
+    pub data:  Vec<u8>,
 }
 
 // ── GhCache ──────────────────────────────────────────────────────────────────
 
 pub struct GhCache {
-    releases: HashMap<String, GhRelease>,
-    assets: HashMap<String, GhDownloadedAsset>,
+    releases:  HashMap<String, GhRelease>,
+    assets:    HashMap<String, GhDownloadedAsset>,
     cache_dir: PathBuf,
 }
 
 impl GhCache {
-    pub fn new() -> Self {
-        Self::new_with_prefix("")
-    }
+    pub fn new() -> Self { Self::new_with_prefix("") }
 
     pub fn new_with_prefix(subdir: &str) -> Self {
         let mut cache_dir = dirs::home_dir()
@@ -110,12 +106,14 @@ impl GhCache {
         if !subdir.is_empty() {
             cache_dir = cache_dir.join(subdir);
         }
-        Self { releases: HashMap::new(), assets: HashMap::new(), cache_dir }
+        Self {
+            releases: HashMap::new(),
+            assets: HashMap::new(),
+            cache_dir,
+        }
     }
 
-    fn release_key(owner: &str, repo: &str) -> String {
-        format!("releases/{}/{}", owner, repo)
-    }
+    fn release_key(owner: &str, repo: &str) -> String { format!("releases/{}/{}", owner, repo) }
 
     fn asset_key(gh_id: u64, name: &str) -> String {
         if name == "tarball" {
@@ -191,7 +189,9 @@ impl GhCache {
 
     // ── assets ───────────────────────────────────────────────────────────────
 
-    pub fn get_asset(&mut self, owner: &str, repo: &str, name: &str, gh_id: u64) -> Option<GhDownloadedAsset> {
+    pub fn get_asset(
+        &mut self, owner: &str, repo: &str, name: &str, gh_id: u64,
+    ) -> Option<GhDownloadedAsset> {
         let key = Self::asset_key(gh_id, name);
 
         if let Some(a) = self.assets.get(&key) {

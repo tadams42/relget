@@ -1,19 +1,20 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result, anyhow};
 use std::io::{Cursor, Read};
 
 pub struct ArchiveExtractor {
     archive_name: String,
-    data: Vec<u8>,
+    data:         Vec<u8>,
 }
 
 impl ArchiveExtractor {
     pub fn new(archive_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self { archive_name: archive_name.into(), data }
+        Self {
+            archive_name: archive_name.into(),
+            data,
+        }
     }
 
-    fn name(&self) -> &str {
-        &self.archive_name
-    }
+    fn name(&self) -> &str { &self.archive_name }
 
     fn is_tar(&self) -> bool {
         let n = self.name().to_lowercase();
@@ -23,13 +24,9 @@ impl ArchiveExtractor {
             || n.ends_with(".tar")
     }
 
-    fn is_zip(&self) -> bool {
-        self.name().to_lowercase().ends_with(".zip")
-    }
+    fn is_zip(&self) -> bool { self.name().to_lowercase().ends_with(".zip") }
 
-    fn is_ar_deb(&self) -> bool {
-        self.name().to_lowercase().ends_with(".deb")
-    }
+    fn is_ar_deb(&self) -> bool { self.name().to_lowercase().ends_with(".deb") }
 
     fn is_gzip_only(&self) -> bool {
         let n = self.name().to_lowercase();

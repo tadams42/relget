@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::gen_completions_subcommand;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct Xq { client: Arc<GithubClient> }
+pub struct Xq {
+    client: Arc<GithubClient>,
+}
 
 impl Xq {
     const OWNER: &'static str = "sibprogrammer";
-    const REPO:  &'static str = "xq";
+    const REPO: &'static str = "xq";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -23,7 +25,9 @@ impl App for Xq {
     fn installed_version_word_index(&self) -> isize { 2 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -36,7 +40,8 @@ impl App for Xq {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
-        let exe = members.iter()
+        let exe = members
+            .iter()
             .find(|m| Path::new(m).file_name().map(|f| f == "xq").unwrap_or(false))
             .cloned()
             .ok_or_else(|| anyhow!("Can't find xq in archive"))?;

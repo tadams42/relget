@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::{run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct Uv { client: Arc<GithubClient> }
+pub struct Uv {
+    client: Arc<GithubClient>,
+}
 
 impl Uv {
     const OWNER: &'static str = "astral-sh";
-    const REPO:  &'static str = "uv";
+    const REPO: &'static str = "uv";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -23,7 +25,9 @@ impl App for Uv {
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -37,12 +41,19 @@ impl App for Uv {
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
 
-        let uv_entry = members.iter()
+        let uv_entry = members
+            .iter()
             .find(|m| Path::new(m).file_name().map(|f| f == "uv").unwrap_or(false))
             .cloned()
             .ok_or_else(|| anyhow!("Can't find uv in archive"))?;
-        let uvx_entry = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "uvx").unwrap_or(false))
+        let uvx_entry = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "uvx")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find uvx in archive"))?;
 
@@ -61,8 +72,14 @@ impl App for Uv {
                 Completion::fish("uv", run_cmd(exe_path, &["generate-shell-completion", "fish"])?),
                 // uvx completions via uv --generate-shell-completion
                 Completion::zsh("uvx", run_cmd(exe_path, &["--generate-shell-completion", "zsh"])?),
-                Completion::bash("uvx", run_cmd(exe_path, &["--generate-shell-completion", "bash"])?),
-                Completion::fish("uvx", run_cmd(exe_path, &["--generate-shell-completion", "fish"])?),
+                Completion::bash(
+                    "uvx",
+                    run_cmd(exe_path, &["--generate-shell-completion", "bash"])?,
+                ),
+                Completion::fish(
+                    "uvx",
+                    run_cmd(exe_path, &["--generate-shell-completion", "fish"])?,
+                ),
             ];
             Ok(comps)
         })?;

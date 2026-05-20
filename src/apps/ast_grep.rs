@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::gen_completions_subcommand;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct AstGrep { client: Arc<GithubClient> }
+pub struct AstGrep {
+    client: Arc<GithubClient>,
+}
 
 impl AstGrep {
     const OWNER: &'static str = "ast-grep";
-    const REPO:  &'static str = "ast-grep";
+    const REPO: &'static str = "ast-grep";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -22,7 +24,9 @@ impl App for AstGrep {
     fn url(&self) -> &str { "https://github.com/ast-grep/ast-grep" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -36,11 +40,18 @@ impl App for AstGrep {
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
 
-        let ag_entry = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "ast-grep").unwrap_or(false))
+        let ag_entry = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "ast-grep")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find ast-grep in archive"))?;
-        let sg_entry = members.iter()
+        let sg_entry = members
+            .iter()
             .find(|m| Path::new(m).file_name().map(|f| f == "sg").unwrap_or(false))
             .cloned()
             .ok_or_else(|| anyhow!("Can't find sg in archive"))?;

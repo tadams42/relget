@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -6,11 +6,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct LazyJournal { client: Arc<GithubClient> }
+pub struct LazyJournal {
+    client: Arc<GithubClient>,
+}
 
 impl LazyJournal {
     const OWNER: &'static str = "Lifailon";
-    const REPO:  &'static str = "lazyjournal";
+    const REPO: &'static str = "lazyjournal";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -20,7 +22,9 @@ impl App for LazyJournal {
     fn installed_version_word_index(&self) -> isize { 0 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {

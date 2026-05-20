@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -8,11 +8,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets, ManPage};
 use crate::version::AppVersion;
 
-pub struct SdEdit { client: Arc<GithubClient> }
+pub struct SdEdit {
+    client: Arc<GithubClient>,
+}
 
 impl SdEdit {
     const OWNER: &'static str = "chmln";
-    const REPO:  &'static str = "sd";
+    const REPO: &'static str = "sd";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -21,7 +23,9 @@ impl App for SdEdit {
     fn url(&self) -> &str { "https://github.com/chmln/sd" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -35,12 +39,19 @@ impl App for SdEdit {
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
 
-        let exe = members.iter()
+        let exe = members
+            .iter()
             .find(|m| Path::new(m).file_name().map(|f| f == "sd").unwrap_or(false))
             .cloned()
             .ok_or_else(|| anyhow!("Can't find sd in archive"))?;
-        let man = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "sd.1").unwrap_or(false))
+        let man = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "sd.1")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find sd.1 in archive"))?;
 

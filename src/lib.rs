@@ -8,7 +8,7 @@ pub mod types;
 pub mod uninstaller;
 pub mod version;
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::{Path, PathBuf};
 
 use apps::{all_app_entries, create_app};
@@ -44,10 +44,7 @@ pub fn select_apps(user_chosen: &[String], minimal_set: bool) -> Result<Vec<Stri
 }
 
 pub fn install_apps(
-    prefix: &Path,
-    selected: &[String],
-    gh_token: Option<String>,
-    cb_token: Option<String>,
+    prefix: &Path, selected: &[String], gh_token: Option<String>, cb_token: Option<String>,
     offline: bool,
 ) -> Result<Vec<PathBuf>> {
     let mut installed = Vec::new();
@@ -56,11 +53,13 @@ pub fn install_apps(
             .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
         match app.install(prefix) {
             Ok(paths) => installed.extend(paths),
-            Err(e) => if offline {
-                log::warn!("app={} msg=Skipping (offline, no cached data): {:#}", app_id, e);
-            } else {
-                log::error!("app={} msg=Install failed: {:#}", app_id, e);
-            },
+            Err(e) => {
+                if offline {
+                    log::warn!("app={} msg=Skipping (offline, no cached data): {:#}", app_id, e);
+                } else {
+                    log::error!("app={} msg=Install failed: {:#}", app_id, e);
+                }
+            }
         }
     }
     Ok(installed)
@@ -80,9 +79,8 @@ pub fn uninstall_apps(prefix: &Path, selected: &[String]) -> Result<Vec<PathBuf>
 pub fn load_github_token(source: &str) -> Result<Option<String>> {
     match source {
         "prompt" => {
-            let token = rpassword::prompt_password(
-                "GitHub API token (leave empty to skip): "
-            ).unwrap_or_default();
+            let token = rpassword::prompt_password("GitHub API token (leave empty to skip): ")
+                .unwrap_or_default();
             Ok(if token.is_empty() { None } else { Some(token) })
         }
         "load" => {
@@ -110,9 +108,8 @@ pub fn load_github_token(source: &str) -> Result<Option<String>> {
 pub fn load_codeberg_token(source: &str) -> Result<Option<String>> {
     match source {
         "prompt" => {
-            let token = rpassword::prompt_password(
-                "Codeberg API token (leave empty to skip): "
-            ).unwrap_or_default();
+            let token = rpassword::prompt_password("Codeberg API token (leave empty to skip): ")
+                .unwrap_or_default();
             Ok(if token.is_empty() { None } else { Some(token) })
         }
         "load" => {

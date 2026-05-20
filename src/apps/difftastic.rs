@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -8,11 +8,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct Difftastic { client: Arc<GithubClient> }
+pub struct Difftastic {
+    client: Arc<GithubClient>,
+}
 
 impl Difftastic {
     const OWNER: &'static str = "Wilfred";
-    const REPO:  &'static str = "difftastic";
+    const REPO: &'static str = "difftastic";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -22,7 +24,9 @@ impl App for Difftastic {
     fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -37,7 +41,12 @@ impl App for Difftastic {
         let members = extractor.members()?;
         let exe = members
             .iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "difft").unwrap_or(false))
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "difft")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find difft in archive"))?;
         Ok(DownloadedAssets {

@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
@@ -9,11 +9,13 @@ use crate::installer::{run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct Delta { client: Arc<GithubClient> }
+pub struct Delta {
+    client: Arc<GithubClient>,
+}
 
 impl Delta {
     const OWNER: &'static str = "dandavison";
-    const REPO:  &'static str = "delta";
+    const REPO: &'static str = "delta";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -22,7 +24,9 @@ impl App for Delta {
     fn url(&self) -> &str { "https://github.com/dandavison/delta" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -35,8 +39,14 @@ impl App for Delta {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
-        let exe = members.iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "delta").unwrap_or(false))
+        let exe = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "delta")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find delta in archive"))?;
         let binary_data = extractor.extract(&exe)?;

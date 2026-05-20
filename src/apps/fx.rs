@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -6,11 +6,13 @@ use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
 
-pub struct Fx { client: Arc<GithubClient> }
+pub struct Fx {
+    client: Arc<GithubClient>,
+}
 
 impl Fx {
     const OWNER: &'static str = "antonmedv";
-    const REPO:  &'static str = "fx";
+    const REPO: &'static str = "fx";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
@@ -20,7 +22,9 @@ impl App for Fx {
     fn installed_version_word_index(&self) -> isize { 0 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
