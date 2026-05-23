@@ -106,50 +106,79 @@ for the full list of caveats.
 
 ## Supported apps
 
-- [aqua](https://github.com/aquaproj/aqua)
-- [ast-grep](https://github.com/ast-grep/ast-grep)
-- [atuin](https://github.com/atuinsh/atuin)
-- [bat](https://github.com/sharkdp/bat)
-- [caddy](https://github.com/caddyserver/caddy)
-- [carapace](https://github.com/carapace-sh/carapace-bin)
-- [chezmoi](https://github.com/twpayne/chezmoi)
+### Containers
+
 - [d4s](https://github.com/jr-k/d4s)
-- [dasel](https://github.com/TomWright/dasel)
-- [delta](https://github.com/dandavison/delta)
-- [difft](https://github.com/Wilfred/difftastic)
 - [dockmate](https://github.com/shubh-io/DockMate)
 - [dry](https://github.com/moncho/dry)
-- [dust](https://github.com/bootandy/dust)
-- [eza](https://github.com/eza-community/eza)
-- [fd](https://github.com/sharkdp/fd)
-- [fnm](https://github.com/Schniz/fnm)
+- [lazydocker](https://github.com/jesseduffield/lazydocker)
+
+### Data
+
+- [dasel](https://github.com/TomWright/dasel)
 - [fx](https://github.com/antonmedv/fx)
-- [fzf](https://github.com/junegunn/fzf)
-- [gitleaks](https://github.com/gitleaks/gitleaks)
 - [gojq](https://github.com/itchyny/gojq)
-- [gonzo](https://github.com/control-theory/gonzo)
 - [jid](https://github.com/simeji/jid)
 - [jq](https://github.com/jqlang/jq)
 - [jqp](https://github.com/noahgorstein/jqp)
-- [lazydocker](https://github.com/jesseduffield/lazydocker)
-- [lazygit](https://github.com/jesseduffield/lazygit)
-- [lazyjournal](https://github.com/Lifailon/lazyjournal)
-- [mdbook](https://github.com/rust-lang/mdBook)
-- [mergiraf](https://codeberg.org/mergiraf/mergiraf)
-- [mise](https://github.com/jdx/mise)
-- [neovide](https://github.com/neovide/neovide)
-- [rclone](https://github.com/rclone/rclone)
-- [restish](https://github.com/rest-sh/restish)
-- [rg](https://github.com/BurntSushi/ripgrep)
-- [rust-analyzer](https://github.com/rust-lang/rust-analyzer)
-- [sd](https://github.com/chmln/sd)
-- [sk](https://github.com/skim-rs/skim)
-- [starship](https://github.com/starship/starship)
-- [stylua](https://github.com/JohnnyMorganz/stylua)
-- [uv](https://github.com/astral-sh/uv)
-- [xh](https://github.com/ducaale/xh)
 - [xq](https://github.com/sibprogrammer/xq)
 - [yq](https://github.com/mikefarah/yq)
+
+### Dev envs
+
+- [aqua](https://github.com/aquaproj/aqua)
+- [fnm](https://github.com/Schniz/fnm)
+- [mise](https://github.com/jdx/mise)
+- [uv](https://github.com/astral-sh/uv)
+
+### Dev tools
+
+- [ast-grep](https://github.com/ast-grep/ast-grep)
+- [mdbook](https://github.com/rust-lang/mdBook)
+- [neovide](https://github.com/neovide/neovide)
+- [rust-analyzer](https://github.com/rust-lang/rust-analyzer)
+- [stylua](https://github.com/JohnnyMorganz/stylua)
+
+### Files
+
+- [bat](https://github.com/sharkdp/bat)
+- [dust](https://github.com/bootandy/dust)
+- [eza](https://github.com/eza-community/eza)
+- [fd](https://github.com/sharkdp/fd)
+- [rg](https://github.com/BurntSushi/ripgrep)
+- [sd](https://github.com/chmln/sd)
+
+### Git
+
+- [delta](https://github.com/dandavison/delta)
+- [difft](https://github.com/Wilfred/difftastic)
+- [gitleaks](https://github.com/gitleaks/gitleaks)
+- [lazygit](https://github.com/jesseduffield/lazygit)
+- [mergiraf](https://codeberg.org/mergiraf/mergiraf)
+
+### HTTP
+
+- [caddy](https://github.com/caddyserver/caddy)
+- [restish](https://github.com/rest-sh/restish)
+- [xh](https://github.com/ducaale/xh)
+
+### Logs
+
+- [gonzo](https://github.com/control-theory/gonzo)
+- [lazyjournal](https://github.com/Lifailon/lazyjournal)
+
+### Other
+
+- [chezmoi](https://github.com/twpayne/chezmoi)
+- [rclone](https://github.com/rclone/rclone)
+
+### Shell
+
+- [atuin](https://github.com/atuinsh/atuin)
+- [carapace](https://github.com/carapace-sh/carapace-bin)
+- [fzf](https://github.com/junegunn/fzf)
+- [sk](https://github.com/skim-rs/skim)
+- [starship](https://github.com/starship/starship)
 - [zoxide](https://github.com/ajeetdsouza/zoxide)
 
 [^1]: Previously, `relget` had been written in Python.

@@ -10,19 +10,46 @@ fn main() {
     update_readme(manifest_dir);
 }
 
+fn category_display_name(category: &str) -> &str {
+    match category {
+        "containers" => "Containers",
+        "data" => "Data",
+        "dev_envs" => "Dev envs",
+        "dev_tools" => "Dev tools",
+        "files" => "Files",
+        "git" => "Git",
+        "http" => "HTTP",
+        "logs" => "Logs",
+        "other" => "Other",
+        "shell" => "Shell",
+        other => other,
+    }
+}
+
 fn update_readme(manifest_dir: &Path) {
     let mod_path = manifest_dir.join("src/apps/mod.rs");
     let readme_path = manifest_dir.join("README.md");
 
     let mod_content = fs::read_to_string(&mod_path).expect("Failed to read src/apps/mod.rs");
 
-    let mut entries: Vec<(String, String)> = parse_app_entries(&mod_content);
-    entries.sort_by(|a, b| a.0.cmp(&b.0));
+    let mut entries: Vec<(String, String, String)> = parse_app_entries(&mod_content);
 
-    let app_lines: Vec<String> = entries
-        .iter()
-        .map(|(id, url)| format!("- [{}]({})", id, url))
-        .collect();
+    entries.sort_by(|a, b| a.2.cmp(&b.2).then_with(|| a.0.cmp(&b.0)));
+
+    let mut app_lines: Vec<String> = Vec::new();
+    let mut current_category: Option<&str> = None;
+    for (id, url, cat) in &entries {
+        let cat_str = cat.as_str();
+        if current_category != Some(cat_str) {
+            if current_category.is_some() {
+                app_lines.push(String::new());
+            }
+            app_lines.push(format!("### {}", category_display_name(cat_str)));
+            app_lines.push(String::new());
+            current_category = Some(cat_str);
+        }
+        app_lines.push(format!("- [{}]({})", id, url));
+    }
 
     let readme = fs::read_to_string(&readme_path).expect("Failed to read README.md");
     let lines: Vec<&str> = readme.lines().collect();
@@ -46,29 +73,33 @@ fn update_readme(manifest_dir: &Path) {
     fs::write(&readme_path, new_content).expect("Failed to write README.md");
 }
 
-fn parse_app_entries(content: &str) -> Vec<(String, String)> {
+fn parse_app_entries(content: &str) -> Vec<(String, String, String)> {
     let mut entries = Vec::new();
-    let mut pending: Option<(Option<String>, Option<String>)> = None;
+    let mut pending: Option<(Option<String>, Option<String>, Option<String>)> = None;
 
     for line in content.lines() {
         let line = line.trim();
         if line.starts_with("AppEntry {") {
             let id = extract_quoted_field(line, "id:");
             let url = extract_quoted_field(line, "url:");
-            if let (Some(id), Some(url)) = (id.clone(), url.clone()) {
-                entries.push((id, url));
+            let cat = extract_quoted_field(line, "category:");
+            if let (Some(id), Some(url), Some(cat)) = (id.clone(), url.clone(), cat.clone()) {
+                entries.push((id, url, cat));
             } else {
-                pending = Some((id, url));
+                pending = Some((id, url, cat));
             }
-        } else if let Some((ref mut id, ref mut url)) = pending {
+        } else if let Some((ref mut id, ref mut url, ref mut cat)) = pending {
             if id.is_none() {
                 *id = extract_quoted_field(line, "id:");
             }
             if url.is_none() {
                 *url = extract_quoted_field(line, "url:");
             }
-            if id.is_some() && url.is_some() {
-                entries.push((id.take().unwrap(), url.take().unwrap()));
+            if cat.is_none() {
+                *cat = extract_quoted_field(line, "category:");
+            }
+            if id.is_some() && url.is_some() && cat.is_some() {
+                entries.push((id.take().unwrap(), url.take().unwrap(), cat.take().unwrap()));
                 pending = None;
             }
         }
