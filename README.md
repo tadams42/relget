@@ -146,6 +146,7 @@ for the full list of caveats.
 - [starship](https://github.com/starship/starship)
 - [stylua](https://github.com/JohnnyMorganz/stylua)
 - [uv](https://github.com/astral-sh/uv)
+- [xh](https://github.com/ducaale/xh)
 - [xq](https://github.com/sibprogrammer/xq)
 - [yq](https://github.com/mikefarah/yq)
 - [zoxide](https://github.com/ajeetdsouza/zoxide)

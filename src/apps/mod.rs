@@ -47,6 +47,7 @@ pub mod skim;
 pub mod starship;
 pub mod stylua;
 pub mod uv;
+pub mod xh;
 pub mod xq;
 pub mod yq;
 pub mod zoxide;
@@ -292,6 +293,10 @@ pub fn all_app_entries() -> Vec<AppEntry> {
             url: "https://github.com/astral-sh/uv",
         },
         AppEntry {
+            id:  "xh",
+            url: "https://github.com/ducaale/xh",
+        },
+        AppEntry {
             id:  "xq",
             url: "https://github.com/sibprogrammer/xq",
         },
@@ -358,6 +363,7 @@ pub fn create_app(
         "starship" => Some(Box::new(starship::Starship::new(client))),
         "stylua" => Some(Box::new(stylua::Stylua::new(client))),
         "uv" => Some(Box::new(uv::Uv::new(client))),
+        "xh" => Some(Box::new(xh::Xh::new(client))),
         "xq" => Some(Box::new(xq::Xq::new(client))),
         "yq" => Some(Box::new(yq::Yq::new(client))),
         "zoxide" => Some(Box::new(zoxide::Zoxide::new(client))),
