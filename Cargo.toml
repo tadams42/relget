@@ -9,6 +9,7 @@ publish = false
 push = false
 tag-name = "v{{version}}"
 pre-release-commit-message = "build: Bumped version to v{{version}}"
+tag-message = ""
 
 [[bin]]
 name = "relget"
