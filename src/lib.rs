@@ -141,6 +141,7 @@ pub const MINIMAL_SET: &[&str] = &[
     "d4s",
     "delta",
     "difft",
+    "dust",
     "eza",
     "fd",
     "fnm",

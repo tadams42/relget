@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -23,7 +23,9 @@ impl App for Xh {
     fn url(&self) -> &str { "https://github.com/ducaale/xh" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {
@@ -40,7 +42,12 @@ impl App for Xh {
 
         let exe = members
             .iter()
-            .find(|m| std::path::Path::new(m).file_name().map(|f| f == "xh").unwrap_or(false))
+            .find(|m| {
+                std::path::Path::new(m)
+                    .file_name()
+                    .map(|f| f == "xh")
+                    .unwrap_or(false)
+            })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find xh in archive"))?;
 
