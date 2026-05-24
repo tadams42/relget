@@ -23,7 +23,6 @@ impl Atuin {
 
 impl App for Atuin {
     fn exe_name(&self) -> &str { "atuin" }
-    fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

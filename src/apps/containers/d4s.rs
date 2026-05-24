@@ -30,13 +30,6 @@ impl App for D4S {
             .version()
     }
 
-    fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
-        // Look for a line containing "Version" and grab the last word
-        let line = data.lines().find(|l| l.contains("Version"))?;
-        let ver = line.split_whitespace().last()?;
-        AppVersion::parse(ver)
-    }
-
     fn download(&self) -> Result<DownloadedAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release

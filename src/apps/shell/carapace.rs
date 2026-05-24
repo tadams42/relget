@@ -22,7 +22,6 @@ impl Carapace {
 
 impl App for Carapace {
     fn exe_name(&self) -> &str { "carapace" }
-    fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

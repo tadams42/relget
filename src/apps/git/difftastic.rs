@@ -22,7 +22,6 @@ impl Difftastic {
 
 impl App for Difftastic {
     fn exe_name(&self) -> &str { "difft" }
-    fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

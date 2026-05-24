@@ -39,13 +39,6 @@ impl App for Go {
             .ok_or_else(|| anyhow!("Can't parse Go version {}", DOWNLOAD_VERSION))
     }
 
-    fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
-        // "go version go1.22.0 linux/amd64"
-        let words: Vec<&str> = data.split_whitespace().collect();
-        let ver_word = words.get(2)?;
-        AppVersion::parse(ver_word.strip_prefix("go").unwrap_or(ver_word))
-    }
-
     fn download(&self) -> Result<DownloadedAssets> {
         // Go installs a directory; download returns nothing usable for standard install
         if !self.cache_path.exists() {

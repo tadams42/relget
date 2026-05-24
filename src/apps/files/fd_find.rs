@@ -23,7 +23,6 @@ impl FdFind {
 
 impl App for FdFind {
     fn exe_name(&self) -> &str { "fd" }
-    fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

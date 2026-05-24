@@ -23,7 +23,6 @@ impl Bat {
 
 impl App for Bat {
     fn exe_name(&self) -> &str { "bat" }
-    fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

@@ -21,20 +21,19 @@ impl RustAnalyzer {
 
 impl App for RustAnalyzer {
     fn exe_name(&self) -> &str { "rust-analyzer" }
-    fn installed_version_word_index(&self) -> isize { -2 }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client
-            .latest_release(Self::OWNER, Self::REPO)?
-            .version()
-    }
-
-    fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
-        // "rust-analyzer 2024-01-15 ..."
-        let normalized = data.replace('-', " ");
-        let words: Vec<&str> = normalized.split_whitespace().collect();
-        let idx = (words.len() as isize + self.installed_version_word_index()) as usize;
-        words.get(idx).and_then(|w| AppVersion::parse(w))
+        let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
+        // GitHub tags use CalVer ("2026-05-18") but the binary reports a build-counter
+        // version ("0.3.2904"). The release body always contains the latter on line 2 as
+        // "(v0.3.2904)", so we scan the body first to get a version comparable to the
+        // installed one, falling back to the tag if the body format ever changes.
+        if let Some(body) = release.data["body"].as_str() {
+            if let Some(v) = AppVersion::find_in(body) {
+                return Ok(v);
+            }
+        }
+        release.version()
     }
 
     fn download(&self) -> Result<DownloadedAssets> {

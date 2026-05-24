@@ -29,19 +29,6 @@ impl App for Lazygit {
             .version()
     }
 
-    fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
-        // Output: "commit=..., build date=..., build source=..., version=1.2.3, ..."
-        let segment = data
-            .split(',')
-            .find(|s| s.trim().starts_with("version="))?
-            .trim()
-            .split('=')
-            .nth(1)?
-            .trim()
-            .to_string();
-        AppVersion::parse(&segment)
-    }
-
     fn download(&self) -> Result<DownloadedAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release

@@ -23,7 +23,6 @@ impl Eza {
 
 impl App for Eza {
     fn exe_name(&self) -> &str { "eza" }
-    fn installed_version_word_index(&self) -> isize { -3 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

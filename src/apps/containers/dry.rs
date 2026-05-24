@@ -20,7 +20,6 @@ impl Dry {
 
 impl App for Dry {
     fn exe_name(&self) -> &str { "dry" }
-    fn installed_version_word_index(&self) -> isize { 2 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

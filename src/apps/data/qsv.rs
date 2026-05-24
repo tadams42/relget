@@ -20,7 +20,9 @@ pub fn gnu_zip_asset_name(release: &GhRelease) -> Result<String> {
         .ok_or_else(|| anyhow!("Can't find qsv x86_64-unknown-linux-gnu zip asset"))
 }
 
-pub fn extract_named(extractor: &ArchiveExtractor, members: &[String], name: &str) -> Result<Vec<u8>> {
+pub fn extract_named(
+    extractor: &ArchiveExtractor, members: &[String], name: &str,
+) -> Result<Vec<u8>> {
     let entry = members
         .iter()
         .find(|m| Path::new(m).file_name().map(|f| f == name).unwrap_or(false))

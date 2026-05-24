@@ -30,13 +30,6 @@ impl App for Gonzo {
             .version()
     }
 
-    fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
-        // Second line: "Version: X.Y.Z"
-        let line = data.lines().nth(1)?;
-        let ver = line.split(':').nth(1)?.trim();
-        AppVersion::parse(ver)
-    }
-
     fn download(&self) -> Result<DownloadedAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release

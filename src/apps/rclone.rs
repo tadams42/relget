@@ -31,12 +31,6 @@ impl App for Rclone {
             .version()
     }
 
-    fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
-        let first_line = data.lines().next()?.trim();
-        let version_str = first_line.split_whitespace().find(|s| s.starts_with('v'))?;
-        AppVersion::parse(version_str)
-    }
-
     fn download(&self) -> Result<DownloadedAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release

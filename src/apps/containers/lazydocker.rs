@@ -29,13 +29,6 @@ impl App for LazyDocker {
             .version()
     }
 
-    fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
-        // "Version: X.Y.Z\n..."
-        let line = data.split('\n').next()?;
-        let ver = line.split(':').nth(1)?.trim();
-        AppVersion::parse(ver)
-    }
-
     fn download(&self) -> Result<DownloadedAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release

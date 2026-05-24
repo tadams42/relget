@@ -10,8 +10,9 @@ use crate::version::AppVersion;
 
 use super::qsv::{OWNER, REPO, extract_named, gnu_zip_asset_name};
 
-const NAMED_BINS: &[&str] =
-    &["qsvdp", "qsvlite", "qsvmcp", "qsvp", "qsvpdp", "qsvplite", "qsvpmcp"];
+const NAMED_BINS: &[&str] = &[
+    "qsvdp", "qsvlite", "qsvmcp", "qsvp", "qsvpdp", "qsvplite", "qsvpmcp",
+];
 
 pub struct QsvAll {
     client: Arc<GithubClient>,

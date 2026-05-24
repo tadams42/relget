@@ -24,7 +24,6 @@ impl Starship {
 
 impl App for Starship {
     fn exe_name(&self) -> &str { "starship" }
-    fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

@@ -118,7 +118,6 @@ impl Yazi {
 
 impl App for Yazi {
     fn exe_name(&self) -> &str { "yazi" }
-    fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

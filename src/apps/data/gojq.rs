@@ -22,7 +22,6 @@ impl GoJq {
 
 impl App for GoJq {
     fn exe_name(&self) -> &str { "gojq" }
-    fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

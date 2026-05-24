@@ -24,7 +24,6 @@ impl Mise {
 impl App for Mise {
     fn exe_name(&self) -> &str { "mise" }
     fn installed_version_flag(&self) -> &str { "version" }
-    fn installed_version_word_index(&self) -> isize { 0 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

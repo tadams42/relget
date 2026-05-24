@@ -23,7 +23,6 @@ impl Fnm {
 
 impl App for Fnm {
     fn exe_name(&self) -> &str { "fnm" }
-    fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

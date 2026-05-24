@@ -23,7 +23,6 @@ impl Fzf {
 
 impl App for Fzf {
     fn exe_name(&self) -> &str { "fzf" }
-    fn installed_version_word_index(&self) -> isize { 0 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

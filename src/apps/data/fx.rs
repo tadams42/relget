@@ -20,7 +20,6 @@ impl Fx {
 
 impl App for Fx {
     fn exe_name(&self) -> &str { "fx" }
-    fn installed_version_word_index(&self) -> isize { 0 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

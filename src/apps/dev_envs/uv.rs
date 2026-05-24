@@ -23,7 +23,6 @@ impl Uv {
 
 impl App for Uv {
     fn exe_name(&self) -> &str { "uv" }
-    fn installed_version_word_index(&self) -> isize { 1 }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

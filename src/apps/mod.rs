@@ -24,27 +24,11 @@ pub trait App {
 
     fn installed_version_flag(&self) -> &str { "--version" }
 
-    /// Index into the whitespace-split output of `<exe> --version`.
-    /// Negative means from the end (Python-style).
-    fn installed_version_word_index(&self) -> isize { -1 }
-
     fn released_version(&self) -> Result<AppVersion>;
     fn download(&self) -> Result<DownloadedAssets>;
 
     fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
-        let normalized = data.replace(',', " ");
-        let words: Vec<&str> = normalized.split_whitespace().collect();
-        if words.is_empty() {
-            return None;
-        }
-        let idx = self.installed_version_word_index();
-        let word = if idx < 0 {
-            let abs = (-idx) as usize;
-            words.get(words.len().wrapping_sub(abs)).copied()?
-        } else {
-            words.get(idx as usize).copied()?
-        };
-        AppVersion::parse(word)
+        AppVersion::find_in(data)
     }
 
     fn installed_version(&self, prefix: &Path) -> Result<Option<AppVersion>> {
