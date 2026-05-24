@@ -4,5 +4,6 @@ pub mod gojq;
 pub mod jid;
 pub mod jq;
 pub mod jqp;
+pub mod rsv;
 pub mod xq;
 pub mod yq;

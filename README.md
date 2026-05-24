@@ -121,6 +121,7 @@ for the full list of caveats.
 - [jid](https://github.com/simeji/jid)
 - [jq](https://github.com/jqlang/jq)
 - [jqp](https://github.com/noahgorstein/jqp)
+- [rsv](https://github.com/ribbondz/rsv)
 - [xq](https://github.com/sibprogrammer/xq)
 - [yq](https://github.com/mikefarah/yq)
 

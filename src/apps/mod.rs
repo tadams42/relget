@@ -274,6 +274,11 @@ pub fn all_app_entries() -> Vec<AppEntry> {
             category: "files",
         },
         AppEntry {
+            id:       "rsv",
+            url:      "https://github.com/ribbondz/rsv",
+            category: "data",
+        },
+        AppEntry {
             id:       "rust-analyzer",
             url:      "https://github.com/rust-lang/rust-analyzer",
             category: "dev_tools",
@@ -378,6 +383,7 @@ pub fn create_app(
         "rclone" => Some(Box::new(rclone::Rclone::new(client))),
         "restish" => Some(Box::new(http::restish::Restish::new(client))),
         "rg" => Some(Box::new(files::ripgrep::Ripgrep::new(client))),
+        "rsv" => Some(Box::new(data::rsv::Rsv::new(client))),
         "rust-analyzer" => Some(Box::new(dev_tools::rust_analyzer::RustAnalyzer::new(client))),
         "sd" => Some(Box::new(files::sd_edit::SdEdit::new(client))),
         "sk" => Some(Box::new(shell::skim::Skim::new(client))),
