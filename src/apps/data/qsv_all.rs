@@ -52,7 +52,7 @@ impl App for QsvAll {
                 Some(f) => f.to_string_lossy().into_owned(),
                 None => continue,
             };
-            if fname.starts_with("qsvpy") {
+            if fname.starts_with("qsvpy") && !fname.contains('.') {
                 let data = extractor.extract(member)?;
                 other_bins.push(AppBinary::new(fname, data));
             }
