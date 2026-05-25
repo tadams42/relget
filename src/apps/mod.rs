@@ -79,8 +79,7 @@ pub struct AppEntry {
     pub description: &'static str,
 }
 
-pub fn all_app_entries() -> Vec<AppEntry> {
-    vec![
+static ALL_APP_ENTRIES: &[AppEntry] = &[
         AppEntry {
             id:          "aqua",
             url:         dev_envs::aqua::Aqua::URL,
@@ -375,8 +374,9 @@ pub fn all_app_entries() -> Vec<AppEntry> {
             category:    "shell",
             description: shell::zoxide::Zoxide::DESCRIPTION,
         },
-    ]
-}
+];
+
+pub fn all_app_entries() -> &'static [AppEntry] { ALL_APP_ENTRIES }
 
 pub fn create_app(
     id: &str, gh_token: Option<String>, cb_token: Option<String>, offline: bool,

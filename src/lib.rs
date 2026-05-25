@@ -17,7 +17,7 @@ use uninstaller::uninstall_app;
 pub const DEFAULT_PREFIX: &str = "/usr/local";
 
 pub fn known_apps_identifiers() -> Vec<&'static str> {
-    let mut ids: Vec<&'static str> = all_app_entries().into_iter().map(|e| e.id).collect();
+    let mut ids: Vec<&'static str> = all_app_entries().iter().map(|e| e.id).collect();
     ids.sort_unstable();
     ids
 }
@@ -76,7 +76,7 @@ pub fn uninstall_apps(prefix: &Path, selected: &[String]) -> Result<Vec<PathBuf>
     Ok(removed)
 }
 
-pub fn load_github_token(source: &str) -> Result<Option<String>> {
+pub fn resolve_github_token(source: &str) -> Result<Option<String>> {
     match source {
         "prompt" => {
             let token = rpassword::prompt_password("GitHub API token (leave empty to skip): ")
@@ -105,7 +105,7 @@ pub fn load_github_token(source: &str) -> Result<Option<String>> {
     }
 }
 
-pub fn load_codeberg_token(source: &str) -> Result<Option<String>> {
+pub fn resolve_codeberg_token(source: &str) -> Result<Option<String>> {
     match source {
         "prompt" => {
             let token = rpassword::prompt_password("Codeberg API token (leave empty to skip): ")
