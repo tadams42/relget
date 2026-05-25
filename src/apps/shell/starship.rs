@@ -19,11 +19,12 @@ impl Starship {
     pub const URL: &'static str = "https://github.com/starship/starship";
     const OWNER: &'static str = "starship";
     const REPO: &'static str = "starship";
+    const EXE_NAME: &'static str = "starship";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Starship {
-    fn exe_name(&self) -> &str { "starship" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

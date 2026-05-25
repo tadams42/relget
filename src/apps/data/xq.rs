@@ -18,11 +18,12 @@ impl Xq {
     pub const URL: &'static str = "https://github.com/sibprogrammer/xq";
     const OWNER: &'static str = "sibprogrammer";
     const REPO: &'static str = "xq";
+    const EXE_NAME: &'static str = "xq";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Xq {
-    fn exe_name(&self) -> &str { "xq" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

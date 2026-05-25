@@ -18,11 +18,12 @@ impl Gitleaks {
     pub const URL: &'static str = "https://github.com/gitleaks/gitleaks";
     const OWNER: &'static str = "gitleaks";
     const REPO: &'static str = "gitleaks";
+    const EXE_NAME: &'static str = "gitleaks";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Gitleaks {
-    fn exe_name(&self) -> &str { "gitleaks" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

@@ -18,11 +18,12 @@ impl Mergiraf {
     const OWNER: &'static str = "mergiraf";
     const REPO: &'static str = "mergiraf";
 
+    const EXE_NAME: &'static str = "mergiraf";
     pub fn new(client: Arc<CodebergClient>) -> Self { Self { client } }
 }
 
 impl App for Mergiraf {
-    fn exe_name(&self) -> &str { "mergiraf" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

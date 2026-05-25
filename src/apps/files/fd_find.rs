@@ -18,11 +18,12 @@ impl FdFind {
     pub const URL: &'static str = "https://github.com/sharkdp/fd";
     const OWNER: &'static str = "sharkdp";
     const REPO: &'static str = "fd";
+    const EXE_NAME: &'static str = "fd";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for FdFind {
-    fn exe_name(&self) -> &str { "fd" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

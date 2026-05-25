@@ -18,12 +18,14 @@ impl Mise {
     pub const URL: &'static str = "https://github.com/jdx/mise";
     const OWNER: &'static str = "jdx";
     const REPO: &'static str = "mise";
+    const EXE_NAME: &'static str = "mise";
+    const VERSION_ARG: &'static str = "version";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Mise {
-    fn exe_name(&self) -> &str { "mise" }
-    fn installed_version_flag(&self) -> &str { "version" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
+    fn cli_version_arg(&self) -> &str { Self::VERSION_ARG }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

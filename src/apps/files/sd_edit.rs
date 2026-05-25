@@ -17,11 +17,12 @@ impl SdEdit {
     pub const URL: &'static str = "https://github.com/chmln/sd";
     const OWNER: &'static str = "chmln";
     const REPO: &'static str = "sd";
+    const EXE_NAME: &'static str = "sd";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for SdEdit {
-    fn exe_name(&self) -> &str { "sd" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     // NOTE: sd v1.1.0 has an upstream packaging bug — the binary inside the release
     // tarball reports "sd 1.0.0" regardless of the actual release tag. This causes

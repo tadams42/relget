@@ -19,17 +19,16 @@ pub mod shell;
 
 // ── App trait ────────────────────────────────────────────────────────────────
 
+const DEFAULT_VERSION_ARG: &str = "--version";
+
 pub trait App {
     fn exe_name(&self) -> &str;
 
-    fn installed_version_flag(&self) -> &str { "--version" }
+    fn cli_version_arg(&self) -> &str { DEFAULT_VERSION_ARG }
 
     fn released_version(&self) -> Result<AppVersion>;
-    fn download(&self) -> Result<DownloadedAssets>;
 
-    fn parse_installed_version(&self, data: &str) -> Option<AppVersion> {
-        AppVersion::find_in(data)
-    }
+    fn download(&self) -> Result<DownloadedAssets>;
 
     fn installed_version(&self, prefix: &Path) -> Result<Option<AppVersion>> {
         let bin = prefix.join("bin").join(self.exe_name());
@@ -37,7 +36,7 @@ pub trait App {
             return Ok(None);
         }
         let out = std::process::Command::new(&bin)
-            .arg(self.installed_version_flag())
+            .arg(self.cli_version_arg())
             .output();
         match out {
             Err(_) => Ok(None),
@@ -45,7 +44,7 @@ pub trait App {
                 let stdout = String::from_utf8_lossy(&o.stdout);
                 let stderr = String::from_utf8_lossy(&o.stderr);
                 let combined = format!("{}{}", stdout, stderr);
-                Ok(self.parse_installed_version(&combined))
+                Ok(AppVersion::find_in(&combined))
             }
         }
     }

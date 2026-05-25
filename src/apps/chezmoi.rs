@@ -18,11 +18,12 @@ impl Chezmoi {
     pub const URL: &'static str = "https://github.com/twpayne/chezmoi";
     const OWNER: &'static str = "twpayne";
     const REPO: &'static str = "chezmoi";
+    const EXE_NAME: &'static str = "chezmoi";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Chezmoi {
-    fn exe_name(&self) -> &str { "chezmoi" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

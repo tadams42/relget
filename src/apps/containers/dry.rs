@@ -15,11 +15,12 @@ impl Dry {
     pub const URL: &'static str = "https://github.com/moncho/dry";
     const OWNER: &'static str = "moncho";
     const REPO: &'static str = "dry";
+    const EXE_NAME: &'static str = "dry";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Dry {
-    fn exe_name(&self) -> &str { "dry" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

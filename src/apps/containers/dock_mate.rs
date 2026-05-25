@@ -15,11 +15,12 @@ impl DockMate {
     pub const URL: &'static str = "https://github.com/shubh-io/DockMate";
     const OWNER: &'static str = "shubh-io";
     const REPO: &'static str = "DockMate";
+    const EXE_NAME: &'static str = "dockmate";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for DockMate {
-    fn exe_name(&self) -> &str { "dockmate" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

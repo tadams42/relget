@@ -17,11 +17,12 @@ impl Jid {
     pub const URL: &'static str = "https://github.com/simeji/jid";
     const OWNER: &'static str = "simeji";
     const REPO: &'static str = "jid";
+    const EXE_NAME: &'static str = "jid";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Jid {
-    fn exe_name(&self) -> &str { "jid" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

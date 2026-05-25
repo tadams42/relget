@@ -22,11 +22,12 @@ impl QsvAll {
     pub const DESCRIPTION: &'static str =
         "High-performance CSV data-wrangling toolkit (all variants)";
     pub const URL: &'static str = "https://github.com/dathere/qsv";
+    const EXE_NAME: &'static str = "qsv";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for QsvAll {
-    fn exe_name(&self) -> &str { "qsv" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client.latest_release(OWNER, REPO)?.version()

@@ -19,11 +19,12 @@ impl Yq {
     pub const URL: &'static str = "https://github.com/mikefarah/yq";
     const OWNER: &'static str = "mikefarah";
     const REPO: &'static str = "yq";
+    const EXE_NAME: &'static str = "yq";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Yq {
-    fn exe_name(&self) -> &str { "yq" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

@@ -18,11 +18,12 @@ impl Ripgrep {
     pub const URL: &'static str = "https://github.com/BurntSushi/ripgrep";
     const OWNER: &'static str = "BurntSushi";
     const REPO: &'static str = "ripgrep";
+    const EXE_NAME: &'static str = "rg";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Ripgrep {
-    fn exe_name(&self) -> &str { "rg" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

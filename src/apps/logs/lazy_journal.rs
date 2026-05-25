@@ -15,11 +15,12 @@ impl LazyJournal {
     pub const URL: &'static str = "https://github.com/Lifailon/lazyjournal";
     const OWNER: &'static str = "Lifailon";
     const REPO: &'static str = "lazyjournal";
+    const EXE_NAME: &'static str = "lazyjournal";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for LazyJournal {
-    fn exe_name(&self) -> &str { "lazyjournal" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

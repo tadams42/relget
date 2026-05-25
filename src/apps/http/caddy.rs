@@ -18,12 +18,14 @@ impl Caddy {
     pub const URL: &'static str = "https://github.com/caddyserver/caddy";
     const OWNER: &'static str = "caddyserver";
     const REPO: &'static str = "caddy";
+    const EXE_NAME: &'static str = "caddy";
+    const VERSION_ARG: &'static str = "version";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Caddy {
-    fn exe_name(&self) -> &str { "caddy" }
-    fn installed_version_flag(&self) -> &str { "version" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
+    fn cli_version_arg(&self) -> &str { Self::VERSION_ARG }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

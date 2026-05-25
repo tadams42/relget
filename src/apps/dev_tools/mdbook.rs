@@ -18,11 +18,12 @@ impl Mdbook {
     pub const URL: &'static str = "https://github.com/rust-lang/mdBook";
     const OWNER: &'static str = "rust-lang";
     const REPO: &'static str = "mdBook";
+    const EXE_NAME: &'static str = "mdbook";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Mdbook {
-    fn exe_name(&self) -> &str { "mdbook" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

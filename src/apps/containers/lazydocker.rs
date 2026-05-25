@@ -17,11 +17,12 @@ impl LazyDocker {
     pub const URL: &'static str = "https://github.com/jesseduffield/lazydocker";
     const OWNER: &'static str = "jesseduffield";
     const REPO: &'static str = "lazydocker";
+    const EXE_NAME: &'static str = "lazydocker";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for LazyDocker {
-    fn exe_name(&self) -> &str { "lazydocker" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

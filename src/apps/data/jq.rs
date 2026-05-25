@@ -17,11 +17,12 @@ impl Jq {
     pub const URL: &'static str = "https://github.com/jqlang/jq";
     const OWNER: &'static str = "jqlang";
     const REPO: &'static str = "jq";
+    const EXE_NAME: &'static str = "jq";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Jq {
-    fn exe_name(&self) -> &str { "jq" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

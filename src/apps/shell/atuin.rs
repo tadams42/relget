@@ -18,11 +18,12 @@ impl Atuin {
     pub const URL: &'static str = "https://github.com/atuinsh/atuin";
     const OWNER: &'static str = "atuinsh";
     const REPO: &'static str = "atuin";
+    const EXE_NAME: &'static str = "atuin";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Atuin {
-    fn exe_name(&self) -> &str { "atuin" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

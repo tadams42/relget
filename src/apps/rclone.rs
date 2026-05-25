@@ -18,12 +18,14 @@ impl Rclone {
     pub const URL: &'static str = "https://github.com/rclone/rclone";
     const OWNER: &'static str = "rclone";
     const REPO: &'static str = "rclone";
+    const EXE_NAME: &'static str = "rclone";
+    const VERSION_ARG: &'static str = "version";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Rclone {
-    fn exe_name(&self) -> &str { "rclone" }
-    fn installed_version_flag(&self) -> &str { "version" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
+    fn cli_version_arg(&self) -> &str { Self::VERSION_ARG }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

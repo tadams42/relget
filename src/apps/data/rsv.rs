@@ -17,11 +17,12 @@ impl Rsv {
     pub const URL: &'static str = "https://github.com/ribbondz/rsv";
     const OWNER: &'static str = "ribbondz";
     const REPO: &'static str = "rsv";
+    const EXE_NAME: &'static str = "rsv";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Rsv {
-    fn exe_name(&self) -> &str { "rsv" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

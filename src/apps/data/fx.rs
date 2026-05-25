@@ -15,11 +15,12 @@ impl Fx {
     pub const URL: &'static str = "https://github.com/antonmedv/fx";
     const OWNER: &'static str = "antonmedv";
     const REPO: &'static str = "fx";
+    const EXE_NAME: &'static str = "fx";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Fx {
-    fn exe_name(&self) -> &str { "fx" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

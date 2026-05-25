@@ -18,11 +18,12 @@ impl Bat {
     pub const URL: &'static str = "https://github.com/sharkdp/bat";
     const OWNER: &'static str = "sharkdp";
     const REPO: &'static str = "bat";
+    const EXE_NAME: &'static str = "bat";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Bat {
-    fn exe_name(&self) -> &str { "bat" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

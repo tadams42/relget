@@ -17,11 +17,12 @@ impl Stylua {
     pub const URL: &'static str = "https://github.com/JohnnyMorganz/stylua";
     const OWNER: &'static str = "JohnnyMorganz";
     const REPO: &'static str = "stylua";
+    const EXE_NAME: &'static str = "stylua";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Stylua {
-    fn exe_name(&self) -> &str { "stylua" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

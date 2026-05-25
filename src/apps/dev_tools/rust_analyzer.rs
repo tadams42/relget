@@ -16,11 +16,12 @@ impl RustAnalyzer {
     pub const URL: &'static str = "https://github.com/rust-lang/rust-analyzer";
     const OWNER: &'static str = "rust-lang";
     const REPO: &'static str = "rust-analyzer";
+    const EXE_NAME: &'static str = "rust-analyzer";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for RustAnalyzer {
-    fn exe_name(&self) -> &str { "rust-analyzer" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;

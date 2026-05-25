@@ -17,11 +17,12 @@ impl Xh {
     pub const URL: &'static str = "https://github.com/ducaale/xh";
     const OWNER: &'static str = "ducaale";
     const REPO: &'static str = "xh";
+    const EXE_NAME: &'static str = "xh";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Xh {
-    fn exe_name(&self) -> &str { "xh" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

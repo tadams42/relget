@@ -18,11 +18,12 @@ impl Zoxide {
     pub const URL: &'static str = "https://github.com/ajeetdsouza/zoxide";
     const OWNER: &'static str = "ajeetdsouza";
     const REPO: &'static str = "zoxide";
+    const EXE_NAME: &'static str = "zoxide";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Zoxide {
-    fn exe_name(&self) -> &str { "zoxide" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

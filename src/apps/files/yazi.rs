@@ -113,11 +113,12 @@ impl Yazi {
     pub const URL: &'static str = "https://github.com/sxyazi/yazi";
     const OWNER: &'static str = "sxyazi";
     const REPO: &'static str = "yazi";
+    const EXE_NAME: &'static str = "yazi";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Yazi {
-    fn exe_name(&self) -> &str { "yazi" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

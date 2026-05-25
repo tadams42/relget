@@ -19,11 +19,12 @@ impl Delta {
     pub const URL: &'static str = "https://github.com/dandavison/delta";
     const OWNER: &'static str = "dandavison";
     const REPO: &'static str = "delta";
+    const EXE_NAME: &'static str = "delta";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Delta {
-    fn exe_name(&self) -> &str { "delta" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

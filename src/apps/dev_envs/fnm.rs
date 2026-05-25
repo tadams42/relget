@@ -18,11 +18,12 @@ impl Fnm {
     pub const URL: &'static str = "https://github.com/Schniz/fnm";
     const OWNER: &'static str = "Schniz";
     const REPO: &'static str = "fnm";
+    const EXE_NAME: &'static str = "fnm";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Fnm {
-    fn exe_name(&self) -> &str { "fnm" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

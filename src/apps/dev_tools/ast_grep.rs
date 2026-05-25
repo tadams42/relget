@@ -19,11 +19,12 @@ impl AstGrep {
     pub const URL: &'static str = "https://github.com/ast-grep/ast-grep";
     const OWNER: &'static str = "ast-grep";
     const REPO: &'static str = "ast-grep";
+    const EXE_NAME: &'static str = "ast-grep";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for AstGrep {
-    fn exe_name(&self) -> &str { "ast-grep" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

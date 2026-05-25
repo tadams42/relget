@@ -18,12 +18,14 @@ impl Dasel {
     pub const URL: &'static str = "https://github.com/TomWright/dasel";
     const OWNER: &'static str = "TomWright";
     const REPO: &'static str = "dasel";
+    const EXE_NAME: &'static str = "dasel";
+    const VERSION_ARG: &'static str = "version";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Dasel {
-    fn exe_name(&self) -> &str { "dasel" }
-    fn installed_version_flag(&self) -> &str { "version" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
+    fn cli_version_arg(&self) -> &str { Self::VERSION_ARG }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

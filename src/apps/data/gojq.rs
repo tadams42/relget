@@ -17,11 +17,12 @@ impl GoJq {
     pub const URL: &'static str = "https://github.com/itchyny/gojq";
     const OWNER: &'static str = "itchyny";
     const REPO: &'static str = "gojq";
+    const EXE_NAME: &'static str = "gojq";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for GoJq {
-    fn exe_name(&self) -> &str { "gojq" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

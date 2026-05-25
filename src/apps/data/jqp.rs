@@ -17,11 +17,12 @@ impl Jqp {
     pub const URL: &'static str = "https://github.com/noahgorstein/jqp";
     const OWNER: &'static str = "noahgorstein";
     const REPO: &'static str = "jqp";
+    const EXE_NAME: &'static str = "jqp";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Jqp {
-    fn exe_name(&self) -> &str { "jqp" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

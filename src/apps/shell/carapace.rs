@@ -17,11 +17,12 @@ impl Carapace {
     pub const URL: &'static str = "https://github.com/carapace-sh/carapace-bin";
     const OWNER: &'static str = "carapace-sh";
     const REPO: &'static str = "carapace-bin";
+    const EXE_NAME: &'static str = "carapace";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Carapace {
-    fn exe_name(&self) -> &str { "carapace" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

@@ -18,11 +18,12 @@ impl Skim {
     pub const URL: &'static str = "https://github.com/skim-rs/skim";
     const OWNER: &'static str = "skim-rs";
     const REPO: &'static str = "skim";
+    const EXE_NAME: &'static str = "sk";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Skim {
-    fn exe_name(&self) -> &str { "sk" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

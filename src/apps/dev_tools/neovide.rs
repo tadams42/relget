@@ -18,11 +18,12 @@ impl Neovide {
     const OWNER: &'static str = "neovide";
     const REPO: &'static str = "neovide";
     const FALLBACK_VERSION: &'static str = "0.15.2";
+    const EXE_NAME: &'static str = "neovide";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Neovide {
-    fn exe_name(&self) -> &str { "neovide" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client
@@ -36,7 +37,7 @@ impl App for Neovide {
             return Ok(None);
         }
         let out = std::process::Command::new(&bin)
-            .arg(self.installed_version_flag())
+            .arg(self.cli_version_arg())
             .output();
         match out {
             Err(_) => Ok(Some(AppVersion::parse(Self::FALLBACK_VERSION).unwrap())),
@@ -51,7 +52,7 @@ impl App for Neovide {
                 let text = String::from_utf8_lossy(&o.stdout);
                 let text2 = String::from_utf8_lossy(&o.stderr);
                 let combined = format!("{}{}", text, text2);
-                Ok(self.parse_installed_version(&combined))
+                Ok(AppVersion::find_in(&combined))
             }
         }
     }

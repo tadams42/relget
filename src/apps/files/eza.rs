@@ -18,11 +18,12 @@ impl Eza {
     pub const URL: &'static str = "https://github.com/eza-community/eza";
     const OWNER: &'static str = "eza-community";
     const REPO: &'static str = "eza";
+    const EXE_NAME: &'static str = "eza";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Eza {
-    fn exe_name(&self) -> &str { "eza" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

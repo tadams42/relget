@@ -17,11 +17,12 @@ impl Difftastic {
     pub const URL: &'static str = "https://github.com/Wilfred/difftastic";
     const OWNER: &'static str = "Wilfred";
     const REPO: &'static str = "difftastic";
+    const EXE_NAME: &'static str = "difft";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Difftastic {
-    fn exe_name(&self) -> &str { "difft" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

@@ -18,11 +18,12 @@ impl Gonzo {
     pub const URL: &'static str = "https://github.com/control-theory/gonzo";
     const OWNER: &'static str = "control-theory";
     const REPO: &'static str = "gonzo";
+    const EXE_NAME: &'static str = "gonzo";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Gonzo {
-    fn exe_name(&self) -> &str { "gonzo" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

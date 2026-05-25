@@ -86,11 +86,12 @@ impl Dust {
     pub const URL: &'static str = "https://github.com/bootandy/dust";
     const OWNER: &'static str = "bootandy";
     const REPO: &'static str = "dust";
+    const EXE_NAME: &'static str = "dust";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Dust {
-    fn exe_name(&self) -> &str { "dust" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client

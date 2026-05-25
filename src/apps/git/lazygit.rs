@@ -17,11 +17,12 @@ impl Lazygit {
     pub const URL: &'static str = "https://github.com/jesseduffield/lazygit";
     const OWNER: &'static str = "jesseduffield";
     const REPO: &'static str = "lazygit";
+    const EXE_NAME: &'static str = "lazygit";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }
 
 impl App for Lazygit {
-    fn exe_name(&self) -> &str { "lazygit" }
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client
