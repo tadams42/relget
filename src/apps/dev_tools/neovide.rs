@@ -13,6 +13,7 @@ pub struct Neovide {
 }
 
 impl Neovide {
+    pub const ID: &'static str = "neovide";
     pub const DESCRIPTION: &'static str = "GPU-accelerated GUI frontend for Neovim";
     pub const URL: &'static str = "https://github.com/neovide/neovide";
     const OWNER: &'static str = "neovide";

@@ -13,6 +13,7 @@ pub struct Mergiraf {
 }
 
 impl Mergiraf {
+    pub const ID: &'static str = "mergiraf";
     pub const DESCRIPTION: &'static str = "Syntax-aware merge driver for git";
     pub const URL: &'static str = "https://codeberg.org/mergiraf/mergiraf";
     const OWNER: &'static str = "mergiraf";

@@ -13,6 +13,7 @@ pub struct SdEdit {
 }
 
 impl SdEdit {
+    pub const ID: &'static str = "sd";
     pub const DESCRIPTION: &'static str = "Intuitive find-and-replace command, a sed alternative";
     pub const URL: &'static str = "https://github.com/chmln/sd";
     const OWNER: &'static str = "chmln";

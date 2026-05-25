@@ -13,6 +13,7 @@ pub struct Difftastic {
 }
 
 impl Difftastic {
+    pub const ID: &'static str = "difftastic";
     pub const DESCRIPTION: &'static str = "Structural diff tool that understands code syntax";
     pub const URL: &'static str = "https://github.com/Wilfred/difftastic";
     const OWNER: &'static str = "Wilfred";

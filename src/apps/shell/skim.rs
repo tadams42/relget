@@ -14,6 +14,7 @@ pub struct Skim {
 }
 
 impl Skim {
+    pub const ID: &'static str = "skim";
     pub const DESCRIPTION: &'static str = "Fuzzy finder in Rust (skim)";
     pub const URL: &'static str = "https://github.com/skim-rs/skim";
     const OWNER: &'static str = "skim-rs";

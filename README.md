@@ -148,14 +148,14 @@ for the full list of caveats.
 - [dust](https://github.com/bootandy/dust) — Intuitive disk usage visualizer, a du alternative
 - [eza](https://github.com/eza-community/eza) — Modern replacement for ls with icons and git integration
 - [fd](https://github.com/sharkdp/fd) — Simple, fast, user-friendly alternative to find
-- [rg](https://github.com/BurntSushi/ripgrep) — Recursive regex search, a faster grep (ripgrep)
+- [ripgrep](https://github.com/BurntSushi/ripgrep) — Recursive regex search, a faster grep (ripgrep)
 - [sd](https://github.com/chmln/sd) — Intuitive find-and-replace command, a sed alternative
 - [yazi](https://github.com/sxyazi/yazi) — Blazing fast terminal file manager with asynchronous I/O
 
 ### Git
 
 - [delta](https://github.com/dandavison/delta) — Syntax-highlighting pager for git, diff, and grep output
-- [difft](https://github.com/Wilfred/difftastic) — Structural diff tool that understands code syntax
+- [difftastic](https://github.com/Wilfred/difftastic) — Structural diff tool that understands code syntax
 - [gitleaks](https://github.com/gitleaks/gitleaks) — Detect secrets and sensitive data in git repositories
 - [lazygit](https://github.com/jesseduffield/lazygit) — Simple terminal UI for git commands
 - [mergiraf](https://codeberg.org/mergiraf/mergiraf) — Syntax-aware merge driver for git
@@ -181,7 +181,7 @@ for the full list of caveats.
 - [atuin](https://github.com/atuinsh/atuin) — Shell history search backed by SQLite with sync
 - [carapace](https://github.com/carapace-sh/carapace-bin) — Multi-shell completion generator for command-line tools
 - [fzf](https://github.com/junegunn/fzf) — General-purpose command-line fuzzy finder
-- [sk](https://github.com/skim-rs/skim) — Fuzzy finder in Rust (skim)
+- [skim](https://github.com/skim-rs/skim) — Fuzzy finder in Rust (skim)
 - [starship](https://github.com/starship/starship) — Minimal, blazing-fast, infinitely customizable shell prompt
 - [zoxide](https://github.com/ajeetdsouza/zoxide) — Smarter cd command with frecency-based directory jumping
 

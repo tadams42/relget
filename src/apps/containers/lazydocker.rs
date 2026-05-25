@@ -13,6 +13,7 @@ pub struct LazyDocker {
 }
 
 impl LazyDocker {
+    pub const ID: &'static str = "lazydocker";
     pub const DESCRIPTION: &'static str = "Terminal UI for Docker containers, images, and compose";
     pub const URL: &'static str = "https://github.com/jesseduffield/lazydocker";
     const OWNER: &'static str = "jesseduffield";

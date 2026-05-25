@@ -13,6 +13,7 @@ pub struct Jqp {
 }
 
 impl Jqp {
+    pub const ID: &'static str = "jqp";
     pub const DESCRIPTION: &'static str = "TUI playground for crafting jq queries";
     pub const URL: &'static str = "https://github.com/noahgorstein/jqp";
     const OWNER: &'static str = "noahgorstein";

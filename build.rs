@@ -82,7 +82,9 @@ fn parse_app_entries(manifest_dir: &Path, content: &str) -> Vec<(String, String,
     for line in content.lines() {
         let line = line.trim();
         if line.starts_with("AppEntry {") {
-            let id = extract_quoted_field(line, "id:");
+            let id = extract_quoted_field(line, "id:").or_else(|| {
+                extract_path_field(line, "id:").and_then(|p| resolve_const(manifest_dir, &p, "ID"))
+            });
             let url = extract_path_field(line, "url:")
                 .and_then(|p| resolve_const(manifest_dir, &p, "URL"));
             let cat = extract_quoted_field(line, "category:");
@@ -97,7 +99,10 @@ fn parse_app_entries(manifest_dir: &Path, content: &str) -> Vec<(String, String,
             }
         } else if let Some((ref mut id, ref mut url, ref mut cat, ref mut desc)) = pending {
             if id.is_none() {
-                *id = extract_quoted_field(line, "id:");
+                *id = extract_quoted_field(line, "id:").or_else(|| {
+                    extract_path_field(line, "id:")
+                        .and_then(|p| resolve_const(manifest_dir, &p, "ID"))
+                });
             }
             if url.is_none() {
                 *url = extract_path_field(line, "url:")

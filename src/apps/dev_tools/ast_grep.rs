@@ -14,6 +14,7 @@ pub struct AstGrep {
 }
 
 impl AstGrep {
+    pub const ID: &'static str = "ast-grep";
     pub const DESCRIPTION: &'static str =
         "Fast code search, lint, and rewriting using AST patterns";
     pub const URL: &'static str = "https://github.com/ast-grep/ast-grep";

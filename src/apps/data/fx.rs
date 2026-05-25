@@ -11,6 +11,7 @@ pub struct Fx {
 }
 
 impl Fx {
+    pub const ID: &'static str = "fx";
     pub const DESCRIPTION: &'static str = "Terminal JSON viewer and interactive processor";
     pub const URL: &'static str = "https://github.com/antonmedv/fx";
     const OWNER: &'static str = "antonmedv";

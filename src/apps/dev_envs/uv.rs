@@ -14,6 +14,7 @@ pub struct Uv {
 }
 
 impl Uv {
+    pub const ID: &'static str = "uv";
     pub const DESCRIPTION: &'static str = "Extremely fast Python package and project manager";
     pub const URL: &'static str = "https://github.com/astral-sh/uv";
     const OWNER: &'static str = "astral-sh";

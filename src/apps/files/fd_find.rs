@@ -14,6 +14,7 @@ pub struct FdFind {
 }
 
 impl FdFind {
+    pub const ID: &'static str = "fd";
     pub const DESCRIPTION: &'static str = "Simple, fast, user-friendly alternative to find";
     pub const URL: &'static str = "https://github.com/sharkdp/fd";
     const OWNER: &'static str = "sharkdp";

@@ -12,6 +12,7 @@ pub struct RustAnalyzer {
 }
 
 impl RustAnalyzer {
+    pub const ID: &'static str = "rust-analyzer";
     pub const DESCRIPTION: &'static str = "Rust language server providing IDE integration";
     pub const URL: &'static str = "https://github.com/rust-lang/rust-analyzer";
     const OWNER: &'static str = "rust-lang";

@@ -14,6 +14,7 @@ pub struct Restish {
 }
 
 impl Restish {
+    pub const ID: &'static str = "restish";
     pub const DESCRIPTION: &'static str = "CLI for interacting with REST-ish HTTP APIs";
     pub const URL: &'static str = "https://github.com/rest-sh/restish";
     const OWNER: &'static str = "rest-sh";

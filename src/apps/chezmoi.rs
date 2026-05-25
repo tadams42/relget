@@ -14,6 +14,7 @@ pub struct Chezmoi {
 }
 
 impl Chezmoi {
+    pub const ID: &'static str = "chezmoi";
     pub const DESCRIPTION: &'static str = "Dotfiles manager across multiple machines";
     pub const URL: &'static str = "https://github.com/twpayne/chezmoi";
     const OWNER: &'static str = "twpayne";

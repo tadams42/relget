@@ -11,6 +11,7 @@ pub struct DockMate {
 }
 
 impl DockMate {
+    pub const ID: &'static str = "dockmate";
     pub const DESCRIPTION: &'static str = "Terminal UI for managing Docker containers and images";
     pub const URL: &'static str = "https://github.com/shubh-io/DockMate";
     const OWNER: &'static str = "shubh-io";

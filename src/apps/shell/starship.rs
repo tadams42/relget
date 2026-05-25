@@ -14,6 +14,7 @@ pub struct Starship {
 }
 
 impl Starship {
+    pub const ID: &'static str = "starship";
     pub const DESCRIPTION: &'static str =
         "Minimal, blazing-fast, infinitely customizable shell prompt";
     pub const URL: &'static str = "https://github.com/starship/starship";

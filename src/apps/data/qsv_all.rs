@@ -19,6 +19,7 @@ pub struct QsvAll {
 }
 
 impl QsvAll {
+    pub const ID: &'static str = "qsv-all";
     pub const DESCRIPTION: &'static str =
         "High-performance CSV data-wrangling toolkit (all variants)";
     pub const URL: &'static str = "https://github.com/dathere/qsv";
