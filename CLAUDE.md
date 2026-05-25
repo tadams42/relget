@@ -10,6 +10,10 @@ cargo run -- --help
 cargo run -- --apps rg --gh-token-source load
 cargo run -- --apps rg,bat --gh-token-source load   # comma-separated
 cargo run -- list-apps-ids
+cargo run -- completions zsh
+cargo run -- uninstall --apps rg
+cargo run -- reinstall --apps rg
+cargo run -- --offline                              # use only cached data
 ```
 
 Use `--prefix /tmp/try-relget/` to avoid needing `sudo` during local testing.
@@ -18,23 +22,37 @@ Use `--prefix /tmp/try-relget/` to avoid needing `sudo` during local testing.
 
 ```
 src/
-  main.rs          # clap CLI: --prefix, --apps, --gh-token-source, --cb-token-source, --minimal-set
-  lib.rs           # public API: install_apps(), select_apps(), load_github_token(), load_codeberg_token()
+  main.rs          # entry point: env_logger init, dispatches to lib functions
+  cli.rs           # clap CLI structs: Cli, Commands (ListAppsIds, Completions, Uninstall, Reinstall)
+  lib.rs           # public API: install_apps(), uninstall_apps(), select_apps(),
+                   #   resolve_github_token(), resolve_codeberg_token(),
+                   #   known_apps_identifiers(), MINIMAL_SET
   apps/
-    mod.rs         # App trait + all_app_entries() registry + create_app() factory
-    *.rs           # one file per app
+    mod.rs         # App trait + ALL_APP_ENTRIES static slice + all_app_entries() + create_app()
+    chezmoi.rs     # top-level app file (not categorized into a subdir)
+    rclone.rs      # top-level app file
+    containers/    # d4s, dock_mate, dry, lazydocker
+    data/          # dasel, fx, gojq, jid, jq, jqp, qsv, qsv_all, rsv, xq, yq
+    dev_envs/      # aqua, fnm, go, mise, uv
+    dev_tools/     # ast_grep, mdbook, neovide, rust_analyzer, stylua
+    files/         # bat, dust, eza, fd_find, ripgrep, sd_edit, yazi
+    git/           # delta, difftastic, gitleaks, lazygit, mergiraf
+    http/          # caddy, restish, xh
+    logs/          # gonzo, lazy_journal
+    shell/         # atuin, carapace, fzf, skim, starship, zoxide
   github.rs        # GithubClient with singleton Lazy<Mutex<GhCache>>
   codeberg.rs      # CodebergClient with singleton Lazy<Mutex<GhCache>>
   cache.rs         # GhCache: memory HashMap + disk under ~/.cache/relget/
   archive.rs       # ArchiveExtractor: .tar.gz/.tar.bz2/.tar.xz/.tar/.zip/.deb/.gz
   installer.rs     # install_assets(), with_temp_exe(), run_cmd(), gen_completions_*()
+  uninstaller.rs   # uninstall_app(): removes binary, completions, man pages
   types.rs         # AppBinary, ManPage, Shell, Completion, DownloadedAssets
-  version.rs       # AppVersion(u64, u64, u64) with parse(), Display, Ord
+  version.rs       # AppVersion(u64, u64, u64) with find_in(), parse(), Display, Ord
 ```
 
 ## Adding a new GitHub app
 
-1. Create `src/apps/myapp.rs` implementing the `App` trait:
+1. Create `src/apps/<category>/myapp.rs` implementing the `App` trait:
 
 ```rust
 use std::sync::Arc;
@@ -42,11 +60,13 @@ use crate::apps::App;
 use crate::github::GithubClient;
 use crate::types::{AppBinary, DownloadedAssets};
 use crate::version::AppVersion;
-use anyhow::Result;
+use anyhow::{Result, anyhow};
 
 pub struct MyApp { client: Arc<GithubClient> }
 
 impl MyApp {
+    pub const URL: &'static str = "https://github.com/owner/repo";
+    pub const DESCRIPTION: &'static str = "Short description of the tool";
     const OWNER: &'static str = "owner";
     const REPO: &'static str = "repo";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
@@ -54,7 +74,6 @@ impl MyApp {
 
 impl App for MyApp {
     fn exe_name(&self) -> &str { "myapp" }
-    fn url(&self) -> &str { "https://github.com/owner/repo" }
 
     fn released_version(&self) -> Result<AppVersion> {
         self.client.latest_release(Self::OWNER, Self::REPO)?.version()
@@ -64,7 +83,7 @@ impl App for MyApp {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release.asset_names().into_iter()
             .find(|a| a.contains("x86_64") && a.contains("linux") && a.ends_with(".tar.gz"))
-            .ok_or_else(|| anyhow::anyhow!("Can't find asset"))?;
+            .ok_or_else(|| anyhow!("Can't find asset"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         // extract binary from archive, optionally generate completions
         Ok(DownloadedAssets { binary: Some(AppBinary::new("myapp", data)), ..Default::default() })
@@ -72,9 +91,10 @@ impl App for MyApp {
 }
 ```
 
-2. Register in `src/apps/mod.rs`:
-   - Add `pub mod myapp;`
-   - Add `AppEntry { id: "myapp", url: "https://github.com/owner/repo" }` to `all_app_entries()`
+2. Register in `src/apps/<category>/mod.rs`: add `pub mod myapp;`
+
+3. Register in `src/apps/mod.rs`:
+   - Add `AppEntry { id: "myapp", url: myapp::MyApp::URL, category: "<category>", description: myapp::MyApp::DESCRIPTION }` to `ALL_APP_ENTRIES`
    - Add `"myapp" => Some(Box::new(myapp::MyApp::new(client)))` to `create_app()`
 
 ## Adding a new Codeberg app
@@ -89,27 +109,29 @@ impl MyApp { pub fn new(client: Arc<CodebergClient>) -> Self { Self { client } }
 
 In `create_app()`:
 ```rust
-"myapp" => Some(Box::new(myapp::MyApp::new(Arc::new(CodebergClient::new(cb_token))))),
+"myapp" => Some(Box::new(myapp::MyApp::new(Arc::new(CodebergClient::new(cb_token, offline))))),
 ```
 
 ## App trait defaults
 
-- `installed_version_flag()` → `"--version"`
-- `installed_version_word_index()` → `-1` (last word of output)
-- `parse_installed_version()` uses the index above; override if the app's `--version` output is unusual
+- `cli_version_arg()` → `"--version"`
+- `installed_version()` runs `<exe> <cli_version_arg>`, combines stdout+stderr, calls `AppVersion::find_in()` on the result; override if the app's version output needs special handling
 - `install()` calls `needs_install()` → `download()` → `install_assets()`; only override `download()`
 
 ## Installer helpers
 
 ```rust
-// Generate completions by running `<exe> <subcommand> <shell>`:
-gen_completions_subcommand("myapp", &data, "completion")
+// Generate completions: `<exe> <subcommand> <shell>` (e.g. "starship completions zsh"):
+gen_completions_subcommand("myapp", &data, "completions")
 
-// Generate with a flag: `<exe> <subcommand> --<shell>`:
-gen_completions_shell_flag("myapp", &data, "completions", "zsh")
+// Generate completions: `<exe> <subcommand> <flag> <shell>` (e.g. "atuin gen-completions --shell zsh"):
+gen_completions_shell_flag("myapp", &data, "gen-completions", "--shell")
 
-// Arbitrary per-shell flags:
+// Generate completions with arbitrary per-shell flags (e.g. "--zsh", "--bash", "--fish"):
 gen_completions_with_flags("myapp", &data, "--zsh", "--bash", "--fish")
+
+// Generic: `<exe> [prefix_args...] <shell>` — basis for the helpers above:
+gen_completions_with_shell_arg("myapp", &data, &["subcommand"])
 
 // Run any command against a temp-installed binary:
 with_temp_exe("myapp", &data, |path| { ... })
@@ -117,12 +139,12 @@ with_temp_exe("myapp", &data, |path| { ... })
 
 ## Token handling
 
-- `--gh-token-source prompt`: prompts on stdin
+- `--gh-token-source prompt`: prompts on stdin (masked)
 - `--gh-token-source load` (default): reads `GITHUB_API_TOKEN` env, then `~/.config/github/api_token`
-- `--cb-token-source prompt`: prompts on stdin
+- `--cb-token-source prompt`: prompts on stdin (masked)
 - `--cb-token-source load` (default): reads `CODEBERG_API_TOKEN` env, then `~/.config/codeberg/api_token`
 
-`CodebergClient::new(token)` uses the provided token if `Some`, otherwise falls back to auto-loading from env/file.
+`CodebergClient::new(token, offline)` uses the provided token if `Some`, otherwise falls back to auto-loading from env/file.
 
 ## Cache
 
@@ -134,9 +156,9 @@ with_temp_exe("myapp", &data, |path| { ... })
 
 ## Special cases
 
-- `go.rs`: does not use GithubClient; downloads from go.dev, extracts a directory to `prefix/go/`, symlinks `prefix/bin/go`
-- `uv.rs`: installs two binaries (`uv` + `uvx`) and generates completions for both
-- Apps with man pages: `caddy`, `dasel`, `eza`, `rclone` — use `ManPage::new(section, filename, data)`
+- `dev_envs/go.rs`: does not use GithubClient; downloads a fixed version from go.dev, extracts a directory to `prefix/go/`, symlinks `prefix/bin/go`
+- `dev_envs/uv.rs`: installs two binaries (`uv` + `uvx`) and generates completions for both
+- Many apps include man pages — use `ManPage::new(section, filename, data)` in `DownloadedAssets`
 
 ## Code conventions
 
