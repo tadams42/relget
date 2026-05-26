@@ -156,6 +156,7 @@ for the full list of caveats.
 - [bat](https://github.com/sharkdp/bat) — cat clone with syntax highlighting and git integration
 - [dust](https://github.com/bootandy/dust) — Intuitive disk usage visualizer, a du alternative
 - [eza](https://github.com/eza-community/eza) — Modern replacement for ls with icons and git integration
+- [f2](https://github.com/ayoisaiah/f2) — Cross-platform batch file renaming tool
 - [fd](https://github.com/sharkdp/fd) — Simple, fast, user-friendly alternative to find
 - [ripgrep](https://github.com/BurntSushi/ripgrep) — Recursive regex search, a faster grep (ripgrep)
 - [sd](https://github.com/chmln/sd) — Intuitive find-and-replace command, a sed alternative
