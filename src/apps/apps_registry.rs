@@ -1,6 +1,6 @@
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
-use super::databases::{Pgplan, Usql};
+use super::databases::{Pgplan, Sabiql, Usql};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
@@ -295,6 +295,12 @@ static ALL_APP_ENTRIES: &[AppEntry] = &[
         url:         RustAnalyzer::URL,
         category:    "dev_tools",
         description: RustAnalyzer::DESCRIPTION,
+    },
+    AppEntry {
+        id:          Sabiql::ID,
+        url:         Sabiql::URL,
+        category:    "databases",
+        description: Sabiql::DESCRIPTION,
     },
     AppEntry {
         id:          Scc::ID,

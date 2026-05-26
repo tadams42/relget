@@ -138,6 +138,7 @@ for the full list of caveats.
 ### databases
 
 - [pgplan](https://github.com/JacobArthurs/pgplan) — CLI tool for visualizing and analyzing PostgreSQL query plans
+- [sabiql](https://github.com/riii111/sabiql) — TUI client for PostgreSQL databases
 - [usql](https://github.com/xo/usql) — Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases
 
 ### Dev envs
