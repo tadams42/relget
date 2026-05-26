@@ -11,6 +11,7 @@ use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
 use super::http::{Caddy, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal};
+use super::music::Spotatui;
 use super::other::{Chezmoi, Rclone};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
 
@@ -66,6 +67,7 @@ pub fn create_app(
         Scc::ID => Some(Box::new(Scc::new(client))),
         SdEdit::ID => Some(Box::new(SdEdit::new(client))),
         Skim::ID => Some(Box::new(Skim::new(client))),
+        Spotatui::ID => Some(Box::new(Spotatui::new(client))),
         Starship::ID => Some(Box::new(Starship::new(client))),
         Stylua::ID => Some(Box::new(Stylua::new(client))),
         Trash::ID => Some(Box::new(Trash::new(client))),

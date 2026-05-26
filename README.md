@@ -182,6 +182,10 @@ for the full list of caveats.
 - [gonzo](https://github.com/control-theory/gonzo) — Log viewer TUI for structured and plain-text logs
 - [lazyjournal](https://github.com/Lifailon/lazyjournal) — TUI for browsing systemd journal and Docker logs
 
+### music
+
+- [spotatui](https://github.com/LargeModGames/spotatui) — Terminal UI for Spotify
+
 ### Other
 
 - [chezmoi](https://github.com/twpayne/chezmoi) — Dotfiles manager across multiple machines

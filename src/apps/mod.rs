@@ -9,6 +9,7 @@ mod files;
 mod git;
 mod http;
 mod logs;
+mod music;
 mod other;
 mod shell;
 

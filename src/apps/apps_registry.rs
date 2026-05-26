@@ -6,6 +6,7 @@ use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
 use super::http::{Caddy, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal};
+use super::music::Spotatui;
 use super::other::{Chezmoi, Rclone};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
 
@@ -299,6 +300,12 @@ static ALL_APP_ENTRIES: &[AppEntry] = &[
         url:         Skim::URL,
         category:    "shell",
         description: Skim::DESCRIPTION,
+    },
+    AppEntry {
+        id:          Spotatui::ID,
+        url:         Spotatui::URL,
+        category:    "music",
+        description: Spotatui::DESCRIPTION,
     },
     AppEntry {
         id:          Starship::ID,
