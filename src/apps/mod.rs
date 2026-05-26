@@ -3,6 +3,7 @@ mod apps_factory;
 mod apps_registry;
 mod containers;
 mod data;
+mod databases;
 mod dev_envs;
 mod dev_tools;
 mod files;

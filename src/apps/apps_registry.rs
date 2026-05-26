@@ -1,5 +1,6 @@
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
+use super::databases::Usql;
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
@@ -336,6 +337,12 @@ static ALL_APP_ENTRIES: &[AppEntry] = &[
         url:         Trash::URL,
         category:    "files",
         description: Trash::DESCRIPTION,
+    },
+    AppEntry {
+        id:          Usql::ID,
+        url:         Usql::URL,
+        category:    "databases",
+        description: Usql::DESCRIPTION,
     },
     AppEntry {
         id:          Uv::ID,

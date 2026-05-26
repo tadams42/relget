@@ -135,6 +135,10 @@ for the full list of caveats.
 - [xq](https://github.com/sibprogrammer/xq) — Command-line XML and HTML processor using XPath
 - [yq](https://github.com/mikefarah/yq) — Portable command-line YAML, JSON, XML, and CSV processor
 
+### databases
+
+- [usql](https://github.com/xo/usql) — Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases
+
 ### Dev envs
 
 - [aqua](https://github.com/aquaproj/aqua) — Declarative CLI tool installer and version manager
