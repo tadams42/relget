@@ -7,7 +7,7 @@ use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
-use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Yazi};
+use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
 use super::http::{Caddy, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal};
@@ -68,6 +68,7 @@ pub fn create_app(
         Skim::ID => Some(Box::new(Skim::new(client))),
         Starship::ID => Some(Box::new(Starship::new(client))),
         Stylua::ID => Some(Box::new(Stylua::new(client))),
+        Trash::ID => Some(Box::new(Trash::new(client))),
         Uv::ID => Some(Box::new(Uv::new(client))),
         Xh::ID => Some(Box::new(Xh::new(client))),
         Xq::ID => Some(Box::new(Xq::new(client))),

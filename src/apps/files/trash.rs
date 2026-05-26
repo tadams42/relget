@@ -1,0 +1,59 @@
+use anyhow::{Result, anyhow};
+use std::path::Path;
+use std::sync::Arc;
+
+use crate::apps::App;
+use crate::archive::ArchiveExtractor;
+use crate::clients::GithubClient;
+use crate::types::{AppBinary, DownloadedAssets};
+use crate::version::AppVersion;
+
+pub struct Trash {
+    client: Arc<GithubClient>,
+}
+
+impl Trash {
+    pub const ID: &'static str = "trash-cli-rs";
+    pub const DESCRIPTION: &'static str = "Safe rm replacement that moves files to the trash";
+    pub const URL: &'static str = "https://github.com/orf/trash";
+    const OWNER: &'static str = "orf";
+    const REPO: &'static str = "trash";
+    const EXE_NAME: &'static str = "trash";
+    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+}
+
+impl App for Trash {
+    fn exe_name(&self) -> &str { Self::EXE_NAME }
+
+    fn released_version(&self) -> Result<AppVersion> {
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
+    }
+
+    fn download(&self) -> Result<DownloadedAssets> {
+        let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
+        let name = release
+            .asset_names()
+            .into_iter()
+            .find(|a| a == "trash-Linux-musl-x86_64.tar.gz")
+            .ok_or_else(|| anyhow!("Can't find trash-Linux-musl-x86_64.tar.gz"))?;
+        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
+        let extractor = ArchiveExtractor::new(&name, asset.data);
+        let members = extractor.members()?;
+        let exe = members
+            .iter()
+            .find(|m| {
+                Path::new(m)
+                    .file_name()
+                    .map(|f| f == "trash")
+                    .unwrap_or(false)
+            })
+            .cloned()
+            .ok_or_else(|| anyhow!("Can't find trash in archive"))?;
+        Ok(DownloadedAssets {
+            binary: Some(AppBinary::new("trash", extractor.extract(&exe)?)),
+            ..Default::default()
+        })
+    }
+}

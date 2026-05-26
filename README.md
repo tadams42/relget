@@ -160,6 +160,7 @@ for the full list of caveats.
 - [fd](https://github.com/sharkdp/fd) — Simple, fast, user-friendly alternative to find
 - [ripgrep](https://github.com/BurntSushi/ripgrep) — Recursive regex search, a faster grep (ripgrep)
 - [sd](https://github.com/chmln/sd) — Intuitive find-and-replace command, a sed alternative
+- [trash-cli-rs](https://github.com/orf/trash) — Safe rm replacement that moves files to the trash
 - [yazi](https://github.com/sxyazi/yazi) — Blazing fast terminal file manager with asynchronous I/O
 
 ### Git
