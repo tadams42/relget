@@ -1,7 +1,7 @@
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
-use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Stylua};
+use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::files::{Bat, Dust, Eza, FdFind, Ripgrep, SdEdit, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
 use super::http::{Caddy, Restish, Xh};
@@ -275,6 +275,12 @@ static ALL_APP_ENTRIES: &[AppEntry] = &[
         url:         RustAnalyzer::URL,
         category:    "dev_tools",
         description: RustAnalyzer::DESCRIPTION,
+    },
+    AppEntry {
+        id:          Scc::ID,
+        url:         Scc::URL,
+        category:    "dev_tools",
+        description: Scc::DESCRIPTION,
     },
     AppEntry {
         id:          SdEdit::ID,

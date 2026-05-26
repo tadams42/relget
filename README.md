@@ -148,6 +148,7 @@ for the full list of caveats.
 - [mdbook](https://github.com/rust-lang/mdBook) — Create books from Markdown source files
 - [neovide](https://github.com/neovide/neovide) — GPU-accelerated GUI frontend for Neovim
 - [rust-analyzer](https://github.com/rust-lang/rust-analyzer) — Rust language server providing IDE integration
+- [scc](https://github.com/boyter/scc) — Fast and accurate code counter with complexity calculations
 - [stylua](https://github.com/JohnnyMorganz/stylua) — Opinionated Lua code formatter
 
 ### Files

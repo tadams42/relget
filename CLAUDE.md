@@ -58,6 +58,7 @@ src/
 2. Register in `src/apps/<category>/mod.rs`: add `mod myapp;` and `pub use myapp::MyApp;`
 3. Register in `src/apps/apps_registry.rs` creating new `AppEntry` in `ALL_APP_ENTRIES`
 4. Update `create_app()` in `src/apps/apps_factory.rs`, add `"myapp" => Some(Box::new(myapp::MyApp::new(client)))`
+5. run `cargo xtask update-readme` so that `README.md` gets updated with new app
 
 ## Adding a new Codeberg app
 
