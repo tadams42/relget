@@ -37,9 +37,7 @@ impl App for Usql {
         let name = release
             .asset_names()
             .into_iter()
-            .find(|a| {
-                a.starts_with("usql_static-") && a.ends_with("-linux-amd64.tar.bz2")
-            })
+            .find(|a| a.starts_with("usql_static-") && a.ends_with("-linux-amd64.tar.bz2"))
             .ok_or_else(|| anyhow!("Can't find usql static linux amd64 asset"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
@@ -49,11 +47,11 @@ impl App for Usql {
             .find(|m| {
                 Path::new(m)
                     .file_name()
-                    .map(|f| f == "usql")
+                    .map(|f| f == "usql_static")
                     .unwrap_or(false)
             })
             .cloned()
-            .ok_or_else(|| anyhow!("Can't find usql in archive"))?;
+            .ok_or_else(|| anyhow!("Can't find usql_static in archive"))?;
         let binary_data = extractor.extract(&exe)?;
         Ok(DownloadedAssets {
             binary: Some(AppBinary::new("usql", binary_data)),

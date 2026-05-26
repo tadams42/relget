@@ -14,7 +14,8 @@ pub struct Scc {
 
 impl Scc {
     pub const ID: &'static str = "scc";
-    pub const DESCRIPTION: &'static str = "Fast and accurate code counter with complexity calculations";
+    pub const DESCRIPTION: &'static str =
+        "Fast and accurate code counter with complexity calculations";
     pub const URL: &'static str = "https://github.com/boyter/scc";
     const OWNER: &'static str = "boyter";
     const REPO: &'static str = "scc";

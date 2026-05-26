@@ -45,7 +45,12 @@ impl App for F2 {
         let find = |filename: &str| -> Result<String> {
             members
                 .iter()
-                .find(|m| Path::new(m).file_name().map(|f| f == filename).unwrap_or(false))
+                .find(|m| {
+                    Path::new(m)
+                        .file_name()
+                        .map(|f| f == filename)
+                        .unwrap_or(false)
+                })
                 .cloned()
                 .ok_or_else(|| anyhow!("Can't find {} in archive", filename))
         };

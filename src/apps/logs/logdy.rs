@@ -13,7 +13,8 @@ pub struct Logdy {
 
 impl Logdy {
     pub const ID: &'static str = "logdy";
-    pub const DESCRIPTION: &'static str = "Web-based real-time log viewer with filtering and search";
+    pub const DESCRIPTION: &'static str =
+        "Web-based real-time log viewer with filtering and search";
     pub const URL: &'static str = "https://github.com/logdyhq/logdy-core";
     const OWNER: &'static str = "logdyhq";
     const REPO: &'static str = "logdy-core";
