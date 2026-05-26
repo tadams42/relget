@@ -6,6 +6,7 @@ use std::process::Command;
 use anyhow::{Context, Result, anyhow};
 
 use crate::apps::create_app;
+use crate::clients::RateLimitError;
 use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage, Shell};
 
 const BIN_MODE: u32 = 0o755;
@@ -156,7 +157,9 @@ pub fn install_apps(
         match app.install(prefix) {
             Ok(paths) => installed.extend(paths),
             Err(e) => {
-                if offline {
+                if e.chain().any(|cause| cause.is::<RateLimitError>()) {
+                    log::warn!("app={} msg=Skipping (rate limit): {}", app_id, e.root_cause());
+                } else if offline {
                     log::warn!("app={} msg=Skipping (offline, no cached data): {:#}", app_id, e);
                 } else {
                     log::error!("app={} msg=Install failed: {:#}", app_id, e);

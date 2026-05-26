@@ -1,10 +1,13 @@
 use anyhow::{Context, Result, anyhow};
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use super::cache::{GhCache, GhDownloadedAsset, GhRelease};
+use super::rate_limit::RateLimitError;
 
 static CACHE: Lazy<Mutex<GhCache>> = Lazy::new(|| Mutex::new(GhCache::new()));
+static RATE_LIMITED: AtomicBool = AtomicBool::new(false);
 
 const GH_API_URL: &str = "https://api.github.com/repos";
 
@@ -29,6 +32,10 @@ impl GithubClient {
             }
         }
 
+        if RATE_LIMITED.load(Ordering::Relaxed) {
+            return Err(anyhow!(RateLimitError { site: "GitHub" }));
+        }
+
         log::info!("app={} msg=Fetching latest GitHub release", repo);
         let url = format!("{}/{}/{}/releases?per_page=5&page=1", GH_API_URL, owner, repo);
 
@@ -38,9 +45,18 @@ impl GithubClient {
         if let Some(token) = &self.token {
             req = req.header("Authorization", &format!("Bearer {}", token));
         }
-        let response = req
-            .call()
-            .with_context(|| format!("Can't fetch GitHub release info for {}/{}", owner, repo))?;
+        let response = match req.call() {
+            Ok(r) => r,
+            Err(ureq::Error::StatusCode(429 | 403)) => {
+                RATE_LIMITED.store(true, Ordering::Relaxed);
+                return Err(anyhow!(RateLimitError { site: "GitHub" }));
+            }
+            Err(e) => {
+                return Err(anyhow::Error::from(e)).with_context(|| {
+                    format!("Can't fetch GitHub release info for {}/{}", owner, repo)
+                });
+            }
+        };
 
         let releases: Vec<serde_json::Value> = response
             .into_body()
@@ -64,6 +80,10 @@ impl GithubClient {
     }
 
     pub fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<GhDownloadedAsset> {
+        if RATE_LIMITED.load(Ordering::Relaxed) {
+            return Err(anyhow!(RateLimitError { site: "GitHub" }));
+        }
+
         let release = self.latest_release(owner, repo)?;
 
         let gh_id = if name == "tarball" {

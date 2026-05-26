@@ -1,10 +1,13 @@
 use anyhow::{Context, Result, anyhow};
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use super::cache::{GhCache, GhDownloadedAsset, GhRelease};
+use super::rate_limit::RateLimitError;
 
 static CACHE: Lazy<Mutex<GhCache>> = Lazy::new(|| Mutex::new(GhCache::new_with_prefix("codeberg")));
+static RATE_LIMITED: AtomicBool = AtomicBool::new(false);
 
 const CB_API_URL: &str = "https://codeberg.org/api/v1/repos";
 
@@ -29,6 +32,10 @@ impl CodebergClient {
             }
         }
 
+        if RATE_LIMITED.load(Ordering::Relaxed) {
+            return Err(anyhow!(RateLimitError { site: "Codeberg" }));
+        }
+
         log::info!("app={} msg=Fetching latest Codeberg release", repo);
         let url = format!("{}/{}/{}/releases?limit=5&page=1", CB_API_URL, owner, repo);
 
@@ -38,9 +45,19 @@ impl CodebergClient {
         if let Some(token) = &self.token {
             req = req.header("Authorization", &format!("token {}", token));
         }
-        let releases: Vec<serde_json::Value> = req
-            .call()
-            .with_context(|| format!("Can't fetch Codeberg release info for {}/{}", owner, repo))?
+        let response = match req.call() {
+            Ok(r) => r,
+            Err(ureq::Error::StatusCode(429)) => {
+                RATE_LIMITED.store(true, Ordering::Relaxed);
+                return Err(anyhow!(RateLimitError { site: "Codeberg" }));
+            }
+            Err(e) => {
+                return Err(anyhow::Error::from(e)).with_context(|| {
+                    format!("Can't fetch Codeberg release info for {}/{}", owner, repo)
+                });
+            }
+        };
+        let releases: Vec<serde_json::Value> = response
             .into_body()
             .read_json()
             .with_context(|| format!("Invalid JSON from Codeberg for {}/{}", owner, repo))?;
@@ -63,6 +80,10 @@ impl CodebergClient {
     }
 
     pub fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<GhDownloadedAsset> {
+        if RATE_LIMITED.load(Ordering::Relaxed) {
+            return Err(anyhow!(RateLimitError { site: "Codeberg" }));
+        }
+
         let release = self.latest_release(owner, repo)?;
 
         let asset_id = release
