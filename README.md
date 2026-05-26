@@ -181,6 +181,7 @@ for the full list of caveats.
 
 - [gonzo](https://github.com/control-theory/gonzo) — Log viewer TUI for structured and plain-text logs
 - [lazyjournal](https://github.com/Lifailon/lazyjournal) — TUI for browsing systemd journal and Docker logs
+- [logdy](https://github.com/logdyhq/logdy-core) — Web-based real-time log viewer with filtering and search
 
 ### music
 

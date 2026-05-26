@@ -5,7 +5,7 @@ use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
 use super::http::{Caddy, Restish, Xh};
-use super::logs::{Gonzo, LazyJournal};
+use super::logs::{Gonzo, LazyJournal, Logdy};
 use super::music::Spotatui;
 use super::other::{Chezmoi, Rclone, Tlrc};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
@@ -216,6 +216,12 @@ static ALL_APP_ENTRIES: &[AppEntry] = &[
         url:         Lazygit::URL,
         category:    "git",
         description: Lazygit::DESCRIPTION,
+    },
+    AppEntry {
+        id:          Logdy::ID,
+        url:         Logdy::URL,
+        category:    "logs",
+        description: Logdy::DESCRIPTION,
     },
     AppEntry {
         id:          Mdbook::ID,

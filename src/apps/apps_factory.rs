@@ -10,7 +10,7 @@ use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
 use super::http::{Caddy, Restish, Xh};
-use super::logs::{Gonzo, LazyJournal};
+use super::logs::{Gonzo, LazyJournal, Logdy};
 use super::music::Spotatui;
 use super::other::{Chezmoi, Rclone, Tlrc};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
@@ -49,6 +49,7 @@ pub fn create_app(
         LazyJournal::ID => Some(Box::new(LazyJournal::new(client))),
         LazyDocker::ID => Some(Box::new(LazyDocker::new(client))),
         Lazygit::ID => Some(Box::new(Lazygit::new(client))),
+        Logdy::ID => Some(Box::new(Logdy::new(client))),
         Mdbook::ID => Some(Box::new(Mdbook::new(client))),
         Mergiraf::ID => {
             Some(Box::new(Mergiraf::new(Arc::new(CodebergClient::new(
