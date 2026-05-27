@@ -13,7 +13,7 @@ cargo run -- list-apps-ids
 cargo run -- completions zsh
 cargo run -- uninstall --apps rg
 cargo run -- reinstall --apps rg
-cargo run -- --offline                              # use only cached data
+cargo run -- --apps rg --offline                    # use only cached data
 ```
 
 Use `--prefix /tmp/try-relget/` to avoid needing `sudo` during local testing.

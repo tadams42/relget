@@ -49,7 +49,7 @@ pub struct Cli {
     #[arg(short = 'p', long, default_value = DEFAULT_PREFIX, global = true)]
     pub prefix: PathBuf,
 
-    /// App(s) to install; comma-separated. Defaults to all apps.
+    /// App(s) to install; comma-separated.
     #[arg(
         short = 'a',
         long = "apps",

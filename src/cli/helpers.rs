@@ -49,7 +49,9 @@ pub fn select_apps(user_chosen: &[String], minimal_set: bool) -> Result<Vec<Stri
     }
 
     if user_chosen.is_empty() {
-        return Ok(known.iter().map(|s| s.to_string()).collect());
+        return Err(anyhow!(
+            "you must specify either --apps <NAME[,NAME...]> or --minimal-set; run `relget --help` for usage"
+        ));
     }
 
     for app in user_chosen {

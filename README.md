@@ -51,17 +51,14 @@ from your shell, depends on your `$PATH`. In most modern distros, stuff from
 ## How to use it?
 
 ```sh
-# install everything into /usr/local
-sudo relget
+# install the hand-picked minimal set into /usr/local (recommended starting point)
+sudo relget --minimal-set
 
-# ... or install everything into ~/.local
-relget --prefix ~/.local
+# install the hand-picked minimal set into ~/.local
+relget --prefix ~/.local --minimal-set
 
 # install a subset of apps
 relget --prefix ~/.local --apps rg,bat,fzf
-
-# install the hand-picked minimal set
-relget --prefix ~/.local --minimal-set
 ```
 
 Services `relget` uses (`GitHub`, `Codeberg`, `GitLab`, ...) apply rate limiting to
