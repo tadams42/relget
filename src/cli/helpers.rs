@@ -4,7 +4,7 @@ use crate::apps::{all_apps_identifiers, minimal_set_identifiers};
 use crate::config::{load_codeberg_token, load_github_token, load_gitlab_token};
 
 pub fn load_or_prompt_github_token(source: &str) -> Result<Option<String>> {
-    match source {
+    let token = match source {
         "prompt" => {
             let token = rpassword::prompt_password("GitHub API token (leave empty to skip): ")
                 .unwrap_or_default();
@@ -12,11 +12,16 @@ pub fn load_or_prompt_github_token(source: &str) -> Result<Option<String>> {
         }
         "load" => load_github_token(),
         _ => Err(anyhow!("Unknown token source '{}'", source)),
+    }?;
+    match &token {
+        Some(_) => log::info!("GitHub token found and loaded"),
+        None => log::warn!("GitHub token not found; app may hit API rate limits"),
     }
+    Ok(token)
 }
 
 pub fn load_or_prompt_codeberg_token(source: &str) -> Result<Option<String>> {
-    match source {
+    let token = match source {
         "prompt" => {
             let token = rpassword::prompt_password("Codeberg API token (leave empty to skip): ")
                 .unwrap_or_default();
@@ -24,11 +29,16 @@ pub fn load_or_prompt_codeberg_token(source: &str) -> Result<Option<String>> {
         }
         "load" => load_codeberg_token(),
         _ => Err(anyhow!("Unknown token source '{}'", source)),
+    }?;
+    match &token {
+        Some(_) => log::info!("Codeberg token found and loaded"),
+        None => log::warn!("Codeberg token not found; app may hit API rate limits"),
     }
+    Ok(token)
 }
 
 pub fn load_or_prompt_gitlab_token(source: &str) -> Result<Option<String>> {
-    match source {
+    let token = match source {
         "prompt" => {
             let token = rpassword::prompt_password("GitLab API token (leave empty to skip): ")
                 .unwrap_or_default();
@@ -36,7 +46,12 @@ pub fn load_or_prompt_gitlab_token(source: &str) -> Result<Option<String>> {
         }
         "load" => load_gitlab_token(),
         _ => Err(anyhow!("Unknown token source '{}'", source)),
+    }?;
+    match &token {
+        Some(_) => log::info!("GitLab token found and loaded"),
+        None => log::warn!("GitLab token not found; app may hit API rate limits"),
     }
+    Ok(token)
 }
 
 pub fn select_apps(user_chosen: &[String], minimal_set: bool) -> Result<Vec<String>> {
