@@ -8,7 +8,7 @@ use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
-use super::files::{Bat, Dust, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
+use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
 use super::http::{Caddy, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
@@ -36,6 +36,7 @@ pub fn create_app(
         DockMate::ID => Some(Box::new(DockMate::new(client))),
         Dry::ID => Some(Box::new(Dry::new(client))),
         Dust::ID => Some(Box::new(Dust::new(client))),
+        Dysk::ID => Some(Box::new(Dysk::new(client))),
         Eza::ID => Some(Box::new(Eza::new(client))),
         F2::ID => Some(Box::new(F2::new(client))),
         FdFind::ID => Some(Box::new(FdFind::new(client))),
