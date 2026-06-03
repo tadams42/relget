@@ -31,7 +31,7 @@ impl App for Carapace {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("carapace")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             ..Default::default()
         }
     }

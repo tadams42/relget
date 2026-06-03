@@ -30,8 +30,8 @@ impl App for Squix {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("squix")),
-            completions: vec![Completion::zsh_desc("squix"), Completion::bash_desc("squix"), Completion::fish_desc("squix")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

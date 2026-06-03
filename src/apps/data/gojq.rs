@@ -31,8 +31,8 @@ impl App for GoJq {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("gojq")),
-            completions: vec![Completion::zsh_desc("gojq")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

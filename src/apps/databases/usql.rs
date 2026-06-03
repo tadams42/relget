@@ -31,7 +31,7 @@ impl App for Usql {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("usql")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             ..Default::default()
         }
     }

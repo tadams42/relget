@@ -34,9 +34,9 @@ impl App for Mise {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("mise")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages:   vec![ManPage::descriptor(1, "mise.1")],
-            completions: vec![Completion::zsh_desc("mise"), Completion::bash_desc("mise"), Completion::fish_desc("mise")],
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

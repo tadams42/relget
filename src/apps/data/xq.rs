@@ -32,8 +32,8 @@ impl App for Xq {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("xq")),
-            completions: vec![Completion::zsh_desc("xq"), Completion::bash_desc("xq"), Completion::fish_desc("xq")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

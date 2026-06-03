@@ -32,8 +32,8 @@ impl App for Chezmoi {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("chezmoi")),
-            completions: vec![Completion::zsh_desc("chezmoi"), Completion::bash_desc("chezmoi"), Completion::fish_desc("chezmoi")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

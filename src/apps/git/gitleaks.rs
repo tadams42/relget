@@ -32,8 +32,8 @@ impl App for Gitleaks {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("gitleaks")),
-            completions: vec![Completion::zsh_desc("gitleaks"), Completion::bash_desc("gitleaks"), Completion::fish_desc("gitleaks")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

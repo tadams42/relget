@@ -32,9 +32,9 @@ impl App for Yq {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("yq")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages:   vec![ManPage::descriptor(1, "yq.1")],
-            completions: vec![Completion::zsh_desc("yq"), Completion::bash_desc("yq"), Completion::fish_desc("yq")],
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

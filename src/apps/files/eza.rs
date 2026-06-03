@@ -31,13 +31,13 @@ impl App for Eza {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("eza")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages:   vec![
                 ManPage::descriptor(1, "eza.1"),
                 ManPage::descriptor(5, "eza_colors.5"),
                 ManPage::descriptor(5, "eza_colors-explanation.5"),
             ],
-            completions: vec![Completion::zsh_desc("eza"), Completion::bash_desc("eza"), Completion::fish_desc("eza")],
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

@@ -34,9 +34,9 @@ impl App for Rclone {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("rclone")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages:   vec![ManPage::descriptor(1, "rclone.1")],
-            completions: vec![Completion::zsh_desc("rclone"), Completion::bash_desc("rclone"), Completion::fish_desc("rclone")],
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

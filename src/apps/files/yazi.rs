@@ -126,12 +126,12 @@ impl App for Yazi {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("yazi")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             other_bins:  vec![AppBinary::descriptor("ya")],
             completions: vec![
-                Completion::zsh_desc("yazi"),
-                Completion::bash_desc("yazi"),
-                Completion::fish_desc("yazi"),
+                Completion::zsh_desc(Self::EXE_NAME),
+                Completion::bash_desc(Self::EXE_NAME),
+                Completion::fish_desc(Self::EXE_NAME),
                 Completion::zsh_desc("ya"),
                 Completion::bash_desc("ya"),
                 Completion::fish_desc("ya"),

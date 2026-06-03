@@ -34,7 +34,7 @@ impl App for Caddy {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("caddy")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages:   vec![
                 ManPage::descriptor(8, "caddy.8"),
                 ManPage::descriptor(8, "caddy-adapt.8"),
@@ -65,9 +65,9 @@ impl App for Caddy {
                 ManPage::descriptor(8, "caddy-version.8"),
             ],
             completions: vec![
-                Completion::zsh_desc("caddy"),
-                Completion::bash_desc("caddy"),
-                Completion::fish_desc("caddy"),
+                Completion::zsh_desc(Self::EXE_NAME),
+                Completion::bash_desc(Self::EXE_NAME),
+                Completion::fish_desc(Self::EXE_NAME),
             ],
             ..Default::default()
         }

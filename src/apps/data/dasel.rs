@@ -34,9 +34,9 @@ impl App for Dasel {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("dasel")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages:   vec![ManPage::descriptor(1, "dasel.1")],
-            completions: vec![Completion::zsh_desc("dasel"), Completion::bash_desc("dasel"), Completion::fish_desc("dasel")],
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

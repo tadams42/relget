@@ -49,7 +49,7 @@ impl App for Qsv {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("qsv")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             ..Default::default()
         }
     }

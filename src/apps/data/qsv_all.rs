@@ -91,7 +91,7 @@ impl App for QsvAll {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:     Some(AppBinary::descriptor("qsv")),
+            binary:     Some(AppBinary::descriptor(Self::EXE_NAME)),
             other_bins: vec![
                 AppBinary::descriptor("qsvdp"),
                 AppBinary::descriptor("qsvlite"),

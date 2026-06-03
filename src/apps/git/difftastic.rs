@@ -31,7 +31,7 @@ impl App for Difftastic {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("difft")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             ..Default::default()
         }
     }

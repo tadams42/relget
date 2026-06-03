@@ -30,7 +30,7 @@ impl App for Pdot {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("pdot")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             ..Default::default()
         }
     }

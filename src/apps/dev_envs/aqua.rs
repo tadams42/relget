@@ -32,8 +32,8 @@ impl App for Aqua {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("aqua")),
-            completions: vec![Completion::zsh_desc("aqua"), Completion::bash_desc("aqua"), Completion::fish_desc("aqua")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

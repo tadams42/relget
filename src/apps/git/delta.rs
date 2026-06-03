@@ -32,8 +32,8 @@ impl App for Delta {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("delta")),
-            completions: vec![Completion::zsh_desc("delta"), Completion::bash_desc("delta"), Completion::fish_desc("delta")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

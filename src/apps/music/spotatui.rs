@@ -32,8 +32,8 @@ impl App for Spotatui {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("spotatui")),
-            completions: vec![Completion::zsh_desc("spotatui"), Completion::bash_desc("spotatui"), Completion::fish_desc("spotatui")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

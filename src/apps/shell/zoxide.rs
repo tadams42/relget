@@ -31,7 +31,7 @@ impl App for Zoxide {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:    Some(AppBinary::descriptor("zoxide")),
+            binary:    Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages: vec![
                 ManPage::descriptor(1, "zoxide.1"),
                 ManPage::descriptor(1, "zoxide-add.1"),

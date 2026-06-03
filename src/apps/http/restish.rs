@@ -32,8 +32,8 @@ impl App for Restish {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("restish")),
-            completions: vec![Completion::zsh_desc("restish"), Completion::bash_desc("restish"), Completion::fish_desc("restish")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

@@ -32,12 +32,12 @@ impl App for Fzf {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("fzf")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages:   vec![
                 ManPage::descriptor(1, "fzf.1"),
                 ManPage::descriptor(1, "fzf-tmux.1"),
             ],
-            completions: vec![Completion::zsh_desc("fzf"), Completion::bash_desc("fzf"), Completion::fish_desc("fzf")],
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

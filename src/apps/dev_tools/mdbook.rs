@@ -32,8 +32,8 @@ impl App for Mdbook {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("mdbook")),
-            completions: vec![Completion::zsh_desc("mdbook"), Completion::bash_desc("mdbook"), Completion::fish_desc("mdbook")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

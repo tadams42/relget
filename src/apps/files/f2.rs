@@ -31,8 +31,8 @@ impl App for F2 {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("f2")),
-            completions: vec![Completion::zsh_desc("f2"), Completion::bash_desc("f2"), Completion::fish_desc("f2")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

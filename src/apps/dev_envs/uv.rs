@@ -32,12 +32,12 @@ impl App for Uv {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("uv")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             other_bins:  vec![AppBinary::descriptor("uvx")],
             completions: vec![
-                Completion::zsh_desc("uv"),
-                Completion::bash_desc("uv"),
-                Completion::fish_desc("uv"),
+                Completion::zsh_desc(Self::EXE_NAME),
+                Completion::bash_desc(Self::EXE_NAME),
+                Completion::fish_desc(Self::EXE_NAME),
                 Completion::zsh_desc("uvx"),
                 Completion::bash_desc("uvx"),
                 Completion::fish_desc("uvx"),

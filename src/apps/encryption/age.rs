@@ -32,7 +32,7 @@ impl App for Age {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:     Some(AppBinary::descriptor("age")),
+            binary:     Some(AppBinary::descriptor(Self::EXE_NAME)),
             other_bins: vec![AppBinary::descriptor("age-keygen")],
             ..Default::default()
         }

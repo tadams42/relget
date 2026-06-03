@@ -31,9 +31,9 @@ impl App for Tlrc {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("tldr")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages:   vec![ManPage::descriptor(1, "tldr.1")],
-            completions: vec![Completion::zsh_desc("tldr"), Completion::bash_desc("tldr"), Completion::fish_desc("tldr")],
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

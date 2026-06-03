@@ -32,12 +32,12 @@ impl App for Skim {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("sk")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages:   vec![
                 ManPage::descriptor(1, "sk.1"),
                 ManPage::descriptor(1, "sk-tmux.1"),
             ],
-            completions: vec![Completion::zsh_desc("sk"), Completion::bash_desc("sk"), Completion::fish_desc("sk")],
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

@@ -32,8 +32,8 @@ impl App for Atuin {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("atuin")),
-            completions: vec![Completion::zsh_desc("atuin"), Completion::bash_desc("atuin"), Completion::fish_desc("atuin")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

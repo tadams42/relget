@@ -35,7 +35,7 @@ impl App for SdEdit {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("sd")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages:   vec![ManPage::descriptor(1, "sd.1")],
             ..Default::default()
         }

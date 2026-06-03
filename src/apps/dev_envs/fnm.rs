@@ -32,8 +32,8 @@ impl App for Fnm {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("fnm")),
-            completions: vec![Completion::zsh_desc("fnm"), Completion::bash_desc("fnm"), Completion::fish_desc("fnm")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

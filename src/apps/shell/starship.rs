@@ -32,8 +32,8 @@ impl App for Starship {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("starship")),
-            completions: vec![Completion::zsh_desc("starship"), Completion::bash_desc("starship"), Completion::fish_desc("starship")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

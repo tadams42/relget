@@ -32,12 +32,12 @@ impl App for AstGrep {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("ast-grep")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             other_bins:  vec![AppBinary::descriptor("sg")],
             completions: vec![
-                Completion::zsh_desc("ast-grep"),
-                Completion::bash_desc("ast-grep"),
-                Completion::fish_desc("ast-grep"),
+                Completion::zsh_desc(Self::EXE_NAME),
+                Completion::bash_desc(Self::EXE_NAME),
+                Completion::fish_desc(Self::EXE_NAME),
                 Completion::zsh_desc("sg"),
                 Completion::bash_desc("sg"),
                 Completion::fish_desc("sg"),

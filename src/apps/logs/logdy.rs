@@ -30,8 +30,8 @@ impl App for Logdy {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("logdy")),
-            completions: vec![Completion::zsh_desc("logdy"), Completion::bash_desc("logdy"), Completion::fish_desc("logdy")],
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
             ..Default::default()
         }
     }

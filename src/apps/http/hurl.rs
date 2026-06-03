@@ -31,16 +31,16 @@ impl App for Hurl {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor("hurl")),
+            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
             other_bins:  vec![AppBinary::descriptor("hurlfmt")],
             man_pages:   vec![
                 ManPage::descriptor(1, "hurl.1.gz"),
                 ManPage::descriptor(1, "hurlfmt.1.gz"),
             ],
             completions: vec![
-                Completion::zsh_desc("hurl"),
-                Completion::bash_desc("hurl"),
-                Completion::fish_desc("hurl"),
+                Completion::zsh_desc(Self::EXE_NAME),
+                Completion::bash_desc(Self::EXE_NAME),
+                Completion::fish_desc(Self::EXE_NAME),
                 Completion::zsh_desc("hurlfmt"),
                 Completion::bash_desc("hurlfmt"),
                 Completion::fish_desc("hurlfmt"),
