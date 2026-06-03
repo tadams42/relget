@@ -1,13 +1,12 @@
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
-use std::process::Command;
 
 use anyhow::{Context, Result, anyhow};
 
 use crate::apps::{App, create_app};
 use crate::clients::RateLimitError;
-use crate::types::{AppBinary, Completion, AppAssets, ManPage, Shell};
+use crate::types::{AppBinary, AppAssets, ManPage, Completion};
 
 const BIN_MODE: u32 = 0o755;
 const DOC_MODE: u32 = 0o644;
@@ -63,83 +62,6 @@ fn ensure_parent(path: &Path) -> Result<()> {
         fs::create_dir_all(parent)?;
     }
     Ok(())
-}
-
-/// Write binary data to a temp file with executable permissions and run a
-/// closure that receives the temp-file path. Temp dir is cleaned up on return.
-pub fn with_temp_exe<F, T>(exe_name: &str, data: &[u8], f: F) -> Result<T>
-where
-    F: FnOnce(&Path) -> Result<T>,
-{
-    let tmp = tempfile::tempdir()?;
-    let exe_path = tmp.path().join(exe_name);
-    fs::write(&exe_path, data)?;
-    fs::set_permissions(&exe_path, fs::Permissions::from_mode(BIN_MODE))?;
-    f(&exe_path)
-}
-
-/// Run `exe_path args...` and return stdout bytes.
-pub fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
-    let out = Command::new(exe_path)
-        .args(args)
-        .output()
-        .with_context(|| format!("Running {:?} {:?}", exe_path, args))?;
-    Ok(out.stdout)
-}
-
-/// Generate zsh + bash + fish completions from a single binary with a
-/// uniform `[prefix_args..., shell_name]` invocation pattern.
-fn gen_completions_with_shell_arg(
-    exe_name: &str, data: &[u8], prefix_args: &[&str],
-) -> Result<Vec<Completion>> {
-    with_temp_exe(exe_name, data, |exe| {
-        let mut completions = Vec::new();
-        let shells = [
-            (Shell::Zsh, "zsh"),
-            (Shell::Bash, "bash"),
-            (Shell::Fish, "fish"),
-        ];
-        for (shell, shell_name) in &shells {
-            let mut args: Vec<&str> = prefix_args.to_vec();
-            args.push(shell_name);
-            let stdout = run_cmd(exe, &args)?;
-            completions.push(Completion {
-                shell:    *shell,
-                app_name: exe_name.to_string(),
-                data:     stdout,
-            });
-        }
-        Ok(completions)
-    })
-}
-
-/// `[cmd, subcommand, shell]` pattern (e.g. "starship completions zsh").
-pub fn gen_completions_subcommand(
-    exe_name: &str, data: &[u8], subcommand: &str,
-) -> Result<Vec<Completion>> {
-    gen_completions_with_shell_arg(exe_name, data, &[subcommand])
-}
-
-/// `[cmd, subcommand, --shell, shell]` pattern (e.g. "atuin gen-completions --shell zsh").
-pub fn gen_completions_shell_flag(
-    exe_name: &str, data: &[u8], subcommand: &str, flag: &str,
-) -> Result<Vec<Completion>> {
-    with_temp_exe(exe_name, data, |exe| {
-        let mut completions = Vec::new();
-        for (shell, shell_name) in &[
-            (Shell::Zsh, "zsh"),
-            (Shell::Bash, "bash"),
-            (Shell::Fish, "fish"),
-        ] {
-            let stdout = run_cmd(exe, &[subcommand, flag, shell_name])?;
-            completions.push(Completion {
-                shell:    *shell,
-                app_name: exe_name.to_string(),
-                data:     stdout,
-            });
-        }
-        Ok(completions)
-    })
 }
 
 pub fn install_app(app: &dyn App, prefix: &Path) -> Result<Vec<PathBuf>> {

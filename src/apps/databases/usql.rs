@@ -1,5 +1,4 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -38,27 +37,11 @@ impl App for Usql {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("usql_static-") && a.ends_with("-linux-amd64.tar.bz2"))
-            .ok_or_else(|| anyhow!("Can't find usql static linux amd64 asset"))?;
+        let name = release.find_asset(|a| a.starts_with("usql_static-") && a.ends_with("-linux-amd64.tar.bz2"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "usql_static")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find usql_static in archive"))?;
-        let binary_data = extractor.extract(&exe)?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("usql", binary_data)),
+            binary: Some(AppBinary::new("usql", extractor.extract_by_filename("usql_static")?)),
             ..Default::default()
         })
     }

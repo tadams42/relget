@@ -93,8 +93,7 @@
 // - [ranger](https://github.com/ranger/ranger)
 //   - written in Python
 
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -142,69 +141,20 @@ impl App for Yazi {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a == "yazi-x86_64-unknown-linux-musl.zip")
-            .ok_or_else(|| anyhow!("Can't find yazi asset"))?;
+        let name = release.find_asset(|a| a == "yazi-x86_64-unknown-linux-musl.zip")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
-        let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-
-        let yazi_entry = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "yazi")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find yazi binary in archive"))?;
-        let ya_entry = members
-            .iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "ya").unwrap_or(false))
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find ya binary in archive"))?;
-
-        let yazi_data = extractor.extract(&yazi_entry)?;
-        let ya_data = extractor.extract(&ya_entry)?;
-
-        let find_completion = |shell_ext: &str| -> Result<Vec<u8>> {
-            let entry = members
-                .iter()
-                .find(|m| {
-                    let path = Path::new(m);
-                    let parent = path
-                        .parent()
-                        .and_then(|p| p.file_name())
-                        .map(|f| f == "completions")
-                        .unwrap_or(false);
-                    let file = path
-                        .file_name()
-                        .and_then(|f| f.to_str())
-                        .map(|f| f == shell_ext)
-                        .unwrap_or(false);
-                    parent && file
-                })
-                .cloned()
-                .ok_or_else(|| anyhow!("Can't find {shell_ext} completion in archive"))?;
-            extractor.extract(&entry)
-        };
-
-        let completions = vec![
-            Completion::zsh("yazi", find_completion("_yazi")?),
-            Completion::bash("yazi", find_completion("yazi.bash")?),
-            Completion::fish("yazi", find_completion("yazi.fish")?),
-            Completion::zsh("ya", find_completion("_ya")?),
-            Completion::bash("ya", find_completion("ya.bash")?),
-            Completion::fish("ya", find_completion("ya.fish")?),
-        ];
-
+        let e = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new("yazi", yazi_data)),
-            other_bins: vec![AppBinary::new("ya", ya_data)],
-            completions,
+            binary:     Some(AppBinary::new("yazi", e.extract_by_filename("yazi")?)),
+            other_bins: vec![AppBinary::new("ya", e.extract_by_filename("ya")?)],
+            completions: vec![
+                Completion::zsh("yazi", e.extract_by_filename("_yazi")?),
+                Completion::bash("yazi", e.extract_by_filename("yazi.bash")?),
+                Completion::fish("yazi", e.extract_by_filename("yazi.fish")?),
+                Completion::zsh("ya", e.extract_by_filename("_ya")?),
+                Completion::bash("ya", e.extract_by_filename("ya.bash")?),
+                Completion::fish("ya", e.extract_by_filename("ya.fish")?),
+            ],
             ..Default::default()
         })
     }

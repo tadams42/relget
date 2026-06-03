@@ -1,4 +1,4 @@
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 use std::path::Path;
 use std::sync::Arc;
 
@@ -65,26 +65,11 @@ impl App for Neovide {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a == "neovide-linux-x86_64.tar.gz" || a == "neovide-linux-x86_64.tar")
-            .ok_or_else(|| anyhow!("Can't find neovide Linux asset"))?;
+        let name = release.find_asset(|a| a == "neovide-linux-x86_64.tar.gz" || a == "neovide-linux-x86_64.tar")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "neovide")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find neovide in archive"))?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("neovide", extractor.extract(&exe)?)),
+            binary: Some(AppBinary::new("neovide", extractor.extract_by_filename("neovide")?)),
             ..Default::default()
         })
     }

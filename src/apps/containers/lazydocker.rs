@@ -1,5 +1,4 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -38,26 +37,11 @@ impl App for LazyDocker {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("lazydocker") && a.ends_with("inux_x86_64.tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find lazydocker Linux x86_64 asset"))?;
+        let name = release.find_asset(|a| a.starts_with("lazydocker") && a.ends_with("inux_x86_64.tar.gz"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "lazydocker")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find lazydocker in archive"))?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("lazydocker", extractor.extract(&exe)?)),
+            binary: Some(AppBinary::new("lazydocker", extractor.extract_by_filename("lazydocker")?)),
             ..Default::default()
         })
     }

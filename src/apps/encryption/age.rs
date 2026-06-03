@@ -1,5 +1,4 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -40,34 +39,12 @@ impl App for Age {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.ends_with("-linux-amd64.tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find age asset"))?;
-
+        let name = release.find_asset(|a| a.ends_with("-linux-amd64.tar.gz"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-
-        let age_path = members
-            .iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "age").unwrap_or(false))
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find age in archive"))?;
-
-        let age_keygen_path = members
-            .iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "age-keygen").unwrap_or(false))
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find age-keygen in archive"))?;
-
-        let age_data = extractor.extract(&age_path)?;
-        let age_keygen_data = extractor.extract(&age_keygen_path)?;
-
         Ok(AppAssets {
-            binary: Some(AppBinary::new("age", age_data)),
-            other_bins: vec![AppBinary::new("age-keygen", age_keygen_data)],
+            binary: Some(AppBinary::new("age", extractor.extract_by_filename("age")?)),
+            other_bins: vec![AppBinary::new("age-keygen", extractor.extract_by_filename("age-keygen")?)],
             ..Default::default()
         })
     }

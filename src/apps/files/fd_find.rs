@@ -1,11 +1,10 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::gen_completions_subcommand;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::installer::{run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
@@ -41,42 +40,12 @@ impl App for FdFind {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("fd-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find fd asset"))?;
+        let name = release.find_asset(|a| a.starts_with("fd-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-
-        let exe = members
-            .iter()
-            .find(|m| Path::new(m).file_name().map(|f| f == "fd").unwrap_or(false))
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find fd in archive"))?;
-        let man = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "fd.1")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find fd.1 in archive"))?;
-
-        let binary_data = extractor.extract(&exe)?;
-        let man_data = extractor.extract(&man)?;
-
-        let completions = with_temp_exe("fd", &binary_data, |exe_path| {
-            Ok(vec![
-                Completion::zsh("fd", run_cmd(exe_path, &["--gen-completions", "zsh"])?),
-                Completion::bash("fd", run_cmd(exe_path, &["--gen-completions", "bash"])?),
-                Completion::fish("fd", run_cmd(exe_path, &["--gen-completions", "fish"])?),
-            ])
-        })?;
-
+        let binary_data = extractor.extract_by_filename("fd")?;
+        let man_data = extractor.extract_by_filename("fd.1")?;
+        let completions = gen_completions_subcommand("fd", &binary_data, "--gen-completions")?;
         Ok(AppAssets {
             binary: Some(AppBinary::new("fd", binary_data)),
             man_pages: vec![ManPage::new(1, "fd.1", man_data)],

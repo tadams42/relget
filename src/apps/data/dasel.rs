@@ -1,11 +1,10 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::{gen_completions_subcommand, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::installer::{gen_completions_subcommand, run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
@@ -43,25 +42,10 @@ impl App for Dasel {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a == "dasel_linux_amd64.gz")
-            .ok_or_else(|| anyhow!("Can't find dasel_linux_amd64.gz"))?;
+        let name = release.find_asset(|a| a == "dasel_linux_amd64.gz")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-        let exe_member = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "dasel_linux_amd64")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find dasel_linux_amd64 in archive"))?;
-        let binary_data = extractor.extract(&exe_member)?;
+        let binary_data = extractor.extract_by_filename("dasel_linux_amd64")?;
 
         let (completions, man_pages) = with_temp_exe("dasel", &binary_data, |exe_path| {
             let completions = gen_completions_subcommand("dasel", &binary_data, "completion")?;

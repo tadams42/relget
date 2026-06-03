@@ -1,4 +1,4 @@
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -39,11 +39,7 @@ impl App for Dysk {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("dysk_") && a.ends_with(".zip"))
-            .ok_or_else(|| anyhow!("Can't find dysk zip asset"))?;
+        let name = release.find_asset(|a| a.starts_with("dysk_") && a.ends_with(".zip"))?;
 
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);

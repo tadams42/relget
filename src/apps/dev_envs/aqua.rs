@@ -1,11 +1,10 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::installer::gen_completions_subcommand;
+use crate::apps::gen_completions_subcommand;
 use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
@@ -40,25 +39,10 @@ impl App for Aqua {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a == "aqua_linux_amd64.tar.gz")
-            .ok_or_else(|| anyhow!("Can't find aqua_linux_amd64.tar.gz"))?;
+        let name = release.find_asset(|a| a == "aqua_linux_amd64.tar.gz")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "aqua")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find aqua in archive"))?;
-        let binary_data = extractor.extract(&exe)?;
+        let binary_data = extractor.extract_by_filename("aqua")?;
         let completions = gen_completions_subcommand("aqua", &binary_data, "completion")?;
         Ok(AppAssets {
             binary: Some(AppBinary::new("aqua", binary_data)),

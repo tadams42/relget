@@ -1,4 +1,4 @@
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -37,11 +37,7 @@ impl App for Pdot {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.contains("Linux x86_64"))
-            .ok_or_else(|| anyhow!("Can't find pdot Linux x86_64 asset"))?;
+        let name = release.find_asset(|a| a.contains("Linux x86_64"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         Ok(AppAssets {
             binary: Some(AppBinary::new("pdot", asset.data)),

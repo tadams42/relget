@@ -1,11 +1,10 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::installer::{run_cmd, with_temp_exe};
+use crate::apps::{run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
@@ -45,30 +44,11 @@ impl App for Fzf {
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
-        // Binary
-        let bin_name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("fzf-") && a.ends_with("-linux_amd64.tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find fzf binary asset"))?;
-        let asset = self
-            .client
-            .download_asset(Self::OWNER, Self::REPO, &bin_name)?;
+        let bin_name = release.find_asset(|a| a.starts_with("fzf-") && a.ends_with("-linux_amd64.tar.gz"))?;
+        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &bin_name)?;
         let extractor = ArchiveExtractor::new(&bin_name, asset.data);
-        let members = extractor.members()?;
-        let exe_entry = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "fzf")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find fzf executable in archive"))?;
-        let binary_data = extractor.extract(&exe_entry)?;
+        let binary_data = extractor.extract_by_filename("fzf")?;
 
-        // Completions from binary
         let completions = with_temp_exe("fzf", &binary_data, |exe_path| {
             Ok(vec![
                 Completion::zsh("fzf", run_cmd(exe_path, &["--zsh"])?),
@@ -77,23 +57,12 @@ impl App for Fzf {
             ])
         })?;
 
-        // Man pages from tarball source
-        let tarball = self
-            .client
-            .download_asset(Self::OWNER, Self::REPO, "tarball")?;
+        let tarball = self.client.download_asset(Self::OWNER, Self::REPO, "tarball")?;
         let tb_name = format!("{}.tar.gz", tarball.name);
         let tb_extractor = ArchiveExtractor::new(&tb_name, tarball.data);
-        let tb_members = tb_extractor.members()?;
         let mut man_pages = Vec::new();
-        for member in &tb_members {
-            let fname = Path::new(member)
-                .file_name()
-                .and_then(|f| f.to_str())
-                .unwrap_or("");
-            if fname == "fzf.1" || fname == "fzf-tmux.1" {
-                let data = tb_extractor.extract(member)?;
-                man_pages.push(ManPage::new(1, fname.to_string(), data));
-            }
+        for man_name in &["fzf.1", "fzf-tmux.1"] {
+            man_pages.push(ManPage::new(1, *man_name, tb_extractor.extract_by_filename(man_name)?));
         }
 
         Ok(AppAssets {

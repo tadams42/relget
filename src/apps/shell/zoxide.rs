@@ -1,4 +1,4 @@
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 use std::path::Path;
 use std::sync::Arc;
 
@@ -46,35 +46,18 @@ impl App for Zoxide {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("zoxide-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find zoxide musl asset"))?;
-
+        let name = release.find_asset(|a| a.starts_with("zoxide-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "zoxide")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find zoxide in archive"))?;
-        let binary_data = extractor.extract(&exe)?;
+        let binary_data = extractor.extract_by_filename("zoxide")?;
 
         let mut man_pages = Vec::new();
-        for member in &members {
-            let path = Path::new(member);
+        for member in extractor.members()? {
+            let path = Path::new(&member);
             let file_name = path.file_name().and_then(|f| f.to_str()).unwrap_or("");
             if let Some(section_str) = path.extension().and_then(|e| e.to_str()) {
                 if let Ok(section) = section_str.parse::<u8>() {
-                    man_pages.push(ManPage::new(section, file_name, extractor.extract(member)?));
+                    man_pages.push(ManPage::new(section, file_name, extractor.extract(&member)?));
                 }
             }
         }

@@ -1,11 +1,10 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::installer::gen_completions_subcommand;
+use crate::apps::gen_completions_subcommand;
 use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
@@ -41,40 +40,12 @@ impl App for Yq {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a == "yq_linux_amd64.tar.gz")
-            .ok_or_else(|| anyhow!("Can't find yq_linux_amd64.tar.gz"))?;
+        let name = release.find_asset(|a| a == "yq_linux_amd64.tar.gz")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "yq_linux_amd64")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find yq_linux_amd64 in archive"))?;
-        let man = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "yq.1")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find yq.1 in archive"))?;
-
-        let binary_data = extractor.extract(&exe)?;
-        let man_data = extractor.extract(&man)?;
+        let binary_data = extractor.extract_by_filename("yq_linux_amd64")?;
+        let man_data = extractor.extract_by_filename("yq.1")?;
         let completions = gen_completions_subcommand("yq", &binary_data, "completion")?;
-
         Ok(AppAssets {
             binary: Some(AppBinary::new("yq", binary_data)),
             man_pages: vec![ManPage::new(1, "yq.1", man_data)],

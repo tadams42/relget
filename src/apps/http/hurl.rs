@@ -1,5 +1,4 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -50,45 +49,24 @@ impl App for Hurl {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.ends_with("-x86_64-unknown-linux-gnu.tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find hurl Linux x86_64 asset"))?;
+        let name = release.find_asset(|a| a.ends_with("-x86_64-unknown-linux-gnu.tar.gz"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
-        let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-
-        let find = |file: &str| -> Result<String> {
-            members
-                .iter()
-                .find(|m| Path::new(m).file_name().map(|f| f == file).unwrap_or(false))
-                .cloned()
-                .ok_or_else(|| anyhow!("Can't find {} in archive", file))
-        };
-
-        let hurl_data = extractor.extract(&find("hurl")?)?;
-        let hurlfmt_data = extractor.extract(&find("hurlfmt")?)?;
-
-        let man_pages = vec![
-            ManPage::new(1, "hurl.1.gz", extractor.extract(&find("hurl.1.gz")?)?),
-            ManPage::new(1, "hurlfmt.1.gz", extractor.extract(&find("hurlfmt.1.gz")?)?),
-        ];
-
-        let completions = vec![
-            Completion::zsh("hurl", extractor.extract(&find("_hurl")?)?),
-            Completion::bash("hurl", extractor.extract(&find("hurl.bash")?)?),
-            Completion::fish("hurl", extractor.extract(&find("hurl.fish")?)?),
-            Completion::zsh("hurlfmt", extractor.extract(&find("_hurlfmt")?)?),
-            Completion::bash("hurlfmt", extractor.extract(&find("hurlfmt.bash")?)?),
-            Completion::fish("hurlfmt", extractor.extract(&find("hurlfmt.fish")?)?),
-        ];
-
+        let e = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new("hurl", hurl_data)),
-            other_bins: vec![AppBinary::new("hurlfmt", hurlfmt_data)],
-            man_pages,
-            completions,
+            binary:     Some(AppBinary::new("hurl", e.extract_by_filename("hurl")?)),
+            other_bins: vec![AppBinary::new("hurlfmt", e.extract_by_filename("hurlfmt")?)],
+            man_pages: vec![
+                ManPage::new(1, "hurl.1.gz", e.extract_by_filename("hurl.1.gz")?),
+                ManPage::new(1, "hurlfmt.1.gz", e.extract_by_filename("hurlfmt.1.gz")?),
+            ],
+            completions: vec![
+                Completion::zsh("hurl", e.extract_by_filename("_hurl")?),
+                Completion::bash("hurl", e.extract_by_filename("hurl.bash")?),
+                Completion::fish("hurl", e.extract_by_filename("hurl.fish")?),
+                Completion::zsh("hurlfmt", e.extract_by_filename("_hurlfmt")?),
+                Completion::bash("hurlfmt", e.extract_by_filename("hurlfmt.bash")?),
+                Completion::fish("hurlfmt", e.extract_by_filename("hurlfmt.fish")?),
+            ],
         })
     }
 }

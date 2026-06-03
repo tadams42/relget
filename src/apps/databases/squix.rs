@@ -1,9 +1,9 @@
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
 use crate::clients::GithubClient;
-use crate::installer::gen_completions_subcommand;
+use crate::apps::gen_completions_subcommand;
 use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
@@ -38,11 +38,7 @@ impl App for Squix {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.as_str() == "squix-linux-amd64")
-            .ok_or_else(|| anyhow!("Can't find squix linux amd64 asset"))?;
+        let name = release.find_asset(|a| a == "squix-linux-amd64")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let completions = gen_completions_subcommand("squix", &asset.data, "completion")?;
         Ok(AppAssets {

@@ -1,5 +1,4 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -40,38 +39,13 @@ impl App for Jq {
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
-        // Man page from source tarball
-        let tar_name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("jq-") && a.ends_with(".tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find jq source tarball"))?;
-        let tar_asset = self
-            .client
-            .download_asset(Self::OWNER, Self::REPO, &tar_name)?;
+        let tar_name = release.find_asset(|a| a.starts_with("jq-") && a.ends_with(".tar.gz"))?;
+        let tar_asset = self.client.download_asset(Self::OWNER, Self::REPO, &tar_name)?;
         let extractor = ArchiveExtractor::new(&tar_name, tar_asset.data);
-        let members = extractor.members()?;
-        let man = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "jq.1")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find jq.1 in source tarball"))?;
-        let man_data = extractor.extract(&man)?;
+        let man_data = extractor.extract_by_filename("jq.1")?;
 
-        // Binary (raw file, not an archive)
-        let bin_name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a == "jq-linux-amd64")
-            .ok_or_else(|| anyhow!("Can't find jq-linux-amd64 binary asset"))?;
-        let bin_asset = self
-            .client
-            .download_asset(Self::OWNER, Self::REPO, &bin_name)?;
+        let bin_name = release.find_asset(|a| a == "jq-linux-amd64")?;
+        let bin_asset = self.client.download_asset(Self::OWNER, Self::REPO, &bin_name)?;
 
         Ok(AppAssets {
             binary: Some(AppBinary::new("jq", bin_asset.data)),

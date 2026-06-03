@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, anyhow};
 use chrono::{DateTime, Duration, Utc};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -43,6 +43,13 @@ impl GhRelease {
                     .collect()
             })
             .unwrap_or_default()
+    }
+
+    pub fn find_asset(&self, predicate: impl Fn(&str) -> bool) -> Result<String> {
+        self.asset_names()
+            .into_iter()
+            .find(|a| predicate(a.as_str()))
+            .ok_or_else(|| anyhow!("No matching asset found in {}/{}", self.owner, self.repo))
     }
 
     pub fn asset_download_url(&self, name: &str) -> Option<String> {

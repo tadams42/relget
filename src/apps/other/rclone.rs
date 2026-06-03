@@ -1,11 +1,10 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::installer::{run_cmd, with_temp_exe};
+use crate::apps::{run_cmd, with_temp_exe};
 use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
@@ -43,39 +42,11 @@ impl App for Rclone {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("rclone-") && a.ends_with("-linux-amd64.zip"))
-            .ok_or_else(|| anyhow!("Can't find rclone asset"))?;
+        let name = release.find_asset(|a| a.starts_with("rclone-") && a.ends_with("-linux-amd64.zip"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "rclone")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find rclone in archive"))?;
-        let man = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "rclone.1")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find rclone.1 in archive"))?;
-
-        let binary_data = extractor.extract(&exe)?;
-        let man_data = extractor.extract(&man)?;
-
+        let binary_data = extractor.extract_by_filename("rclone")?;
+        let man_data = extractor.extract_by_filename("rclone.1")?;
         let completions = with_temp_exe("rclone", &binary_data, |exe_path| {
             Ok(vec![
                 Completion::zsh("rclone", run_cmd(exe_path, &["completion", "zsh", "-"])?),
@@ -83,7 +54,6 @@ impl App for Rclone {
                 Completion::fish("rclone", run_cmd(exe_path, &["completion", "fish", "-"])?),
             ])
         })?;
-
         Ok(AppAssets {
             binary: Some(AppBinary::new("rclone", binary_data)),
             man_pages: vec![ManPage::new(1, "rclone.1", man_data)],

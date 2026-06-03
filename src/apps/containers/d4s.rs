@@ -1,5 +1,4 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -38,26 +37,11 @@ impl App for D4S {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("d4s") && a.ends_with("linux_amd64.tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find d4s asset"))?;
+        let name = release.find_asset(|a| a.starts_with("d4s") && a.ends_with("linux_amd64.tar.gz"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "d4s")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find d4s in archive"))?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("d4s", extractor.extract(&exe)?)),
+            binary: Some(AppBinary::new("d4s", extractor.extract_by_filename("d4s")?)),
             ..Default::default()
         })
     }

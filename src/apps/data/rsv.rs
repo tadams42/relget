@@ -1,5 +1,4 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -38,26 +37,11 @@ impl App for Rsv {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a == "x86_64-unknown-linux-musl.zip")
-            .ok_or_else(|| anyhow!("Can't find x86_64-unknown-linux-musl.zip"))?;
+        let name = release.find_asset(|a| a == "x86_64-unknown-linux-musl.zip")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "rsv")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find rsv in archive"))?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("rsv", extractor.extract(&exe)?)),
+            binary: Some(AppBinary::new("rsv", extractor.extract_by_filename("rsv")?)),
             ..Default::default()
         })
     }

@@ -1,4 +1,4 @@
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -45,16 +45,11 @@ impl App for RustAnalyzer {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a == "rust-analyzer-x86_64-unknown-linux-gnu.gz")
-            .ok_or_else(|| anyhow!("Can't find rust-analyzer asset"))?;
+        let name = release.find_asset(|a| a == "rust-analyzer-x86_64-unknown-linux-gnu.gz")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         // Single .gz file decompresses to one file; member name = name without .gz
-        let member = "rust-analyzer-x86_64-unknown-linux-gnu";
-        let binary_data = extractor.extract(member)?;
+        let binary_data = extractor.extract("rust-analyzer-x86_64-unknown-linux-gnu")?;
         Ok(AppAssets {
             binary: Some(AppBinary::new("rust-analyzer", binary_data)),
             ..Default::default()

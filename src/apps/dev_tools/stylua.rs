@@ -1,5 +1,4 @@
-use anyhow::{Result, anyhow};
-use std::path::Path;
+use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
@@ -38,26 +37,11 @@ impl App for Stylua {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a == "stylua-linux-x86_64.zip")
-            .ok_or_else(|| anyhow!("Can't find stylua-linux-x86_64.zip"))?;
+        let name = release.find_asset(|a| a == "stylua-linux-x86_64.zip")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
-        let members = extractor.members()?;
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "stylua")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find stylua in archive"))?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("stylua", extractor.extract(&exe)?)),
+            binary: Some(AppBinary::new("stylua", extractor.extract_by_filename("stylua")?)),
             ..Default::default()
         })
     }

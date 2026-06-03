@@ -45,98 +45,39 @@ impl App for Eza {
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
-        // Binary
-        let bin_name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a == "eza_x86_64-unknown-linux-musl.tar.gz")
-            .ok_or_else(|| anyhow!("Can't find eza binary asset"))?;
-        let asset = self
-            .client
-            .download_asset(Self::OWNER, Self::REPO, &bin_name)?;
+        let bin_name = release.find_asset(|a| a == "eza_x86_64-unknown-linux-musl.tar.gz")?;
+        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &bin_name)?;
         let extractor = ArchiveExtractor::new(&bin_name, asset.data);
-        let members = extractor.members()?;
-        let exe = members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "eza")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find eza executable"))?;
-        let binary_data = extractor.extract(&exe)?;
+        let binary_data = extractor.extract_by_filename("eza")?;
 
-        // Completions archive
-        let comp_name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("completions-") && a.ends_with(".tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find eza completions asset"))?;
-        let comp_asset = self
-            .client
-            .download_asset(Self::OWNER, Self::REPO, &comp_name)?;
+        let comp_name = release.find_asset(|a| a.starts_with("completions-") && a.ends_with(".tar.gz"))?;
+        let comp_asset = self.client.download_asset(Self::OWNER, Self::REPO, &comp_name)?;
         let comp_extractor = ArchiveExtractor::new(&comp_name, comp_asset.data);
         let comp_members = comp_extractor.members()?;
-
-        let zsh_entry = comp_members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "_eza")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find _eza zsh completion"))?;
-        let fish_entry = comp_members
-            .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == "eza.fish")
-                    .unwrap_or(false)
-            })
-            .cloned()
-            .ok_or_else(|| anyhow!("Can't find eza.fish completion"))?;
         let bash_entry = comp_members
             .iter()
             .find(|m| {
-                let name = Path::new(m)
-                    .file_name()
-                    .map(|f| f.to_str().unwrap_or(""))
-                    .unwrap_or("");
+                let name = Path::new(m).file_name().map(|f| f.to_str().unwrap_or("")).unwrap_or("");
                 name == "eza" && m.contains("completions")
             })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find eza bash completion"))?;
-
         let completions = vec![
-            Completion::zsh("eza", comp_extractor.extract(&zsh_entry)?),
-            Completion::fish("eza", comp_extractor.extract(&fish_entry)?),
+            Completion::zsh("eza", comp_extractor.extract_by_filename("_eza")?),
+            Completion::fish("eza", comp_extractor.extract_by_filename("eza.fish")?),
             Completion::bash("eza", comp_extractor.extract(&bash_entry)?),
         ];
 
-        // Man pages archive
-        let man_name = release
-            .asset_names()
-            .into_iter()
-            .find(|a| a.starts_with("man-") && a.ends_with(".tar.gz"))
-            .ok_or_else(|| anyhow!("Can't find eza man pages asset"))?;
-        let man_asset = self
-            .client
-            .download_asset(Self::OWNER, Self::REPO, &man_name)?;
+        let man_name = release.find_asset(|a| a.starts_with("man-") && a.ends_with(".tar.gz"))?;
+        let man_asset = self.client.download_asset(Self::OWNER, Self::REPO, &man_name)?;
         let man_extractor = ArchiveExtractor::new(&man_name, man_asset.data);
-        let man_members = man_extractor.members()?;
         let mut man_pages = Vec::new();
-        for member in &man_members {
-            let path = Path::new(member);
+        for member in man_extractor.members()? {
+            let path = Path::new(&member);
             let file_name = path.file_name().and_then(|f| f.to_str()).unwrap_or("");
             if let Some(section_str) = path.extension().and_then(|e| e.to_str()) {
                 if let Ok(section) = section_str.parse::<u8>() {
-                    let data = man_extractor.extract(member)?;
-                    man_pages.push(ManPage::new(section, file_name, data));
+                    man_pages.push(ManPage::new(section, file_name, man_extractor.extract(&member)?));
                 }
             }
         }
