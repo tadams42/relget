@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 
 use anyhow::Result;
+use clap::builder::styling::{AnsiColor, Effects, Styles};
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand};
 use clap_complete::{Shell, generate};
 
@@ -12,12 +13,25 @@ use super::sub_commands::{
 
 const DEFAULT_PREFIX: &str = "/usr/local";
 
+fn styles() -> Styles {
+    Styles::styled()
+        .header(AnsiColor::Green.on_default().effects(Effects::BOLD | Effects::UNDERLINE))
+        .usage(AnsiColor::Green.on_default().effects(Effects::BOLD))
+        .literal(AnsiColor::Cyan.on_default().effects(Effects::BOLD))
+        .placeholder(AnsiColor::Cyan.on_default())
+        .error(AnsiColor::Red.on_default().effects(Effects::BOLD))
+        .valid(AnsiColor::Green.on_default().effects(Effects::BOLD))
+        .invalid(AnsiColor::Yellow.on_default().effects(Effects::BOLD))
+}
+
 pub fn create_cli() -> Result<Cli> {
     let minimal_set_help = format!(
         "Install a hand-picked minimal set of apps (overrides --apps): {}",
         minimal_set_identifiers().join(", ")
     );
-    let cmd = Cli::command().mut_arg("minimal_set", |a| a.help(minimal_set_help));
+    let cmd = Cli::command()
+        .styles(styles())
+        .mut_arg("minimal_set", |a| a.help(minimal_set_help));
     let cli = Cli::from_arg_matches(&cmd.get_matches())?;
 
     Ok(cli)
