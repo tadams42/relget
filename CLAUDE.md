@@ -32,7 +32,7 @@ src/
                     # for accessing it
     containers/    # d4s, dock_mate, dry, lazydocker
     data/          # dasel, fx, gojq, jid, jq, jqp, qsv, qsv_all, rsv, xq, yq
-    dev_envs/      # aqua, fnm, go, mise, uv
+    dev_envs/      # aqua, fnm, mise, uv
     dev_tools/     # ast_grep, mdbook, neovide, rust_analyzer, stylua
     files/         # bat, dust, eza, fd_find, ripgrep, sd_edit, yazi
     git/           # delta, difftastic, gitleaks, lazygit, mergiraf
@@ -53,7 +53,9 @@ src/
   version.rs       # AppVersion(u64, u64, u64) with find_in(), parse(), Display, Ord
 ```
 
-## Adding a new GitHub app
+## Adding a new app
+
+GitHub app:
 
 1. Create `src/apps/<category>/myapp.rs` implementing the `App` trait:
 2. Register in `src/apps/<category>/mod.rs`: add `mod myapp;` and `pub use myapp::MyApp;`
@@ -61,19 +63,21 @@ src/
 4. Update `create_app()` in `src/apps/apps_factory.rs`, add `"myapp" => Some(Box::new(myapp::MyApp::new(client)))`
 5. run `cargo xtask update-readme` so that `README.md` gets updated with new app
 
-## Adding a new Codeberg app
+Codeberg app:
 
 Same as above but use `CodebergClient` instead of `GithubClient`:
 
-## Adding a new GitLab app
+GitLab app:
 
 Same as above but use `GitlabClient` instead of `GithubClient`. Note that GitLab release assets are stored under `assets.links[].{id, name, direct_asset_url}` in the API response; `GitlabClient` normalizes this to the same shape as GitHub/Codeberg before storing in `GhRelease`, so the same `release.asset_names()` / `release.asset_download_url()` helpers work.
 
-## App trait defaults
+When choosing build artifact to download for new app, use the one for Linux, `x86_64` architecture.
 
-- `cli_version_arg()` → `"--version"`
-- `installed_version()` runs `<exe> <cli_version_arg>`, combines stdout+stderr, calls `AppVersion::find_in()` on the result; override if the app's version output needs special handling
-- `install()` calls `needs_install()` → `download()` → `install_assets()`; only override `download()`
+Prefer `musl` builds if available.
+
+If downloaded artifact contains `man` pages, and app can also generate them, prefer generating them by running downloaded app. Same goes for shell completions: prefer running the app and generating them. Of course, if they can't be generated, use the ones shipped in build artifact.
+
+Sometimes app provides both `.deb` and `.tar.gz` build artifact, but `.tar.gz` doesn't contain man pages or shell completions, and they can't be generated on the fly. In this case, download and extract `.deb` too, it sometimes includes missing pieces from `.tar.gz`
 
 ## Installer helpers
 
@@ -126,9 +130,7 @@ CLI flags:
 
 ## Special cases
 
-- `dev_envs/go.rs`: does not use GithubClient; downloads a fixed version from go.dev, extracts a directory to `prefix/go/`, symlinks `prefix/bin/go`
 - `dev_envs/uv.rs`: installs two binaries (`uv` + `uvx`) and generates completions for both
-- Many apps include man pages — use `ManPage::new(section, filename, data)` in `DownloadedAssets`
 
 ## Code conventions
 

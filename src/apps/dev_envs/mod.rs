@@ -1,6 +1,5 @@
 mod aqua;
 mod fnm;
-mod go;
 mod mise;
 mod uv;
 
