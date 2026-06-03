@@ -1,11 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
-use crate::apps::App;
+use crate::apps::{App, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::apps::{run_cmd, with_temp_exe};
-use crate::types::{AppBinary, Completion, AppAssets, ManPage};
+use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Fzf {
@@ -31,12 +30,16 @@ impl App for Fzf {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages:   vec![
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            man_pages: vec![
                 ManPage::descriptor(1, "fzf.1"),
                 ManPage::descriptor(1, "fzf-tmux.1"),
             ],
-            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
+            completions: vec![
+                Completion::zsh_desc(Self::EXE_NAME),
+                Completion::bash_desc(Self::EXE_NAME),
+                Completion::fish_desc(Self::EXE_NAME),
+            ],
             ..Default::default()
         }
     }
@@ -44,8 +47,11 @@ impl App for Fzf {
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
-        let bin_name = release.find_asset(|a| a.starts_with("fzf-") && a.ends_with("-linux_amd64.tar.gz"))?;
-        let asset = self.client.download_asset(Self::OWNER, Self::REPO, &bin_name)?;
+        let bin_name =
+            release.find_asset(|a| a.starts_with("fzf-") && a.ends_with("-linux_amd64.tar.gz"))?;
+        let asset = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, &bin_name)?;
         let extractor = ArchiveExtractor::new(&bin_name, asset.data);
         let binary_data = extractor.extract_by_filename("fzf")?;
 
@@ -57,12 +63,18 @@ impl App for Fzf {
             ])
         })?;
 
-        let tarball = self.client.download_asset(Self::OWNER, Self::REPO, "tarball")?;
+        let tarball = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, "tarball")?;
         let tb_name = format!("{}.tar.gz", tarball.name);
         let tb_extractor = ArchiveExtractor::new(&tb_name, tarball.data);
         let mut man_pages = Vec::new();
         for man_name in &["fzf.1", "fzf-tmux.1"] {
-            man_pages.push(ManPage::new(1, *man_name, tb_extractor.extract_by_filename(man_name)?));
+            man_pages.push(ManPage::new(
+                1,
+                *man_name,
+                tb_extractor.extract_by_filename(man_name)?,
+            ));
         }
 
         Ok(AppAssets {

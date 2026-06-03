@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, AppAssets};
+use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct LazyJournal {
@@ -29,14 +29,15 @@ impl App for LazyJournal {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
             ..Default::default()
         }
     }
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release.find_asset(|a| a.starts_with("lazyjournal") && a.ends_with("linux-amd64"))?;
+        let name =
+            release.find_asset(|a| a.starts_with("lazyjournal") && a.ends_with("linux-amd64"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         Ok(AppAssets {
             binary: Some(AppBinary::new("lazyjournal", asset.data)),

@@ -1,11 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
-use crate::apps::App;
+use crate::apps::{App, gen_completions_subcommand};
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::apps::gen_completions_subcommand;
-use crate::types::{AppBinary, Completion, AppAssets, ManPage};
+use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Yq {
@@ -31,9 +30,13 @@ impl App for Yq {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages:   vec![ManPage::descriptor(1, "yq.1")],
-            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            man_pages: vec![ManPage::descriptor(1, "yq.1")],
+            completions: vec![
+                Completion::zsh_desc(Self::EXE_NAME),
+                Completion::bash_desc(Self::EXE_NAME),
+                Completion::fish_desc(Self::EXE_NAME),
+            ],
             ..Default::default()
         }
     }

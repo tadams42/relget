@@ -49,9 +49,10 @@ pub fn load_gitlab_token() -> Result<Option<String>> {
 
 pub fn load_configured_set(name: &str) -> Result<Vec<String>> {
     let config = load_config()?;
-    config
-        .sets
-        .get(name)
-        .cloned()
-        .ok_or_else(|| anyhow!("no configured set '{}' found in ~/.config/relget.toml under [sets]", name))
+    config.sets.get(name).cloned().ok_or_else(|| {
+        anyhow!(
+            "no configured set '{}' found in ~/.config/relget.toml under [sets]",
+            name
+        )
+    })
 }

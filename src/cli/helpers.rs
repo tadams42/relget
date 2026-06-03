@@ -1,7 +1,9 @@
 use anyhow::{Result, anyhow};
 
 use crate::apps::{all_apps_identifiers, minimal_set_identifiers};
-use crate::config::{load_codeberg_token, load_configured_set, load_github_token, load_gitlab_token};
+use crate::config::{
+    load_codeberg_token, load_configured_set, load_github_token, load_gitlab_token,
+};
 
 pub fn load_or_prompt_github_token(source: &str) -> Result<Option<String>> {
     let token = match source {
@@ -55,9 +57,7 @@ pub fn load_or_prompt_gitlab_token(source: &str) -> Result<Option<String>> {
 }
 
 pub fn select_apps(
-    user_chosen: &[String],
-    minimal_set: bool,
-    configured_set: Option<&str>,
+    user_chosen: &[String], minimal_set: bool, configured_set: Option<&str>,
 ) -> Result<Vec<String>> {
     let known: Vec<&str> = all_apps_identifiers();
 

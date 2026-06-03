@@ -6,12 +6,40 @@ use anyhow::{Context, Result, anyhow};
 
 use crate::apps::{App, create_app};
 use crate::clients::RateLimitError;
-use crate::types::{AppBinary, AppAssets, ManPage, Completion};
+use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 
 const BIN_MODE: u32 = 0o755;
 const DOC_MODE: u32 = 0o644;
 
-pub fn install_assets(prefix: &Path, assets: &AppAssets) -> Result<Vec<PathBuf>> {
+/// Create each app from `selected` and call it's installer
+/// - installer might need to download the app, so it may need `gh_token` and/or `cb_token`
+/// - if `offline` is true, installer will not try to download anything but will work with cached
+///   data only
+pub fn install_apps(
+    prefix: &Path, selected: &[String], gh_token: Option<String>, cb_token: Option<String>,
+    gl_token: Option<String>, offline: bool,
+) -> Result<Vec<PathBuf>> {
+    let mut installed = Vec::new();
+    for app_id in selected {
+        let app = create_app(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
+            .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
+        match install_app(app.as_ref(), prefix) {
+            Ok(paths) => installed.extend(paths),
+            Err(e) => {
+                if e.chain().any(|cause| cause.is::<RateLimitError>()) {
+                    log::warn!("app={} msg=Skipping (rate limit): {}", app_id, e.root_cause());
+                } else if offline {
+                    log::warn!("app={} msg=Skipping (offline, no cached data): {:#}", app_id, e);
+                } else {
+                    log::error!("app={} msg=Install failed: {:#}", app_id, e);
+                }
+            }
+        }
+    }
+    Ok(installed)
+}
+
+fn install_assets(prefix: &Path, assets: &AppAssets) -> Result<Vec<PathBuf>> {
     let mut installed = Vec::new();
 
     if let Some(bin) = &assets.binary {
@@ -64,7 +92,7 @@ fn ensure_parent(path: &Path) -> Result<()> {
     Ok(())
 }
 
-pub fn install_app(app: &dyn App, prefix: &Path) -> Result<Vec<PathBuf>> {
+fn install_app(app: &dyn App, prefix: &Path) -> Result<Vec<PathBuf>> {
     if !app.needs_install(prefix)? {
         log::info!("lvl=INFO app={} msg=Already at latest version", app.exe_name());
         return Ok(vec![]);
@@ -72,33 +100,5 @@ pub fn install_app(app: &dyn App, prefix: &Path) -> Result<Vec<PathBuf>> {
     let assets = app.download()?;
     let installed = install_assets(prefix, &assets)?;
     log::info!("lvl=INFO app={} msg=Installed", app.exe_name());
-    Ok(installed)
-}
-
-/// Create each app from `selected` and call it's installer
-/// - installer might need to download the app, so it may need `gh_token` and/or `cb_token`
-/// - if `offline` is true, installer will not try to download anything but will work with cached
-///   data only
-pub fn install_apps(
-    prefix: &Path, selected: &[String], gh_token: Option<String>, cb_token: Option<String>,
-    gl_token: Option<String>, offline: bool,
-) -> Result<Vec<PathBuf>> {
-    let mut installed = Vec::new();
-    for app_id in selected {
-        let app = create_app(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
-            .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
-        match install_app(app.as_ref(), prefix) {
-            Ok(paths) => installed.extend(paths),
-            Err(e) => {
-                if e.chain().any(|cause| cause.is::<RateLimitError>()) {
-                    log::warn!("app={} msg=Skipping (rate limit): {}", app_id, e.root_cause());
-                } else if offline {
-                    log::warn!("app={} msg=Skipping (offline, no cached data): {:#}", app_id, e);
-                } else {
-                    log::error!("app={} msg=Install failed: {:#}", app_id, e);
-                }
-            }
-        }
-    }
     Ok(installed)
 }

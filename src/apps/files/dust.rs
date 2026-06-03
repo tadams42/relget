@@ -74,7 +74,7 @@ use anyhow::{Result, anyhow};
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, AppAssets, ManPage};
+use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Dust {
@@ -100,9 +100,13 @@ impl App for Dust {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages:   vec![ManPage::descriptor(1, "dust.1")],
-            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            man_pages: vec![ManPage::descriptor(1, "dust.1")],
+            completions: vec![
+                Completion::zsh_desc(Self::EXE_NAME),
+                Completion::bash_desc(Self::EXE_NAME),
+                Completion::fish_desc(Self::EXE_NAME),
+            ],
             ..Default::default()
         }
     }

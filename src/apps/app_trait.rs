@@ -33,12 +33,20 @@ fn gen_completions_with_shell_arg(
 ) -> Result<Vec<Completion>> {
     with_temp_exe(exe_name, data, |exe| {
         let mut completions = Vec::new();
-        let shells = [(Shell::Zsh, "zsh"), (Shell::Bash, "bash"), (Shell::Fish, "fish")];
+        let shells = [
+            (Shell::Zsh, "zsh"),
+            (Shell::Bash, "bash"),
+            (Shell::Fish, "fish"),
+        ];
         for (shell, shell_name) in &shells {
             let mut args: Vec<&str> = prefix_args.to_vec();
             args.push(shell_name);
             let stdout = run_cmd(exe, &args)?;
-            completions.push(Completion { shell: *shell, app_name: exe_name.to_string(), data: stdout });
+            completions.push(Completion {
+                shell:    *shell,
+                app_name: exe_name.to_string(),
+                data:     stdout,
+            });
         }
         Ok(completions)
     })
@@ -55,9 +63,17 @@ pub(in crate::apps) fn gen_completions_shell_flag(
 ) -> Result<Vec<Completion>> {
     with_temp_exe(exe_name, data, |exe| {
         let mut completions = Vec::new();
-        for (shell, shell_name) in &[(Shell::Zsh, "zsh"), (Shell::Bash, "bash"), (Shell::Fish, "fish")] {
+        for (shell, shell_name) in &[
+            (Shell::Zsh, "zsh"),
+            (Shell::Bash, "bash"),
+            (Shell::Fish, "fish"),
+        ] {
             let stdout = run_cmd(exe, &[subcommand, flag, shell_name])?;
-            completions.push(Completion { shell: *shell, app_name: exe_name.to_string(), data: stdout });
+            completions.push(Completion {
+                shell:    *shell,
+                app_name: exe_name.to_string(),
+                data:     stdout,
+            });
         }
         Ok(completions)
     })
@@ -100,5 +116,4 @@ pub trait App {
             Some(iv) => Ok(iv != self.released_version()?),
         }
     }
-
 }

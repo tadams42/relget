@@ -62,11 +62,7 @@ pub fn create_app(
                 cb_token, offline,
             )))))
         }
-        Pdot::ID => {
-            Some(Box::new(Pdot::new(Arc::new(GitlabClient::new(
-                gl_token, offline,
-            )))))
-        }
+        Pdot::ID => Some(Box::new(Pdot::new(Arc::new(GitlabClient::new(gl_token, offline))))),
         Mise::ID => Some(Box::new(Mise::new(client))),
         Neovide::ID => Some(Box::new(Neovide::new(client))),
         Pgplan::ID => Some(Box::new(Pgplan::new(client))),

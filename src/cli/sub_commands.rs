@@ -30,7 +30,8 @@ pub fn install_apps_command(cli: &Cli) -> Result<()> {
             load_or_prompt_gitlab_token(&cli.gl_token_source)?,
         )
     };
-    let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, gl_token, cli.offline)?;
+    let installed =
+        install_apps(&cli.prefix, &selected, gh_token, cb_token, gl_token, cli.offline)?;
     if !installed.is_empty() {
         println!("Installed files:");
         for path in installed {
@@ -58,14 +59,21 @@ pub fn uninstall_command(cli: &Cli) -> Result<()> {
 }
 
 pub fn update_command(cli: &Cli) -> Result<()> {
-    let to_update: Vec<String> = if cli.apps.is_empty() && !cli.minimal_set && cli.configured_set.is_none() {
+    let to_update: Vec<String> = if cli.apps.is_empty()
+        && !cli.minimal_set
+        && cli.configured_set.is_none()
+    {
         let bin_dir = cli.prefix.join("bin");
         let installed_binaries: HashSet<String> = std::fs::read_dir(&bin_dir)
             .map_err(|e| anyhow::anyhow!("cannot read {}: {}", bin_dir.display(), e))?
             .filter_map(|e| e.ok())
             .filter_map(|e| {
                 let path = e.path();
-                if path.is_file() { Some(e.file_name().to_string_lossy().into_owned()) } else { None }
+                if path.is_file() {
+                    Some(e.file_name().to_string_lossy().into_owned())
+                } else {
+                    None
+                }
             })
             .collect();
 
@@ -74,7 +82,8 @@ pub fn update_command(cli: &Cli) -> Result<()> {
             return Ok(());
         }
 
-        // Build exe_name → first-match app id map; warn on collisions only when the exe is installed.
+        // Build exe_name → first-match app id map; warn on collisions only when the exe is
+        // installed.
         let mut exe_to_id: HashMap<&str, &str> = HashMap::new();
         for entry in all_app_entries() {
             if exe_to_id.contains_key(entry.exe_name.as_str()) {
@@ -82,7 +91,11 @@ pub fn update_command(cli: &Cli) -> Result<()> {
                     let winner = exe_to_id[entry.exe_name.as_str()];
                     log::warn!(
                         "exe_name '{}' maps to both '{}' and '{}'; '{}' will be used for update (re-run with --apps {} to update the other)",
-                        entry.exe_name, winner, entry.id, winner, entry.id
+                        entry.exe_name,
+                        winner,
+                        entry.id,
+                        winner,
+                        entry.id
                     );
                 }
             } else {
@@ -116,7 +129,8 @@ pub fn update_command(cli: &Cli) -> Result<()> {
             load_or_prompt_gitlab_token(&cli.gl_token_source)?,
         )
     };
-    let installed = install_apps(&cli.prefix, &to_update, gh_token, cb_token, gl_token, cli.offline)?;
+    let installed =
+        install_apps(&cli.prefix, &to_update, gh_token, cb_token, gl_token, cli.offline)?;
     if installed.is_empty() {
         println!("All apps already at latest version.");
     } else {

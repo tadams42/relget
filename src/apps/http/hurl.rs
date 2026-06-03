@@ -4,7 +4,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, AppAssets, ManPage};
+use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Hurl {
@@ -53,9 +53,9 @@ impl App for Hurl {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let e = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary:     Some(AppBinary::new("hurl", e.extract_by_filename("hurl")?)),
-            other_bins: vec![AppBinary::new("hurlfmt", e.extract_by_filename("hurlfmt")?)],
-            man_pages: vec![
+            binary:      Some(AppBinary::new("hurl", e.extract_by_filename("hurl")?)),
+            other_bins:  vec![AppBinary::new("hurlfmt", e.extract_by_filename("hurlfmt")?)],
+            man_pages:   vec![
                 ManPage::new(1, "hurl.1.gz", e.extract_by_filename("hurl.1.gz")?),
                 ManPage::new(1, "hurlfmt.1.gz", e.extract_by_filename("hurlfmt.1.gz")?),
             ],

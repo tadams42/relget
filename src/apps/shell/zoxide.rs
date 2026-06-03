@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, AppAssets, ManPage};
+use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct Zoxide {
@@ -31,7 +31,7 @@ impl App for Zoxide {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:    Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
             man_pages: vec![
                 ManPage::descriptor(1, "zoxide.1"),
                 ManPage::descriptor(1, "zoxide-add.1"),
@@ -46,7 +46,9 @@ impl App for Zoxide {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release.find_asset(|a| a.starts_with("zoxide-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz"))?;
+        let name = release.find_asset(|a| {
+            a.starts_with("zoxide-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz")
+        })?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let binary_data = extractor.extract_by_filename("zoxide")?;

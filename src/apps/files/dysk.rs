@@ -4,7 +4,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, AppAssets, ManPage};
+use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Dysk {
@@ -30,9 +30,13 @@ impl App for Dysk {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages:   vec![ManPage::descriptor(1, "dysk.1")],
-            completions: vec![Completion::zsh_desc(Self::EXE_NAME), Completion::bash_desc(Self::EXE_NAME), Completion::fish_desc(Self::EXE_NAME)],
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            man_pages: vec![ManPage::descriptor(1, "dysk.1")],
+            completions: vec![
+                Completion::zsh_desc(Self::EXE_NAME),
+                Completion::bash_desc(Self::EXE_NAME),
+                Completion::fish_desc(Self::EXE_NAME),
+            ],
             ..Default::default()
         }
     }
@@ -44,8 +48,7 @@ impl App for Dysk {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
 
-        let binary_data =
-            extractor.extract("build/x86_64-unknown-linux-musl/dysk")?;
+        let binary_data = extractor.extract("build/x86_64-unknown-linux-musl/dysk")?;
         let man_data = extractor.extract("build/man/dysk.1")?;
         let bash_data = extractor.extract("build/completion/dysk.bash")?;
         let zsh_data = extractor.extract("build/completion/_dysk")?;

@@ -1,5 +1,10 @@
 # relget
 
+[![Latest release](https://img.shields.io/github/v/release/tadams42/relget)](https://github.com/tadams42/relget/releases/latest)
+[![Release](https://github.com/tadams42/relget/actions/workflows/release.yml/badge.svg)](https://github.com/tadams42/relget/actions/workflows/release.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+![Rust](https://img.shields.io/badge/rust-2021-orange)
+
 Downloads and installs bunch of cmdline utilities directly from `GitHub`, `Codeberg` and
 `GitLab` releases and installs them into `/usr/local`. Installs app binaries, `man`
 pages and completion for `ZSH`, `Bash` and `Fish` shells.

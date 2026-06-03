@@ -4,7 +4,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, AppAssets, ManPage};
+use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct Jq {
@@ -30,8 +30,8 @@ impl App for Jq {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages:   vec![ManPage::descriptor(1, "jq.1")],
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            man_pages: vec![ManPage::descriptor(1, "jq.1")],
             ..Default::default()
         }
     }
@@ -40,12 +40,16 @@ impl App for Jq {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
         let tar_name = release.find_asset(|a| a.starts_with("jq-") && a.ends_with(".tar.gz"))?;
-        let tar_asset = self.client.download_asset(Self::OWNER, Self::REPO, &tar_name)?;
+        let tar_asset = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, &tar_name)?;
         let extractor = ArchiveExtractor::new(&tar_name, tar_asset.data);
         let man_data = extractor.extract_by_filename("jq.1")?;
 
         let bin_name = release.find_asset(|a| a == "jq-linux-amd64")?;
-        let bin_asset = self.client.download_asset(Self::OWNER, Self::REPO, &bin_name)?;
+        let bin_asset = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, &bin_name)?;
 
         Ok(AppAssets {
             binary: Some(AppBinary::new("jq", bin_asset.data)),

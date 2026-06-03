@@ -4,7 +4,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, AppAssets, ManPage};
+use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct SdEdit {
@@ -34,20 +34,26 @@ impl App for SdEdit {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages:   vec![ManPage::descriptor(1, "sd.1")],
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            man_pages: vec![ManPage::descriptor(1, "sd.1")],
             ..Default::default()
         }
     }
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release.find_asset(|a| a.starts_with("sd-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz"))?;
+        let name = release.find_asset(|a| {
+            a.starts_with("sd-") && a.ends_with("-x86_64-unknown-linux-musl.tar.gz")
+        })?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
             binary: Some(AppBinary::new("sd", extractor.extract_by_filename("sd")?)),
-            man_pages: vec![ManPage::new(1, "sd.1", extractor.extract_by_filename("sd.1")?)],
+            man_pages: vec![ManPage::new(
+                1,
+                "sd.1",
+                extractor.extract_by_filename("sd.1")?,
+            )],
             ..Default::default()
         })
     }

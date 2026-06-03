@@ -15,7 +15,11 @@ const DEFAULT_PREFIX: &str = "/usr/local";
 
 fn styles() -> Styles {
     Styles::styled()
-        .header(AnsiColor::Green.on_default().effects(Effects::BOLD | Effects::UNDERLINE))
+        .header(
+            AnsiColor::Green
+                .on_default()
+                .effects(Effects::BOLD | Effects::UNDERLINE),
+        )
         .usage(AnsiColor::Green.on_default().effects(Effects::BOLD))
         .literal(AnsiColor::Cyan.on_default().effects(Effects::BOLD))
         .placeholder(AnsiColor::Cyan.on_default())

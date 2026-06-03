@@ -63,7 +63,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, AppAssets};
+use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 use super::qsv::{OWNER, REPO, extract_named, gnu_zip_asset_name};
@@ -91,7 +91,7 @@ impl App for QsvAll {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:     Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
             other_bins: vec![
                 AppBinary::descriptor("qsvdp"),
                 AppBinary::descriptor("qsvlite"),

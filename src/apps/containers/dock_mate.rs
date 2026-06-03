@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, AppAssets};
+use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct DockMate {
@@ -29,7 +29,7 @@ impl App for DockMate {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
             ..Default::default()
         }
     }

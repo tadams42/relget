@@ -1,11 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
-use crate::apps::App;
+use crate::apps::{App, gen_completions_subcommand, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::apps::{gen_completions_subcommand, run_cmd, with_temp_exe};
-use crate::types::{AppBinary, Completion, AppAssets, ManPage};
+use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Caddy {
@@ -33,8 +32,8 @@ impl App for Caddy {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages:   vec![
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            man_pages: vec![
                 ManPage::descriptor(8, "caddy.8"),
                 ManPage::descriptor(8, "caddy-adapt.8"),
                 ManPage::descriptor(8, "caddy-add-package.8"),
@@ -74,7 +73,8 @@ impl App for Caddy {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release.find_asset(|a| a.starts_with("caddy_") && a.ends_with("_linux_amd64.tar.gz"))?;
+        let name = release
+            .find_asset(|a| a.starts_with("caddy_") && a.ends_with("_linux_amd64.tar.gz"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let binary_data = extractor.extract_by_filename("caddy")?;

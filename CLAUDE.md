@@ -7,12 +7,12 @@ Rust CLI that installs/updates CLI utilities directly from GitHub and Codeberg r
 ```sh
 cargo build
 cargo run -- --help
-cargo run -- --apps rg --gh-token-source load
-cargo run -- --apps rg,bat --gh-token-source load   # comma-separated
+cargo run -- --apps rg
+cargo run -- --apps rg,bat        # comma-separated
 cargo run -- list-apps-ids
 cargo run -- completions zsh
 cargo run -- uninstall --apps rg
-cargo run -- --apps rg --offline                    # use only cached data
+cargo run -- --apps rg --offline  # use only cached data
 ```
 
 Use `--prefix /tmp/try-relget/` to avoid needing `sudo` during local testing.
@@ -138,25 +138,7 @@ with_temp_exe("myapp", &data, |path| { ... })
 
 Tokens are optional. Without them, `relget` works anonymously (subject to API rate limits).
 
-Config file `~/.config/relget.toml` (optional):
-```toml
-github_token = "ghp_..."
-codeberg_token = "..."
-gitlab_token = "..."
-```
-
-Env vars override the config file (higher precedence):
-- `RELGET_GHB_TOKEN` — GitHub token
-- `RELGET_CDB_TOKEN` — Codeberg token
-- `RELGET_GLB_TOKEN` — GitLab token
-
-CLI flags:
-- `--gh-token-source prompt`: prompts on stdin (masked)
-- `--gh-token-source load` (default): reads `RELGET_GHB_TOKEN` env, then `~/.config/relget.toml`
-- `--cb-token-source prompt`: prompts on stdin (masked)
-- `--cb-token-source load` (default): reads `RELGET_CDB_TOKEN` env, then `~/.config/relget.toml`
-- `--gl-token-source prompt`: prompts on stdin (masked)
-- `--gl-token-source load` (default): reads `RELGET_GLB_TOKEN` env, then `~/.config/relget.toml`
+`relget` by default tries to load tokens from config file. You may assume that this config file exists and is correctly set up in local development environment. You don't need to provide tokens in any way when calling `relget` for local testing.
 
 ## Cache
 

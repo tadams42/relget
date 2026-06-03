@@ -1,11 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
-use crate::apps::App;
+use crate::apps::{App, gen_completions_subcommand};
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::apps::gen_completions_subcommand;
-use crate::types::{AppBinary, Completion, AppAssets};
+use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct AstGrep {
@@ -31,8 +30,8 @@ impl App for AstGrep {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-            other_bins:  vec![AppBinary::descriptor("sg")],
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            other_bins: vec![AppBinary::descriptor("sg")],
             completions: vec![
                 Completion::zsh_desc(Self::EXE_NAME),
                 Completion::bash_desc(Self::EXE_NAME),
