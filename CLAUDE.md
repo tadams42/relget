@@ -12,7 +12,6 @@ cargo run -- --apps rg,bat --gh-token-source load   # comma-separated
 cargo run -- list-apps-ids
 cargo run -- completions zsh
 cargo run -- uninstall --apps rg
-cargo run -- reinstall --apps rg
 cargo run -- --apps rg --offline                    # use only cached data
 ```
 

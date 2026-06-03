@@ -7,8 +7,7 @@ use clap_complete::{Shell, generate};
 use crate::apps::minimal_set_identifiers;
 
 use super::sub_commands::{
-    install_apps_command, list_apps_ids_command, reinstall_apps_command, uninstall_command,
-    update_command,
+    install_apps_command, list_apps_ids_command, uninstall_command, update_command,
 };
 
 const DEFAULT_PREFIX: &str = "/usr/local";
@@ -31,7 +30,6 @@ pub fn execute_cli(cli: &Cli) -> Result<()> {
             generate(shell, &mut Cli::command(), "relget", &mut std::io::stdout())
         }
         Some(Commands::Uninstall) => uninstall_command(cli)?,
-        Some(Commands::Reinstall) => reinstall_apps_command(cli)?,
         Some(Commands::Update) => update_command(cli)?,
         None => install_apps_command(cli)?,
     }
@@ -119,12 +117,6 @@ pub enum Commands {
     /// ignored for this command.
     #[command(verbatim_doc_comment)]
     Uninstall,
-    /// Uninstall then reinstall selected apps
-    ///
-    /// Equivalent to running `uninstall` followed by the default install.
-    /// Useful to force a clean reinstall without manually tracking installed
-    /// files. Inherits the same best-effort caveats as `uninstall`.
-    Reinstall,
     /// Update all relget-managed apps found in the prefix
     ///
     /// Scans `<prefix>/bin/` for executables that match a known app in the

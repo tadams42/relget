@@ -120,35 +120,3 @@ pub fn update_command(cli: &Cli) -> Result<()> {
 
     Ok(())
 }
-
-pub fn reinstall_apps_command(cli: &Cli) -> Result<()> {
-    let selected = select_apps(&cli.apps, cli.minimal_set, cli.configured_set.as_deref())?;
-    let removed = uninstall_apps(&cli.prefix, &selected)?;
-    if removed.is_empty() {
-        println!("No files removed.");
-    } else {
-        println!("Removed files:");
-        for path in &removed {
-            println!("- {}", path.display());
-        }
-    }
-    log::info!("Reinstalling into: {:?}", cli.prefix);
-    let (gh_token, cb_token, gl_token) = if cli.offline {
-        (None, None, None)
-    } else {
-        (
-            load_or_prompt_github_token(&cli.gh_token_source)?,
-            load_or_prompt_codeberg_token(&cli.cb_token_source)?,
-            load_or_prompt_gitlab_token(&cli.gl_token_source)?,
-        )
-    };
-    let installed = install_apps(&cli.prefix, &selected, gh_token, cb_token, gl_token, cli.offline)?;
-    if !installed.is_empty() {
-        println!("Installed files:");
-        for path in installed {
-            println!("- {}", path.display());
-        }
-    }
-
-    Ok(())
-}
