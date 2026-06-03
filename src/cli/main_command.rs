@@ -121,16 +121,17 @@ pub enum Commands {
     /// ignored for this command.
     #[command(verbatim_doc_comment)]
     Uninstall,
-    /// Update all relget-managed apps found in the prefix
+    /// Update relget-managed apps in the prefix
     ///
-    /// Scans `<prefix>/bin/` for executables that match a known app in the
-    /// registry and installs the latest version of each. Apps already at the
-    /// latest version are skipped.
+    /// Without selectors: scans `<prefix>/bin/` for executables that match a known app in the
+    /// registry and updates each one. When a binary name matches more than one registry entry
+    /// (e.g. `qsv` for both `qsv` and `qsv-all`), the first alphabetical match is used and a
+    /// warning is printed.
     ///
-    /// When a binary name matches more than one registry entry (e.g. `qsv` for
-    /// both `qsv` and `qsv-all`), the first alphabetical match is used and a
-    /// warning is printed. Re-run with `--apps <id>` to update the other entry
-    /// explicitly.
+    /// With --apps / --minimal-set / --configured-set: updates only the specified apps,
+    /// regardless of whether they are currently installed.
+    ///
+    /// Apps already at the latest version are skipped in both cases.
     #[command(verbatim_doc_comment)]
     Update,
 }

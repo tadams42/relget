@@ -58,47 +58,53 @@ pub fn uninstall_command(cli: &Cli) -> Result<()> {
 }
 
 pub fn update_command(cli: &Cli) -> Result<()> {
-    let bin_dir = cli.prefix.join("bin");
-    let installed_binaries: HashSet<String> = std::fs::read_dir(&bin_dir)
-        .map_err(|e| anyhow::anyhow!("cannot read {}: {}", bin_dir.display(), e))?
-        .filter_map(|e| e.ok())
-        .filter_map(|e| {
-            let path = e.path();
-            if path.is_file() { Some(e.file_name().to_string_lossy().into_owned()) } else { None }
-        })
-        .collect();
+    let to_update: Vec<String> = if cli.apps.is_empty() && !cli.minimal_set && cli.configured_set.is_none() {
+        let bin_dir = cli.prefix.join("bin");
+        let installed_binaries: HashSet<String> = std::fs::read_dir(&bin_dir)
+            .map_err(|e| anyhow::anyhow!("cannot read {}: {}", bin_dir.display(), e))?
+            .filter_map(|e| e.ok())
+            .filter_map(|e| {
+                let path = e.path();
+                if path.is_file() { Some(e.file_name().to_string_lossy().into_owned()) } else { None }
+            })
+            .collect();
 
-    if installed_binaries.is_empty() {
-        println!("No binaries found in {}.", bin_dir.display());
-        return Ok(());
-    }
-
-    // Build exe_name → first-match app id map; warn on collisions only when the exe is installed.
-    let mut exe_to_id: HashMap<&str, &str> = HashMap::new();
-    for entry in all_app_entries() {
-        if exe_to_id.contains_key(entry.exe_name.as_str()) {
-            if installed_binaries.contains(entry.exe_name.as_str()) {
-                let winner = exe_to_id[entry.exe_name.as_str()];
-                log::warn!(
-                    "exe_name '{}' maps to both '{}' and '{}'; '{}' will be used for update (re-run with --apps {} to update the other)",
-                    entry.exe_name, winner, entry.id, winner, entry.id
-                );
-            }
-        } else {
-            exe_to_id.insert(&entry.exe_name, &entry.id);
+        if installed_binaries.is_empty() {
+            println!("No binaries found in {}.", bin_dir.display());
+            return Ok(());
         }
-    }
 
-    let to_update: Vec<String> = exe_to_id
-        .iter()
-        .filter(|(exe, _)| installed_binaries.contains(**exe))
-        .map(|(_, id)| id.to_string())
-        .collect();
+        // Build exe_name → first-match app id map; warn on collisions only when the exe is installed.
+        let mut exe_to_id: HashMap<&str, &str> = HashMap::new();
+        for entry in all_app_entries() {
+            if exe_to_id.contains_key(entry.exe_name.as_str()) {
+                if installed_binaries.contains(entry.exe_name.as_str()) {
+                    let winner = exe_to_id[entry.exe_name.as_str()];
+                    log::warn!(
+                        "exe_name '{}' maps to both '{}' and '{}'; '{}' will be used for update (re-run with --apps {} to update the other)",
+                        entry.exe_name, winner, entry.id, winner, entry.id
+                    );
+                }
+            } else {
+                exe_to_id.insert(&entry.exe_name, &entry.id);
+            }
+        }
 
-    if to_update.is_empty() {
-        println!("No relget-managed apps found in {}.", bin_dir.display());
-        return Ok(());
-    }
+        let ids: Vec<String> = exe_to_id
+            .iter()
+            .filter(|(exe, _)| installed_binaries.contains(**exe))
+            .map(|(_, id)| id.to_string())
+            .collect();
+
+        if ids.is_empty() {
+            println!("No relget-managed apps found in {}.", bin_dir.display());
+            return Ok(());
+        }
+
+        ids
+    } else {
+        select_apps(&cli.apps, cli.minimal_set, cli.configured_set.as_deref())?
+    };
 
     log::info!("Updating {} app(s) in {:?}", to_update.len(), cli.prefix);
     let (gh_token, cb_token, gl_token) = if cli.offline {
