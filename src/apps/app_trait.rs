@@ -1,8 +1,7 @@
-use crate::installer::install_assets;
 use crate::types::AppAssets;
 use crate::version::AppVersion;
 use anyhow::Result;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 const DEFAULT_VERSION_ARG: &str = "--version";
 
@@ -44,15 +43,4 @@ pub trait App {
         }
     }
 
-    fn install(&self, prefix: &Path) -> Result<Vec<PathBuf>> {
-        if !self.needs_install(prefix)? {
-            log::info!("lvl=INFO app={} msg=Already at latest version", self.exe_name());
-            return Ok(vec![]);
-        }
-
-        let assets = self.download()?;
-        let installed = install_assets(prefix, &assets)?;
-        log::info!("lvl=INFO app={} msg=Installed", self.exe_name());
-        Ok(installed)
-    }
 }

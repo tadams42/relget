@@ -5,7 +5,7 @@ use std::process::Command;
 
 use anyhow::{Context, Result, anyhow};
 
-use crate::apps::create_app;
+use crate::apps::{App, create_app};
 use crate::clients::RateLimitError;
 use crate::types::{AppBinary, Completion, AppAssets, ManPage, Shell};
 
@@ -142,6 +142,17 @@ pub fn gen_completions_shell_flag(
     })
 }
 
+pub fn install_app(app: &dyn App, prefix: &Path) -> Result<Vec<PathBuf>> {
+    if !app.needs_install(prefix)? {
+        log::info!("lvl=INFO app={} msg=Already at latest version", app.exe_name());
+        return Ok(vec![]);
+    }
+    let assets = app.download()?;
+    let installed = install_assets(prefix, &assets)?;
+    log::info!("lvl=INFO app={} msg=Installed", app.exe_name());
+    Ok(installed)
+}
+
 /// Create each app from `selected` and call it's installer
 /// - installer might need to download the app, so it may need `gh_token` and/or `cb_token`
 /// - if `offline` is true, installer will not try to download anything but will work with cached
@@ -154,7 +165,7 @@ pub fn install_apps(
     for app_id in selected {
         let app = create_app(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
             .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
-        match app.install(prefix) {
+        match install_app(app.as_ref(), prefix) {
             Ok(paths) => installed.extend(paths),
             Err(e) => {
                 if e.chain().any(|cause| cause.is::<RateLimitError>()) {
