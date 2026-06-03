@@ -6,6 +6,7 @@ mod data;
 mod databases;
 mod dev_envs;
 mod dev_tools;
+mod encryption;
 mod files;
 mod git;
 mod http;

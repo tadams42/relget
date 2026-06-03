@@ -3,6 +3,7 @@ use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
+use super::encryption::Age;
 use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
 use super::http::{Caddy, Hurl, Restish, Xh};
@@ -45,6 +46,12 @@ pub struct AppEntry {
 }
 
 static ALL_APP_ENTRIES: &[AppEntry] = &[
+    AppEntry {
+        id:          Age::ID,
+        url:         Age::URL,
+        category:    "encryption",
+        description: Age::DESCRIPTION,
+    },
     AppEntry {
         id:          Aqua::ID,
         url:         Aqua::URL,

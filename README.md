@@ -194,6 +194,10 @@ primary binary removed. Run `relget uninstall --help` for the full list of cavea
 - [scc](https://github.com/boyter/scc) — Fast and accurate code counter with complexity calculations
 - [stylua](https://github.com/JohnnyMorganz/stylua) — Opinionated Lua code formatter
 
+### encryption
+
+- [age](https://github.com/FiloSottile/age) — Simple, modern and secure file encryption tool
+
 ### Files
 
 - [bat](https://github.com/sharkdp/bat) — cat clone with syntax highlighting and git integration
