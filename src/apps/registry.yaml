@@ -1,314 +1,377 @@
 - id: age
+  exe_name: age
   url: https://github.com/FiloSottile/age
   category: encryption
   description: Simple, modern and secure file encryption tool
 
 - id: aqua
+  exe_name: aqua
   url: https://github.com/aquaproj/aqua
   category: dev_envs
   description: Declarative CLI tool installer and version manager
 
 - id: ast-grep
+  exe_name: ast-grep
   url: https://github.com/ast-grep/ast-grep
   category: dev_tools
   description: Fast code search, lint, and rewriting using AST patterns
 
 - id: atuin
+  exe_name: atuin
   url: https://github.com/atuinsh/atuin
   category: shell
   description: Shell history search backed by SQLite with sync
 
 - id: bat
+  exe_name: bat
   url: https://github.com/sharkdp/bat
   category: files
   description: cat clone with syntax highlighting and git integration
 
 - id: caddy
+  exe_name: caddy
   url: https://github.com/caddyserver/caddy
   category: http
   description: Fast, automatic HTTPS web server with TLS
 
 - id: carapace
+  exe_name: carapace
   url: https://github.com/carapace-sh/carapace-bin
   category: shell
   description: Multi-shell completion generator for command-line tools
 
 - id: chezmoi
+  exe_name: chezmoi
   url: https://github.com/twpayne/chezmoi
   category: other
   description: Dotfiles manager across multiple machines
 
 - id: d4s
+  exe_name: d4s
   url: https://github.com/jr-k/d4s
   category: containers
   description: Docker socket proxy for restricting container API access
 
 - id: dasel
+  exe_name: dasel
   url: https://github.com/TomWright/dasel
   category: data
   description: "Query and modify data in JSON, YAML, TOML, XML, and CSV"
 
 - id: delta
+  exe_name: delta
   url: https://github.com/dandavison/delta
   category: git
   description: "Syntax-highlighting pager for git, diff, and grep output"
 
 - id: difftastic
+  exe_name: difft
   url: https://github.com/Wilfred/difftastic
   category: git
   description: Structural diff tool that understands code syntax
 
 - id: dockmate
+  exe_name: dockmate
   url: https://github.com/shubh-io/DockMate
   category: containers
   description: Terminal UI for managing Docker containers and images
 
 - id: dry
+  exe_name: dry
   url: https://github.com/moncho/dry
   category: containers
   description: Interactive terminal application for Docker management
 
 - id: dust
+  exe_name: dust
   url: https://github.com/bootandy/dust
   category: files
   description: "Intuitive disk usage visualizer, a du alternative"
 
 - id: dysk
+  exe_name: dysk
   url: https://github.com/Canop/dysk
   category: files
   description: Terminal utility to get information on filesystems (df alternative)
 
 - id: eza
+  exe_name: eza
   url: https://github.com/eza-community/eza
   category: files
   description: Modern replacement for ls with icons and git integration
 
 - id: f2
+  exe_name: f2
   url: https://github.com/ayoisaiah/f2
   category: files
   description: Cross-platform batch file renaming tool
 
 - id: fd
+  exe_name: fd
   url: https://github.com/sharkdp/fd
   category: files
   description: "Simple, fast, user-friendly alternative to find"
 
 - id: fnm
+  exe_name: fnm
   url: https://github.com/Schniz/fnm
   category: dev_envs
   description: Fast and simple Node.js version manager
 
 - id: fx
+  exe_name: fx
   url: https://github.com/antonmedv/fx
   category: data
   description: Terminal JSON viewer and interactive processor
 
 - id: fzf
+  exe_name: fzf
   url: https://github.com/junegunn/fzf
   category: shell
   description: General-purpose command-line fuzzy finder
 
 - id: gitleaks
+  exe_name: gitleaks
   url: https://github.com/gitleaks/gitleaks
   category: git
   description: Detect secrets and sensitive data in git repositories
 
 - id: gojq
+  exe_name: gojq
   url: https://github.com/itchyny/gojq
   category: data
   description: Pure Go implementation of jq with extended features
 
 - id: gonzo
+  exe_name: gonzo
   url: https://github.com/control-theory/gonzo
   category: logs
   description: Log viewer TUI for structured and plain-text logs
 
 - id: hurl
+  exe_name: hurl
   url: https://github.com/Orange-OpenSource/hurl
   category: http
   description: Run and test HTTP requests defined in plain text
 
 - id: jid
+  exe_name: jid
   url: https://github.com/simeji/jid
   category: data
   description: Interactive JSON incremental digger
 
 - id: jq
+  exe_name: jq
   url: https://github.com/jqlang/jq
   category: data
   description: Lightweight command-line JSON processor
 
 - id: jqp
+  exe_name: jqp
   url: https://github.com/noahgorstein/jqp
   category: data
   description: TUI playground for crafting jq queries
 
 - id: lazyjournal
+  exe_name: lazyjournal
   url: https://github.com/Lifailon/lazyjournal
   category: logs
   description: TUI for browsing systemd journal and Docker logs
 
 - id: lazydocker
+  exe_name: lazydocker
   url: https://github.com/jesseduffield/lazydocker
   category: containers
   description: "Terminal UI for Docker containers, images, and compose"
 
 - id: lazygit
+  exe_name: lazygit
   url: https://github.com/jesseduffield/lazygit
   category: git
   description: Simple terminal UI for git commands
 
 - id: logdy
+  exe_name: logdy
   url: https://github.com/logdyhq/logdy-core
   category: logs
   description: Web-based real-time log viewer with filtering and search
 
 - id: mdbook
+  exe_name: mdbook
   url: https://github.com/rust-lang/mdBook
   category: dev_tools
   description: Create books from Markdown source files
 
 - id: mergiraf
+  exe_name: mergiraf
   url: https://codeberg.org/mergiraf/mergiraf
   category: git
   description: Syntax-aware merge driver for git
 
 - id: mise
+  exe_name: mise
   url: https://github.com/jdx/mise
   category: dev_envs
   description: Polyglot tool version manager and task runner
 
 - id: neovide
+  exe_name: neovide
   url: https://github.com/neovide/neovide
   category: dev_tools
   description: GPU-accelerated GUI frontend for Neovim
 
 - id: pdot
+  exe_name: pdot
   url: https://gitlab.com/dmfay/pdot
   category: databases
   description: PostgreSQL schema visualizer using Graphviz/Mermaid
 
 - id: pgplan
+  exe_name: pgplan
   url: https://github.com/JacobArthurs/pgplan
   category: databases
   description: CLI tool for visualizing and analyzing PostgreSQL query plans
 
 - id: qsv
+  exe_name: qsv
   url: https://github.com/dathere/qsv
   category: data
   description: High-performance CSV data-wrangling toolkit
 
 - id: qsv-all
+  exe_name: qsv
   url: https://github.com/dathere/qsv
   category: data
   description: High-performance CSV data-wrangling toolkit (all variants)
 
 - id: rclone
+  exe_name: rclone
   url: https://github.com/rclone/rclone
   category: other
   description: "rsync for cloud storage (S3, GDrive, Dropbox, and more)"
 
 - id: restish
+  exe_name: restish
   url: https://github.com/rest-sh/restish
   category: http
   description: CLI for interacting with REST-ish HTTP APIs
 
 - id: ripgrep
+  exe_name: rg
   url: https://github.com/BurntSushi/ripgrep
   category: files
   description: Recursive regex search, a faster grep (ripgrep)
 
 - id: rsv
+  exe_name: rsv
   url: https://github.com/ribbondz/rsv
   category: data
   description: High-performance CSV/TSV toolkit for data exploration
 
 - id: rust-analyzer
+  exe_name: rust-analyzer
   url: https://github.com/rust-lang/rust-analyzer
   category: dev_tools
   description: Rust language server providing IDE integration
 
 - id: sabiql
+  exe_name: sabiql
   url: https://github.com/riii111/sabiql
   category: databases
   description: TUI client for PostgreSQL databases
 
 - id: scc
+  exe_name: scc
   url: https://github.com/boyter/scc
   category: dev_tools
   description: Fast and accurate code counter with complexity calculations
 
 - id: sd
+  exe_name: sd
   url: https://github.com/chmln/sd
   category: files
   description: "Intuitive find-and-replace command, a sed alternative"
 
 - id: skim
+  exe_name: sk
   url: https://github.com/skim-rs/skim
   category: shell
   description: Fuzzy finder in Rust (skim)
 
 - id: spotatui
+  exe_name: spotatui
   url: https://github.com/LargeModGames/spotatui
   category: music
   description: Terminal UI for Spotify
 
 - id: squix
+  exe_name: squix
   url: https://github.com/eduardofuncao/squix
   category: databases
   description: Interactive TUI for exploring and querying SQL databases
 
 - id: starship
+  exe_name: starship
   url: https://github.com/starship/starship
   category: shell
   description: "Minimal, blazing-fast, infinitely customizable shell prompt"
 
 - id: stylua
+  exe_name: stylua
   url: https://github.com/JohnnyMorganz/stylua
   category: dev_tools
   description: Opinionated Lua code formatter
 
 - id: tlrc
+  exe_name: tldr
   url: https://github.com/tldr-pages/tlrc
   category: other
   description: Official tldr-pages client written in Rust
 
 - id: trash-cli-rs
+  exe_name: trash
   url: https://github.com/orf/trash
   category: files
   description: Safe rm replacement that moves files to the trash
 
 - id: usql
+  exe_name: usql
   url: https://github.com/xo/usql
   category: databases
   description: "Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases"
 
 - id: uv
+  exe_name: uv
   url: https://github.com/astral-sh/uv
   category: dev_envs
   description: Extremely fast Python package and project manager
 
 - id: xh
+  exe_name: xh
   url: https://github.com/ducaale/xh
   category: http
   description: "Friendly and fast HTTP client, HTTPie alternative"
 
 - id: xq
+  exe_name: xq
   url: https://github.com/sibprogrammer/xq
   category: data
   description: Command-line XML and HTML processor using XPath
 
 - id: yazi
+  exe_name: yazi
   url: https://github.com/sxyazi/yazi
   category: files
   description: Blazing fast terminal file manager with asynchronous I/O
 
 - id: yq
+  exe_name: yq
   url: https://github.com/mikefarah/yq
   category: data
   description: "Portable command-line YAML, JSON, XML, and CSV processor"
 
 - id: zoxide
+  exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide
   category: shell
   description: Smarter cd command with frecency-based directory jumping

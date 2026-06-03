@@ -8,6 +8,7 @@ use crate::apps::minimal_set_identifiers;
 
 use super::sub_commands::{
     install_apps_command, list_apps_ids_command, reinstall_apps_command, uninstall_command,
+    update_command,
 };
 
 const DEFAULT_PREFIX: &str = "/usr/local";
@@ -31,6 +32,7 @@ pub fn execute_cli(cli: &Cli) -> Result<()> {
         }
         Some(Commands::Uninstall) => uninstall_command(cli)?,
         Some(Commands::Reinstall) => reinstall_apps_command(cli)?,
+        Some(Commands::Update) => update_command(cli)?,
         None => install_apps_command(cli)?,
     }
 
@@ -123,4 +125,16 @@ pub enum Commands {
     /// Useful to force a clean reinstall without manually tracking installed
     /// files. Inherits the same best-effort caveats as `uninstall`.
     Reinstall,
+    /// Update all relget-managed apps found in the prefix
+    ///
+    /// Scans `<prefix>/bin/` for executables that match a known app in the
+    /// registry and installs the latest version of each. Apps already at the
+    /// latest version are skipped.
+    ///
+    /// When a binary name matches more than one registry entry (e.g. `qsv` for
+    /// both `qsv` and `qsv-all`), the first alphabetical match is used and a
+    /// warning is printed. Re-run with `--apps <id>` to update the other entry
+    /// explicitly.
+    #[command(verbatim_doc_comment)]
+    Update,
 }
