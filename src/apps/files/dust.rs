@@ -83,6 +83,7 @@ pub struct Dust {
 
 impl Dust {
     pub const ID: &'static str = "dust";
+    pub const CATEGORY: &'static str = "files";
     pub const DESCRIPTION: &'static str = "Intuitive disk usage visualizer, a du alternative";
     pub const URL: &'static str = "https://github.com/bootandy/dust";
     const OWNER: &'static str = "bootandy";

@@ -15,6 +15,7 @@ pub struct Mdbook {
 
 impl Mdbook {
     pub const ID: &'static str = "mdbook";
+    pub const CATEGORY: &'static str = "dev_tools";
     pub const DESCRIPTION: &'static str = "Create books from Markdown source files";
     pub const URL: &'static str = "https://github.com/rust-lang/mdBook";
     const OWNER: &'static str = "rust-lang";

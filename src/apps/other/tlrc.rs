@@ -14,6 +14,7 @@ pub struct Tlrc {
 
 impl Tlrc {
     pub const ID: &'static str = "tlrc";
+    pub const CATEGORY: &'static str = "other";
     pub const DESCRIPTION: &'static str = "Official tldr-pages client written in Rust";
     pub const URL: &'static str = "https://github.com/tldr-pages/tlrc";
     const OWNER: &'static str = "tldr-pages";

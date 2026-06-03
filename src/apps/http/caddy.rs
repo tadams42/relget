@@ -15,6 +15,7 @@ pub struct Caddy {
 
 impl Caddy {
     pub const ID: &'static str = "caddy";
+    pub const CATEGORY: &'static str = "http";
     pub const DESCRIPTION: &'static str = "Fast, automatic HTTPS web server with TLS";
     pub const URL: &'static str = "https://github.com/caddyserver/caddy";
     const OWNER: &'static str = "caddyserver";

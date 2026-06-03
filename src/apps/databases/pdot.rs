@@ -12,6 +12,7 @@ pub struct Pdot {
 
 impl Pdot {
     pub const ID: &'static str = "pdot";
+    pub const CATEGORY: &'static str = "databases";
     pub const DESCRIPTION: &'static str = "PostgreSQL schema visualizer using Graphviz/Mermaid";
     pub const URL: &'static str = "https://gitlab.com/dmfay/pdot";
     const OWNER: &'static str = "dmfay";

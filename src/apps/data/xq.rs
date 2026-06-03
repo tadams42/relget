@@ -15,6 +15,7 @@ pub struct Xq {
 
 impl Xq {
     pub const ID: &'static str = "xq";
+    pub const CATEGORY: &'static str = "data";
     pub const DESCRIPTION: &'static str = "Command-line XML and HTML processor using XPath";
     pub const URL: &'static str = "https://github.com/sibprogrammer/xq";
     const OWNER: &'static str = "sibprogrammer";

@@ -14,6 +14,7 @@ pub struct Age {
 
 impl Age {
     pub const ID: &'static str = "age";
+    pub const CATEGORY: &'static str = "encryption";
     pub const DESCRIPTION: &'static str = "Simple, modern and secure file encryption tool";
     pub const URL: &'static str = "https://github.com/FiloSottile/age";
     const OWNER: &'static str = "FiloSottile";

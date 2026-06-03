@@ -1,0 +1,314 @@
+- id: age
+  url: https://github.com/FiloSottile/age
+  category: encryption
+  description: Simple, modern and secure file encryption tool
+
+- id: aqua
+  url: https://github.com/aquaproj/aqua
+  category: dev_envs
+  description: Declarative CLI tool installer and version manager
+
+- id: ast-grep
+  url: https://github.com/ast-grep/ast-grep
+  category: dev_tools
+  description: Fast code search, lint, and rewriting using AST patterns
+
+- id: atuin
+  url: https://github.com/atuinsh/atuin
+  category: shell
+  description: Shell history search backed by SQLite with sync
+
+- id: bat
+  url: https://github.com/sharkdp/bat
+  category: files
+  description: cat clone with syntax highlighting and git integration
+
+- id: caddy
+  url: https://github.com/caddyserver/caddy
+  category: http
+  description: Fast, automatic HTTPS web server with TLS
+
+- id: carapace
+  url: https://github.com/carapace-sh/carapace-bin
+  category: shell
+  description: Multi-shell completion generator for command-line tools
+
+- id: chezmoi
+  url: https://github.com/twpayne/chezmoi
+  category: other
+  description: Dotfiles manager across multiple machines
+
+- id: d4s
+  url: https://github.com/jr-k/d4s
+  category: containers
+  description: Docker socket proxy for restricting container API access
+
+- id: dasel
+  url: https://github.com/TomWright/dasel
+  category: data
+  description: "Query and modify data in JSON, YAML, TOML, XML, and CSV"
+
+- id: delta
+  url: https://github.com/dandavison/delta
+  category: git
+  description: "Syntax-highlighting pager for git, diff, and grep output"
+
+- id: difftastic
+  url: https://github.com/Wilfred/difftastic
+  category: git
+  description: Structural diff tool that understands code syntax
+
+- id: dockmate
+  url: https://github.com/shubh-io/DockMate
+  category: containers
+  description: Terminal UI for managing Docker containers and images
+
+- id: dry
+  url: https://github.com/moncho/dry
+  category: containers
+  description: Interactive terminal application for Docker management
+
+- id: dust
+  url: https://github.com/bootandy/dust
+  category: files
+  description: "Intuitive disk usage visualizer, a du alternative"
+
+- id: dysk
+  url: https://github.com/Canop/dysk
+  category: files
+  description: Terminal utility to get information on filesystems (df alternative)
+
+- id: eza
+  url: https://github.com/eza-community/eza
+  category: files
+  description: Modern replacement for ls with icons and git integration
+
+- id: f2
+  url: https://github.com/ayoisaiah/f2
+  category: files
+  description: Cross-platform batch file renaming tool
+
+- id: fd
+  url: https://github.com/sharkdp/fd
+  category: files
+  description: "Simple, fast, user-friendly alternative to find"
+
+- id: fnm
+  url: https://github.com/Schniz/fnm
+  category: dev_envs
+  description: Fast and simple Node.js version manager
+
+- id: fx
+  url: https://github.com/antonmedv/fx
+  category: data
+  description: Terminal JSON viewer and interactive processor
+
+- id: fzf
+  url: https://github.com/junegunn/fzf
+  category: shell
+  description: General-purpose command-line fuzzy finder
+
+- id: gitleaks
+  url: https://github.com/gitleaks/gitleaks
+  category: git
+  description: Detect secrets and sensitive data in git repositories
+
+- id: gojq
+  url: https://github.com/itchyny/gojq
+  category: data
+  description: Pure Go implementation of jq with extended features
+
+- id: gonzo
+  url: https://github.com/control-theory/gonzo
+  category: logs
+  description: Log viewer TUI for structured and plain-text logs
+
+- id: hurl
+  url: https://github.com/Orange-OpenSource/hurl
+  category: http
+  description: Run and test HTTP requests defined in plain text
+
+- id: jid
+  url: https://github.com/simeji/jid
+  category: data
+  description: Interactive JSON incremental digger
+
+- id: jq
+  url: https://github.com/jqlang/jq
+  category: data
+  description: Lightweight command-line JSON processor
+
+- id: jqp
+  url: https://github.com/noahgorstein/jqp
+  category: data
+  description: TUI playground for crafting jq queries
+
+- id: lazyjournal
+  url: https://github.com/Lifailon/lazyjournal
+  category: logs
+  description: TUI for browsing systemd journal and Docker logs
+
+- id: lazydocker
+  url: https://github.com/jesseduffield/lazydocker
+  category: containers
+  description: "Terminal UI for Docker containers, images, and compose"
+
+- id: lazygit
+  url: https://github.com/jesseduffield/lazygit
+  category: git
+  description: Simple terminal UI for git commands
+
+- id: logdy
+  url: https://github.com/logdyhq/logdy-core
+  category: logs
+  description: Web-based real-time log viewer with filtering and search
+
+- id: mdbook
+  url: https://github.com/rust-lang/mdBook
+  category: dev_tools
+  description: Create books from Markdown source files
+
+- id: mergiraf
+  url: https://codeberg.org/mergiraf/mergiraf
+  category: git
+  description: Syntax-aware merge driver for git
+
+- id: mise
+  url: https://github.com/jdx/mise
+  category: dev_envs
+  description: Polyglot tool version manager and task runner
+
+- id: neovide
+  url: https://github.com/neovide/neovide
+  category: dev_tools
+  description: GPU-accelerated GUI frontend for Neovim
+
+- id: pdot
+  url: https://gitlab.com/dmfay/pdot
+  category: databases
+  description: PostgreSQL schema visualizer using Graphviz/Mermaid
+
+- id: pgplan
+  url: https://github.com/JacobArthurs/pgplan
+  category: databases
+  description: CLI tool for visualizing and analyzing PostgreSQL query plans
+
+- id: qsv
+  url: https://github.com/dathere/qsv
+  category: data
+  description: High-performance CSV data-wrangling toolkit
+
+- id: qsv-all
+  url: https://github.com/dathere/qsv
+  category: data
+  description: High-performance CSV data-wrangling toolkit (all variants)
+
+- id: rclone
+  url: https://github.com/rclone/rclone
+  category: other
+  description: "rsync for cloud storage (S3, GDrive, Dropbox, and more)"
+
+- id: restish
+  url: https://github.com/rest-sh/restish
+  category: http
+  description: CLI for interacting with REST-ish HTTP APIs
+
+- id: ripgrep
+  url: https://github.com/BurntSushi/ripgrep
+  category: files
+  description: Recursive regex search, a faster grep (ripgrep)
+
+- id: rsv
+  url: https://github.com/ribbondz/rsv
+  category: data
+  description: High-performance CSV/TSV toolkit for data exploration
+
+- id: rust-analyzer
+  url: https://github.com/rust-lang/rust-analyzer
+  category: dev_tools
+  description: Rust language server providing IDE integration
+
+- id: sabiql
+  url: https://github.com/riii111/sabiql
+  category: databases
+  description: TUI client for PostgreSQL databases
+
+- id: scc
+  url: https://github.com/boyter/scc
+  category: dev_tools
+  description: Fast and accurate code counter with complexity calculations
+
+- id: sd
+  url: https://github.com/chmln/sd
+  category: files
+  description: "Intuitive find-and-replace command, a sed alternative"
+
+- id: skim
+  url: https://github.com/skim-rs/skim
+  category: shell
+  description: Fuzzy finder in Rust (skim)
+
+- id: spotatui
+  url: https://github.com/LargeModGames/spotatui
+  category: music
+  description: Terminal UI for Spotify
+
+- id: squix
+  url: https://github.com/eduardofuncao/squix
+  category: databases
+  description: Interactive TUI for exploring and querying SQL databases
+
+- id: starship
+  url: https://github.com/starship/starship
+  category: shell
+  description: "Minimal, blazing-fast, infinitely customizable shell prompt"
+
+- id: stylua
+  url: https://github.com/JohnnyMorganz/stylua
+  category: dev_tools
+  description: Opinionated Lua code formatter
+
+- id: tlrc
+  url: https://github.com/tldr-pages/tlrc
+  category: other
+  description: Official tldr-pages client written in Rust
+
+- id: trash-cli-rs
+  url: https://github.com/orf/trash
+  category: files
+  description: Safe rm replacement that moves files to the trash
+
+- id: usql
+  url: https://github.com/xo/usql
+  category: databases
+  description: "Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases"
+
+- id: uv
+  url: https://github.com/astral-sh/uv
+  category: dev_envs
+  description: Extremely fast Python package and project manager
+
+- id: xh
+  url: https://github.com/ducaale/xh
+  category: http
+  description: "Friendly and fast HTTP client, HTTPie alternative"
+
+- id: xq
+  url: https://github.com/sibprogrammer/xq
+  category: data
+  description: Command-line XML and HTML processor using XPath
+
+- id: yazi
+  url: https://github.com/sxyazi/yazi
+  category: files
+  description: Blazing fast terminal file manager with asynchronous I/O
+
+- id: yq
+  url: https://github.com/mikefarah/yq
+  category: data
+  description: "Portable command-line YAML, JSON, XML, and CSV processor"
+
+- id: zoxide
+  url: https://github.com/ajeetdsouza/zoxide
+  category: shell
+  description: Smarter cd command with frecency-based directory jumping

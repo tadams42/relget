@@ -15,6 +15,7 @@ pub struct Fnm {
 
 impl Fnm {
     pub const ID: &'static str = "fnm";
+    pub const CATEGORY: &'static str = "dev_envs";
     pub const DESCRIPTION: &'static str = "Fast and simple Node.js version manager";
     pub const URL: &'static str = "https://github.com/Schniz/fnm";
     const OWNER: &'static str = "Schniz";

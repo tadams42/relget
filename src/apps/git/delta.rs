@@ -15,6 +15,7 @@ pub struct Delta {
 
 impl Delta {
     pub const ID: &'static str = "delta";
+    pub const CATEGORY: &'static str = "git";
     pub const DESCRIPTION: &'static str =
         "Syntax-highlighting pager for git, diff, and grep output";
     pub const URL: &'static str = "https://github.com/dandavison/delta";

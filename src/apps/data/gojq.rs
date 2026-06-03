@@ -14,6 +14,7 @@ pub struct GoJq {
 
 impl GoJq {
     pub const ID: &'static str = "gojq";
+    pub const CATEGORY: &'static str = "data";
     pub const DESCRIPTION: &'static str = "Pure Go implementation of jq with extended features";
     pub const URL: &'static str = "https://github.com/itchyny/gojq";
     const OWNER: &'static str = "itchyny";

@@ -14,6 +14,7 @@ pub struct Carapace {
 
 impl Carapace {
     pub const ID: &'static str = "carapace";
+    pub const CATEGORY: &'static str = "shell";
     pub const DESCRIPTION: &'static str = "Multi-shell completion generator for command-line tools";
     pub const URL: &'static str = "https://github.com/carapace-sh/carapace-bin";
     const OWNER: &'static str = "carapace-sh";

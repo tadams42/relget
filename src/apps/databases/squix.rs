@@ -13,6 +13,7 @@ pub struct Squix {
 
 impl Squix {
     pub const ID: &'static str = "squix";
+    pub const CATEGORY: &'static str = "databases";
     pub const DESCRIPTION: &'static str =
         "Interactive TUI for exploring and querying SQL databases";
     pub const URL: &'static str = "https://github.com/eduardofuncao/squix";

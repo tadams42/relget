@@ -15,6 +15,7 @@ pub struct Spotatui {
 
 impl Spotatui {
     pub const ID: &'static str = "spotatui";
+    pub const CATEGORY: &'static str = "music";
     pub const DESCRIPTION: &'static str = "Terminal UI for Spotify";
     pub const URL: &'static str = "https://github.com/LargeModGames/spotatui";
     const OWNER: &'static str = "LargeModGames";

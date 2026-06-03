@@ -15,6 +15,7 @@ pub struct Bat {
 
 impl Bat {
     pub const ID: &'static str = "bat";
+    pub const CATEGORY: &'static str = "files";
     pub const DESCRIPTION: &'static str = "cat clone with syntax highlighting and git integration";
     pub const URL: &'static str = "https://github.com/sharkdp/bat";
     const OWNER: &'static str = "sharkdp";

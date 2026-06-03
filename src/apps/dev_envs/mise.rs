@@ -15,6 +15,7 @@ pub struct Mise {
 
 impl Mise {
     pub const ID: &'static str = "mise";
+    pub const CATEGORY: &'static str = "dev_envs";
     pub const DESCRIPTION: &'static str = "Polyglot tool version manager and task runner";
     pub const URL: &'static str = "https://github.com/jdx/mise";
     const OWNER: &'static str = "jdx";

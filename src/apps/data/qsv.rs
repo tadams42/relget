@@ -36,6 +36,7 @@ pub struct Qsv {
 
 impl Qsv {
     pub const ID: &'static str = "qsv";
+    pub const CATEGORY: &'static str = "data";
     pub const DESCRIPTION: &'static str = "High-performance CSV data-wrangling toolkit";
     pub const URL: &'static str = "https://github.com/dathere/qsv";
     const EXE_NAME: &'static str = "qsv";

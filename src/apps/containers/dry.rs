@@ -12,6 +12,7 @@ pub struct Dry {
 
 impl Dry {
     pub const ID: &'static str = "dry";
+    pub const CATEGORY: &'static str = "containers";
     pub const DESCRIPTION: &'static str = "Interactive terminal application for Docker management";
     pub const URL: &'static str = "https://github.com/moncho/dry";
     const OWNER: &'static str = "moncho";

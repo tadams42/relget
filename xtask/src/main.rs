@@ -41,18 +41,18 @@ fn update_readme() {
     let readme_path = project_root().join("README.md");
 
     let mut entries: Vec<_> = all_app_entries().iter().collect();
-    entries.sort_by(|a, b| a.category.cmp(b.category).then_with(|| a.id.cmp(b.id)));
+    entries.sort_by(|a, b| a.category.cmp(&b.category).then_with(|| a.id.cmp(&b.id)));
 
     let mut app_lines: Vec<String> = Vec::new();
     let mut current_category: Option<&str> = None;
     for entry in &entries {
-        if current_category != Some(entry.category) {
+        if current_category != Some(entry.category.as_str()) {
             if current_category.is_some() {
                 app_lines.push(String::new());
             }
-            app_lines.push(format!("### {}", category_display_name(entry.category)));
+            app_lines.push(format!("### {}", category_display_name(&entry.category)));
             app_lines.push(String::new());
-            current_category = Some(entry.category);
+            current_category = Some(entry.category.as_str());
         }
         app_lines.push(format!("- [{}]({}) — {}", entry.id, entry.url, entry.description));
     }

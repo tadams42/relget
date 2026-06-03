@@ -14,6 +14,7 @@ pub struct Zoxide {
 
 impl Zoxide {
     pub const ID: &'static str = "zoxide";
+    pub const CATEGORY: &'static str = "shell";
     pub const DESCRIPTION: &'static str =
         "Smarter cd command with frecency-based directory jumping";
     pub const URL: &'static str = "https://github.com/ajeetdsouza/zoxide";

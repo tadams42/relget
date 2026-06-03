@@ -14,6 +14,7 @@ pub struct Trash {
 
 impl Trash {
     pub const ID: &'static str = "trash-cli-rs";
+    pub const CATEGORY: &'static str = "files";
     pub const DESCRIPTION: &'static str = "Safe rm replacement that moves files to the trash";
     pub const URL: &'static str = "https://github.com/orf/trash";
     const OWNER: &'static str = "orf";
