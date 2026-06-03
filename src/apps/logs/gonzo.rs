@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::gen_completions_subcommand;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Gonzo {
@@ -32,7 +32,15 @@ impl App for Gonzo {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("gonzo")),
+            completions: vec![Completion::zsh_desc("gonzo"), Completion::bash_desc("gonzo"), Completion::fish_desc("gonzo")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -54,7 +62,7 @@ impl App for Gonzo {
             .ok_or_else(|| anyhow!("Can't find gonzo in archive"))?;
         let binary_data = extractor.extract(&exe)?;
         let completions = gen_completions_subcommand("gonzo", &binary_data, "completion")?;
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("gonzo", binary_data)),
             completions,
             ..Default::default()

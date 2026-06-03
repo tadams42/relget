@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Zoxide {
@@ -32,7 +32,22 @@ impl App for Zoxide {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:    Some(AppBinary::descriptor("zoxide")),
+            man_pages: vec![
+                ManPage::descriptor(1, "zoxide.1"),
+                ManPage::descriptor(1, "zoxide-add.1"),
+                ManPage::descriptor(1, "zoxide-import.1"),
+                ManPage::descriptor(1, "zoxide-init.1"),
+                ManPage::descriptor(1, "zoxide-query.1"),
+                ManPage::descriptor(1, "zoxide-remove.1"),
+            ],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -67,7 +82,7 @@ impl App for Zoxide {
             }
         }
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("zoxide", binary_data)),
             man_pages,
             // zoxide init generates completions at shell init time; no static files needed

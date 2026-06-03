@@ -8,11 +8,10 @@ pub struct AppBinary {
 
 impl AppBinary {
     pub fn new(name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self {
-            name: name.into(),
-            data,
-        }
+        Self { name: name.into(), data }
     }
+
+    pub fn descriptor(name: impl Into<String>) -> Self { Self::new(name, vec![]) }
 
     pub fn install_path(&self, prefix: &Path) -> PathBuf { prefix.join("bin").join(&self.name) }
 }
@@ -26,11 +25,11 @@ pub struct ManPage {
 
 impl ManPage {
     pub fn new(section: u8, file_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self {
-            section,
-            file_name: file_name.into(),
-            data,
-        }
+        Self { section, file_name: file_name.into(), data }
+    }
+
+    pub fn descriptor(section: u8, file_name: impl Into<String>) -> Self {
+        Self::new(section, file_name, vec![])
     }
 
     pub fn install_path(&self, prefix: &Path) -> PathBuf {
@@ -58,28 +57,20 @@ pub struct Completion {
 
 impl Completion {
     pub fn zsh(app_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self {
-            shell: Shell::Zsh,
-            app_name: app_name.into(),
-            data,
-        }
+        Self { shell: Shell::Zsh, app_name: app_name.into(), data }
     }
 
     pub fn bash(app_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self {
-            shell: Shell::Bash,
-            app_name: app_name.into(),
-            data,
-        }
+        Self { shell: Shell::Bash, app_name: app_name.into(), data }
     }
 
     pub fn fish(app_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self {
-            shell: Shell::Fish,
-            app_name: app_name.into(),
-            data,
-        }
+        Self { shell: Shell::Fish, app_name: app_name.into(), data }
     }
+
+    pub fn zsh_desc(app_name: impl Into<String>) -> Self { Self::zsh(app_name, vec![]) }
+    pub fn bash_desc(app_name: impl Into<String>) -> Self { Self::bash(app_name, vec![]) }
+    pub fn fish_desc(app_name: impl Into<String>) -> Self { Self::fish(app_name, vec![]) }
 
     pub fn file_name(&self) -> String {
         match self.shell {
@@ -117,7 +108,7 @@ impl Completion {
 }
 
 #[derive(Debug, Default)]
-pub struct DownloadedAssets {
+pub struct AppAssets {
     pub binary:      Option<AppBinary>,
     pub other_bins:  Vec<AppBinary>,
     pub man_pages:   Vec<ManPage>,

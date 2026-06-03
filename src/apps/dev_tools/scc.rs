@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Scc {
@@ -32,7 +32,14 @@ impl App for Scc {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("scc")),
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -52,7 +59,7 @@ impl App for Scc {
             })
             .cloned()
             .ok_or_else(|| anyhow!("Can't find scc in archive"))?;
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("scc", extractor.extract(&exe)?)),
             ..Default::default()
         })

@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::gen_completions_subcommand;
-use crate::types::{AppBinary, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Yq {
@@ -33,7 +33,16 @@ impl App for Yq {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("yq")),
+            man_pages:   vec![ManPage::descriptor(1, "yq.1")],
+            completions: vec![Completion::zsh_desc("yq"), Completion::bash_desc("yq"), Completion::fish_desc("yq")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -69,7 +78,7 @@ impl App for Yq {
         let man_data = extractor.extract(&man)?;
         let completions = gen_completions_subcommand("yq", &binary_data, "completion")?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("yq", binary_data)),
             man_pages: vec![ManPage::new(1, "yq.1", man_data)],
             completions,

@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::{run_cmd, with_temp_exe};
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Ripgrep {
@@ -32,7 +32,16 @@ impl App for Ripgrep {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("rg")),
+            man_pages:   vec![ManPage::descriptor(1, "rg.1")],
+            completions: vec![Completion::zsh_desc("rg"), Completion::bash_desc("rg"), Completion::fish_desc("rg")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -71,7 +80,7 @@ impl App for Ripgrep {
             ])
         })?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("rg", binary_data)),
             man_pages: vec![ManPage::new(1, "rg.1", man_data)],
             completions,

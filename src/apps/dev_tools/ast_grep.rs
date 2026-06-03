@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::gen_completions_subcommand;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct AstGrep {
@@ -33,7 +33,23 @@ impl App for AstGrep {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("ast-grep")),
+            other_bins:  vec![AppBinary::descriptor("sg")],
+            completions: vec![
+                Completion::zsh_desc("ast-grep"),
+                Completion::bash_desc("ast-grep"),
+                Completion::fish_desc("ast-grep"),
+                Completion::zsh_desc("sg"),
+                Completion::bash_desc("sg"),
+                Completion::fish_desc("sg"),
+            ],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -66,7 +82,7 @@ impl App for AstGrep {
         let mut completions = gen_completions_subcommand("ast-grep", &ag_data, "completions")?;
         completions.extend(gen_completions_subcommand("sg", &sg_data, "completions")?);
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("ast-grep", ag_data)),
             other_bins: vec![AppBinary::new("sg", sg_data)],
             completions,

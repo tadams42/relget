@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Hurl {
@@ -31,7 +31,26 @@ impl App for Hurl {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("hurl")),
+            other_bins:  vec![AppBinary::descriptor("hurlfmt")],
+            man_pages:   vec![
+                ManPage::descriptor(1, "hurl.1.gz"),
+                ManPage::descriptor(1, "hurlfmt.1.gz"),
+            ],
+            completions: vec![
+                Completion::zsh_desc("hurl"),
+                Completion::bash_desc("hurl"),
+                Completion::fish_desc("hurl"),
+                Completion::zsh_desc("hurlfmt"),
+                Completion::bash_desc("hurlfmt"),
+                Completion::fish_desc("hurlfmt"),
+            ],
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -67,7 +86,7 @@ impl App for Hurl {
             Completion::fish("hurlfmt", extractor.extract(&find("hurlfmt.fish")?)?),
         ];
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("hurl", hurl_data)),
             other_bins: vec![AppBinary::new("hurlfmt", hurlfmt_data)],
             man_pages,

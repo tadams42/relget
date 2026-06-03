@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::CodebergClient;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Mergiraf {
@@ -32,7 +32,14 @@ impl App for Mergiraf {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("mergiraf")),
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -54,7 +61,7 @@ impl App for Mergiraf {
             .cloned()
             .ok_or_else(|| anyhow!("Can't find mergiraf binary in archive"))?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("mergiraf", extractor.extract(&exe_entry)?)),
             ..Default::default()
         })

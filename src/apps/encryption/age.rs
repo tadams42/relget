@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Age {
@@ -32,7 +32,15 @@ impl App for Age {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:     Some(AppBinary::descriptor("age")),
+            other_bins: vec![AppBinary::descriptor("age-keygen")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -59,7 +67,7 @@ impl App for Age {
         let age_data = extractor.extract(&age_path)?;
         let age_keygen_data = extractor.extract(&age_keygen_path)?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("age", age_data)),
             other_bins: vec![AppBinary::new("age-keygen", age_keygen_data)],
             ..Default::default()

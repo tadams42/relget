@@ -1,5 +1,5 @@
 use crate::installer::install_assets;
-use crate::types::DownloadedAssets;
+use crate::types::AppAssets;
 use crate::version::AppVersion;
 use anyhow::Result;
 use std::path::{Path, PathBuf};
@@ -13,7 +13,9 @@ pub trait App {
 
     fn released_version(&self) -> Result<AppVersion>;
 
-    fn download(&self) -> Result<DownloadedAssets>;
+    fn assets(&self) -> AppAssets;
+
+    fn download(&self) -> Result<AppAssets>;
 
     fn installed_version(&self, prefix: &Path) -> Result<Option<AppVersion>> {
         let bin = prefix.join("bin").join(self.exe_name());

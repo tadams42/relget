@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct GoJq {
@@ -31,7 +31,15 @@ impl App for GoJq {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("gojq")),
+            completions: vec![Completion::zsh_desc("gojq")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -63,7 +71,7 @@ impl App for GoJq {
             .cloned()
             .ok_or_else(|| anyhow!("Can't find _gojq zsh completion in archive"))?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("gojq", extractor.extract(&exe)?)),
             // Only zsh completion is packaged (no runtime generation supported)
             completions: vec![Completion::zsh("gojq", extractor.extract(&zsh)?)],

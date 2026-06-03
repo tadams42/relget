@@ -4,7 +4,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Dysk {
@@ -31,7 +31,16 @@ impl App for Dysk {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("dysk")),
+            man_pages:   vec![ManPage::descriptor(1, "dysk.1")],
+            completions: vec![Completion::zsh_desc("dysk"), Completion::bash_desc("dysk"), Completion::fish_desc("dysk")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -49,7 +58,7 @@ impl App for Dysk {
         let zsh_data = extractor.extract("build/completion/_dysk")?;
         let fish_data = extractor.extract("build/completion/dysk.fish")?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("dysk", binary_data)),
             man_pages: vec![ManPage::new(1, "dysk.1", man_data)],
             completions: vec![

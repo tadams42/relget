@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::{run_cmd, with_temp_exe};
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Fzf {
@@ -32,7 +32,19 @@ impl App for Fzf {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("fzf")),
+            man_pages:   vec![
+                ManPage::descriptor(1, "fzf.1"),
+                ManPage::descriptor(1, "fzf-tmux.1"),
+            ],
+            completions: vec![Completion::zsh_desc("fzf"), Completion::bash_desc("fzf"), Completion::fish_desc("fzf")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
         // Binary
@@ -86,7 +98,7 @@ impl App for Fzf {
             }
         }
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("fzf", binary_data)),
             man_pages,
             completions,

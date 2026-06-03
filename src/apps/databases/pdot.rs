@@ -3,7 +3,7 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::clients::GitlabClient;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Pdot {
@@ -30,7 +30,14 @@ impl App for Pdot {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("pdot")),
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -38,7 +45,7 @@ impl App for Pdot {
             .find(|a| a.contains("Linux x86_64"))
             .ok_or_else(|| anyhow!("Can't find pdot Linux x86_64 asset"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("pdot", asset.data)),
             ..Default::default()
         })

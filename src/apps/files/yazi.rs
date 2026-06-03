@@ -100,7 +100,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Yazi {
@@ -127,7 +127,23 @@ impl App for Yazi {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("yazi")),
+            other_bins:  vec![AppBinary::descriptor("ya")],
+            completions: vec![
+                Completion::zsh_desc("yazi"),
+                Completion::bash_desc("yazi"),
+                Completion::fish_desc("yazi"),
+                Completion::zsh_desc("ya"),
+                Completion::bash_desc("ya"),
+                Completion::fish_desc("ya"),
+            ],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -188,7 +204,7 @@ impl App for Yazi {
             Completion::fish("ya", find_completion("ya.fish")?),
         ];
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("yazi", yazi_data)),
             other_bins: vec![AppBinary::new("ya", ya_data)],
             completions,

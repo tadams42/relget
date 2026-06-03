@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::{run_cmd, with_temp_exe};
-use crate::types::{AppBinary, Completion, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Uv {
@@ -32,7 +32,23 @@ impl App for Uv {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("uv")),
+            other_bins:  vec![AppBinary::descriptor("uvx")],
+            completions: vec![
+                Completion::zsh_desc("uv"),
+                Completion::bash_desc("uv"),
+                Completion::fish_desc("uv"),
+                Completion::zsh_desc("uvx"),
+                Completion::bash_desc("uvx"),
+                Completion::fish_desc("uvx"),
+            ],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -86,7 +102,7 @@ impl App for Uv {
             Ok(comps)
         })?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("uv", uv_data)),
             other_bins: vec![AppBinary::new("uvx", uvx_data)],
             completions,

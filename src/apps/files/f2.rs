@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct F2 {
@@ -31,7 +31,15 @@ impl App for F2 {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("f2")),
+            completions: vec![Completion::zsh_desc("f2"), Completion::bash_desc("f2"), Completion::fish_desc("f2")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -55,7 +63,7 @@ impl App for F2 {
                 .ok_or_else(|| anyhow!("Can't find {} in archive", filename))
         };
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("f2", extractor.extract(&find("f2")?)?)),
             completions: vec![
                 Completion::zsh("f2", extractor.extract(&find("f2.zsh")?)?),

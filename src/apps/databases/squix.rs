@@ -4,7 +4,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::clients::GithubClient;
 use crate::installer::gen_completions_subcommand;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Squix {
@@ -31,7 +31,15 @@ impl App for Squix {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("squix")),
+            completions: vec![Completion::zsh_desc("squix"), Completion::bash_desc("squix"), Completion::fish_desc("squix")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -40,7 +48,7 @@ impl App for Squix {
             .ok_or_else(|| anyhow!("Can't find squix linux amd64 asset"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let completions = gen_completions_subcommand("squix", &asset.data, "completion")?;
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("squix", asset.data)),
             completions,
             ..Default::default()

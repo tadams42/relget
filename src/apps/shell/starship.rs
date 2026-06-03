@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::gen_completions_subcommand;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Starship {
@@ -33,7 +33,15 @@ impl App for Starship {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("starship")),
+            completions: vec![Completion::zsh_desc("starship"), Completion::bash_desc("starship"), Completion::fish_desc("starship")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -55,7 +63,7 @@ impl App for Starship {
             .ok_or_else(|| anyhow!("Can't find starship in archive"))?;
         let binary_data = extractor.extract(&exe)?;
         let completions = gen_completions_subcommand("starship", &binary_data, "completions")?;
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("starship", binary_data)),
             completions,
             ..Default::default()

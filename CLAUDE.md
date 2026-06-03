@@ -48,8 +48,8 @@ src/
     cache.rs       # GhCache: memory HashMap + disk under ~/.cache/relget/
   archive.rs       # ArchiveExtractor: .tar.gz/.tar.bz2/.tar.xz/.tar/.zip/.deb/.gz
   installer.rs     # install_assets(), with_temp_exe(), run_cmd(), gen_completions_*()
-  uninstaller.rs   # uninstall_app(): removes binary, completions, man pages
-  types.rs         # AppBinary, ManPage, Shell, Completion, DownloadedAssets
+  uninstaller.rs   # uninstall_app(): deterministic removal via app.assets()
+  types.rs         # AppBinary, ManPage, Shell, Completion, AppAssets
   version.rs       # AppVersion(u64, u64, u64) with find_in(), parse(), Display, Ord
 ```
 
@@ -58,6 +58,11 @@ src/
 GitHub app:
 
 1. Create `src/apps/<category>/myapp.rs` implementing the `App` trait:
+   - Implement `fn assets(&self) -> AppAssets` returning a static descriptor of all installed files
+     (binary, other_bins, man_pages, completions) using the descriptor constructors:
+     `AppBinary::descriptor("name")`, `ManPage::descriptor(1, "name.1")`,
+     `Completion::zsh_desc("name")` / `bash_desc` / `fish_desc`
+   - Implement `fn download(&self) -> Result<AppAssets>` whose returned asset set must match `assets()`
 2. Register in `src/apps/<category>/mod.rs`: add `mod myapp;` and `pub use myapp::MyApp;`
 3. Register in `src/apps/apps_registry.rs` creating new `AppEntry` in `ALL_APP_ENTRIES`
 4. Update `create_app()` in `src/apps/apps_factory.rs`, add `"myapp" => Some(Box::new(myapp::MyApp::new(client)))`

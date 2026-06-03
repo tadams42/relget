@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::{run_cmd, with_temp_exe};
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Rclone {
@@ -34,7 +34,16 @@ impl App for Rclone {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("rclone")),
+            man_pages:   vec![ManPage::descriptor(1, "rclone.1")],
+            completions: vec![Completion::zsh_desc("rclone"), Completion::bash_desc("rclone"), Completion::fish_desc("rclone")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -77,7 +86,7 @@ impl App for Rclone {
             ])
         })?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("rclone", binary_data)),
             man_pages: vec![ManPage::new(1, "rclone.1", man_data)],
             completions,

@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::gen_completions_subcommand;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Chezmoi {
@@ -32,7 +32,15 @@ impl App for Chezmoi {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("chezmoi")),
+            completions: vec![Completion::zsh_desc("chezmoi"), Completion::bash_desc("chezmoi"), Completion::fish_desc("chezmoi")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -55,7 +63,7 @@ impl App for Chezmoi {
             .ok_or_else(|| anyhow!("Can't find chezmoi in archive"))?;
         let binary_data = extractor.extract(&exe)?;
         let completions = gen_completions_subcommand("chezmoi", &binary_data, "completion")?;
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("chezmoi", binary_data)),
             completions,
             ..Default::default()

@@ -63,7 +63,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, AppAssets};
 use crate::version::AppVersion;
 
 use super::qsv::{OWNER, REPO, extract_named, gnu_zip_asset_name};
@@ -92,7 +92,26 @@ impl App for QsvAll {
         self.client.latest_release(OWNER, REPO)?.version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:     Some(AppBinary::descriptor("qsv")),
+            other_bins: vec![
+                AppBinary::descriptor("qsvdp"),
+                AppBinary::descriptor("qsvlite"),
+                AppBinary::descriptor("qsvmcp"),
+                AppBinary::descriptor("qsvp"),
+                AppBinary::descriptor("qsvpdp"),
+                AppBinary::descriptor("qsvplite"),
+                AppBinary::descriptor("qsvpmcp"),
+                AppBinary::descriptor("qsvpy311"),
+                AppBinary::descriptor("qsvpy312"),
+                AppBinary::descriptor("qsvpy313"),
+            ],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(OWNER, REPO)?;
         let name = gnu_zip_asset_name(&release)?;
         let asset = self.client.download_asset(OWNER, REPO, &name)?;
@@ -119,7 +138,7 @@ impl App for QsvAll {
             }
         }
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("qsv", qsv_data)),
             other_bins,
             ..Default::default()

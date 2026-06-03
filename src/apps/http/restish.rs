@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::gen_completions_subcommand;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Restish {
@@ -32,7 +32,15 @@ impl App for Restish {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("restish")),
+            completions: vec![Completion::zsh_desc("restish"), Completion::bash_desc("restish"), Completion::fish_desc("restish")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -54,7 +62,7 @@ impl App for Restish {
             .ok_or_else(|| anyhow!("Can't find restish in archive"))?;
         let binary_data = extractor.extract(&exe)?;
         let completions = gen_completions_subcommand("restish", &binary_data, "completion")?;
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("restish", binary_data)),
             completions,
             ..Default::default()

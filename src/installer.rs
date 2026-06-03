@@ -7,12 +7,12 @@ use anyhow::{Context, Result, anyhow};
 
 use crate::apps::create_app;
 use crate::clients::RateLimitError;
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage, Shell};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage, Shell};
 
 const BIN_MODE: u32 = 0o755;
 const DOC_MODE: u32 = 0o644;
 
-pub fn install_assets(prefix: &Path, assets: &DownloadedAssets) -> Result<Vec<PathBuf>> {
+pub fn install_assets(prefix: &Path, assets: &AppAssets) -> Result<Vec<PathBuf>> {
     let mut installed = Vec::new();
 
     if let Some(bin) = &assets.binary {

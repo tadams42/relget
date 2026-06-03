@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::{gen_completions_subcommand, run_cmd, with_temp_exe};
-use crate::types::{AppBinary, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Dasel {
@@ -34,7 +34,16 @@ impl App for Dasel {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("dasel")),
+            man_pages:   vec![ManPage::descriptor(1, "dasel.1")],
+            completions: vec![Completion::zsh_desc("dasel"), Completion::bash_desc("dasel"), Completion::fish_desc("dasel")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -62,7 +71,7 @@ impl App for Dasel {
             Ok((completions, vec![ManPage::new(1, "dasel.1", man_data)]))
         })?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("dasel", binary_data)),
             completions,
             man_pages,

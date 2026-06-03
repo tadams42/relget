@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::{GhRelease, GithubClient};
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, AppAssets};
 use crate::version::AppVersion;
 
 pub const OWNER: &str = "dathere";
@@ -49,14 +49,21 @@ impl App for Qsv {
         self.client.latest_release(OWNER, REPO)?.version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("qsv")),
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(OWNER, REPO)?;
         let name = gnu_zip_asset_name(&release)?;
         let asset = self.client.download_asset(OWNER, REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let members = extractor.members()?;
         let data = extract_named(&extractor, &members, "qsv")?;
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("qsv", data)),
             ..Default::default()
         })

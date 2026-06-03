@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Tlrc {
@@ -31,7 +31,16 @@ impl App for Tlrc {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("tldr")),
+            man_pages:   vec![ManPage::descriptor(1, "tldr.1")],
+            completions: vec![Completion::zsh_desc("tldr"), Completion::bash_desc("tldr"), Completion::fish_desc("tldr")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -56,7 +65,7 @@ impl App for Tlrc {
         let zsh_entry = find("_tldr")?;
         let fish_entry = find("tldr.fish")?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("tldr", extractor.extract(&exe_entry)?)),
             man_pages: vec![ManPage::new(1, "tldr.1", extractor.extract(&man_entry)?)],
             completions: vec![

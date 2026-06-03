@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Jq {
@@ -31,7 +31,15 @@ impl App for Jq {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("jq")),
+            man_pages:   vec![ManPage::descriptor(1, "jq.1")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
         // Man page from source tarball
@@ -67,7 +75,7 @@ impl App for Jq {
             .client
             .download_asset(Self::OWNER, Self::REPO, &bin_name)?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("jq", bin_asset.data)),
             man_pages: vec![ManPage::new(1, "jq.1", man_data)],
             ..Default::default()

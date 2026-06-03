@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::{run_cmd, with_temp_exe};
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Bat {
@@ -32,7 +32,16 @@ impl App for Bat {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("bat")),
+            man_pages:   vec![ManPage::descriptor(1, "bat.1")],
+            completions: vec![Completion::zsh_desc("bat"), Completion::bash_desc("bat"), Completion::fish_desc("bat")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -76,7 +85,7 @@ impl App for Bat {
             ])
         })?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("bat", binary_data)),
             man_pages: vec![ManPage::new(1, "bat.1", man_data)],
             completions,

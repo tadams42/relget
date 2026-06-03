@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct SdEdit {
@@ -35,7 +35,15 @@ impl App for SdEdit {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("sd")),
+            man_pages:   vec![ManPage::descriptor(1, "sd.1")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -62,7 +70,7 @@ impl App for SdEdit {
             .cloned()
             .ok_or_else(|| anyhow!("Can't find sd.1 in archive"))?;
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("sd", extractor.extract(&exe)?)),
             man_pages: vec![ManPage::new(1, "sd.1", extractor.extract(&man)?)],
             ..Default::default()

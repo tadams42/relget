@@ -74,7 +74,7 @@ use anyhow::{Result, anyhow};
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Dust {
@@ -100,7 +100,16 @@ impl App for Dust {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("dust")),
+            man_pages:   vec![ManPage::descriptor(1, "dust.1")],
+            completions: vec![Completion::zsh_desc("dust"), Completion::bash_desc("dust"), Completion::fish_desc("dust")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
         // Binary: x86_64 musl static build
@@ -208,7 +217,7 @@ impl App for Dust {
             completions.push(Completion::fish("dust", data_extractor.extract(m)?));
         }
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("dust", binary_data)),
             man_pages,
             completions,

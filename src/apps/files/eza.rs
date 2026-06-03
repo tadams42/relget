@@ -5,7 +5,7 @@ use std::sync::Arc;
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
-use crate::types::{AppBinary, Completion, DownloadedAssets, ManPage};
+use crate::types::{AppBinary, Completion, AppAssets, ManPage};
 use crate::version::AppVersion;
 
 pub struct Eza {
@@ -32,7 +32,20 @@ impl App for Eza {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("eza")),
+            man_pages:   vec![
+                ManPage::descriptor(1, "eza.1"),
+                ManPage::descriptor(5, "eza_colors.5"),
+                ManPage::descriptor(5, "eza_colors-explanation.5"),
+            ],
+            completions: vec![Completion::zsh_desc("eza"), Completion::bash_desc("eza"), Completion::fish_desc("eza")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
         // Binary
@@ -131,7 +144,7 @@ impl App for Eza {
             }
         }
 
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("eza", binary_data)),
             man_pages,
             completions,

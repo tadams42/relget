@@ -6,7 +6,7 @@ use crate::apps::App;
 use crate::archive::ArchiveExtractor;
 use crate::clients::GithubClient;
 use crate::installer::gen_completions_shell_flag;
-use crate::types::{AppBinary, DownloadedAssets};
+use crate::types::{AppBinary, Completion, AppAssets};
 use crate::version::AppVersion;
 
 pub struct Fnm {
@@ -32,7 +32,15 @@ impl App for Fnm {
             .version()
     }
 
-    fn download(&self) -> Result<DownloadedAssets> {
+    fn assets(&self) -> AppAssets {
+        AppAssets {
+            binary:      Some(AppBinary::descriptor("fnm")),
+            completions: vec![Completion::zsh_desc("fnm"), Completion::bash_desc("fnm"), Completion::fish_desc("fnm")],
+            ..Default::default()
+        }
+    }
+
+    fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release
             .asset_names()
@@ -55,7 +63,7 @@ impl App for Fnm {
         let binary_data = extractor.extract(&exe)?;
         let completions =
             gen_completions_shell_flag("fnm", &binary_data, "completions", "--shell")?;
-        Ok(DownloadedAssets {
+        Ok(AppAssets {
             binary: Some(AppBinary::new("fnm", binary_data)),
             completions,
             ..Default::default()

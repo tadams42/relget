@@ -41,9 +41,6 @@ from your shell, depends on your `$PATH`. In most modern distros, stuff from
     `relget` had just this moment installed it to location that makes sure this broken
     version is called by everything 😎
   - or ...
-- `relget uninstall` is best-effort: it removes the primary binary, standard
-  completions, and man pages matched by name, but does not guarantee complete removal
-  (see `relget uninstall --help` for details)
 - `relget` works on and installs utilities for **Linux only**; you may be able to make
   it work on some other systems, but it was never intended to be used like that [^1]
 - `relget` downloads only `x86_64` binaries
@@ -138,10 +135,9 @@ relget uninstall --prefix ~/.local --minimal-set
 relget reinstall --prefix ~/.local --apps rg --gh-token-source load
 ```
 
-`uninstall` is best-effort: it removes the primary binary, standard shell completions,
-and man pages whose names match `{exe}-{anything}.N[.gz]`. Apps that install additional
-binaries under different names (e.g. `uv` also installs `uvx`) will have only the
-primary binary removed. Run `relget uninstall --help` for the full list of caveats.
+`uninstall` removes exactly what each app declares it installs — all binaries,
+man pages, and shell completions. Multi-binary apps (e.g. `uv`/`uvx`, `age`/`age-keygen`,
+`yazi`/`ya`) are fully cleaned up.
 
 ## Caching
 
