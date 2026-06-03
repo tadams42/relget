@@ -38,3 +38,4 @@ jobs:
       - uses: softprops/action-gh-release@v3
         with:
           files: relget-x86_64-linux.tar.gz
+          generate_release_notes: true
