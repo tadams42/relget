@@ -78,10 +78,6 @@ pub struct QsvAll {
 
 impl QsvAll {
     pub const ID: &'static str = "qsv-all";
-    pub const CATEGORY: &'static str = "data";
-    pub const DESCRIPTION: &'static str =
-        "High-performance CSV data-wrangling toolkit (all variants)";
-    pub const URL: &'static str = "https://github.com/dathere/qsv";
     const EXE_NAME: &'static str = "qsv";
     pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
 }

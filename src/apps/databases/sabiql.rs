@@ -14,9 +14,6 @@ pub struct Sabiql {
 
 impl Sabiql {
     pub const ID: &'static str = "sabiql";
-    pub const CATEGORY: &'static str = "databases";
-    pub const DESCRIPTION: &'static str = "TUI client for PostgreSQL databases";
-    pub const URL: &'static str = "https://github.com/riii111/sabiql";
     const OWNER: &'static str = "riii111";
     const REPO: &'static str = "sabiql";
     const EXE_NAME: &'static str = "sabiql";

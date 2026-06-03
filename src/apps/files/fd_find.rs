@@ -15,9 +15,6 @@ pub struct FdFind {
 
 impl FdFind {
     pub const ID: &'static str = "fd";
-    pub const CATEGORY: &'static str = "files";
-    pub const DESCRIPTION: &'static str = "Simple, fast, user-friendly alternative to find";
-    pub const URL: &'static str = "https://github.com/sharkdp/fd";
     const OWNER: &'static str = "sharkdp";
     const REPO: &'static str = "fd";
     const EXE_NAME: &'static str = "fd";

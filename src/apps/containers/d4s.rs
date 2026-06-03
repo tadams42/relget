@@ -14,10 +14,6 @@ pub struct D4S {
 
 impl D4S {
     pub const ID: &'static str = "d4s";
-    pub const CATEGORY: &'static str = "containers";
-    pub const DESCRIPTION: &'static str =
-        "Docker socket proxy for restricting container API access";
-    pub const URL: &'static str = "https://github.com/jr-k/d4s";
     const OWNER: &'static str = "jr-k";
     const REPO: &'static str = "d4s";
     const EXE_NAME: &'static str = "d4s";

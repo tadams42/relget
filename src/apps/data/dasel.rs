@@ -15,9 +15,6 @@ pub struct Dasel {
 
 impl Dasel {
     pub const ID: &'static str = "dasel";
-    pub const CATEGORY: &'static str = "data";
-    pub const DESCRIPTION: &'static str = "Query and modify data in JSON, YAML, TOML, XML, and CSV";
-    pub const URL: &'static str = "https://github.com/TomWright/dasel";
     const OWNER: &'static str = "TomWright";
     const REPO: &'static str = "dasel";
     const EXE_NAME: &'static str = "dasel";

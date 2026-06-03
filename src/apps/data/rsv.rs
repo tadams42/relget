@@ -14,9 +14,6 @@ pub struct Rsv {
 
 impl Rsv {
     pub const ID: &'static str = "rsv";
-    pub const CATEGORY: &'static str = "data";
-    pub const DESCRIPTION: &'static str = "High-performance CSV/TSV toolkit for data exploration";
-    pub const URL: &'static str = "https://github.com/ribbondz/rsv";
     const OWNER: &'static str = "ribbondz";
     const REPO: &'static str = "rsv";
     const EXE_NAME: &'static str = "rsv";

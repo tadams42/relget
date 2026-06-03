@@ -14,9 +14,6 @@ pub struct Jid {
 
 impl Jid {
     pub const ID: &'static str = "jid";
-    pub const CATEGORY: &'static str = "data";
-    pub const DESCRIPTION: &'static str = "Interactive JSON incremental digger";
-    pub const URL: &'static str = "https://github.com/simeji/jid";
     const OWNER: &'static str = "simeji";
     const REPO: &'static str = "jid";
     const EXE_NAME: &'static str = "jid";

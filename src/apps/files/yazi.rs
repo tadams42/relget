@@ -109,10 +109,6 @@ pub struct Yazi {
 
 impl Yazi {
     pub const ID: &'static str = "yazi";
-    pub const CATEGORY: &'static str = "files";
-    pub const DESCRIPTION: &'static str =
-        "Blazing fast terminal file manager with asynchronous I/O";
-    pub const URL: &'static str = "https://github.com/sxyazi/yazi";
     const OWNER: &'static str = "sxyazi";
     const REPO: &'static str = "yazi";
     const EXE_NAME: &'static str = "yazi";

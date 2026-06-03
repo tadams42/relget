@@ -13,10 +13,6 @@ pub struct Dysk {
 
 impl Dysk {
     pub const ID: &'static str = "dysk";
-    pub const CATEGORY: &'static str = "files";
-    pub const DESCRIPTION: &'static str =
-        "Terminal utility to get information on filesystems (df alternative)";
-    pub const URL: &'static str = "https://github.com/Canop/dysk";
     const OWNER: &'static str = "Canop";
     const REPO: &'static str = "dysk";
     const EXE_NAME: &'static str = "dysk";

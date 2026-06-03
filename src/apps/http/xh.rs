@@ -14,9 +14,6 @@ pub struct Xh {
 
 impl Xh {
     pub const ID: &'static str = "xh";
-    pub const CATEGORY: &'static str = "http";
-    pub const DESCRIPTION: &'static str = "Friendly and fast HTTP client, HTTPie alternative";
-    pub const URL: &'static str = "https://github.com/ducaale/xh";
     const OWNER: &'static str = "ducaale";
     const REPO: &'static str = "xh";
     const EXE_NAME: &'static str = "xh";

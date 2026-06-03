@@ -15,9 +15,6 @@ pub struct Fzf {
 
 impl Fzf {
     pub const ID: &'static str = "fzf";
-    pub const CATEGORY: &'static str = "shell";
-    pub const DESCRIPTION: &'static str = "General-purpose command-line fuzzy finder";
-    pub const URL: &'static str = "https://github.com/junegunn/fzf";
     const OWNER: &'static str = "junegunn";
     const REPO: &'static str = "fzf";
     const EXE_NAME: &'static str = "fzf";

@@ -14,9 +14,6 @@ pub struct F2 {
 
 impl F2 {
     pub const ID: &'static str = "f2";
-    pub const CATEGORY: &'static str = "files";
-    pub const DESCRIPTION: &'static str = "Cross-platform batch file renaming tool";
-    pub const URL: &'static str = "https://github.com/ayoisaiah/f2";
     const OWNER: &'static str = "ayoisaiah";
     const REPO: &'static str = "f2";
     const EXE_NAME: &'static str = "f2";

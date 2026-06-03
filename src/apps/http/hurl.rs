@@ -14,9 +14,6 @@ pub struct Hurl {
 
 impl Hurl {
     pub const ID: &'static str = "hurl";
-    pub const CATEGORY: &'static str = "http";
-    pub const DESCRIPTION: &'static str = "Run and test HTTP requests defined in plain text";
-    pub const URL: &'static str = "https://github.com/Orange-OpenSource/hurl";
     const OWNER: &'static str = "Orange-OpenSource";
     const REPO: &'static str = "hurl";
     const EXE_NAME: &'static str = "hurl";

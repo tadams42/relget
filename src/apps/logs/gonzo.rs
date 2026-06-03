@@ -15,9 +15,6 @@ pub struct Gonzo {
 
 impl Gonzo {
     pub const ID: &'static str = "gonzo";
-    pub const CATEGORY: &'static str = "logs";
-    pub const DESCRIPTION: &'static str = "Log viewer TUI for structured and plain-text logs";
-    pub const URL: &'static str = "https://github.com/control-theory/gonzo";
     const OWNER: &'static str = "control-theory";
     const REPO: &'static str = "gonzo";
     const EXE_NAME: &'static str = "gonzo";

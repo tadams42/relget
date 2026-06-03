@@ -14,9 +14,6 @@ pub struct Lazygit {
 
 impl Lazygit {
     pub const ID: &'static str = "lazygit";
-    pub const CATEGORY: &'static str = "git";
-    pub const DESCRIPTION: &'static str = "Simple terminal UI for git commands";
-    pub const URL: &'static str = "https://github.com/jesseduffield/lazygit";
     const OWNER: &'static str = "jesseduffield";
     const REPO: &'static str = "lazygit";
     const EXE_NAME: &'static str = "lazygit";

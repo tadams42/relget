@@ -14,9 +14,6 @@ pub struct Stylua {
 
 impl Stylua {
     pub const ID: &'static str = "stylua";
-    pub const CATEGORY: &'static str = "dev_tools";
-    pub const DESCRIPTION: &'static str = "Opinionated Lua code formatter";
-    pub const URL: &'static str = "https://github.com/JohnnyMorganz/stylua";
     const OWNER: &'static str = "JohnnyMorganz";
     const REPO: &'static str = "stylua";
     const EXE_NAME: &'static str = "stylua";

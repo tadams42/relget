@@ -15,9 +15,6 @@ pub struct Aqua {
 
 impl Aqua {
     pub const ID: &'static str = "aqua";
-    pub const CATEGORY: &'static str = "dev_envs";
-    pub const DESCRIPTION: &'static str = "Declarative CLI tool installer and version manager";
-    pub const URL: &'static str = "https://github.com/aquaproj/aqua";
     const OWNER: &'static str = "aquaproj";
     const REPO: &'static str = "aqua";
     const EXE_NAME: &'static str = "aqua";

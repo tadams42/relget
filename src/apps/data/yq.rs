@@ -15,10 +15,6 @@ pub struct Yq {
 
 impl Yq {
     pub const ID: &'static str = "yq";
-    pub const CATEGORY: &'static str = "data";
-    pub const DESCRIPTION: &'static str =
-        "Portable command-line YAML, JSON, XML, and CSV processor";
-    pub const URL: &'static str = "https://github.com/mikefarah/yq";
     const OWNER: &'static str = "mikefarah";
     const REPO: &'static str = "yq";
     const EXE_NAME: &'static str = "yq";

@@ -15,9 +15,6 @@ pub struct Atuin {
 
 impl Atuin {
     pub const ID: &'static str = "atuin";
-    pub const CATEGORY: &'static str = "shell";
-    pub const DESCRIPTION: &'static str = "Shell history search backed by SQLite with sync";
-    pub const URL: &'static str = "https://github.com/atuinsh/atuin";
     const OWNER: &'static str = "atuinsh";
     const REPO: &'static str = "atuin";
     const EXE_NAME: &'static str = "atuin";

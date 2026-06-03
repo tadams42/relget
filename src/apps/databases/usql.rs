@@ -14,10 +14,6 @@ pub struct Usql {
 
 impl Usql {
     pub const ID: &'static str = "usql";
-    pub const CATEGORY: &'static str = "databases";
-    pub const DESCRIPTION: &'static str =
-        "Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases";
-    pub const URL: &'static str = "https://github.com/xo/usql";
     const OWNER: &'static str = "xo";
     const REPO: &'static str = "usql";
     const EXE_NAME: &'static str = "usql";

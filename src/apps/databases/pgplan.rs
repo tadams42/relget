@@ -14,10 +14,6 @@ pub struct Pgplan {
 
 impl Pgplan {
     pub const ID: &'static str = "pgplan";
-    pub const CATEGORY: &'static str = "databases";
-    pub const DESCRIPTION: &'static str =
-        "CLI tool for visualizing and analyzing PostgreSQL query plans";
-    pub const URL: &'static str = "https://github.com/JacobArthurs/pgplan";
     const OWNER: &'static str = "JacobArthurs";
     const REPO: &'static str = "pgplan";
     const EXE_NAME: &'static str = "pgplan";

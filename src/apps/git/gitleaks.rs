@@ -15,9 +15,6 @@ pub struct Gitleaks {
 
 impl Gitleaks {
     pub const ID: &'static str = "gitleaks";
-    pub const CATEGORY: &'static str = "git";
-    pub const DESCRIPTION: &'static str = "Detect secrets and sensitive data in git repositories";
-    pub const URL: &'static str = "https://github.com/gitleaks/gitleaks";
     const OWNER: &'static str = "gitleaks";
     const REPO: &'static str = "gitleaks";
     const EXE_NAME: &'static str = "gitleaks";

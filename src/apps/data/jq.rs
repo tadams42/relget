@@ -14,9 +14,6 @@ pub struct Jq {
 
 impl Jq {
     pub const ID: &'static str = "jq";
-    pub const CATEGORY: &'static str = "data";
-    pub const DESCRIPTION: &'static str = "Lightweight command-line JSON processor";
-    pub const URL: &'static str = "https://github.com/jqlang/jq";
     const OWNER: &'static str = "jqlang";
     const REPO: &'static str = "jq";
     const EXE_NAME: &'static str = "jq";

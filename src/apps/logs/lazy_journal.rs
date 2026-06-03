@@ -12,9 +12,6 @@ pub struct LazyJournal {
 
 impl LazyJournal {
     pub const ID: &'static str = "lazyjournal";
-    pub const CATEGORY: &'static str = "logs";
-    pub const DESCRIPTION: &'static str = "TUI for browsing systemd journal and Docker logs";
-    pub const URL: &'static str = "https://github.com/Lifailon/lazyjournal";
     const OWNER: &'static str = "Lifailon";
     const REPO: &'static str = "lazyjournal";
     const EXE_NAME: &'static str = "lazyjournal";

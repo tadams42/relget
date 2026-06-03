@@ -15,9 +15,6 @@ pub struct Ripgrep {
 
 impl Ripgrep {
     pub const ID: &'static str = "ripgrep";
-    pub const CATEGORY: &'static str = "files";
-    pub const DESCRIPTION: &'static str = "Recursive regex search, a faster grep (ripgrep)";
-    pub const URL: &'static str = "https://github.com/BurntSushi/ripgrep";
     const OWNER: &'static str = "BurntSushi";
     const REPO: &'static str = "ripgrep";
     const EXE_NAME: &'static str = "rg";

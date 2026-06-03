@@ -14,10 +14,6 @@ pub struct Eza {
 
 impl Eza {
     pub const ID: &'static str = "eza";
-    pub const CATEGORY: &'static str = "files";
-    pub const DESCRIPTION: &'static str =
-        "Modern replacement for ls with icons and git integration";
-    pub const URL: &'static str = "https://github.com/eza-community/eza";
     const OWNER: &'static str = "eza-community";
     const REPO: &'static str = "eza";
     const EXE_NAME: &'static str = "eza";

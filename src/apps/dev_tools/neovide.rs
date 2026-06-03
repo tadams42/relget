@@ -14,9 +14,6 @@ pub struct Neovide {
 
 impl Neovide {
     pub const ID: &'static str = "neovide";
-    pub const CATEGORY: &'static str = "dev_tools";
-    pub const DESCRIPTION: &'static str = "GPU-accelerated GUI frontend for Neovim";
-    pub const URL: &'static str = "https://github.com/neovide/neovide";
     const OWNER: &'static str = "neovide";
     const REPO: &'static str = "neovide";
     const FALLBACK_VERSION: &'static str = "0.15.2";

@@ -15,9 +15,6 @@ pub struct Rclone {
 
 impl Rclone {
     pub const ID: &'static str = "rclone";
-    pub const CATEGORY: &'static str = "other";
-    pub const DESCRIPTION: &'static str = "rsync for cloud storage (S3, GDrive, Dropbox, and more)";
-    pub const URL: &'static str = "https://github.com/rclone/rclone";
     const OWNER: &'static str = "rclone";
     const REPO: &'static str = "rclone";
     const EXE_NAME: &'static str = "rclone";

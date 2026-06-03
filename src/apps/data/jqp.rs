@@ -14,9 +14,6 @@ pub struct Jqp {
 
 impl Jqp {
     pub const ID: &'static str = "jqp";
-    pub const CATEGORY: &'static str = "data";
-    pub const DESCRIPTION: &'static str = "TUI playground for crafting jq queries";
-    pub const URL: &'static str = "https://github.com/noahgorstein/jqp";
     const OWNER: &'static str = "noahgorstein";
     const REPO: &'static str = "jqp";
     const EXE_NAME: &'static str = "jqp";
