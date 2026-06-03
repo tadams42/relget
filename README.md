@@ -218,6 +218,7 @@ primary binary removed. Run `relget uninstall --help` for the full list of cavea
 ### HTTP
 
 - [caddy](https://github.com/caddyserver/caddy) — Fast, automatic HTTPS web server with TLS
+- [hurl](https://github.com/Orange-OpenSource/hurl) — Run and test HTTP requests defined in plain text
 - [restish](https://github.com/rest-sh/restish) — CLI for interacting with REST-ish HTTP APIs
 - [xh](https://github.com/ducaale/xh) — Friendly and fast HTTP client, HTTPie alternative
 

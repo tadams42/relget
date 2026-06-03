@@ -77,7 +77,11 @@ Prefer `musl` builds if available.
 
 If downloaded artifact contains `man` pages, and app can also generate them, prefer generating them by running downloaded app. Same goes for shell completions: prefer running the app and generating them. Of course, if they can't be generated, use the ones shipped in build artifact.
 
+When installing shell completions, get the ones for `Bash`, `Fish` and `ZSH`. Others don't interest us.
+
 Sometimes app provides both `.deb` and `.tar.gz` build artifact, but `.tar.gz` doesn't contain man pages or shell completions, and they can't be generated on the fly. In this case, download and extract `.deb` too, it sometimes includes missing pieces from `.tar.gz`
+
+Note that you probably need to download and extract app binary to be able to check if it can self-generate man pages or shell completions.
 
 ## Installer helpers
 

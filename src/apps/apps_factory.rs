@@ -10,7 +10,7 @@ use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
-use super::http::{Caddy, Restish, Xh};
+use super::http::{Caddy, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
 use super::music::Spotatui;
 use super::other::{Chezmoi, Rclone, Tlrc};
@@ -46,6 +46,7 @@ pub fn create_app(
         Gitleaks::ID => Some(Box::new(Gitleaks::new(client))),
         GoJq::ID => Some(Box::new(GoJq::new(client))),
         Gonzo::ID => Some(Box::new(Gonzo::new(client))),
+        Hurl::ID => Some(Box::new(Hurl::new(client))),
         Jid::ID => Some(Box::new(Jid::new(client))),
         Jq::ID => Some(Box::new(Jq::new(client))),
         Jqp::ID => Some(Box::new(Jqp::new(client))),

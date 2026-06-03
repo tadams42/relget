@@ -5,7 +5,7 @@ use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
-use super::http::{Caddy, Restish, Xh};
+use super::http::{Caddy, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
 use super::music::Spotatui;
 use super::other::{Chezmoi, Rclone, Tlrc};
@@ -188,6 +188,12 @@ static ALL_APP_ENTRIES: &[AppEntry] = &[
         url:         Gonzo::URL,
         category:    "logs",
         description: Gonzo::DESCRIPTION,
+    },
+    AppEntry {
+        id:          Hurl::ID,
+        url:         Hurl::URL,
+        category:    "http",
+        description: Hurl::DESCRIPTION,
     },
     AppEntry {
         id:          Jid::ID,
