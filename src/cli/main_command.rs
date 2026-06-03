@@ -111,21 +111,11 @@ pub enum Commands {
         /// Shell to generate completions for
         shell: Shell,
     },
-    /// Uninstall selected apps from the given prefix (best-effort)
+    /// Uninstall selected apps from the given prefix
     ///
-    /// Removes the binary, shell completion files, and man pages that match
-    /// the app's executable name under the given prefix. This is a
-    /// best-effort operation:
-    ///
-    ///   - Only files that follow relget's standard installation layout are searched. Files placed
-    ///     elsewhere will not be touched.
-    ///
-    ///   - Apps that install multiple binaries under different names (e.g. `uv` also installs
-    ///     `uvx`) will have only the primary binary removed. The secondary binaries and their
-    ///     completions are left behind.
-    ///
-    ///   - Man pages with a separator other than `-` (e.g. `eza_colors.5`) are not matched and will
-    ///     not be removed.
+    /// Removes exactly the files that relget installed: the binary, all secondary binaries,
+    /// man pages, and shell completions. The set of files is derived from each app's static
+    /// asset descriptor, so every file relget placed is removed — no more, no less.
     ///
     /// Token flags (--gh-token-source, --cb-token-source, --gl-token-source) are accepted but
     /// ignored for this command.
