@@ -73,15 +73,17 @@ pub fn update_command(cli: &Cli) -> Result<()> {
         return Ok(());
     }
 
-    // Build exe_name → first-match app id map; warn on collisions.
+    // Build exe_name → first-match app id map; warn on collisions only when the exe is installed.
     let mut exe_to_id: HashMap<&str, &str> = HashMap::new();
     for entry in all_app_entries() {
         if exe_to_id.contains_key(entry.exe_name.as_str()) {
-            let winner = exe_to_id[entry.exe_name.as_str()];
-            log::warn!(
-                "exe_name '{}' maps to both '{}' and '{}'; '{}' will be used for update (re-run with --apps {} to update the other)",
-                entry.exe_name, winner, entry.id, winner, entry.id
-            );
+            if installed_binaries.contains(entry.exe_name.as_str()) {
+                let winner = exe_to_id[entry.exe_name.as_str()];
+                log::warn!(
+                    "exe_name '{}' maps to both '{}' and '{}'; '{}' will be used for update (re-run with --apps {} to update the other)",
+                    entry.exe_name, winner, entry.id, winner, entry.id
+                );
+            }
         } else {
             exe_to_id.insert(&entry.exe_name, &entry.id);
         }
