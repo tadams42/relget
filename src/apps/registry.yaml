@@ -26,7 +26,7 @@
   exe_name: bat
   url: https://github.com/sharkdp/bat
   category: files
-  description: cat clone with syntax highlighting and git integration
+  description: "`cat` clone with syntax highlighting and git integration"
 
 - id: caddy
   exe_name: caddy
@@ -44,25 +44,25 @@
   exe_name: chezmoi
   url: https://github.com/twpayne/chezmoi
   category: other
-  description: Dotfiles manager across multiple machines
+  description: Dotfiles manager across multiple machines, think `ansible` but for dotfiles
 
 - id: d4s
   exe_name: d4s
   url: https://github.com/jr-k/d4s
   category: containers
-  description: Docker socket proxy for restricting container API access
+  description: Terminal UI for managing Docker containers and images
 
 - id: dasel
   exe_name: dasel
   url: https://github.com/TomWright/dasel
   category: data
-  description: "Query and modify data in JSON, YAML, TOML, XML, and CSV"
+  description: Query and modify data in JSON, YAML, TOML, XML, and CSV
 
 - id: delta
   exe_name: delta
   url: https://github.com/dandavison/delta
   category: git
-  description: "Syntax-highlighting pager for git, diff, and grep output"
+  description: Syntax-highlighting pager for git, diff, and grep output
 
 - id: difftastic
   exe_name: difft
@@ -80,37 +80,37 @@
   exe_name: dry
   url: https://github.com/moncho/dry
   category: containers
-  description: Interactive terminal application for Docker management
+  description: Terminal UI for managing Docker containers and images
 
 - id: dust
   exe_name: dust
   url: https://github.com/bootandy/dust
   category: files
-  description: "Intuitive disk usage visualizer, a du alternative"
+  description: Intuitive disk usage visualizer, a `du` alternative
 
 - id: dysk
   exe_name: dysk
   url: https://github.com/Canop/dysk
   category: files
-  description: Terminal utility to get information on filesystems (df alternative)
+  description: Terminal utility to get information on filesystems (`df` alternative)
 
 - id: eza
   exe_name: eza
   url: https://github.com/eza-community/eza
   category: files
-  description: Modern replacement for ls with icons and git integration
+  description: Modern replacement for `ls` with icons and git integration
 
 - id: f2
   exe_name: f2
   url: https://github.com/ayoisaiah/f2
   category: files
-  description: Cross-platform batch file renaming tool
+  description: Batch file renaming tool
 
 - id: fd
   exe_name: fd
   url: https://github.com/sharkdp/fd
   category: files
-  description: "Simple, fast, user-friendly alternative to find"
+  description: Simple, fast, user-friendly alternative to `find`
 
 - id: fnm
   exe_name: fnm
@@ -140,7 +140,7 @@
   exe_name: gojq
   url: https://github.com/itchyny/gojq
   category: data
-  description: Pure Go implementation of jq with extended features
+  description: Pure Go implementation of `jq` with extended features
 
 - id: gonzo
   exe_name: gonzo
@@ -170,7 +170,7 @@
   exe_name: jqp
   url: https://github.com/noahgorstein/jqp
   category: data
-  description: TUI playground for crafting jq queries
+  description: TUI playground for crafting `jq` queries
 
 - id: lazyjournal
   exe_name: lazyjournal
@@ -182,13 +182,13 @@
   exe_name: lazydocker
   url: https://github.com/jesseduffield/lazydocker
   category: containers
-  description: "Terminal UI for Docker containers, images, and compose"
+  description: Terminal UI for Docker containers, images, and compose
 
 - id: lazygit
   exe_name: lazygit
   url: https://github.com/jesseduffield/lazygit
   category: git
-  description: Simple terminal UI for git commands
+  description: Simple terminal UI for `git` commands
 
 - id: logdy
   exe_name: logdy
@@ -206,13 +206,13 @@
   exe_name: mergiraf
   url: https://codeberg.org/mergiraf/mergiraf
   category: git
-  description: Syntax-aware merge driver for git
+  description: Syntax-aware merge driver for `git`
 
 - id: mise
   exe_name: mise
   url: https://github.com/jdx/mise
   category: dev_envs
-  description: Polyglot tool version manager and task runner
+  description: prepares your complete development environment before each command runs
 
 - id: neovide
   exe_name: neovide
@@ -242,25 +242,25 @@
   exe_name: qsv
   url: https://github.com/dathere/qsv
   category: data
-  description: High-performance CSV data-wrangling toolkit (all variants)
+  description: High-performance CSV data-wrangling toolkit (additional binaries optimized for specific workloads)
 
 - id: rclone
   exe_name: rclone
   url: https://github.com/rclone/rclone
   category: other
-  description: "rsync for cloud storage (S3, GDrive, Dropbox, and more)"
+  description: "`rsync` for cloud storage (S3, GDrive, Dropbox, and more)"
 
 - id: restish
   exe_name: restish
   url: https://github.com/rest-sh/restish
   category: http
-  description: CLI for interacting with REST-ish HTTP APIs
+  description: CLI for interacting with REST-ish HTTP APIs, `curl` alternative
 
 - id: ripgrep
   exe_name: rg
   url: https://github.com/BurntSushi/ripgrep
   category: files
-  description: Recursive regex search, a faster grep (ripgrep)
+  description: Recursive regex search, a faster `grep`
 
 - id: rsv
   exe_name: rsv
@@ -284,19 +284,19 @@
   exe_name: scc
   url: https://github.com/boyter/scc
   category: dev_tools
-  description: Fast and accurate code counter with complexity calculations
+  description: Fast and accurate code counter with complexity calculations - better `cloc`
 
 - id: sd
   exe_name: sd
   url: https://github.com/chmln/sd
   category: files
-  description: "Intuitive find-and-replace command, a sed alternative"
+  description: Intuitive find-and-replace command, a `sed` alternative
 
 - id: skim
   exe_name: sk
   url: https://github.com/skim-rs/skim
   category: shell
-  description: Fuzzy finder in Rust (skim)
+  description: Fuzzy finder in Rust (alternative to `fzf`)
 
 - id: spotatui
   exe_name: spotatui
@@ -314,7 +314,7 @@
   exe_name: starship
   url: https://github.com/starship/starship
   category: shell
-  description: "Minimal, blazing-fast, infinitely customizable shell prompt"
+  description: Minimal, blazing-fast, infinitely customizable shell prompt
 
 - id: stylua
   exe_name: stylua
@@ -326,19 +326,19 @@
   exe_name: tldr
   url: https://github.com/tldr-pages/tlrc
   category: other
-  description: Official tldr-pages client written in Rust
+  description: Official [tldr-pages](https://tldr.sh/) client written in Rust
 
 - id: trash-cli-rs
   exe_name: trash
   url: https://github.com/orf/trash
   category: files
-  description: Safe rm replacement that moves files to the trash
+  description: Safe `rm` replacement that moves files to the trash
 
 - id: usql
   exe_name: usql
   url: https://github.com/xo/usql
   category: databases
-  description: "Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases"
+  description: Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases
 
 - id: uv
   exe_name: uv
@@ -350,7 +350,7 @@
   exe_name: xh
   url: https://github.com/ducaale/xh
   category: http
-  description: "Friendly and fast HTTP client, HTTPie alternative"
+  description: Friendly and fast HTTP client, `HTTPie` and `curl` alternative
 
 - id: xq
   exe_name: xq
@@ -368,10 +368,10 @@
   exe_name: yq
   url: https://github.com/mikefarah/yq
   category: data
-  description: "Portable command-line YAML, JSON, XML, and CSV processor"
+  description: Portable command-line YAML, JSON, XML, and CSV processor
 
 - id: zoxide
   exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide
   category: shell
-  description: Smarter cd command with frecency-based directory jumping
+  description: Smarter `cd` command with frecency-based directory jumping
