@@ -100,7 +100,7 @@ GitHub app:
    ```
 4. Update `create_app()` in `src/apps/apps_factory.rs`: add
    `"myapp" => Some(Box::new(myapp::MyApp::new(client)))`
-5. Run `cargo xtask update-readme` so that `README.md` gets updated with the new app.
+5. Run `cargo xtask update-docs` so that `README.md` and `CHANGELOG.md` get updated.
 
 Codeberg app:
 

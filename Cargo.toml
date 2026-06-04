@@ -10,6 +10,12 @@ tag-name = "v{{version}}"
 pre-release-commit-message = "build: Bumped version to v{{version}}"
 tag-message = ""
 
+[[workspace.metadata.release.pre-release-replacements]]
+file    = "CHANGELOG.md"
+search  = "## unreleased"
+replace = "## unreleased\n\n## v{{version}} ({{date}})"
+exactly = 1
+
 [package]
 name = "relget"
 version = "0.5.1"
