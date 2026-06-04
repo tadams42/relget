@@ -238,6 +238,12 @@
   category: dev_tools
   description: GPU-accelerated GUI frontend for Neovim
 
+- id: pass-cli
+  exe_name: pass-cli
+  url: https://github.com/reyamira/pass-cli
+  category: encryption
+  description: Password manager CLI with encrypted local storage
+
 - id: pdot
   exe_name: pdot
   url: https://gitlab.com/dmfay/pdot

@@ -8,7 +8,7 @@ use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Grex, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
-use super::encryption::{Age, Doppler};
+use super::encryption::{Age, Doppler, PassCli};
 use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Procs, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
@@ -65,6 +65,7 @@ pub fn create_app(
                 cb_token, offline,
             )))))
         }
+        PassCli::ID => Some(Box::new(PassCli::new(client))),
         Pdot::ID => Some(Box::new(Pdot::new(Arc::new(GitlabClient::new(gl_token, offline))))),
         Mise::ID => Some(Box::new(Mise::new(client))),
         Neovide::ID => Some(Box::new(Neovide::new(client))),
