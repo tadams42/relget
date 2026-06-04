@@ -160,6 +160,12 @@
   category: logs
   description: Log viewer TUI for structured and plain-text logs
 
+- id: gopass
+  exe_name: gopass
+  url: https://github.com/gopasspw/gopass
+  category: encryption
+  description: Secrets manager and password store built on GPG and Git
+
 - id: grex
   exe_name: grex
   url: https://github.com/pemistahl/grex
