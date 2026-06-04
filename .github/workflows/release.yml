@@ -51,13 +51,11 @@ jobs:
           # Trim leading and trailing blank lines
           BODY=$(printf '%s' "${BODY}" | sed '/./,$!d' | sed -e :a -e '/^\n*$/{$d;N;ba}')
 
-          if [ -n "${PREV_TAG}" ]; then
-            BODY="${BODY}
-
-**Full Changelog**: https://github.com/tadams42/relget/compare/${PREV_TAG}...${TAG}"
-          fi
-
           printf '%s\n' "${BODY}" > release_body.md
+
+          if [ -n "${PREV_TAG}" ]; then
+            printf '\n**Full Changelog**: https://github.com/tadams42/relget/compare/%s...%s\n' "${PREV_TAG}" "${TAG}" >> release_body.md
+          fi
 
       - uses: softprops/action-gh-release@v3
         with:
