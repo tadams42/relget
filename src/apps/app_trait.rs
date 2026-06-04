@@ -28,7 +28,7 @@ pub(in crate::apps) fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>
     Ok(out.stdout)
 }
 
-fn gen_completions_with_shell_arg(
+pub(in crate::apps) fn gen_completions_with_shell_arg(
     exe_name: &str, data: &[u8], prefix_args: &[&str],
 ) -> Result<Vec<Completion>> {
     with_temp_exe(exe_name, data, |exe| {

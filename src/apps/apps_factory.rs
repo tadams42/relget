@@ -9,7 +9,7 @@ use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Grex, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::encryption::Age;
-use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
+use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Procs, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
@@ -68,6 +68,7 @@ pub fn create_app(
         Mise::ID => Some(Box::new(Mise::new(client))),
         Neovide::ID => Some(Box::new(Neovide::new(client))),
         Pgplan::ID => Some(Box::new(Pgplan::new(client))),
+        Procs::ID => Some(Box::new(Procs::new(client))),
         Rclone::ID => Some(Box::new(Rclone::new(client))),
         Restish::ID => Some(Box::new(Restish::new(client))),
         Ripgrep::ID => Some(Box::new(Ripgrep::new(client))),

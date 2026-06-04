@@ -20,5 +20,6 @@ pub use apps_factory::create_app;
 pub use apps_registry::{all_app_entries, all_apps_identifiers, minimal_set_identifiers};
 
 pub(in crate::apps) use app_trait::{
-    gen_completions_shell_flag, gen_completions_subcommand, run_cmd, with_temp_exe,
+    gen_completions_shell_flag, gen_completions_subcommand, gen_completions_with_shell_arg,
+    run_cmd, with_temp_exe,
 };

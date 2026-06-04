@@ -244,6 +244,12 @@
   category: databases
   description: CLI tool for visualizing and analyzing PostgreSQL query plans
 
+- id: procs
+  exe_name: procs
+  url: https://github.com/dalance/procs
+  category: files
+  description: Modern replacement for ps with colored output and search
+
 - id: qsv
   exe_name: qsv
   url: https://github.com/dathere/qsv

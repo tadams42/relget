@@ -197,6 +197,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [eza](https://github.com/eza-community/eza) — Modern replacement for `ls` with icons and git integration
 - [f2](https://github.com/ayoisaiah/f2) — Batch file renaming tool
 - [fd](https://github.com/sharkdp/fd) — Simple, fast, user-friendly alternative to `find`
+- [procs](https://github.com/dalance/procs) — Modern replacement for ps with colored output and search
 - [ripgrep](https://github.com/BurntSushi/ripgrep) — Recursive regex search, a faster `grep`
 - [sd](https://github.com/chmln/sd) — Intuitive find-and-replace command, a `sed` alternative
 - [trash-cli-rs](https://github.com/orf/trash) — Safe `rm` replacement that moves files to the trash
