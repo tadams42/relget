@@ -168,23 +168,24 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [squix](https://github.com/eduardofuncao/squix) — Interactive TUI for exploring and querying SQL databases
 - [usql](https://github.com/xo/usql) — Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases
 
-### Dev envs
+### Development environments
 
 - [aqua](https://github.com/aquaproj/aqua) — Declarative CLI tool installer and version manager
 - [fnm](https://github.com/Schniz/fnm) — Fast and simple Node.js version manager
 - [mise](https://github.com/jdx/mise) — prepares your complete development environment before each command runs
 - [uv](https://github.com/astral-sh/uv) — Extremely fast Python package and project manager
 
-### Dev tools
+### Development tools
 
 - [ast-grep](https://github.com/ast-grep/ast-grep) — Fast code search, lint, and rewriting using AST patterns
+- [grex](https://github.com/pemistahl/grex) — Generates regular expressions from user-provided test strings
 - [mdbook](https://github.com/rust-lang/mdBook) — Create books from Markdown source files
 - [neovide](https://github.com/neovide/neovide) — GPU-accelerated GUI frontend for Neovim
 - [rust-analyzer](https://github.com/rust-lang/rust-analyzer) — Rust language server providing IDE integration
 - [scc](https://github.com/boyter/scc) — Fast and accurate code counter with complexity calculations - better `cloc`
 - [stylua](https://github.com/JohnnyMorganz/stylua) — Opinionated Lua code formatter
 
-### encryption
+### Encryption and secrets management
 
 - [age](https://github.com/FiloSottile/age) — Simple, modern and secure file encryption tool
 

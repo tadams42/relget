@@ -7,7 +7,7 @@ use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
-use super::dev_tools::{AstGrep, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
+use super::dev_tools::{AstGrep, Grex, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::encryption::Age;
 use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
@@ -48,6 +48,7 @@ pub fn create_app(
         Gitleaks::ID => Some(Box::new(Gitleaks::new(client))),
         GoJq::ID => Some(Box::new(GoJq::new(client))),
         Gonzo::ID => Some(Box::new(Gonzo::new(client))),
+        Grex::ID => Some(Box::new(Grex::new(client))),
         Hurl::ID => Some(Box::new(Hurl::new(client))),
         Jid::ID => Some(Box::new(Jid::new(client))),
         Jq::ID => Some(Box::new(Jq::new(client))),

@@ -25,8 +25,9 @@ fn category_display_name(category: &str) -> &str {
     match category {
         "containers" => "Containers",
         "data" => "Data",
-        "dev_envs" => "Dev envs",
-        "dev_tools" => "Dev tools",
+        "dev_envs" => "Development environments",
+        "dev_tools" => "Development tools",
+        "encryption" => "Encryption and secrets management",
         "files" => "Files",
         "git" => "Git",
         "http" => "HTTP",

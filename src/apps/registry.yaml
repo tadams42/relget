@@ -148,6 +148,12 @@
   category: logs
   description: Log viewer TUI for structured and plain-text logs
 
+- id: grex
+  exe_name: grex
+  url: https://github.com/pemistahl/grex
+  category: dev_tools
+  description: Generates regular expressions from user-provided test strings
+
 - id: hurl
   exe_name: hurl
   url: https://github.com/Orange-OpenSource/hurl
