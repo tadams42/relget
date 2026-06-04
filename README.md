@@ -213,6 +213,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 ### HTTP
 
 - [caddy](https://github.com/caddyserver/caddy) — Fast, automatic HTTPS web server with TLS
+- [curlie](https://github.com/rs/curlie) — curl frontend that adds HTTPie-style formatting and usability
 - [hurl](https://github.com/Orange-OpenSource/hurl) — Run and test HTTP requests defined in plain text
 - [restish](https://github.com/rest-sh/restish) — CLI for interacting with REST-ish HTTP APIs, `curl` alternative
 - [xh](https://github.com/ducaale/xh) — Friendly and fast HTTP client, `HTTPie` and `curl` alternative

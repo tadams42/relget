@@ -11,7 +11,7 @@ use super::dev_tools::{AstGrep, Grex, Mdbook, Neovide, RustAnalyzer, Scc, Stylua
 use super::encryption::Age;
 use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
-use super::http::{Caddy, Hurl, Restish, Xh};
+use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
 use super::music::Spotatui;
 use super::other::{Chezmoi, Rclone, Tlrc};
@@ -31,6 +31,7 @@ pub fn create_app(
         Caddy::ID => Some(Box::new(Caddy::new(client))),
         Carapace::ID => Some(Box::new(Carapace::new(client))),
         Chezmoi::ID => Some(Box::new(Chezmoi::new(client))),
+        Curlie::ID => Some(Box::new(Curlie::new(client))),
         D4S::ID => Some(Box::new(D4S::new(client))),
         Dasel::ID => Some(Box::new(Dasel::new(client))),
         Delta::ID => Some(Box::new(Delta::new(client))),

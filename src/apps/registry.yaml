@@ -46,6 +46,12 @@
   category: other
   description: Dotfiles manager across multiple machines, think `ansible` but for dotfiles
 
+- id: curlie
+  exe_name: curlie
+  url: https://github.com/rs/curlie
+  category: http
+  description: curl frontend that adds HTTPie-style formatting and usability
+
 - id: d4s
   exe_name: d4s
   url: https://github.com/jr-k/d4s
