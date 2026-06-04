@@ -90,9 +90,13 @@ GitHub app:
 3. Add an entry to `src/apps/registry.yaml`:
    ```yaml
    - id: myapp
+     exe_name: myapp
      url: https://github.com/owner/repo
      category: <category>
      description: One-line description of what the app does
+     has_musl: false
+     man_pages: unavailable        # unavailable | bundled | self_generated
+     shell_completions: unavailable # unavailable | bundled | self_generated
    ```
 4. Update `create_app()` in `src/apps/apps_factory.rs`: add
    `"myapp" => Some(Box::new(myapp::MyApp::new(client)))`
