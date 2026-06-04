@@ -12,7 +12,9 @@ fn main() {
         }
         _ => {
             eprintln!("Available tasks:");
-            eprintln!("  update-docs  Regenerate README app list and ## unreleased changelog section");
+            eprintln!(
+                "  update-docs  Regenerate README app list and ## unreleased changelog section"
+            );
         }
     }
 }
@@ -47,12 +49,7 @@ fn update_changelog() {
 
     let log_text = String::from_utf8(log_output.stdout).expect("git log output is not UTF-8");
 
-    let noise_prefixes = [
-        "build: Bumped version to",
-        "ci:",
-        "docs:",
-        "chore:",
-    ];
+    let noise_prefixes = ["build:", "ci:", "docs:", "chore:"];
 
     let bullet_lines: Vec<String> = log_text
         .lines()

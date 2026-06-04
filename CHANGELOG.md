@@ -1,15 +1,13 @@
 ## unreleased
 
-- refactor: add explicit install subcommand, move options to per-command scope
-- feat: add per-flag colors to doctor table output
-- feat: add doctor subcommand for registry health checks
-- feat: add gopass to encryption
-- feat: add pass-cli to encryption
-- feat: add doppler to encryption
-- feat: add procs to files
-- feat: add worktrunk to git
-- feat: add curlie to http
-- feat: add grex to dev_tools
+- refactor: added explicit `install` subcommand, move options to per-command scope
+- feat: added `gopass`
+- feat: added `pass-cli`
+- feat: added `doppler`
+- feat: added `procs`
+- feat: added `worktrunk`
+- feat: added `curlie`
+- feat: added `grex`
 
 ## v0.5.1 (2026-06-03)
 
