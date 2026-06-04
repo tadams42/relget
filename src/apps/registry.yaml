@@ -82,6 +82,12 @@
   category: containers
   description: Terminal UI for managing Docker containers and images
 
+- id: doppler
+  exe_name: doppler
+  url: https://github.com/DopplerHQ/cli
+  category: encryption
+  description: Secrets manager CLI — sync env vars and secrets across teams
+
 - id: dry
   exe_name: dry
   url: https://github.com/moncho/dry

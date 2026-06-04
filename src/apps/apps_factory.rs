@@ -8,7 +8,7 @@ use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Grex, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
-use super::encryption::Age;
+use super::encryption::{Age, Doppler};
 use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Procs, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
@@ -37,6 +37,7 @@ pub fn create_app(
         Delta::ID => Some(Box::new(Delta::new(client))),
         Difftastic::ID => Some(Box::new(Difftastic::new(client))),
         DockMate::ID => Some(Box::new(DockMate::new(client))),
+        Doppler::ID => Some(Box::new(Doppler::new(client))),
         Dry::ID => Some(Box::new(Dry::new(client))),
         Dust::ID => Some(Box::new(Dust::new(client))),
         Dysk::ID => Some(Box::new(Dysk::new(client))),
