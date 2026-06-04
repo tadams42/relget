@@ -96,13 +96,15 @@ fn category_display_name(category: &str) -> &str {
         "data" => "Data",
         "dev_envs" => "Development environments",
         "dev_tools" => "Development tools",
+        "databases" => "Databases",
         "encryption" => "Encryption and secrets management",
         "files" => "Files",
-        "git" => "Git",
+        "git" => "git",
         "http" => "HTTP",
         "logs" => "Logs",
         "other" => "Other",
         "shell" => "Shell",
+        "music" => "Music",
         other => other,
     }
 }

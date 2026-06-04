@@ -439,6 +439,15 @@
   man_pages: unavailable
   shell_completions: self_generated
 
+- id: rgx
+  exe_name: rgx
+  url: https://github.com/brevity1swos/rgx
+  category: dev_tools
+  description: Regex debugger for the terminal — step-through execution, 3 engines, code generation
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: ripgrep
   exe_name: rg
   url: https://github.com/BurntSushi/ripgrep

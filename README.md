@@ -160,7 +160,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [xq](https://github.com/sibprogrammer/xq) — Command-line XML and HTML processor using XPath
 - [yq](https://github.com/mikefarah/yq) — Portable command-line YAML, JSON, XML, and CSV processor
 
-### databases
+### Databases
 
 - [pdot](https://gitlab.com/dmfay/pdot) — PostgreSQL schema visualizer using Graphviz/Mermaid
 - [pgplan](https://github.com/JacobArthurs/pgplan) — CLI tool for visualizing and analyzing PostgreSQL query plans
@@ -181,6 +181,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [grex](https://github.com/pemistahl/grex) — Generates regular expressions from user-provided test strings
 - [mdbook](https://github.com/rust-lang/mdBook) — Create books from Markdown source files
 - [neovide](https://github.com/neovide/neovide) — GPU-accelerated GUI frontend for Neovim
+- [rgx](https://github.com/brevity1swos/rgx) — Regex debugger for the terminal — step-through execution, 3 engines, code generation
 - [rust-analyzer](https://github.com/rust-lang/rust-analyzer) — Rust language server providing IDE integration
 - [scc](https://github.com/boyter/scc) — Fast and accurate code counter with complexity calculations - better `cloc`
 - [stylua](https://github.com/JohnnyMorganz/stylua) — Opinionated Lua code formatter
@@ -206,7 +207,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [trash-cli-rs](https://github.com/orf/trash) — Safe `rm` replacement that moves files to the trash
 - [yazi](https://github.com/sxyazi/yazi) — Blazing fast terminal file manager with asynchronous I/O
 
-### Git
+### git
 
 - [delta](https://github.com/dandavison/delta) — Syntax-highlighting pager for git, diff, and grep output
 - [difftastic](https://github.com/Wilfred/difftastic) — Structural diff tool that understands code syntax
@@ -229,7 +230,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [lazyjournal](https://github.com/Lifailon/lazyjournal) — TUI for browsing systemd journal and Docker logs
 - [logdy](https://github.com/logdyhq/logdy-core) — Web-based real-time log viewer with filtering and search
 
-### music
+### Music
 
 - [spotatui](https://github.com/LargeModGames/spotatui) — Terminal UI for Spotify
 

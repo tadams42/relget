@@ -1,5 +1,7 @@
 ## unreleased
 
+- feat: added rgx app (brevity1swos/rgx)
+
 ## v0.5.2 (2026-06-04)
 
 - refactor: added explicit `install` subcommand, move options to per-command scope
