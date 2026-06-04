@@ -382,6 +382,12 @@
   category: data
   description: Portable command-line YAML, JSON, XML, and CSV processor
 
+- id: worktrunk
+  exe_name: wt
+  url: https://github.com/max-sixty/worktrunk
+  category: git
+  description: Git worktree manager — fast branch switching without stashing
+
 - id: zoxide
   exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide

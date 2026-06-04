@@ -10,7 +10,7 @@ use super::dev_envs::{Aqua, Fnm, Mise, Uv};
 use super::dev_tools::{AstGrep, Grex, Mdbook, Neovide, RustAnalyzer, Scc, Stylua};
 use super::encryption::Age;
 use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Ripgrep, SdEdit, Trash, Yazi};
-use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf};
+use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
 use super::music::Spotatui;
@@ -90,6 +90,7 @@ pub fn create_app(
         Xh::ID => Some(Box::new(Xh::new(client))),
         Xq::ID => Some(Box::new(Xq::new(client))),
         Yazi::ID => Some(Box::new(Yazi::new(client))),
+        Worktrunk::ID => Some(Box::new(Worktrunk::new(client))),
         Yq::ID => Some(Box::new(Yq::new(client))),
         Zoxide::ID => Some(Box::new(Zoxide::new(client))),
         _ => None,

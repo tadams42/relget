@@ -209,6 +209,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [gitleaks](https://github.com/gitleaks/gitleaks) — Detect secrets and sensitive data in git repositories
 - [lazygit](https://github.com/jesseduffield/lazygit) — Simple terminal UI for `git` commands
 - [mergiraf](https://codeberg.org/mergiraf/mergiraf) — Syntax-aware merge driver for `git`
+- [worktrunk](https://github.com/max-sixty/worktrunk) — Git worktree manager — fast branch switching without stashing
 
 ### HTTP
 
