@@ -15,13 +15,32 @@ use std::sync::OnceLock;
 #[include = "registry.yaml"]
 struct RegistryAsset;
 
+#[derive(Debug, Deserialize, PartialEq, Eq, Clone)]
+#[serde(rename_all = "snake_case")]
+pub enum ManPagesStatus {
+    Unavailable,
+    Bundled,
+    SelfGenerated,
+}
+
+#[derive(Debug, Deserialize, PartialEq, Eq, Clone)]
+#[serde(rename_all = "snake_case")]
+pub enum ShellCompletionsStatus {
+    Unavailable,
+    Bundled,
+    SelfGenerated,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct AppEntry {
-    pub id:          String,
-    pub exe_name:    String,
-    pub url:         String,
-    pub category:    String,
-    pub description: String,
+    pub id:                String,
+    pub exe_name:          String,
+    pub url:               String,
+    pub category:          String,
+    pub description:       String,
+    pub has_musl:          bool,
+    pub man_pages:         ManPagesStatus,
+    pub shell_completions: ShellCompletionsStatus,
 }
 
 #[rustfmt::skip]

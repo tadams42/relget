@@ -1,3 +1,4 @@
+mod doctor;
 mod helpers;
 mod main_command;
 mod sub_commands;

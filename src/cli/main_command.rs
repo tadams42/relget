@@ -7,6 +7,7 @@ use clap_complete::{Shell, generate};
 
 use crate::apps::minimal_set_identifiers;
 
+use super::doctor::doctor_command;
 use super::sub_commands::{
     install_apps_command, list_apps_ids_command, uninstall_command, update_command,
 };
@@ -47,6 +48,7 @@ pub fn execute_cli(cli: &Cli) -> Result<()> {
         Some(Commands::Completions { shell }) => {
             generate(shell, &mut Cli::command(), "relget", &mut std::io::stdout())
         }
+        Some(Commands::Doctor) => doctor_command(cli)?,
         Some(Commands::Uninstall) => uninstall_command(cli)?,
         Some(Commands::Update) => update_command(cli)?,
         None => install_apps_command(cli)?,
@@ -125,6 +127,8 @@ pub enum Commands {
     /// ignored for this command.
     #[command(verbatim_doc_comment)]
     Uninstall,
+    /// Check all registry apps for potential issues against latest releases
+    Doctor,
     /// Update relget-managed apps in the prefix
     ///
     /// Without selectors: scans `<prefix>/bin/` for executables that match a known app in the

@@ -3,417 +3,627 @@
   url: https://github.com/FiloSottile/age
   category: encryption
   description: Simple, modern and secure file encryption tool
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: aqua
   exe_name: aqua
   url: https://github.com/aquaproj/aqua
   category: dev_envs
   description: Declarative CLI tool installer and version manager
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: ast-grep
   exe_name: ast-grep
   url: https://github.com/ast-grep/ast-grep
   category: dev_tools
   description: Fast code search, lint, and rewriting using AST patterns
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: atuin
   exe_name: atuin
   url: https://github.com/atuinsh/atuin
   category: shell
   description: Shell history search backed by SQLite with sync
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: bat
   exe_name: bat
   url: https://github.com/sharkdp/bat
   category: files
   description: "`cat` clone with syntax highlighting and git integration"
+  has_musl: true
+  man_pages: bundled
+  shell_completions: self_generated
 
 - id: caddy
   exe_name: caddy
   url: https://github.com/caddyserver/caddy
   category: http
   description: Fast, automatic HTTPS web server with TLS
+  has_musl: false
+  man_pages: self_generated
+  shell_completions: self_generated
 
 - id: carapace
   exe_name: carapace
   url: https://github.com/carapace-sh/carapace-bin
   category: shell
   description: Multi-shell completion generator for command-line tools
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: chezmoi
   exe_name: chezmoi
   url: https://github.com/twpayne/chezmoi
   category: other
   description: Dotfiles manager across multiple machines, think `ansible` but for dotfiles
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: curlie
   exe_name: curlie
   url: https://github.com/rs/curlie
   category: http
   description: curl frontend that adds HTTPie-style formatting and usability
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: d4s
   exe_name: d4s
   url: https://github.com/jr-k/d4s
   category: containers
   description: Terminal UI for managing Docker containers and images
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: dasel
   exe_name: dasel
   url: https://github.com/TomWright/dasel
   category: data
   description: Query and modify data in JSON, YAML, TOML, XML, and CSV
+  has_musl: false
+  man_pages: self_generated
+  shell_completions: self_generated
 
 - id: delta
   exe_name: delta
   url: https://github.com/dandavison/delta
   category: git
   description: Syntax-highlighting pager for git, diff, and grep output
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: difftastic
   exe_name: difft
   url: https://github.com/Wilfred/difftastic
   category: git
   description: Structural diff tool that understands code syntax
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: dockmate
   exe_name: dockmate
   url: https://github.com/shubh-io/DockMate
   category: containers
   description: Terminal UI for managing Docker containers and images
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: doppler
   exe_name: doppler
   url: https://github.com/DopplerHQ/cli
   category: encryption
   description: Secrets manager CLI — sync env vars and secrets across teams
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: dry
   exe_name: dry
   url: https://github.com/moncho/dry
   category: containers
   description: Terminal UI for managing Docker containers and images
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: dust
   exe_name: dust
   url: https://github.com/bootandy/dust
   category: files
   description: Intuitive disk usage visualizer, a `du` alternative
+  has_musl: true
+  man_pages: bundled
+  shell_completions: bundled
 
 - id: dysk
   exe_name: dysk
   url: https://github.com/Canop/dysk
   category: files
   description: Terminal utility to get information on filesystems (`df` alternative)
+  has_musl: true
+  man_pages: bundled
+  shell_completions: bundled
 
 - id: eza
   exe_name: eza
   url: https://github.com/eza-community/eza
   category: files
   description: Modern replacement for `ls` with icons and git integration
+  has_musl: true
+  man_pages: bundled
+  shell_completions: bundled
 
 - id: f2
   exe_name: f2
   url: https://github.com/ayoisaiah/f2
   category: files
   description: Batch file renaming tool
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: bundled
 
 - id: fd
   exe_name: fd
   url: https://github.com/sharkdp/fd
   category: files
   description: Simple, fast, user-friendly alternative to `find`
+  has_musl: true
+  man_pages: bundled
+  shell_completions: self_generated
 
 - id: fnm
   exe_name: fnm
   url: https://github.com/Schniz/fnm
   category: dev_envs
   description: Fast and simple Node.js version manager
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: fx
   exe_name: fx
   url: https://github.com/antonmedv/fx
   category: data
   description: Terminal JSON viewer and interactive processor
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: fzf
   exe_name: fzf
   url: https://github.com/junegunn/fzf
   category: shell
   description: General-purpose command-line fuzzy finder
+  has_musl: false
+  man_pages: bundled
+  shell_completions: self_generated
 
 - id: gitleaks
   exe_name: gitleaks
   url: https://github.com/gitleaks/gitleaks
   category: git
   description: Detect secrets and sensitive data in git repositories
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: gojq
   exe_name: gojq
   url: https://github.com/itchyny/gojq
   category: data
   description: Pure Go implementation of `jq` with extended features
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: bundled
 
 - id: gonzo
   exe_name: gonzo
   url: https://github.com/control-theory/gonzo
   category: logs
   description: Log viewer TUI for structured and plain-text logs
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: gopass
   exe_name: gopass
   url: https://github.com/gopasspw/gopass
   category: encryption
   description: Secrets manager and password store built on GPG and Git
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: grex
   exe_name: grex
   url: https://github.com/pemistahl/grex
   category: dev_tools
   description: Generates regular expressions from user-provided test strings
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: hurl
   exe_name: hurl
   url: https://github.com/Orange-OpenSource/hurl
   category: http
   description: Run and test HTTP requests defined in plain text
+  has_musl: false
+  man_pages: bundled
+  shell_completions: bundled
 
 - id: jid
   exe_name: jid
   url: https://github.com/simeji/jid
   category: data
   description: Interactive JSON incremental digger
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: jq
   exe_name: jq
   url: https://github.com/jqlang/jq
   category: data
   description: Lightweight command-line JSON processor
+  has_musl: false
+  man_pages: bundled
+  shell_completions: unavailable
 
 - id: jqp
   exe_name: jqp
   url: https://github.com/noahgorstein/jqp
   category: data
   description: TUI playground for crafting `jq` queries
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: lazyjournal
   exe_name: lazyjournal
   url: https://github.com/Lifailon/lazyjournal
   category: logs
   description: TUI for browsing systemd journal and Docker logs
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: lazydocker
   exe_name: lazydocker
   url: https://github.com/jesseduffield/lazydocker
   category: containers
   description: Terminal UI for Docker containers, images, and compose
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: lazygit
   exe_name: lazygit
   url: https://github.com/jesseduffield/lazygit
   category: git
   description: Simple terminal UI for `git` commands
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: logdy
   exe_name: logdy
   url: https://github.com/logdyhq/logdy-core
   category: logs
   description: Web-based real-time log viewer with filtering and search
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: mdbook
   exe_name: mdbook
   url: https://github.com/rust-lang/mdBook
   category: dev_tools
   description: Create books from Markdown source files
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: mergiraf
   exe_name: mergiraf
   url: https://codeberg.org/mergiraf/mergiraf
   category: git
   description: Syntax-aware merge driver for `git`
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: mise
   exe_name: mise
   url: https://github.com/jdx/mise
   category: dev_envs
   description: prepares your complete development environment before each command runs
+  has_musl: false
+  man_pages: bundled
+  shell_completions: self_generated
 
 - id: neovide
   exe_name: neovide
   url: https://github.com/neovide/neovide
   category: dev_tools
   description: GPU-accelerated GUI frontend for Neovim
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: pass-cli
   exe_name: pass-cli
   url: https://github.com/reyamira/pass-cli
   category: encryption
   description: Password manager CLI with encrypted local storage
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: pdot
   exe_name: pdot
   url: https://gitlab.com/dmfay/pdot
   category: databases
   description: PostgreSQL schema visualizer using Graphviz/Mermaid
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: pgplan
   exe_name: pgplan
   url: https://github.com/JacobArthurs/pgplan
   category: databases
   description: CLI tool for visualizing and analyzing PostgreSQL query plans
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: procs
   exe_name: procs
   url: https://github.com/dalance/procs
   category: files
   description: Modern replacement for ps with colored output and search
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: qsv
   exe_name: qsv
   url: https://github.com/dathere/qsv
   category: data
   description: High-performance CSV data-wrangling toolkit
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: qsv-all
   exe_name: qsv
   url: https://github.com/dathere/qsv
   category: data
   description: High-performance CSV data-wrangling toolkit (additional binaries optimized for specific workloads)
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: rclone
   exe_name: rclone
   url: https://github.com/rclone/rclone
   category: other
   description: "`rsync` for cloud storage (S3, GDrive, Dropbox, and more)"
+  has_musl: false
+  man_pages: bundled
+  shell_completions: self_generated
 
 - id: restish
   exe_name: restish
   url: https://github.com/rest-sh/restish
   category: http
   description: CLI for interacting with REST-ish HTTP APIs, `curl` alternative
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: ripgrep
   exe_name: rg
   url: https://github.com/BurntSushi/ripgrep
   category: files
   description: Recursive regex search, a faster `grep`
+  has_musl: true
+  man_pages: bundled
+  shell_completions: self_generated
 
 - id: rsv
   exe_name: rsv
   url: https://github.com/ribbondz/rsv
   category: data
   description: High-performance CSV/TSV toolkit for data exploration
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: rust-analyzer
   exe_name: rust-analyzer
   url: https://github.com/rust-lang/rust-analyzer
   category: dev_tools
   description: Rust language server providing IDE integration
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: sabiql
   exe_name: sabiql
   url: https://github.com/riii111/sabiql
   category: databases
   description: TUI client for PostgreSQL databases
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: scc
   exe_name: scc
   url: https://github.com/boyter/scc
   category: dev_tools
   description: Fast and accurate code counter with complexity calculations - better `cloc`
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: sd
   exe_name: sd
   url: https://github.com/chmln/sd
   category: files
   description: Intuitive find-and-replace command, a `sed` alternative
+  has_musl: true
+  man_pages: bundled
+  shell_completions: unavailable
 
 - id: skim
   exe_name: sk
   url: https://github.com/skim-rs/skim
   category: shell
   description: Fuzzy finder in Rust (alternative to `fzf`)
+  has_musl: false
+  man_pages: bundled
+  shell_completions: self_generated
 
 - id: spotatui
   exe_name: spotatui
   url: https://github.com/LargeModGames/spotatui
   category: music
   description: Terminal UI for Spotify
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: squix
   exe_name: squix
   url: https://github.com/eduardofuncao/squix
   category: databases
   description: Interactive TUI for exploring and querying SQL databases
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: starship
   exe_name: starship
   url: https://github.com/starship/starship
   category: shell
   description: Minimal, blazing-fast, infinitely customizable shell prompt
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: stylua
   exe_name: stylua
   url: https://github.com/JohnnyMorganz/stylua
   category: dev_tools
   description: Opinionated Lua code formatter
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: tlrc
   exe_name: tldr
   url: https://github.com/tldr-pages/tlrc
   category: other
   description: Official [tldr-pages](https://tldr.sh/) client written in Rust
+  has_musl: false
+  man_pages: bundled
+  shell_completions: bundled
 
 - id: trash-cli-rs
   exe_name: trash
   url: https://github.com/orf/trash
   category: files
   description: Safe `rm` replacement that moves files to the trash
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: usql
   exe_name: usql
   url: https://github.com/xo/usql
   category: databases
   description: Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: uv
   exe_name: uv
   url: https://github.com/astral-sh/uv
   category: dev_envs
   description: Extremely fast Python package and project manager
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: xh
   exe_name: xh
   url: https://github.com/ducaale/xh
   category: http
   description: Friendly and fast HTTP client, `HTTPie` and `curl` alternative
+  has_musl: true
+  man_pages: self_generated
+  shell_completions: self_generated
 
 - id: xq
   exe_name: xq
   url: https://github.com/sibprogrammer/xq
   category: data
   description: Command-line XML and HTML processor using XPath
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
 
 - id: yazi
   exe_name: yazi
   url: https://github.com/sxyazi/yazi
   category: files
   description: Blazing fast terminal file manager with asynchronous I/O
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: bundled
 
 - id: yq
   exe_name: yq
   url: https://github.com/mikefarah/yq
   category: data
   description: Portable command-line YAML, JSON, XML, and CSV processor
+  has_musl: false
+  man_pages: bundled
+  shell_completions: self_generated
 
 - id: worktrunk
   exe_name: wt
   url: https://github.com/max-sixty/worktrunk
   category: git
   description: Git worktree manager — fast branch switching without stashing
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
 
 - id: zoxide
   exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide
   category: shell
   description: Smarter `cd` command with frecency-based directory jumping
+  has_musl: true
+  man_pages: bundled
+  shell_completions: unavailable
