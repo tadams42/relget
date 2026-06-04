@@ -45,7 +45,7 @@ The commit message will be `build: bumped version to vX.Y.Z`.
 ### 3. Push
 
 ```sh
-git push --follow-tags
+git push && git push --tags
 ```
 
 This pushes both the commit and the tag. The `GitHub Actions` release workflow fires on
@@ -55,6 +55,6 @@ and appends a **Full Changelog** comparison link.
 `push = false` in the workspace `Cargo.toml` means `cargo-release` never pushes
 automatically. Always use `git push --follow-tags`.
 
-If CHANGELOG.md does not contain a `## vX.Y.Z (...)` section matching the pushed tag,
+If `CHANGELOG.md` does not contain a `## vX.Y.Z (...)` section matching the pushed tag,
 the `GitHub` release is created with an empty body. If you'd followed above instructions
 correctly, this should never happen.

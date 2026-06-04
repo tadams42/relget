@@ -166,3 +166,10 @@ Tokens are optional. Without them, `relget` works anonymously (subject to API ra
 
 - use `cargo +nightly fmt` to format the code
 - use `cargo check --workspace` and `cargo clippy --no-deps` to lint the code
+- git commit messages should use past tense (`added foobar` instead of `add foobar`,
+  `adding foobar` or `adds foobar`)
+- git commit messages should be prefixed by short category like `refactor:`, `build:`,
+  `ci:`, `feat:`, `docs:`, `chore:` and similar
+- git commit messages prefixed by `build:`, `ci:`, `docs:` and `chore:` will be filtered
+  from `CHANGELOG.md` so use these prefixes for stuff that is not interesting to end
+  users
