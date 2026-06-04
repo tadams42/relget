@@ -79,7 +79,7 @@ pub fn select_apps(
 
     if user_chosen.is_empty() {
         return Err(anyhow!(
-            "you must specify one of --apps <NAME[,NAME...]>, --minimal-set, or --configured-set <SET_NAME>; run `relget --help` for usage"
+            "you must specify one of --apps <NAME[,NAME...]>, --minimal-set, or --configured-set <SET_NAME>; run `relget install --help` for usage"
         ));
     }
 

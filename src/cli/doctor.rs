@@ -7,7 +7,7 @@ use crate::clients::{CodebergClient, GhRelease, GithubClient, GitlabClient};
 use super::helpers::{
     load_or_prompt_codeberg_token, load_or_prompt_github_token, load_or_prompt_gitlab_token,
 };
-use super::main_command::Cli;
+use super::main_command::DoctorArgs;
 
 enum DoctorFlag {
     PotentiallyUnmaintained,
@@ -103,14 +103,14 @@ fn release_date(release: &GhRelease) -> Option<DateTime<Utc>> {
     })
 }
 
-pub fn doctor_command(cli: &Cli) -> Result<()> {
-    let (gh_token, cb_token, gl_token) = if cli.offline {
+pub fn doctor_command(args: &DoctorArgs, offline: bool) -> Result<()> {
+    let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
     } else {
         (
-            load_or_prompt_github_token(&cli.gh_token_source)?,
-            load_or_prompt_codeberg_token(&cli.cb_token_source)?,
-            load_or_prompt_gitlab_token(&cli.gl_token_source)?,
+            load_or_prompt_github_token(&args.gh_token_source)?,
+            load_or_prompt_codeberg_token(&args.cb_token_source)?,
+            load_or_prompt_gitlab_token(&args.gl_token_source)?,
         )
     };
 
@@ -123,7 +123,7 @@ pub fn doctor_command(cli: &Cli) -> Result<()> {
             gh_token.clone(),
             cb_token.clone(),
             gl_token.clone(),
-            cli.offline,
+            offline,
         ) {
             Ok(r) => r,
             Err(e) => {

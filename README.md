@@ -15,10 +15,10 @@ pages and completion for `ZSH`, `Bash` and `Fish` shells.
 curl -fsSL https://github.com/tadams42/relget/releases/latest/download/relget-x86_64-linux.tar.gz | tar xz
 
 # install into ~/.local/bin ...
-./relget --prefix ~/.local --apps bat,eza,fd,fnm,uv,jq,lazygit
+./relget install --prefix ~/.local --apps bat,eza,fd,fnm,uv,jq,lazygit
 
 # ... or install system wide into /usr/local
-sudo ./relget --apps bat,eza,fd,fnm,uv,jq,lazygit
+sudo ./relget install --apps bat,eza,fd,fnm,uv,jq,lazygit
 
 rm ./relget
 ```
@@ -55,10 +55,10 @@ The risks are acceptable to me `99.999%` of times. **YMMV**
 
 ```sh
 # install into ~/.local/bin
-relget --prefix ~/.local --apps bat,eza,fd,fnm,uv,jq,lazygit
+relget install --prefix ~/.local --apps bat,eza,fd,fnm,uv,jq,lazygit
 
 # install system wide into /usr/local/
-sudo relget --apps bat,eza,fd,fnm,uv,jq,lazygit
+sudo relget install --apps bat,eza,fd,fnm,uv,jq,lazygit
 
 # uninstall specific apps from specific prefix
 relget uninstall --prefix ~/.local --apps rg,bat
@@ -90,7 +90,7 @@ and select them with `--configured-set`:
 
 ```sh
 # install the "work" set
-relget --prefix ~/.local --configured-set work
+relget install --prefix ~/.local --configured-set work
 
 # uninstall it
 relget uninstall --prefix ~/.local --configured-set work
@@ -128,13 +128,13 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
   ```sh
   # prompt for GitHub token
-  relget --gh-token-source prompt
+  relget install --gh-token-source prompt
 
   # prompt for Codeberg token
-  relget --cb-token-source prompt
+  relget install --cb-token-source prompt
 
   # prompt for GitLab token
-  relget --gl-token-source prompt
+  relget install --gl-token-source prompt
   ```
 
 ## Supported apps

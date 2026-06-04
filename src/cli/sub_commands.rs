@@ -10,7 +10,7 @@ use super::helpers::{
     load_or_prompt_codeberg_token, load_or_prompt_github_token, load_or_prompt_gitlab_token,
     select_apps,
 };
-use super::main_command::Cli;
+use super::main_command::{InstallArgs, UninstallArgs, UpdateArgs};
 
 pub fn list_apps_ids_command() {
     for id in all_apps_identifiers() {
@@ -18,20 +18,19 @@ pub fn list_apps_ids_command() {
     }
 }
 
-pub fn install_apps_command(cli: &Cli) -> Result<()> {
-    let selected = select_apps(&cli.apps, cli.minimal_set, cli.configured_set.as_deref())?;
-    log::info!("Installing into: {:?}", cli.prefix);
-    let (gh_token, cb_token, gl_token) = if cli.offline {
+pub fn install_apps_command(args: &InstallArgs, offline: bool) -> Result<()> {
+    let selected = select_apps(&args.apps, args.minimal_set, args.configured_set.as_deref())?;
+    log::info!("Installing into: {:?}", args.prefix);
+    let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
     } else {
         (
-            load_or_prompt_github_token(&cli.gh_token_source)?,
-            load_or_prompt_codeberg_token(&cli.cb_token_source)?,
-            load_or_prompt_gitlab_token(&cli.gl_token_source)?,
+            load_or_prompt_github_token(&args.gh_token_source)?,
+            load_or_prompt_codeberg_token(&args.cb_token_source)?,
+            load_or_prompt_gitlab_token(&args.gl_token_source)?,
         )
     };
-    let installed =
-        install_apps(&cli.prefix, &selected, gh_token, cb_token, gl_token, cli.offline)?;
+    let installed = install_apps(&args.prefix, &selected, gh_token, cb_token, gl_token, offline)?;
     if !installed.is_empty() {
         println!("Installed files:");
         for path in installed {
@@ -42,11 +41,11 @@ pub fn install_apps_command(cli: &Cli) -> Result<()> {
     Ok(())
 }
 
-pub fn uninstall_command(cli: &Cli) -> Result<()> {
-    let selected = select_apps(&cli.apps, cli.minimal_set, cli.configured_set.as_deref())?;
+pub fn uninstall_command(args: &UninstallArgs) -> Result<()> {
+    let selected = select_apps(&args.apps, args.minimal_set, args.configured_set.as_deref())?;
     let validated = select_apps(&selected, false, None)?;
 
-    let removed = uninstall_apps(&cli.prefix, &validated)?;
+    let removed = uninstall_apps(&args.prefix, &validated)?;
     if removed.is_empty() {
         println!("No files removed.");
     } else {
@@ -58,12 +57,12 @@ pub fn uninstall_command(cli: &Cli) -> Result<()> {
     Ok(())
 }
 
-pub fn update_command(cli: &Cli) -> Result<()> {
-    let to_update: Vec<String> = if cli.apps.is_empty()
-        && !cli.minimal_set
-        && cli.configured_set.is_none()
+pub fn update_command(args: &UpdateArgs, offline: bool) -> Result<()> {
+    let to_update: Vec<String> = if args.apps.is_empty()
+        && !args.minimal_set
+        && args.configured_set.is_none()
     {
-        let bin_dir = cli.prefix.join("bin");
+        let bin_dir = args.prefix.join("bin");
         let installed_binaries: HashSet<String> = std::fs::read_dir(&bin_dir)
             .map_err(|e| anyhow::anyhow!("cannot read {}: {}", bin_dir.display(), e))?
             .filter_map(|e| e.ok())
@@ -116,21 +115,21 @@ pub fn update_command(cli: &Cli) -> Result<()> {
 
         ids
     } else {
-        select_apps(&cli.apps, cli.minimal_set, cli.configured_set.as_deref())?
+        select_apps(&args.apps, args.minimal_set, args.configured_set.as_deref())?
     };
 
-    log::info!("Updating {} app(s) in {:?}", to_update.len(), cli.prefix);
-    let (gh_token, cb_token, gl_token) = if cli.offline {
+    log::info!("Updating {} app(s) in {:?}", to_update.len(), args.prefix);
+    let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
     } else {
         (
-            load_or_prompt_github_token(&cli.gh_token_source)?,
-            load_or_prompt_codeberg_token(&cli.cb_token_source)?,
-            load_or_prompt_gitlab_token(&cli.gl_token_source)?,
+            load_or_prompt_github_token(&args.gh_token_source)?,
+            load_or_prompt_codeberg_token(&args.cb_token_source)?,
+            load_or_prompt_gitlab_token(&args.gl_token_source)?,
         )
     };
     let installed =
-        install_apps(&cli.prefix, &to_update, gh_token, cb_token, gl_token, cli.offline)?;
+        install_apps(&args.prefix, &to_update, gh_token, cb_token, gl_token, offline)?;
     if installed.is_empty() {
         println!("All apps already at latest version.");
     } else {
