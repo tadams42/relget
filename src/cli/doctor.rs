@@ -27,6 +27,21 @@ impl DoctorFlag {
             Self::BundledCompletions => "comp:bundled",
         }
     }
+
+    fn colored_label(&self, use_color: bool) -> String {
+        if !use_color {
+            return self.label().to_string();
+        }
+        let (code, reset) = ("\x1b[", "\x1b[0m");
+        let color = match self {
+            Self::PotentiallyUnmaintained => "1;33m", // bold yellow
+            Self::MuslNowAvailable        => "32m",   // green
+            Self::MuslNoLongerAvailable   => "31m",   // red
+            Self::BundledManPages         => "36m",   // cyan
+            Self::BundledCompletions      => "35m",   // magenta
+        };
+        format!("{}{}{}{}", code, color, self.label(), reset)
+    }
 }
 
 struct FlaggedApp {
@@ -158,11 +173,12 @@ pub fn doctor_command(cli: &Cli) -> Result<()> {
         }
     }
 
-    print_table(&flagged);
+    use std::io::IsTerminal;
+    print_table(&flagged, std::io::stdout().is_terminal());
     Ok(())
 }
 
-fn print_table(apps: &[FlaggedApp]) {
+fn print_table(apps: &[FlaggedApp], use_color: bool) {
     if apps.is_empty() {
         println!("All apps look healthy.");
         return;
@@ -190,7 +206,7 @@ fn print_table(apps: &[FlaggedApp]) {
     );
 
     for app in apps {
-        let flags_str = app.flags.iter().map(|f| f.label()).collect::<Vec<_>>().join(", ");
+        let flags_str = app.flags.iter().map(|f| f.colored_label(use_color)).collect::<Vec<_>>().join(", ");
         println!(
             "{:<id_w$}  {:<date_w$}  {:<ver_w$}  {}",
             app.id,
