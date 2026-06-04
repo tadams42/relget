@@ -234,6 +234,7 @@ pub enum Commands {
     #[command(verbatim_doc_comment)]
     Uninstall(UninstallArgs),
     /// Check all registry apps for potential issues against latest releases
+    #[command(hide = true)]
     Doctor(DoctorArgs),
     /// Update relget-managed apps in the prefix
     ///
