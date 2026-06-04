@@ -18,7 +18,7 @@ exactly = 1
 
 [package]
 name = "relget"
-version = "0.5.1"
+version = "0.5.2"
 edition = "2021"
 license = "MIT"
 

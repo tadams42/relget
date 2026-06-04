@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.5.2 (2026-06-04)
+
 - refactor: added explicit `install` subcommand, move options to per-command scope
 - feat: added `gopass`
 - feat: added `pass-cli`
