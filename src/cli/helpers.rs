@@ -5,16 +5,8 @@ use crate::config::{
     load_codeberg_token, load_configured_set, load_github_token, load_gitlab_token,
 };
 
-pub fn load_or_prompt_github_token(source: &str) -> Result<Option<String>> {
-    let token = match source {
-        "prompt" => {
-            let token = rpassword::prompt_password("GitHub API token (leave empty to skip): ")
-                .unwrap_or_default();
-            Ok(if token.is_empty() { None } else { Some(token) })
-        }
-        "load" => load_github_token(),
-        _ => Err(anyhow!("Unknown token source '{}'", source)),
-    }?;
+pub fn get_github_token() -> Result<Option<String>> {
+    let token = load_github_token()?;
     match &token {
         Some(_) => log::info!("GitHub token found and loaded"),
         None => log::warn!("GitHub token not found; app may hit API rate limits"),
@@ -22,16 +14,8 @@ pub fn load_or_prompt_github_token(source: &str) -> Result<Option<String>> {
     Ok(token)
 }
 
-pub fn load_or_prompt_codeberg_token(source: &str) -> Result<Option<String>> {
-    let token = match source {
-        "prompt" => {
-            let token = rpassword::prompt_password("Codeberg API token (leave empty to skip): ")
-                .unwrap_or_default();
-            Ok(if token.is_empty() { None } else { Some(token) })
-        }
-        "load" => load_codeberg_token(),
-        _ => Err(anyhow!("Unknown token source '{}'", source)),
-    }?;
+pub fn get_codeberg_token() -> Result<Option<String>> {
+    let token = load_codeberg_token()?;
     match &token {
         Some(_) => log::info!("Codeberg token found and loaded"),
         None => log::warn!("Codeberg token not found; app may hit API rate limits"),
@@ -39,16 +23,8 @@ pub fn load_or_prompt_codeberg_token(source: &str) -> Result<Option<String>> {
     Ok(token)
 }
 
-pub fn load_or_prompt_gitlab_token(source: &str) -> Result<Option<String>> {
-    let token = match source {
-        "prompt" => {
-            let token = rpassword::prompt_password("GitLab API token (leave empty to skip): ")
-                .unwrap_or_default();
-            Ok(if token.is_empty() { None } else { Some(token) })
-        }
-        "load" => load_gitlab_token(),
-        _ => Err(anyhow!("Unknown token source '{}'", source)),
-    }?;
+pub fn get_gitlab_token() -> Result<Option<String>> {
+    let token = load_gitlab_token()?;
     match &token {
         Some(_) => log::info!("GitLab token found and loaded"),
         None => log::warn!("GitLab token not found; app may hit API rate limits"),

@@ -122,23 +122,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
   export RELGET_GLB_TOKEN="..."
   ```
 
-  Values from env variables have higher precedence than the ones read from config file.
-
-- from `relget`'s interactive prompt
-
-  ```sh
-  # prompt for GitHub token
-  relget install --gh-token-source prompt
-
-  # prompt for Codeberg token
-  relget install --cb-token-source prompt
-
-  # prompt for GitLab token
-  relget install --gl-token-source prompt
-  ```
-
-  Values from interactive prompts have higher precedence than the ones read from env
-  variables.
+  Env variables take precedence over the config file.
 
 ## Supported apps
 

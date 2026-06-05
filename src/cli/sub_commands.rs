@@ -6,10 +6,7 @@ use crate::apps::{all_app_entries, all_apps_identifiers};
 use crate::installer::install_apps;
 use crate::uninstaller::uninstall_apps;
 
-use super::helpers::{
-    load_or_prompt_codeberg_token, load_or_prompt_github_token, load_or_prompt_gitlab_token,
-    select_apps,
-};
+use super::helpers::{get_codeberg_token, get_github_token, get_gitlab_token, select_apps};
 use super::main_command::{InstallArgs, UninstallArgs, UpdateArgs};
 
 pub fn list_apps_ids_command() {
@@ -24,11 +21,7 @@ pub fn install_apps_command(args: &InstallArgs, offline: bool) -> Result<()> {
     let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
     } else {
-        (
-            load_or_prompt_github_token(&args.gh_token_source)?,
-            load_or_prompt_codeberg_token(&args.cb_token_source)?,
-            load_or_prompt_gitlab_token(&args.gl_token_source)?,
-        )
+        (get_github_token()?, get_codeberg_token()?, get_gitlab_token()?)
     };
     let installed = install_apps(&args.prefix, &selected, gh_token, cb_token, gl_token, offline)?;
     if !installed.is_empty() {
@@ -122,11 +115,7 @@ pub fn update_command(args: &UpdateArgs, offline: bool) -> Result<()> {
     let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
     } else {
-        (
-            load_or_prompt_github_token(&args.gh_token_source)?,
-            load_or_prompt_codeberg_token(&args.cb_token_source)?,
-            load_or_prompt_gitlab_token(&args.gl_token_source)?,
-        )
+        (get_github_token()?, get_codeberg_token()?, get_gitlab_token()?)
     };
     let installed = install_apps(&args.prefix, &to_update, gh_token, cb_token, gl_token, offline)?;
     if installed.is_empty() {

@@ -110,21 +110,6 @@ pub struct InstallArgs {
     )]
     pub apps: Vec<String>,
 
-    /// GitHub token source: `prompt` to enter interactively, `load` to read from
-    /// RELGET_GHB_TOKEN env var or ~/.config/relget.toml (github_token key)
-    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
-    pub gh_token_source: String,
-
-    /// Codeberg token source: `prompt` to enter interactively, `load` to read from
-    /// RELGET_CDB_TOKEN env var or ~/.config/relget.toml (codeberg_token key)
-    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
-    pub cb_token_source: String,
-
-    /// GitLab token source: `prompt` to enter interactively, `load` to read from
-    /// RELGET_GLB_TOKEN env var or ~/.config/relget.toml (gitlab_token key)
-    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
-    pub gl_token_source: String,
-
     /// Install a hand-picked minimal set of apps
     #[arg(long, default_value_t = false, conflicts_with_all = ["apps", "configured_set"])]
     pub minimal_set: bool,
@@ -149,21 +134,6 @@ pub struct UpdateArgs {
         conflicts_with_all = ["minimal_set", "configured_set"]
     )]
     pub apps: Vec<String>,
-
-    /// GitHub token source: `prompt` to enter interactively, `load` to read from
-    /// RELGET_GHB_TOKEN env var or ~/.config/relget.toml (github_token key)
-    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
-    pub gh_token_source: String,
-
-    /// Codeberg token source: `prompt` to enter interactively, `load` to read from
-    /// RELGET_CDB_TOKEN env var or ~/.config/relget.toml (codeberg_token key)
-    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
-    pub cb_token_source: String,
-
-    /// GitLab token source: `prompt` to enter interactively, `load` to read from
-    /// RELGET_GLB_TOKEN env var or ~/.config/relget.toml (gitlab_token key)
-    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
-    pub gl_token_source: String,
 
     /// Update a hand-picked minimal set of apps
     #[arg(long, default_value_t = false, conflicts_with_all = ["apps", "configured_set"])]
@@ -200,22 +170,7 @@ pub struct UninstallArgs {
 }
 
 #[derive(Args)]
-pub struct DoctorArgs {
-    /// GitHub token source: `prompt` to enter interactively, `load` to read from
-    /// RELGET_GHB_TOKEN env var or ~/.config/relget.toml (github_token key)
-    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
-    pub gh_token_source: String,
-
-    /// Codeberg token source: `prompt` to enter interactively, `load` to read from
-    /// RELGET_CDB_TOKEN env var or ~/.config/relget.toml (codeberg_token key)
-    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
-    pub cb_token_source: String,
-
-    /// GitLab token source: `prompt` to enter interactively, `load` to read from
-    /// RELGET_GLB_TOKEN env var or ~/.config/relget.toml (gitlab_token key)
-    #[arg(long, default_value = "load", value_parser = ["prompt", "load"])]
-    pub gl_token_source: String,
-}
+pub struct DoctorArgs {}
 
 #[derive(Subcommand)]
 pub enum Commands {

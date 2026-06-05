@@ -4,9 +4,7 @@ use chrono::{DateTime, Duration, Utc};
 use crate::apps::{ManPagesStatus, ShellCompletionsStatus, all_app_entries};
 use crate::clients::{CodebergClient, GithubClient, GitlabClient, ReleaseMetadata};
 
-use super::helpers::{
-    load_or_prompt_codeberg_token, load_or_prompt_github_token, load_or_prompt_gitlab_token,
-};
+use super::helpers::{get_codeberg_token, get_github_token, get_gitlab_token};
 use super::main_command::DoctorArgs;
 
 enum DoctorFlag {
@@ -102,15 +100,11 @@ fn release_date(release: &ReleaseMetadata) -> Option<DateTime<Utc>> {
         })
 }
 
-pub fn doctor_command(args: &DoctorArgs, offline: bool) -> Result<()> {
+pub fn doctor_command(_args: &DoctorArgs, offline: bool) -> Result<()> {
     let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
     } else {
-        (
-            load_or_prompt_github_token(&args.gh_token_source)?,
-            load_or_prompt_codeberg_token(&args.cb_token_source)?,
-            load_or_prompt_gitlab_token(&args.gl_token_source)?,
-        )
+        (get_github_token()?, get_codeberg_token()?, get_gitlab_token()?)
     };
 
     let mut flagged: Vec<FlaggedApp> = Vec::new();
