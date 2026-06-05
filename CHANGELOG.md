@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.5.4 (2026-06-05)
+
 - feat: added pyrefly app (facebook/pyrefly)
 - feat: added ty app (astral-sh/ty)
 - feat: added ruff app (astral-sh/ruff)
