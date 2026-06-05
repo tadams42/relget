@@ -592,15 +592,6 @@
   man_pages: unavailable
   shell_completions: self_generated
 
-- id: usql
-  exe_name: usql
-  url: https://github.com/xo/usql
-  category: databases
-  description: Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases
-  has_musl: false
-  man_pages: unavailable
-  shell_completions: unavailable
-
 - id: uv
   exe_name: uv
   url: https://github.com/astral-sh/uv
