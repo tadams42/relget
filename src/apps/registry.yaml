@@ -547,15 +547,6 @@
   man_pages: bundled
   shell_completions: self_generated
 
-- id: squix
-  exe_name: squix
-  url: https://github.com/eduardofuncao/squix
-  category: databases
-  description: Interactive TUI for exploring and querying SQL databases
-  has_musl: false
-  man_pages: unavailable
-  shell_completions: self_generated
-
 - id: starship
   exe_name: starship
   url: https://github.com/starship/starship
