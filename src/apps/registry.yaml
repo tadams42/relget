@@ -547,15 +547,6 @@
   man_pages: bundled
   shell_completions: self_generated
 
-- id: spotatui
-  exe_name: spotatui
-  url: https://github.com/LargeModGames/spotatui
-  category: music
-  description: Terminal UI for Spotify
-  has_musl: false
-  man_pages: unavailable
-  shell_completions: self_generated
-
 - id: squix
   exe_name: squix
   url: https://github.com/eduardofuncao/squix

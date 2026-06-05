@@ -15,7 +15,6 @@ use super::system::{Dust, Dysk, Procs};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
-use super::music::Spotatui;
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
 
 pub fn create_app(
@@ -89,7 +88,6 @@ pub fn create_app(
         Scc::ID => Some(Box::new(Scc::new(client))),
         SdEdit::ID => Some(Box::new(SdEdit::new(client))),
         Skim::ID => Some(Box::new(Skim::new(client))),
-        Spotatui::ID => Some(Box::new(Spotatui::new(client))),
         Squix::ID => Some(Box::new(Squix::new(client))),
         Starship::ID => Some(Box::new(Starship::new(client))),
         Stylua::ID => Some(Box::new(Stylua::new(client))),

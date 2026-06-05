@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: removed spotatui app (LargeModGames/spotatui)
 - feat: added gocryptfs app (rfjakob/gocryptfs)
 
 ## v0.5.4 (2026-06-05)
