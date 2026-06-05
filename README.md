@@ -168,7 +168,6 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 ### Development environments
 
-- [aqua](https://github.com/aquaproj/aqua) — Declarative CLI tool installer and version manager
 - [chezmoi](https://github.com/twpayne/chezmoi) — Dotfiles manager across multiple machines, think `ansible` but for dotfiles
 - [fnm](https://github.com/Schniz/fnm) — Fast and simple Node.js version manager
 - [mise](https://github.com/jdx/mise) — prepares your complete development environment before each command runs

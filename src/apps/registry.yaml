@@ -7,15 +7,6 @@
   man_pages: unavailable
   shell_completions: unavailable
 
-- id: aqua
-  exe_name: aqua
-  url: https://github.com/aquaproj/aqua
-  category: dev_envs
-  description: Declarative CLI tool installer and version manager
-  has_musl: false
-  man_pages: unavailable
-  shell_completions: self_generated
-
 - id: ast-grep
   exe_name: ast-grep
   url: https://github.com/ast-grep/ast-grep

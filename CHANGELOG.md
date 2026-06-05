@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: removed aqua app (aquaproj/aqua)
 - feat: removed usql app (xo/usql)
 - feat: removed squix app (eduardofuncao/squix)
 - feat: removed sabiql app (riii111/sabiql)

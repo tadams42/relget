@@ -6,7 +6,7 @@ use super::App;
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan};
-use super::dev_envs::{Aqua, Chezmoi, Fnm, Mise, Uv};
+use super::dev_envs::{Chezmoi, Fnm, Mise, Uv};
 use super::coding::{AstGrep, Grex, Neovide, Pyrefly, Rgx, Ruff, RustAnalyzer, Scc, Stylua, Ty};
 use super::docs_diag::{D2, Mdbook, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Gopass, PassCli};
@@ -24,7 +24,6 @@ pub fn create_app(
     let client = Arc::new(GithubClient::new(gh_token, offline));
     match id {
         Age::ID => Some(Box::new(Age::new(client))),
-        Aqua::ID => Some(Box::new(Aqua::new(client))),
         AstGrep::ID => Some(Box::new(AstGrep::new(client))),
         Atuin::ID => Some(Box::new(Atuin::new(client))),
         Bat::ID => Some(Box::new(Bat::new(client))),
