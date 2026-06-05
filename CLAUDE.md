@@ -101,7 +101,10 @@ GitHub app:
    ```
 4. Update `create_app()` in `src/apps/apps_factory.rs`: add
    `"myapp" => Some(Box::new(myapp::MyApp::new(client)))`
-5. Run `cargo xtask update-docs` so that `README.md` and `CHANGELOG.md` get updated.
+5. Commit the changes first, then run `cargo xtask update-docs`, then amend the commit.
+   `xtask update-docs` reads git log to build `CHANGELOG.md`, so the new commit must exist
+   before xtask runs — otherwise the new app won't appear in the changelog. The amend folds
+   the updated `CHANGELOG.md` (and `README.md`) back into the same commit.
 
 Codeberg app:
 
