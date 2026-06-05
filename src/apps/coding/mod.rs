@@ -1,6 +1,7 @@
 mod ast_grep;
 mod grex;
 mod neovide;
+mod pyrefly;
 mod rgx;
 mod ruff;
 mod rust_analyzer;
@@ -11,6 +12,7 @@ mod stylua;
 pub use ast_grep::AstGrep;
 pub use grex::Grex;
 pub use neovide::Neovide;
+pub use pyrefly::Pyrefly;
 pub use rgx::Rgx;
 pub use ruff::Ruff;
 pub use rust_analyzer::RustAnalyzer;

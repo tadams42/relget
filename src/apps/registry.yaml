@@ -412,6 +412,15 @@
   man_pages: unavailable
   shell_completions: self_generated
 
+- id: pyrefly
+  exe_name: pyrefly
+  url: https://github.com/facebook/pyrefly
+  category: coding
+  description: Fast Python type checker
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: qsv
   exe_name: qsv
   url: https://github.com/dathere/qsv

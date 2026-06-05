@@ -147,6 +147,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [ast-grep](https://github.com/ast-grep/ast-grep) — Fast code search, lint, and rewriting using AST patterns
 - [grex](https://github.com/pemistahl/grex) — Generates regular expressions from user-provided test strings
 - [neovide](https://github.com/neovide/neovide) — GPU-accelerated GUI frontend for Neovim
+- [pyrefly](https://github.com/facebook/pyrefly) — Fast Python type checker
 - [rgx](https://github.com/brevity1swos/rgx) — Regex debugger for the terminal — step-through execution, 3 engines, code generation
 - [ruff](https://github.com/astral-sh/ruff) — Extremely fast Python linter and code formatter
 - [rust-analyzer](https://github.com/rust-lang/rust-analyzer) — Rust language server providing IDE integration

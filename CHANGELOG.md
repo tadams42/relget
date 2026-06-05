@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added pyrefly app (facebook/pyrefly)
 - feat: added ty app (astral-sh/ty)
 - feat: added ruff app (astral-sh/ruff)
 
