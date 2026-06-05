@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.5.3 (2026-06-05)
+
 - feat: added d2 app (terrastruct/d2)
 - feat: added rgx app (brevity1swos/rgx)
 
