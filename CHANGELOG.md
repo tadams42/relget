@@ -1,5 +1,7 @@
 ## unreleased
 
+- feat: added gocryptfs app (rfjakob/gocryptfs)
+
 ## v0.5.4 (2026-06-05)
 
 - feat: added pyrefly app (facebook/pyrefly)

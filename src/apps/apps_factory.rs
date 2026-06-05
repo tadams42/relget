@@ -9,7 +9,7 @@ use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Chezmoi, Fnm, Mise, Uv};
 use super::coding::{AstGrep, Grex, Neovide, Pyrefly, Rgx, Ruff, RustAnalyzer, Scc, Stylua, Ty};
 use super::docs_diag::{D2, Mdbook, Tlrc};
-use super::encryption::{Age, Doppler, Gopass, PassCli};
+use super::encryption::{Age, Doppler, Gocryptfs, Gopass, PassCli};
 use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Yazi};
 use super::system::{Dust, Dysk, Procs};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
@@ -49,6 +49,7 @@ pub fn create_app(
         Fx::ID => Some(Box::new(Fx::new(client))),
         Fzf::ID => Some(Box::new(Fzf::new(client))),
         Gitleaks::ID => Some(Box::new(Gitleaks::new(client))),
+        Gocryptfs::ID => Some(Box::new(Gocryptfs::new(client))),
         GoJq::ID => Some(Box::new(GoJq::new(client))),
         Gonzo::ID => Some(Box::new(Gonzo::new(client))),
         Gopass::ID => Some(Box::new(Gopass::new(client))),

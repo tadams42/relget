@@ -223,6 +223,15 @@
   man_pages: unavailable
   shell_completions: self_generated
 
+- id: gocryptfs
+  exe_name: gocryptfs
+  url: https://github.com/rfjakob/gocryptfs
+  category: encryption
+  description: Encrypted overlay filesystem written in Go
+  has_musl: false
+  man_pages: bundled
+  shell_completions: unavailable
+
 - id: gojq
   exe_name: gojq
   url: https://github.com/itchyny/gojq
