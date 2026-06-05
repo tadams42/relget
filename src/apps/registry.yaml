@@ -331,6 +331,15 @@
   man_pages: unavailable
   shell_completions: self_generated
 
+- id: d2
+  exe_name: d2
+  url: https://github.com/terrastruct/d2
+  category: docs_diag
+  description: Diagram scripting language that turns text to diagrams
+  has_musl: false
+  man_pages: bundled
+  shell_completions: unavailable
+
 - id: mdbook
   exe_name: mdbook
   url: https://github.com/rust-lang/mdBook

@@ -191,6 +191,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 ### Documentation and diagrams
 
+- [d2](https://github.com/terrastruct/d2) — Diagram scripting language that turns text to diagrams
 - [mdbook](https://github.com/rust-lang/mdBook) — Create books from Markdown source files
 - [tlrc](https://github.com/tldr-pages/tlrc) — Official [tldr-pages](https://tldr.sh/) client written in Rust
 

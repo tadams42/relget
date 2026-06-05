@@ -8,7 +8,7 @@ use super::data_processing::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq
 use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Chezmoi, Fnm, Mise, Uv};
 use super::coding::{AstGrep, Grex, Neovide, Rgx, RustAnalyzer, Scc, Stylua};
-use super::docs_diag::{Mdbook, Tlrc};
+use super::docs_diag::{D2, Mdbook, Tlrc};
 use super::encryption::{Age, Doppler, Gopass, PassCli};
 use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Yazi};
 use super::system::{Dust, Dysk, Procs};
@@ -59,6 +59,7 @@ pub fn create_app(
         Jqp::ID => Some(Box::new(Jqp::new(client))),
         LazyJournal::ID => Some(Box::new(LazyJournal::new(client))),
         LazyDocker::ID => Some(Box::new(LazyDocker::new(client))),
+        D2::ID => Some(Box::new(D2::new(client))),
         Lazygit::ID => Some(Box::new(Lazygit::new(client))),
         Logdy::ID => Some(Box::new(Logdy::new(client))),
         Mdbook::ID => Some(Box::new(Mdbook::new(client))),
