@@ -466,6 +466,15 @@
   man_pages: bundled
   shell_completions: self_generated
 
+- id: ruff
+  exe_name: ruff
+  url: https://github.com/astral-sh/ruff
+  category: coding
+  description: Extremely fast Python linter and code formatter
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: self_generated
+
 - id: rsv
   exe_name: rsv
   url: https://github.com/ribbondz/rsv

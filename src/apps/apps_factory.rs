@@ -7,7 +7,7 @@ use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Chezmoi, Fnm, Mise, Uv};
-use super::coding::{AstGrep, Grex, Neovide, Rgx, RustAnalyzer, Scc, Stylua};
+use super::coding::{AstGrep, Grex, Neovide, Rgx, Ruff, RustAnalyzer, Scc, Stylua};
 use super::docs_diag::{D2, Mdbook, Tlrc};
 use super::encryption::{Age, Doppler, Gopass, PassCli};
 use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Yazi};
@@ -77,6 +77,7 @@ pub fn create_app(
         Rclone::ID => Some(Box::new(Rclone::new(client))),
         Restish::ID => Some(Box::new(Restish::new(client))),
         Rgx::ID => Some(Box::new(Rgx::new(client))),
+        Ruff::ID => Some(Box::new(Ruff::new(client))),
         Ripgrep::ID => Some(Box::new(Ripgrep::new(client))),
         Qsv::ID => Some(Box::new(Qsv::new(client))),
         QsvAll::ID => Some(Box::new(QsvAll::new(client))),
