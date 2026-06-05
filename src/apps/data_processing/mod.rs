@@ -1,6 +1,7 @@
 mod dasel;
 mod fx;
 mod gojq;
+mod jaq;
 mod jid;
 mod jq;
 mod jqp;
@@ -13,6 +14,7 @@ mod yq;
 pub use dasel::Dasel;
 pub use fx::Fx;
 pub use gojq::GoJq;
+pub use jaq::Jaq;
 pub use jid::Jid;
 pub use jq::Jq;
 pub use jqp::Jqp;

@@ -4,7 +4,7 @@ use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 
 use super::App;
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
-use super::data_processing::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
+use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Chezmoi, Fnm, Mise, Uv};
 use super::coding::{AstGrep, Grex, Neovide, Pyrefly, Rgx, Ruff, RustAnalyzer, Scc, Stylua, Ty};
@@ -54,6 +54,7 @@ pub fn create_app(
         Gopass::ID => Some(Box::new(Gopass::new(client))),
         Grex::ID => Some(Box::new(Grex::new(client))),
         Hurl::ID => Some(Box::new(Hurl::new(client))),
+        Jaq::ID => Some(Box::new(Jaq::new(client))),
         Jid::ID => Some(Box::new(Jid::new(client))),
         Jq::ID => Some(Box::new(Jq::new(client))),
         Jqp::ID => Some(Box::new(Jqp::new(client))),

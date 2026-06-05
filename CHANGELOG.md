@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added jaq app (01mf02/jaq)
 - feat: removed spotatui app (LargeModGames/spotatui)
 - feat: added gocryptfs app (rfjakob/gocryptfs)
 

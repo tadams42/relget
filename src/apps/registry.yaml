@@ -277,6 +277,15 @@
   man_pages: bundled
   shell_completions: bundled
 
+- id: jaq
+  exe_name: jaq
+  url: https://github.com/01mf02/jaq
+  category: data_processing
+  description: jq-compatible JSON query language focused on correctness and speed
+  has_musl: true
+  man_pages: bundled
+  shell_completions: unavailable
+
 - id: jid
   exe_name: jid
   url: https://github.com/simeji/jid

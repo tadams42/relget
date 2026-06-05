@@ -151,6 +151,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [dasel](https://github.com/TomWright/dasel) — Query and modify data in JSON, YAML, TOML, XML, and CSV
 - [fx](https://github.com/antonmedv/fx) — Terminal JSON viewer and interactive processor
 - [gojq](https://github.com/itchyny/gojq) — Pure Go implementation of `jq` with extended features
+- [jaq](https://github.com/01mf02/jaq) — jq-compatible JSON query language focused on correctness and speed
 - [jid](https://github.com/simeji/jid) — Interactive JSON incremental digger
 - [jq](https://github.com/jqlang/jq) — Lightweight command-line JSON processor
 - [jqp](https://github.com/noahgorstein/jqp) — TUI playground for crafting `jq` queries
