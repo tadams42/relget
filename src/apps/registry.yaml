@@ -520,15 +520,6 @@
   man_pages: unavailable
   shell_completions: unavailable
 
-- id: sabiql
-  exe_name: sabiql
-  url: https://github.com/riii111/sabiql
-  category: databases
-  description: TUI client for PostgreSQL databases
-  has_musl: false
-  man_pages: unavailable
-  shell_completions: unavailable
-
 - id: scc
   exe_name: scc
   url: https://github.com/boyter/scc

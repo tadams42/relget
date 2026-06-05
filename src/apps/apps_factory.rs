@@ -5,7 +5,7 @@ use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 use super::App;
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
-use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
+use super::databases::{Pdot, Pgplan};
 use super::dev_envs::{Aqua, Chezmoi, Fnm, Mise, Uv};
 use super::coding::{AstGrep, Grex, Neovide, Pyrefly, Rgx, Ruff, RustAnalyzer, Scc, Stylua, Ty};
 use super::docs_diag::{D2, Mdbook, Tlrc};
@@ -85,17 +85,14 @@ pub fn create_app(
         QsvAll::ID => Some(Box::new(QsvAll::new(client))),
         Rsv::ID => Some(Box::new(Rsv::new(client))),
         RustAnalyzer::ID => Some(Box::new(RustAnalyzer::new(client))),
-        Sabiql::ID => Some(Box::new(Sabiql::new(client))),
         Scc::ID => Some(Box::new(Scc::new(client))),
         SdEdit::ID => Some(Box::new(SdEdit::new(client))),
         Skim::ID => Some(Box::new(Skim::new(client))),
-        Squix::ID => Some(Box::new(Squix::new(client))),
         Starship::ID => Some(Box::new(Starship::new(client))),
         Stylua::ID => Some(Box::new(Stylua::new(client))),
         Tlrc::ID => Some(Box::new(Tlrc::new(client))),
         Ty::ID => Some(Box::new(Ty::new(client))),
         Trash::ID => Some(Box::new(Trash::new(client))),
-        Usql::ID => Some(Box::new(Usql::new(client))),
         Uv::ID => Some(Box::new(Uv::new(client))),
         Xh::ID => Some(Box::new(Xh::new(client))),
         Xq::ID => Some(Box::new(Xq::new(client))),
