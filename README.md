@@ -96,8 +96,8 @@ relget install --prefix ~/.local --configured-set work
 relget uninstall --prefix ~/.local --configured-set work
 ```
 
-`--configured-set`, `--apps`, and `--minimal-set` are mutually exclusive — only one may
-be given per invocation.
+`--configured-set` and `--apps` are mutually exclusive — only one may be given per
+invocation.
 
 ### API Rate limits on GitHub (and others)
 

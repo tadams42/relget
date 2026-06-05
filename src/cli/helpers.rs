@@ -1,6 +1,6 @@
 use anyhow::{Result, anyhow};
 
-use crate::apps::{all_apps_identifiers, minimal_set_identifiers};
+use crate::apps::all_apps_identifiers;
 use crate::config::{
     load_codeberg_token, load_configured_set, load_github_token, load_gitlab_token,
 };
@@ -32,16 +32,8 @@ pub fn get_gitlab_token() -> Result<Option<String>> {
     Ok(token)
 }
 
-pub fn select_apps(
-    user_chosen: &[String], minimal_set: bool, configured_set: Option<&str>,
-) -> Result<Vec<String>> {
+pub fn select_apps(user_chosen: &[String], configured_set: Option<&str>) -> Result<Vec<String>> {
     let known: Vec<&str> = all_apps_identifiers();
-
-    if minimal_set {
-        let mut apps = minimal_set_identifiers().to_vec();
-        apps.sort_unstable();
-        return Ok(apps.iter().map(|s| s.to_string()).collect());
-    }
 
     if let Some(set_name) = configured_set {
         let apps = load_configured_set(set_name)?;
@@ -55,7 +47,7 @@ pub fn select_apps(
 
     if user_chosen.is_empty() {
         return Err(anyhow!(
-            "you must specify one of --apps <NAME[,NAME...]>, --minimal-set, or --configured-set <SET_NAME>; run `relget install --help` for usage"
+            "you must specify one of --apps <NAME[,NAME...]> or --configured-set <SET_NAME>; run `relget install --help` for usage"
         ));
     }
 

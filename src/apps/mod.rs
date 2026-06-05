@@ -17,10 +17,7 @@ mod system;
 
 pub use app_trait::App;
 pub use apps_factory::create_app;
-pub use apps_registry::{
-    ManPagesStatus, ShellCompletionsStatus, all_app_entries, all_apps_identifiers,
-    minimal_set_identifiers,
-};
+pub use apps_registry::{ManPagesStatus, ShellCompletionsStatus, all_app_entries, all_apps_identifiers};
 
 pub(in crate::apps) use app_trait::{
     gen_completions_shell_flag, gen_completions_subcommand, gen_completions_with_shell_arg,

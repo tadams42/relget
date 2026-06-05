@@ -1,11 +1,3 @@
-use super::containers::D4S;
-use super::data_processing::{GoJq, Jq, Yq};
-use super::dev_envs::{Chezmoi, Fnm, Uv};
-use super::files::{Bat, Eza, FdFind, Ripgrep, SdEdit};
-use super::system::{Dust, Dysk};
-use super::git::{Delta, Difftastic, Gitleaks, Lazygit};
-use super::http::Restish;
-use super::shell::{Fzf, Starship, Zoxide};
 use rust_embed::RustEmbed;
 use serde::Deserialize;
 use std::sync::OnceLock;
@@ -43,32 +35,6 @@ pub struct AppEntry {
     pub shell_completions: ShellCompletionsStatus,
 }
 
-#[rustfmt::skip]
-pub const MINIMAL_SET: &[&str] = &[
-    Bat::ID,
-    Chezmoi::ID,
-    D4S::ID,
-    Delta::ID,
-    Difftastic::ID,
-    Dust::ID,
-    Dysk::ID,
-    Eza::ID,
-    FdFind::ID,
-    Fnm::ID,
-    Fzf::ID,
-    Gitleaks::ID,
-    GoJq::ID,
-    Jq::ID,
-    Lazygit::ID,
-    Restish::ID,
-    Ripgrep::ID,
-    SdEdit::ID,
-    Starship::ID,
-    Uv::ID,
-    Yq::ID,
-    Zoxide::ID,
-];
-
 static REGISTRY: OnceLock<Vec<AppEntry>> = OnceLock::new();
 
 fn registry() -> &'static [AppEntry] {
@@ -79,8 +45,6 @@ fn registry() -> &'static [AppEntry] {
 }
 
 pub fn all_app_entries() -> &'static [AppEntry] { registry() }
-
-pub fn minimal_set_identifiers() -> &'static [&'static str] { MINIMAL_SET }
 
 pub fn all_apps_identifiers() -> Vec<&'static str> {
     let mut ids: Vec<&str> = registry().iter().map(|e| e.id.as_str()).collect();

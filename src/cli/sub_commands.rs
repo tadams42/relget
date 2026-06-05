@@ -16,7 +16,7 @@ pub fn list_apps_ids_command() {
 }
 
 pub fn install_apps_command(args: &InstallArgs, offline: bool) -> Result<()> {
-    let selected = select_apps(&args.apps, args.minimal_set, args.configured_set.as_deref())?;
+    let selected = select_apps(&args.apps, args.configured_set.as_deref())?;
     log::info!("Installing into: {:?}", args.prefix);
     let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
@@ -35,8 +35,8 @@ pub fn install_apps_command(args: &InstallArgs, offline: bool) -> Result<()> {
 }
 
 pub fn uninstall_command(args: &UninstallArgs) -> Result<()> {
-    let selected = select_apps(&args.apps, args.minimal_set, args.configured_set.as_deref())?;
-    let validated = select_apps(&selected, false, None)?;
+    let selected = select_apps(&args.apps, args.configured_set.as_deref())?;
+    let validated = select_apps(&selected, None)?;
 
     let removed = uninstall_apps(&args.prefix, &validated)?;
     if removed.is_empty() {
@@ -51,10 +51,7 @@ pub fn uninstall_command(args: &UninstallArgs) -> Result<()> {
 }
 
 pub fn update_command(args: &UpdateArgs, offline: bool) -> Result<()> {
-    let to_update: Vec<String> = if args.apps.is_empty()
-        && !args.minimal_set
-        && args.configured_set.is_none()
-    {
+    let to_update: Vec<String> = if args.apps.is_empty() && args.configured_set.is_none() {
         let bin_dir = args.prefix.join("bin");
         let installed_binaries: HashSet<String> = std::fs::read_dir(&bin_dir)
             .map_err(|e| anyhow::anyhow!("cannot read {}: {}", bin_dir.display(), e))?
@@ -108,7 +105,7 @@ pub fn update_command(args: &UpdateArgs, offline: bool) -> Result<()> {
 
         ids
     } else {
-        select_apps(&args.apps, args.minimal_set, args.configured_set.as_deref())?
+        select_apps(&args.apps, args.configured_set.as_deref())?
     };
 
     log::info!("Updating {} app(s) in {:?}", to_update.len(), args.prefix);

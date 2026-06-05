@@ -5,8 +5,6 @@ use clap::builder::styling::{AnsiColor, Effects, Styles};
 use clap::{Args, CommandFactory, FromArgMatches, Parser, Subcommand};
 use clap_complete::{Shell, generate};
 
-use crate::apps::minimal_set_identifiers;
-
 use super::doctor::doctor_command;
 use super::sub_commands::{
     install_apps_command, list_apps_ids_command, uninstall_command, update_command,
@@ -30,21 +28,7 @@ fn styles() -> Styles {
 }
 
 pub fn create_cli() -> Result<Cli> {
-    let app_list = minimal_set_identifiers().join(", ");
-    let install_help = format!("Install a hand-picked minimal set of apps: {}", app_list);
-    let update_help = format!("Update a hand-picked minimal set of apps: {}", app_list);
-    let uninstall_help = format!("Uninstall a hand-picked minimal set of apps: {}", app_list);
-    let mut cmd = Cli::command()
-        .styles(styles())
-        .mut_subcommand("install", |sub| {
-            sub.mut_arg("minimal_set", |a| a.help(install_help.clone()))
-        })
-        .mut_subcommand("update", |sub| {
-            sub.mut_arg("minimal_set", |a| a.help(update_help.clone()))
-        })
-        .mut_subcommand("uninstall", |sub| {
-            sub.mut_arg("minimal_set", |a| a.help(uninstall_help.clone()))
-        });
+    let mut cmd = Cli::command().styles(styles());
 
     let matches = match cmd.clone().try_get_matches() {
         Ok(m) => m,
@@ -106,16 +90,12 @@ pub struct InstallArgs {
         long = "apps",
         value_name = "NAME[,NAME...]",
         value_delimiter = ',',
-        conflicts_with_all = ["minimal_set", "configured_set"]
+        conflicts_with_all = ["configured_set"]
     )]
     pub apps: Vec<String>,
 
-    /// Install a hand-picked minimal set of apps
-    #[arg(long, default_value_t = false, conflicts_with_all = ["apps", "configured_set"])]
-    pub minimal_set: bool,
-
     /// Load a named app set from the [sets] table in ~/.config/relget.toml
-    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps", "minimal_set"])]
+    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps"])]
     pub configured_set: Option<String>,
 }
 
@@ -131,16 +111,12 @@ pub struct UpdateArgs {
         long = "apps",
         value_name = "NAME[,NAME...]",
         value_delimiter = ',',
-        conflicts_with_all = ["minimal_set", "configured_set"]
+        conflicts_with_all = ["configured_set"]
     )]
     pub apps: Vec<String>,
 
-    /// Update a hand-picked minimal set of apps
-    #[arg(long, default_value_t = false, conflicts_with_all = ["apps", "configured_set"])]
-    pub minimal_set: bool,
-
     /// Load a named app set from the [sets] table in ~/.config/relget.toml
-    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps", "minimal_set"])]
+    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps"])]
     pub configured_set: Option<String>,
 }
 
@@ -156,16 +132,12 @@ pub struct UninstallArgs {
         long = "apps",
         value_name = "NAME[,NAME...]",
         value_delimiter = ',',
-        conflicts_with_all = ["minimal_set", "configured_set"]
+        conflicts_with_all = ["configured_set"]
     )]
     pub apps: Vec<String>,
 
-    /// Uninstall a hand-picked minimal set of apps
-    #[arg(long, default_value_t = false, conflicts_with_all = ["apps", "configured_set"])]
-    pub minimal_set: bool,
-
     /// Load a named app set from the [sets] table in ~/.config/relget.toml
-    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps", "minimal_set"])]
+    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps"])]
     pub configured_set: Option<String>,
 }
 
@@ -200,7 +172,7 @@ pub enum Commands {
     /// (e.g. `qsv` for both `qsv` and `qsv-all`), the first alphabetical match is used and a
     /// warning is printed.
     ///
-    /// With --apps / --minimal-set / --configured-set: updates only the specified apps,
+    /// With --apps / --configured-set: updates only the specified apps,
     /// regardless of whether they are currently installed.
     ///
     /// Apps already at the latest version are skipped in both cases.
