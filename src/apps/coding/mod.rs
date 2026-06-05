@@ -4,6 +4,7 @@ mod neovide;
 mod rgx;
 mod ruff;
 mod rust_analyzer;
+mod ty;
 mod scc;
 mod stylua;
 
@@ -13,5 +14,6 @@ pub use neovide::Neovide;
 pub use rgx::Rgx;
 pub use ruff::Ruff;
 pub use rust_analyzer::RustAnalyzer;
+pub use ty::Ty;
 pub use scc::Scc;
 pub use stylua::Stylua;

@@ -583,6 +583,15 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: ty
+  exe_name: ty
+  url: https://github.com/astral-sh/ty
+  category: coding
+  description: Extremely fast Python type checker
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: self_generated
+
 - id: usql
   exe_name: usql
   url: https://github.com/xo/usql

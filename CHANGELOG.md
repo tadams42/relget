@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added ty app (astral-sh/ty)
 - feat: added ruff app (astral-sh/ruff)
 
 ## v0.5.3 (2026-06-05)

@@ -7,7 +7,7 @@ use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
 use super::dev_envs::{Aqua, Chezmoi, Fnm, Mise, Uv};
-use super::coding::{AstGrep, Grex, Neovide, Rgx, Ruff, RustAnalyzer, Scc, Stylua};
+use super::coding::{AstGrep, Grex, Neovide, Rgx, Ruff, RustAnalyzer, Scc, Stylua, Ty};
 use super::docs_diag::{D2, Mdbook, Tlrc};
 use super::encryption::{Age, Doppler, Gopass, PassCli};
 use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Yazi};
@@ -92,6 +92,7 @@ pub fn create_app(
         Starship::ID => Some(Box::new(Starship::new(client))),
         Stylua::ID => Some(Box::new(Stylua::new(client))),
         Tlrc::ID => Some(Box::new(Tlrc::new(client))),
+        Ty::ID => Some(Box::new(Ty::new(client))),
         Trash::ID => Some(Box::new(Trash::new(client))),
         Usql::ID => Some(Box::new(Usql::new(client))),
         Uv::ID => Some(Box::new(Uv::new(client))),

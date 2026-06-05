@@ -152,6 +152,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [rust-analyzer](https://github.com/rust-lang/rust-analyzer) — Rust language server providing IDE integration
 - [scc](https://github.com/boyter/scc) — Fast and accurate code counter with complexity calculations - better `cloc`
 - [stylua](https://github.com/JohnnyMorganz/stylua) — Opinionated Lua code formatter
+- [ty](https://github.com/astral-sh/ty) — Extremely fast Python type checker
 
 ### Containers
 
