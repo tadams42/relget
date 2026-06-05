@@ -1,5 +1,8 @@
 ## unreleased
 
+- feat: removed usql app (xo/usql)
+- feat: removed squix app (eduardofuncao/squix)
+- feat: removed sabiql app (riii111/sabiql)
 - feat: added jaq app (01mf02/jaq)
 - feat: removed spotatui app (LargeModGames/spotatui)
 - feat: added gocryptfs app (rfjakob/gocryptfs)

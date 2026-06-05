@@ -165,9 +165,6 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 - [pdot](https://gitlab.com/dmfay/pdot) — PostgreSQL schema visualizer using Graphviz/Mermaid
 - [pgplan](https://github.com/JacobArthurs/pgplan) — CLI tool for visualizing and analyzing PostgreSQL query plans
-- [sabiql](https://github.com/riii111/sabiql) — TUI client for PostgreSQL databases
-- [squix](https://github.com/eduardofuncao/squix) — Interactive TUI for exploring and querying SQL databases
-- [usql](https://github.com/xo/usql) — Universal CLI for PostgreSQL, MySQL, SQLite, and many other databases
 
 ### Development environments
 
