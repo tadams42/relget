@@ -4,17 +4,18 @@ use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 
 use super::App;
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
-use super::data::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
+use super::data_processing::{Dasel, Fx, GoJq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan, Sabiql, Squix, Usql};
-use super::dev_envs::{Aqua, Fnm, Mise, Uv};
-use super::dev_tools::{AstGrep, Grex, Mdbook, Neovide, Rgx, RustAnalyzer, Scc, Stylua};
+use super::dev_envs::{Aqua, Chezmoi, Fnm, Mise, Uv};
+use super::coding::{AstGrep, Grex, Neovide, Rgx, RustAnalyzer, Scc, Stylua};
+use super::docs_diag::{Mdbook, Tlrc};
 use super::encryption::{Age, Doppler, Gopass, PassCli};
-use super::files::{Bat, Dust, Dysk, Eza, F2, FdFind, Procs, Ripgrep, SdEdit, Trash, Yazi};
+use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Yazi};
+use super::system::{Dust, Dysk, Procs};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
 use super::music::Spotatui;
-use super::other::{Chezmoi, Rclone, Tlrc};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
 
 pub fn create_app(

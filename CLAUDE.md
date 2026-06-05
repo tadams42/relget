@@ -32,18 +32,19 @@ src/
     registry.yaml   # source of truth for app metadata: id, url, category, description;
                     # embedded at compile time via rust-embed, parsed with serde_yaml
     containers/    # d4s, dock_mate, dry, lazydocker
-    data/          # dasel, fx, gojq, jid, jq, jqp, qsv, qsv_all, rsv, xq, yq
+    data_processing/ # dasel, fx, gojq, jid, jq, jqp, qsv, qsv_all, rsv, xq, yq
     databases/     # pdot, pgplan, sabiql, squix, usql
-    dev_envs/      # aqua, fnm, mise, uv
-    dev_tools/     # ast_grep, mdbook, neovide, rust_analyzer, scc, stylua
+    docs_diag/     # mdbook, tlrc
+    dev_envs/      # aqua, chezmoi, fnm, mise, uv
+    coding/        # ast_grep, neovide, rust_analyzer, scc, stylua
     encryption/    # age
-    files/         # bat, dust, dysk, eza, f2, fd_find, ripgrep, sd_edit, trash, yazi
+    files/         # bat, eza, f2, fd_find, rclone, ripgrep, sd_edit, trash, yazi
     git/           # delta, difftastic, gitleaks, lazygit, mergiraf
     http/          # caddy, hurl, restish, xh
     logs/          # gonzo, lazy_journal, logdy
     music/         # spotatui
     shell/         # atuin, carapace, fzf, skim, starship, zoxide
-    other/         # rclone, chezmoi, tlrc
+    system/        # dust, dysk, procs
   cli/             # clap CLI structs: Cli, Commands and functions that implement them
   clients/         # GitHub, Codeberg, and GitLab clients, caching
     github.rs      # GithubClient with singleton Lazy<Mutex<RelgetCache>>
@@ -157,7 +158,7 @@ Tokens are optional. Without them, `relget` works anonymously (subject to API ra
 
 - `dev_envs/uv.rs`: installs two binaries (`uv` + `uvx`) and generates completions for both
 - `http/hurl.rs`: installs `hurl` + `hurlfmt`, each with their own man pages and completions
-- `dev_tools/ast_grep.rs`: installs `ast-grep` + `sg`, each with their own completions
+- `coding/ast_grep.rs`: installs `ast-grep` + `sg`, each with their own completions
 - `files/yazi.rs`: installs `yazi` + `ya`, each with their own completions
 - `encryption/age.rs`: installs `age` + `age-keygen` (no completions)
 - `data/qsv_all.rs`: installs `qsv` plus many variant binaries (`qsvdp`, `qsvlite`, etc.)

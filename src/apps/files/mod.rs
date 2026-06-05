@@ -1,22 +1,18 @@
 mod bat;
-mod dust;
-mod dysk;
 mod eza;
 mod f2;
 mod fd_find;
-mod procs;
+mod rclone;
 mod ripgrep;
 mod sd_edit;
 mod trash;
 mod yazi;
 
 pub use bat::Bat;
-pub use dust::Dust;
-pub use dysk::Dysk;
 pub use eza::Eza;
 pub use f2::F2;
 pub use fd_find::FdFind;
-pub use procs::Procs;
+pub use rclone::Rclone;
 pub use ripgrep::Ripgrep;
 pub use sd_edit::SdEdit;
 pub use trash::Trash;

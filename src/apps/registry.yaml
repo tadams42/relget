@@ -19,7 +19,7 @@
 - id: ast-grep
   exe_name: ast-grep
   url: https://github.com/ast-grep/ast-grep
-  category: dev_tools
+  category: coding
   description: Fast code search, lint, and rewriting using AST patterns
   has_musl: false
   man_pages: unavailable
@@ -64,7 +64,7 @@
 - id: chezmoi
   exe_name: chezmoi
   url: https://github.com/twpayne/chezmoi
-  category: other
+  category: dev_envs
   description: Dotfiles manager across multiple machines, think `ansible` but for dotfiles
   has_musl: true
   man_pages: unavailable
@@ -91,7 +91,7 @@
 - id: dasel
   exe_name: dasel
   url: https://github.com/TomWright/dasel
-  category: data
+  category: data_processing
   description: Query and modify data in JSON, YAML, TOML, XML, and CSV
   has_musl: false
   man_pages: self_generated
@@ -145,7 +145,7 @@
 - id: dust
   exe_name: dust
   url: https://github.com/bootandy/dust
-  category: files
+  category: system
   description: Intuitive disk usage visualizer, a `du` alternative
   has_musl: true
   man_pages: bundled
@@ -154,7 +154,7 @@
 - id: dysk
   exe_name: dysk
   url: https://github.com/Canop/dysk
-  category: files
+  category: system
   description: Terminal utility to get information on filesystems (`df` alternative)
   has_musl: true
   man_pages: bundled
@@ -199,7 +199,7 @@
 - id: fx
   exe_name: fx
   url: https://github.com/antonmedv/fx
-  category: data
+  category: data_processing
   description: Terminal JSON viewer and interactive processor
   has_musl: false
   man_pages: unavailable
@@ -226,7 +226,7 @@
 - id: gojq
   exe_name: gojq
   url: https://github.com/itchyny/gojq
-  category: data
+  category: data_processing
   description: Pure Go implementation of `jq` with extended features
   has_musl: false
   man_pages: unavailable
@@ -253,7 +253,7 @@
 - id: grex
   exe_name: grex
   url: https://github.com/pemistahl/grex
-  category: dev_tools
+  category: coding
   description: Generates regular expressions from user-provided test strings
   has_musl: true
   man_pages: unavailable
@@ -271,7 +271,7 @@
 - id: jid
   exe_name: jid
   url: https://github.com/simeji/jid
-  category: data
+  category: data_processing
   description: Interactive JSON incremental digger
   has_musl: false
   man_pages: unavailable
@@ -280,7 +280,7 @@
 - id: jq
   exe_name: jq
   url: https://github.com/jqlang/jq
-  category: data
+  category: data_processing
   description: Lightweight command-line JSON processor
   has_musl: false
   man_pages: bundled
@@ -289,7 +289,7 @@
 - id: jqp
   exe_name: jqp
   url: https://github.com/noahgorstein/jqp
-  category: data
+  category: data_processing
   description: TUI playground for crafting `jq` queries
   has_musl: false
   man_pages: unavailable
@@ -334,7 +334,7 @@
 - id: mdbook
   exe_name: mdbook
   url: https://github.com/rust-lang/mdBook
-  category: dev_tools
+  category: docs_diag
   description: Create books from Markdown source files
   has_musl: false
   man_pages: unavailable
@@ -361,7 +361,7 @@
 - id: neovide
   exe_name: neovide
   url: https://github.com/neovide/neovide
-  category: dev_tools
+  category: coding
   description: GPU-accelerated GUI frontend for Neovim
   has_musl: false
   man_pages: unavailable
@@ -397,7 +397,7 @@
 - id: procs
   exe_name: procs
   url: https://github.com/dalance/procs
-  category: files
+  category: system
   description: Modern replacement for ps with colored output and search
   has_musl: false
   man_pages: unavailable
@@ -406,7 +406,7 @@
 - id: qsv
   exe_name: qsv
   url: https://github.com/dathere/qsv
-  category: data
+  category: data_processing
   description: High-performance CSV data-wrangling toolkit
   has_musl: false
   man_pages: unavailable
@@ -415,7 +415,7 @@
 - id: qsv-all
   exe_name: qsv
   url: https://github.com/dathere/qsv
-  category: data
+  category: data_processing
   description: High-performance CSV data-wrangling toolkit (additional binaries optimized for specific workloads)
   has_musl: false
   man_pages: unavailable
@@ -424,7 +424,7 @@
 - id: rclone
   exe_name: rclone
   url: https://github.com/rclone/rclone
-  category: other
+  category: files
   description: "`rsync` for cloud storage (S3, GDrive, Dropbox, and more)"
   has_musl: false
   man_pages: bundled
@@ -442,7 +442,7 @@
 - id: rgx
   exe_name: rgx
   url: https://github.com/brevity1swos/rgx
-  category: dev_tools
+  category: coding
   description: Regex debugger for the terminal — step-through execution, 3 engines, code generation
   has_musl: false
   man_pages: unavailable
@@ -460,7 +460,7 @@
 - id: rsv
   exe_name: rsv
   url: https://github.com/ribbondz/rsv
-  category: data
+  category: data_processing
   description: High-performance CSV/TSV toolkit for data exploration
   has_musl: true
   man_pages: unavailable
@@ -469,7 +469,7 @@
 - id: rust-analyzer
   exe_name: rust-analyzer
   url: https://github.com/rust-lang/rust-analyzer
-  category: dev_tools
+  category: coding
   description: Rust language server providing IDE integration
   has_musl: false
   man_pages: unavailable
@@ -487,7 +487,7 @@
 - id: scc
   exe_name: scc
   url: https://github.com/boyter/scc
-  category: dev_tools
+  category: coding
   description: Fast and accurate code counter with complexity calculations - better `cloc`
   has_musl: false
   man_pages: unavailable
@@ -541,7 +541,7 @@
 - id: stylua
   exe_name: stylua
   url: https://github.com/JohnnyMorganz/stylua
-  category: dev_tools
+  category: coding
   description: Opinionated Lua code formatter
   has_musl: false
   man_pages: unavailable
@@ -550,7 +550,7 @@
 - id: tlrc
   exe_name: tldr
   url: https://github.com/tldr-pages/tlrc
-  category: other
+  category: docs_diag
   description: Official [tldr-pages](https://tldr.sh/) client written in Rust
   has_musl: false
   man_pages: bundled
@@ -595,7 +595,7 @@
 - id: xq
   exe_name: xq
   url: https://github.com/sibprogrammer/xq
-  category: data
+  category: data_processing
   description: Command-line XML and HTML processor using XPath
   has_musl: false
   man_pages: unavailable
@@ -613,7 +613,7 @@
 - id: yq
   exe_name: yq
   url: https://github.com/mikefarah/yq
-  category: data
+  category: data_processing
   description: Portable command-line YAML, JSON, XML, and CSV processor
   has_musl: false
   man_pages: bundled

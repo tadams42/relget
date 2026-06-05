@@ -142,6 +142,16 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 ## Supported apps
 
+### Coding
+
+- [ast-grep](https://github.com/ast-grep/ast-grep) — Fast code search, lint, and rewriting using AST patterns
+- [grex](https://github.com/pemistahl/grex) — Generates regular expressions from user-provided test strings
+- [neovide](https://github.com/neovide/neovide) — GPU-accelerated GUI frontend for Neovim
+- [rgx](https://github.com/brevity1swos/rgx) — Regex debugger for the terminal — step-through execution, 3 engines, code generation
+- [rust-analyzer](https://github.com/rust-lang/rust-analyzer) — Rust language server providing IDE integration
+- [scc](https://github.com/boyter/scc) — Fast and accurate code counter with complexity calculations - better `cloc`
+- [stylua](https://github.com/JohnnyMorganz/stylua) — Opinionated Lua code formatter
+
 ### Containers
 
 - [d4s](https://github.com/jr-k/d4s) — Terminal UI for managing Docker containers and images
@@ -149,7 +159,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [dry](https://github.com/moncho/dry) — Terminal UI for managing Docker containers and images
 - [lazydocker](https://github.com/jesseduffield/lazydocker) — Terminal UI for Docker containers, images, and compose
 
-### Data
+### Data - processing JSON/YAML/CSV
 
 - [dasel](https://github.com/TomWright/dasel) — Query and modify data in JSON, YAML, TOML, XML, and CSV
 - [fx](https://github.com/antonmedv/fx) — Terminal JSON viewer and interactive processor
@@ -174,20 +184,15 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 ### Development environments
 
 - [aqua](https://github.com/aquaproj/aqua) — Declarative CLI tool installer and version manager
+- [chezmoi](https://github.com/twpayne/chezmoi) — Dotfiles manager across multiple machines, think `ansible` but for dotfiles
 - [fnm](https://github.com/Schniz/fnm) — Fast and simple Node.js version manager
 - [mise](https://github.com/jdx/mise) — prepares your complete development environment before each command runs
 - [uv](https://github.com/astral-sh/uv) — Extremely fast Python package and project manager
 
-### Development tools
+### Documentation and diagrams
 
-- [ast-grep](https://github.com/ast-grep/ast-grep) — Fast code search, lint, and rewriting using AST patterns
-- [grex](https://github.com/pemistahl/grex) — Generates regular expressions from user-provided test strings
 - [mdbook](https://github.com/rust-lang/mdBook) — Create books from Markdown source files
-- [neovide](https://github.com/neovide/neovide) — GPU-accelerated GUI frontend for Neovim
-- [rgx](https://github.com/brevity1swos/rgx) — Regex debugger for the terminal — step-through execution, 3 engines, code generation
-- [rust-analyzer](https://github.com/rust-lang/rust-analyzer) — Rust language server providing IDE integration
-- [scc](https://github.com/boyter/scc) — Fast and accurate code counter with complexity calculations - better `cloc`
-- [stylua](https://github.com/JohnnyMorganz/stylua) — Opinionated Lua code formatter
+- [tlrc](https://github.com/tldr-pages/tlrc) — Official [tldr-pages](https://tldr.sh/) client written in Rust
 
 ### Encryption and secrets management
 
@@ -199,12 +204,10 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 ### Files
 
 - [bat](https://github.com/sharkdp/bat) — `cat` clone with syntax highlighting and git integration
-- [dust](https://github.com/bootandy/dust) — Intuitive disk usage visualizer, a `du` alternative
-- [dysk](https://github.com/Canop/dysk) — Terminal utility to get information on filesystems (`df` alternative)
 - [eza](https://github.com/eza-community/eza) — Modern replacement for `ls` with icons and git integration
 - [f2](https://github.com/ayoisaiah/f2) — Batch file renaming tool
 - [fd](https://github.com/sharkdp/fd) — Simple, fast, user-friendly alternative to `find`
-- [procs](https://github.com/dalance/procs) — Modern replacement for ps with colored output and search
+- [rclone](https://github.com/rclone/rclone) — `rsync` for cloud storage (S3, GDrive, Dropbox, and more)
 - [ripgrep](https://github.com/BurntSushi/ripgrep) — Recursive regex search, a faster `grep`
 - [sd](https://github.com/chmln/sd) — Intuitive find-and-replace command, a `sed` alternative
 - [trash-cli-rs](https://github.com/orf/trash) — Safe `rm` replacement that moves files to the trash
@@ -237,12 +240,6 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 - [spotatui](https://github.com/LargeModGames/spotatui) — Terminal UI for Spotify
 
-### Other
-
-- [chezmoi](https://github.com/twpayne/chezmoi) — Dotfiles manager across multiple machines, think `ansible` but for dotfiles
-- [rclone](https://github.com/rclone/rclone) — `rsync` for cloud storage (S3, GDrive, Dropbox, and more)
-- [tlrc](https://github.com/tldr-pages/tlrc) — Official [tldr-pages](https://tldr.sh/) client written in Rust
-
 ### Shell
 
 - [atuin](https://github.com/atuinsh/atuin) — Shell history search backed by SQLite with sync
@@ -251,6 +248,12 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [skim](https://github.com/skim-rs/skim) — Fuzzy finder in Rust (alternative to `fzf`)
 - [starship](https://github.com/starship/starship) — Minimal, blazing-fast, infinitely customizable shell prompt
 - [zoxide](https://github.com/ajeetdsouza/zoxide) — Smarter `cd` command with frecency-based directory jumping
+
+### System
+
+- [dust](https://github.com/bootandy/dust) — Intuitive disk usage visualizer, a `du` alternative
+- [dysk](https://github.com/Canop/dysk) — Terminal utility to get information on filesystems (`df` alternative)
+- [procs](https://github.com/dalance/procs) — Modern replacement for ps with colored output and search
 
 [^1]: Previously, `relget` had been written in Python.
       Workflow that required me to deploy Python to be able to deploy `relget` to be

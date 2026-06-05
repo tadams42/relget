@@ -1,10 +1,10 @@
 use super::containers::D4S;
-use super::data::{GoJq, Jq, Yq};
-use super::dev_envs::{Fnm, Uv};
-use super::files::{Bat, Dust, Dysk, Eza, FdFind, Ripgrep, SdEdit};
+use super::data_processing::{GoJq, Jq, Yq};
+use super::dev_envs::{Chezmoi, Fnm, Uv};
+use super::files::{Bat, Eza, FdFind, Ripgrep, SdEdit};
+use super::system::{Dust, Dysk};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit};
 use super::http::Restish;
-use super::other::Chezmoi;
 use super::shell::{Fzf, Starship, Zoxide};
 use rust_embed::RustEmbed;
 use serde::Deserialize;
