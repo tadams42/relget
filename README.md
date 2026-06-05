@@ -137,6 +137,9 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
   relget install --gl-token-source prompt
   ```
 
+  Values from interactive prompts have higher precedence than the ones read from env
+  variables.
+
 ## Supported apps
 
 ### Containers

@@ -4,10 +4,11 @@ use serde_json::Value;
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicBool, Ordering};
 
-use super::cache::{GhCache, GhDownloadedAsset, GhRelease};
+use super::cache::{CachedFile, ReleaseMetadata, RelgetCache};
 use super::rate_limit::RateLimitError;
 
-static CACHE: Lazy<Mutex<GhCache>> = Lazy::new(|| Mutex::new(GhCache::new_with_prefix("gitlab")));
+static CACHE: Lazy<Mutex<RelgetCache>> =
+    Lazy::new(|| Mutex::new(RelgetCache::new_with_prefix("gitlab")));
 static RATE_LIMITED: AtomicBool = AtomicBool::new(false);
 
 const GL_API_URL: &str = "https://gitlab.com/api/v4/projects";
@@ -20,7 +21,7 @@ pub struct GitlabClient {
 impl GitlabClient {
     pub fn new(token: Option<String>, offline: bool) -> Self { Self { token, offline } }
 
-    pub fn latest_release(&self, owner: &str, repo: &str) -> Result<GhRelease> {
+    pub fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
         {
             let mut cache = CACHE.lock().unwrap();
             if self.offline {
@@ -77,12 +78,12 @@ impl GitlabClient {
             .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
 
         let normalized = normalize_gitlab_release(data);
-        let release = GhRelease::new(owner, repo, normalized)?;
+        let release = ReleaseMetadata::new(owner, repo, normalized)?;
         CACHE.lock().unwrap().store_release(release.clone())?;
         Ok(release)
     }
 
-    pub fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<GhDownloadedAsset> {
+    pub fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<CachedFile> {
         if RATE_LIMITED.load(Ordering::Relaxed) {
             return Err(anyhow!(RateLimitError { site: "GitLab" }));
         }
@@ -132,22 +133,23 @@ impl GitlabClient {
             .with_context(|| format!("Couldn't read downloaded asset '{}'", name))?;
         log::info!("app={} msg=Downloaded {}", repo, name);
 
-        let asset = GhDownloadedAsset {
-            gh_id: asset_id,
-            owner: owner.to_string(),
-            repo:  repo.to_string(),
-            name:  name.to_string(),
-            data:  buf,
+        let asset = CachedFile {
+            api_id: asset_id,
+            owner:  owner.to_string(),
+            repo:   repo.to_string(),
+            name:   name.to_string(),
+            data:   buf,
         };
         CACHE.lock().unwrap().store_asset(asset.clone())?;
         Ok(asset)
     }
 }
 
-/// Normalize GitLab release JSON to match the GitHub/Codeberg shape expected by `GhRelease`.
+/// Normalize GitLab release JSON to match the GitHub/Codeberg shape expected by
+/// `ReleaseMetadata`.
 ///
 /// GitLab stores assets at `assets.links[].{id, name, direct_asset_url}`.
-/// `GhRelease` methods expect `assets[].{id, name, browser_download_url}`.
+/// `ReleaseMetadata` methods expect `assets[].{id, name, browser_download_url}`.
 fn normalize_gitlab_release(mut data: Value) -> Value {
     let links = data["assets"]["links"]
         .as_array()

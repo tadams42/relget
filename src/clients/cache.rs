@@ -9,17 +9,15 @@ use crate::version::AppVersion;
 
 const RELEASE_CACHE_SECONDS: i64 = 86400;
 
-// ── GhRelease ────────────────────────────────────────────────────────────────
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct GhRelease {
+pub struct ReleaseMetadata {
     pub owner:         String,
     pub repo:          String,
     pub data:          Value,
     pub downloaded_at: DateTime<Utc>,
 }
 
-impl GhRelease {
+impl ReleaseMetadata {
     pub fn new(owner: &str, repo: &str, data: Value) -> Result<Self> {
         Ok(Self {
             owner: owner.to_string(),
@@ -76,37 +74,33 @@ impl GhRelease {
         self.data["tarball_url"].as_str().map(|s| s.to_string())
     }
 
-    pub fn gh_id(&self) -> Option<u64> { self.data["id"].as_u64() }
+    pub fn api_id(&self) -> Option<u64> { self.data["id"].as_u64() }
 
     pub fn is_expired(&self) -> bool {
         Utc::now() - self.downloaded_at > Duration::seconds(RELEASE_CACHE_SECONDS)
     }
 }
 
-// ── GhDownloadedAsset ────────────────────────────────────────────────────────
-
 #[derive(Debug, Clone)]
-pub struct GhDownloadedAsset {
-    pub gh_id: u64,
-    pub owner: String,
-    pub repo:  String,
-    pub name:  String,
-    pub data:  Vec<u8>,
+pub struct CachedFile {
+    pub api_id: u64,
+    pub owner:  String,
+    pub repo:   String,
+    pub name:   String,
+    pub data:   Vec<u8>,
 }
 
-// ── GhCache ──────────────────────────────────────────────────────────────────
-
-pub struct GhCache {
-    releases:  HashMap<String, GhRelease>,
-    assets:    HashMap<String, GhDownloadedAsset>,
+pub struct RelgetCache {
+    releases:  HashMap<String, ReleaseMetadata>,
+    assets:    HashMap<String, CachedFile>,
     cache_dir: PathBuf,
 }
 
-impl Default for GhCache {
+impl Default for RelgetCache {
     fn default() -> Self { Self::new() }
 }
 
-impl GhCache {
+impl RelgetCache {
     pub fn new() -> Self { Self::new_with_prefix("") }
 
     pub fn new_with_prefix(subdir: &str) -> Self {
@@ -126,11 +120,11 @@ impl GhCache {
 
     fn release_key(owner: &str, repo: &str) -> String { format!("releases/{}/{}", owner, repo) }
 
-    fn asset_key(gh_id: u64, name: &str) -> String {
+    fn asset_key(api_id: u64, name: &str) -> String {
         if name == "tarball" {
-            format!("assets/tarball.{}", gh_id)
+            format!("assets/tarball.{}", api_id)
         } else {
-            format!("assets/asset.{}", gh_id)
+            format!("assets/asset.{}", api_id)
         }
     }
 
@@ -140,7 +134,7 @@ impl GhCache {
 
     // ── releases ─────────────────────────────────────────────────────────────
 
-    pub fn get_release(&mut self, owner: &str, repo: &str) -> Option<GhRelease> {
+    pub fn get_release(&mut self, owner: &str, repo: &str) -> Option<ReleaseMetadata> {
         let key = Self::release_key(owner, repo);
 
         // Check memory cache first
@@ -156,7 +150,7 @@ impl GhCache {
         let path = self.repo_cache_dir(owner, repo).join("release.json");
         if path.exists() {
             if let Ok(data) = std::fs::read_to_string(&path) {
-                if let Ok(json) = serde_json::from_str::<GhRelease>(&data) {
+                if let Ok(json) = serde_json::from_str::<ReleaseMetadata>(&data) {
                     if !json.is_expired() {
                         log::debug!("Disk cache hit for {}/{}", owner, repo);
                         self.releases.insert(key, json.clone());
@@ -170,7 +164,7 @@ impl GhCache {
     }
 
     /// Like `get_release` but ignores expiry — for offline mode.
-    pub fn get_release_any_age(&mut self, owner: &str, repo: &str) -> Option<GhRelease> {
+    pub fn get_release_any_age(&mut self, owner: &str, repo: &str) -> Option<ReleaseMetadata> {
         let key = Self::release_key(owner, repo);
         if let Some(r) = self.releases.get(&key) {
             return Some(r.clone());
@@ -178,7 +172,7 @@ impl GhCache {
         let path = self.repo_cache_dir(owner, repo).join("release.json");
         if path.exists() {
             if let Ok(data) = std::fs::read_to_string(&path) {
-                if let Ok(json) = serde_json::from_str::<GhRelease>(&data) {
+                if let Ok(json) = serde_json::from_str::<ReleaseMetadata>(&data) {
                     self.releases.insert(key, json.clone());
                     return Some(json);
                 }
@@ -187,7 +181,7 @@ impl GhCache {
         None
     }
 
-    pub fn store_release(&mut self, release: GhRelease) -> Result<()> {
+    pub fn store_release(&mut self, release: ReleaseMetadata) -> Result<()> {
         let dir = self.repo_cache_dir(&release.owner, &release.repo);
         std::fs::create_dir_all(&dir)?;
         let path = dir.join("release.json");
@@ -201,9 +195,9 @@ impl GhCache {
     // ── assets ───────────────────────────────────────────────────────────────
 
     pub fn get_asset(
-        &mut self, owner: &str, repo: &str, name: &str, gh_id: u64,
-    ) -> Option<GhDownloadedAsset> {
-        let key = Self::asset_key(gh_id, name);
+        &mut self, owner: &str, repo: &str, name: &str, api_id: u64,
+    ) -> Option<CachedFile> {
+        let key = Self::asset_key(api_id, name);
 
         if let Some(a) = self.assets.get(&key) {
             log::debug!("Memory cache hit for asset {}", name);
@@ -211,16 +205,16 @@ impl GhCache {
         }
 
         let file_name = if name == "tarball" {
-            format!("tarball.{}", gh_id)
+            format!("tarball.{}", api_id)
         } else {
-            format!("asset.{}", gh_id)
+            format!("asset.{}", api_id)
         };
         let path = self.repo_cache_dir(owner, repo).join(&file_name);
         if path.exists() {
             if let Ok(data) = std::fs::read(&path) {
                 log::debug!("Disk cache hit for asset {}", name);
-                let asset = GhDownloadedAsset {
-                    gh_id,
+                let asset = CachedFile {
+                    api_id,
                     owner: owner.to_string(),
                     repo: repo.to_string(),
                     name: name.to_string(),
@@ -234,17 +228,17 @@ impl GhCache {
         None
     }
 
-    pub fn store_asset(&mut self, asset: GhDownloadedAsset) -> Result<()> {
+    pub fn store_asset(&mut self, asset: CachedFile) -> Result<()> {
         let dir = self.repo_cache_dir(&asset.owner, &asset.repo);
         std::fs::create_dir_all(&dir)?;
         let file_name = if asset.name == "tarball" {
-            format!("tarball.{}", asset.gh_id)
+            format!("tarball.{}", asset.api_id)
         } else {
-            format!("asset.{}", asset.gh_id)
+            format!("asset.{}", asset.api_id)
         };
         let path = dir.join(&file_name);
         std::fs::write(&path, &asset.data)?;
-        let key = Self::asset_key(asset.gh_id, &asset.name);
+        let key = Self::asset_key(asset.api_id, &asset.name);
         self.assets.insert(key, asset);
         Ok(())
     }

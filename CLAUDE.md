@@ -46,10 +46,10 @@ src/
     other/         # rclone, chezmoi, tlrc
   cli/             # clap CLI structs: Cli, Commands and functions that implement them
   clients/         # GitHub, Codeberg, and GitLab clients, caching
-    github.rs      # GithubClient with singleton Lazy<Mutex<GhCache>>
-    codeberg.rs    # CodebergClient with singleton Lazy<Mutex<GhCache>>
-    gitlab.rs      # GitlabClient with singleton Lazy<Mutex<GhCache>>
-    cache.rs       # GhCache: memory HashMap + disk under ~/.cache/relget/
+    github.rs      # GithubClient with singleton Lazy<Mutex<RelgetCache>>
+    codeberg.rs    # CodebergClient with singleton Lazy<Mutex<RelgetCache>>
+    gitlab.rs      # GitlabClient with singleton Lazy<Mutex<RelgetCache>>
+    cache.rs       # memory HashMap + disk under ~/.cache/relget/
   archive.rs       # ArchiveExtractor: .tar.gz/.tar.bz2/.tar.xz/.tar/.zip/.deb/.gz
   installer.rs     # install_assets(), with_temp_exe(), run_cmd(), gen_completions_*()
   uninstaller.rs   # uninstall_app(): calls app.assets() to remove exactly those paths
@@ -146,7 +146,7 @@ Tokens are optional. Without them, `relget` works anonymously (subject to API ra
 
 ## Cache
 
-`GhCache` is reused for GitHub, Codeberg, and GitLab:
+`RelgetCache` is reused for GitHub, Codeberg, and GitLab:
 - GitHub: `~/.cache/relget/{owner}/{repo}/release.json` and `asset.{id}`
 - Codeberg: `~/.cache/relget/codeberg/{owner}/{repo}/release.json` and `asset.{id}`
 - GitLab: `~/.cache/relget/gitlab/{owner}/{repo}/release.json` and `asset.{id}`
@@ -170,6 +170,6 @@ Tokens are optional. Without them, `relget` works anonymously (subject to API ra
   `adding foobar` or `adds foobar`)
 - git commit messages should be prefixed by short category like `refactor:`, `build:`,
   `ci:`, `feat:`, `docs:`, `chore:` and similar
-- git commit messages prefixed by `build:`, `ci:`, `docs:` and `chore:` will be filtered
-  from `CHANGELOG.md` so use these prefixes for stuff that is not interesting to end
-  users
+- git commit messages prefixed by `build:`, `ci:`, `docs:`, `refactor:` and `chore:`
+  will be filtered from `CHANGELOG.md` so use these prefixes for stuff that is not
+  interesting to end users

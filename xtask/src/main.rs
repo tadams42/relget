@@ -19,6 +19,8 @@ fn main() {
     }
 }
 
+const NOISE_PREFIXES: &[&str] = &["build:", "ci:", "docs:", "chore:", "refact:", "refactor"];
+
 fn update_changelog() {
     let tag_output = std::process::Command::new("git")
         .args(["describe", "--tags", "--abbrev=0"])
@@ -49,12 +51,10 @@ fn update_changelog() {
 
     let log_text = String::from_utf8(log_output.stdout).expect("git log output is not UTF-8");
 
-    let noise_prefixes = ["build:", "ci:", "docs:", "chore:"];
-
     let bullet_lines: Vec<String> = log_text
         .lines()
         .filter(|l| !l.is_empty())
-        .filter(|l| !noise_prefixes.iter().any(|p| l.starts_with(p)))
+        .filter(|l| !NOISE_PREFIXES.iter().any(|p| l.starts_with(p)))
         .map(|l| format!("- {}", l))
         .collect();
 

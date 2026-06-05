@@ -4,14 +4,14 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::{GhRelease, GithubClient};
+use crate::clients::{GithubClient, ReleaseMetadata};
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub const OWNER: &str = "dathere";
 pub const REPO: &str = "qsv";
 
-pub fn gnu_zip_asset_name(release: &GhRelease) -> Result<String> {
+pub fn gnu_zip_asset_name(release: &ReleaseMetadata) -> Result<String> {
     release
         .asset_names()
         .into_iter()

@@ -48,17 +48,19 @@ pub fn create_cli() -> Result<Cli> {
 
     let matches = match cmd.clone().try_get_matches() {
         Ok(m) => m,
-        Err(e) => match e.kind() {
-            clap::error::ErrorKind::DisplayHelp | clap::error::ErrorKind::DisplayVersion => {
-                e.exit()
+        Err(e) => {
+            match e.kind() {
+                clap::error::ErrorKind::DisplayHelp | clap::error::ErrorKind::DisplayVersion => {
+                    e.exit()
+                }
+                clap::error::ErrorKind::MissingSubcommand => {
+                    let _ = cmd.print_help();
+                    eprintln!();
+                    std::process::exit(2);
+                }
+                _ => e.exit(),
             }
-            clap::error::ErrorKind::MissingSubcommand => {
-                let _ = cmd.print_help();
-                eprintln!();
-                std::process::exit(2);
-            }
-            _ => e.exit(),
-        },
+        }
     };
 
     Ok(Cli::from_arg_matches(&matches)?)

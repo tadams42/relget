@@ -128,8 +128,7 @@ pub fn update_command(args: &UpdateArgs, offline: bool) -> Result<()> {
             load_or_prompt_gitlab_token(&args.gl_token_source)?,
         )
     };
-    let installed =
-        install_apps(&args.prefix, &to_update, gh_token, cb_token, gl_token, offline)?;
+    let installed = install_apps(&args.prefix, &to_update, gh_token, cb_token, gl_token, offline)?;
     if installed.is_empty() {
         println!("All apps already at latest version.");
     } else {

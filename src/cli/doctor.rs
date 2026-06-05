@@ -2,7 +2,7 @@ use anyhow::{Result, anyhow};
 use chrono::{DateTime, Duration, Utc};
 
 use crate::apps::{ManPagesStatus, ShellCompletionsStatus, all_app_entries};
-use crate::clients::{CodebergClient, GhRelease, GithubClient, GitlabClient};
+use crate::clients::{CodebergClient, GithubClient, GitlabClient, ReleaseMetadata};
 
 use super::helpers::{
     load_or_prompt_codeberg_token, load_or_prompt_github_token, load_or_prompt_gitlab_token,
@@ -35,10 +35,10 @@ impl DoctorFlag {
         let (code, reset) = ("\x1b[", "\x1b[0m");
         let color = match self {
             Self::PotentiallyUnmaintained => "1;33m", // bold yellow
-            Self::MuslNowAvailable        => "32m",   // green
-            Self::MuslNoLongerAvailable   => "31m",   // red
-            Self::BundledManPages         => "36m",   // cyan
-            Self::BundledCompletions      => "35m",   // magenta
+            Self::MuslNowAvailable => "32m",          // green
+            Self::MuslNoLongerAvailable => "31m",     // red
+            Self::BundledManPages => "36m",           // cyan
+            Self::BundledCompletions => "35m",        // magenta
         };
         format!("{}{}{}{}", code, color, self.label(), reset)
     }
@@ -63,12 +63,9 @@ fn parse_url_parts(url: &str) -> Option<(&str, &str, &str)> {
 }
 
 fn fetch_release(
-    url:      &str,
-    gh_token: Option<String>,
-    cb_token: Option<String>,
-    gl_token: Option<String>,
-    offline:  bool,
-) -> Result<GhRelease> {
+    url: &str, gh_token: Option<String>, cb_token: Option<String>, gl_token: Option<String>,
+    offline: bool,
+) -> Result<ReleaseMetadata> {
     let (host, owner, repo) =
         parse_url_parts(url).ok_or_else(|| anyhow!("cannot parse url: {}", url))?;
     match host {
@@ -93,14 +90,16 @@ fn release_has_x86_musl(asset_names: &[String]) -> bool {
     })
 }
 
-fn release_date(release: &GhRelease) -> Option<DateTime<Utc>> {
+fn release_date(release: &ReleaseMetadata) -> Option<DateTime<Utc>> {
     // GitHub/Codeberg: "published_at"; GitLab: "released_at" then "created_at"
-    ["published_at", "released_at", "created_at"].iter().find_map(|key| {
-        release.data[*key]
-            .as_str()
-            .and_then(|s| DateTime::parse_from_rfc3339(s).ok())
-            .map(|d| d.with_timezone(&Utc))
-    })
+    ["published_at", "released_at", "created_at"]
+        .iter()
+        .find_map(|key| {
+            release.data[*key]
+                .as_str()
+                .and_then(|s| DateTime::parse_from_rfc3339(s).ok())
+                .map(|d| d.with_timezone(&Utc))
+        })
 }
 
 pub fn doctor_command(args: &DoctorArgs, offline: bool) -> Result<()> {
@@ -133,7 +132,10 @@ pub fn doctor_command(args: &DoctorArgs, offline: bool) -> Result<()> {
         };
 
         let published_at = release_date(&release);
-        let version_str = release.version().map(|v| v.to_string()).unwrap_or_else(|_| "unknown".to_string());
+        let version_str = release
+            .version()
+            .map(|v| v.to_string())
+            .unwrap_or_else(|_| "unknown".to_string());
         let date_str = published_at
             .map(|d| d.format("%Y-%m-%d").to_string())
             .unwrap_or_else(|| "unknown".to_string());
@@ -186,7 +188,12 @@ fn print_table(apps: &[FlaggedApp], use_color: bool) {
 
     let id_w = apps.iter().map(|a| a.id.len()).max().unwrap_or(6).max(6);
     let date_w = 12usize;
-    let ver_w = apps.iter().map(|a| a.version.len()).max().unwrap_or(7).max(7);
+    let ver_w = apps
+        .iter()
+        .map(|a| a.version.len())
+        .max()
+        .unwrap_or(7)
+        .max(7);
 
     println!(
         "{:<id_w$}  {:<date_w$}  {:<ver_w$}  FLAGS",
@@ -206,7 +213,12 @@ fn print_table(apps: &[FlaggedApp], use_color: bool) {
     );
 
     for app in apps {
-        let flags_str = app.flags.iter().map(|f| f.colored_label(use_color)).collect::<Vec<_>>().join(", ");
+        let flags_str = app
+            .flags
+            .iter()
+            .map(|f| f.colored_label(use_color))
+            .collect::<Vec<_>>()
+            .join(", ");
         println!(
             "{:<id_w$}  {:<date_w$}  {:<ver_w$}  {}",
             app.id,

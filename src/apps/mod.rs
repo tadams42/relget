@@ -18,8 +18,8 @@ mod shell;
 pub use app_trait::App;
 pub use apps_factory::create_app;
 pub use apps_registry::{
-    all_app_entries, all_apps_identifiers, minimal_set_identifiers, ManPagesStatus,
-    ShellCompletionsStatus,
+    ManPagesStatus, ShellCompletionsStatus, all_app_entries, all_apps_identifiers,
+    minimal_set_identifiers,
 };
 
 pub(in crate::apps) use app_trait::{

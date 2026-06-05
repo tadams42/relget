@@ -3,10 +3,11 @@ use once_cell::sync::Lazy;
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicBool, Ordering};
 
-use super::cache::{GhCache, GhDownloadedAsset, GhRelease};
+use super::cache::{CachedFile, ReleaseMetadata, RelgetCache};
 use super::rate_limit::RateLimitError;
 
-static CACHE: Lazy<Mutex<GhCache>> = Lazy::new(|| Mutex::new(GhCache::new_with_prefix("codeberg")));
+static CACHE: Lazy<Mutex<RelgetCache>> =
+    Lazy::new(|| Mutex::new(RelgetCache::new_with_prefix("codeberg")));
 static RATE_LIMITED: AtomicBool = AtomicBool::new(false);
 
 const CB_API_URL: &str = "https://codeberg.org/api/v1/repos";
@@ -19,7 +20,7 @@ pub struct CodebergClient {
 impl CodebergClient {
     pub fn new(token: Option<String>, offline: bool) -> Self { Self { token, offline } }
 
-    pub fn latest_release(&self, owner: &str, repo: &str) -> Result<GhRelease> {
+    pub fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
         {
             let mut cache = CACHE.lock().unwrap();
             if self.offline {
@@ -74,12 +75,12 @@ impl CodebergClient {
             })
             .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
 
-        let release = GhRelease::new(owner, repo, data)?;
+        let release = ReleaseMetadata::new(owner, repo, data)?;
         CACHE.lock().unwrap().store_release(release.clone())?;
         Ok(release)
     }
 
-    pub fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<GhDownloadedAsset> {
+    pub fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<CachedFile> {
         if RATE_LIMITED.load(Ordering::Relaxed) {
             return Err(anyhow!(RateLimitError { site: "Codeberg" }));
         }
@@ -129,12 +130,12 @@ impl CodebergClient {
             .with_context(|| format!("Couldn't read downloaded asset '{}'", name))?;
         log::info!("app={} msg=Downloaded {}", repo, name);
 
-        let asset = GhDownloadedAsset {
-            gh_id: asset_id,
-            owner: owner.to_string(),
-            repo:  repo.to_string(),
-            name:  name.to_string(),
-            data:  buf,
+        let asset = CachedFile {
+            api_id: asset_id,
+            owner:  owner.to_string(),
+            repo:   repo.to_string(),
+            name:   name.to_string(),
+            data:   buf,
         };
         CACHE.lock().unwrap().store_asset(asset.clone())?;
         Ok(asset)
