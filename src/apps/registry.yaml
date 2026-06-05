@@ -367,15 +367,6 @@
   man_pages: unavailable
   shell_completions: unavailable
 
-- id: mise
-  exe_name: mise
-  url: https://github.com/jdx/mise
-  category: dev_envs
-  description: prepares your complete development environment before each command runs
-  has_musl: false
-  man_pages: bundled
-  shell_completions: self_generated
-
 - id: neovide
   exe_name: neovide
   url: https://github.com/neovide/neovide

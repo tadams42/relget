@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: removed mise app (jdx/mise)
 - feat: removed aqua app (aquaproj/aqua)
 - feat: removed usql app (xo/usql)
 - feat: removed squix app (eduardofuncao/squix)

@@ -6,7 +6,7 @@ use super::App;
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::databases::{Pdot, Pgplan};
-use super::dev_envs::{Chezmoi, Fnm, Mise, Uv};
+use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::coding::{AstGrep, Grex, Neovide, Pyrefly, Rgx, Ruff, RustAnalyzer, Scc, Stylua, Ty};
 use super::docs_diag::{D2, Mdbook, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Gopass, PassCli};
@@ -70,7 +70,6 @@ pub fn create_app(
         }
         PassCli::ID => Some(Box::new(PassCli::new(client))),
         Pdot::ID => Some(Box::new(Pdot::new(Arc::new(GitlabClient::new(gl_token, offline))))),
-        Mise::ID => Some(Box::new(Mise::new(client))),
         Neovide::ID => Some(Box::new(Neovide::new(client))),
         Pgplan::ID => Some(Box::new(Pgplan::new(client))),
         Procs::ID => Some(Box::new(Procs::new(client))),

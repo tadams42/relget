@@ -170,7 +170,6 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 - [chezmoi](https://github.com/twpayne/chezmoi) — Dotfiles manager across multiple machines, think `ansible` but for dotfiles
 - [fnm](https://github.com/Schniz/fnm) — Fast and simple Node.js version manager
-- [mise](https://github.com/jdx/mise) — prepares your complete development environment before each command runs
 - [uv](https://github.com/astral-sh/uv) — Extremely fast Python package and project manager
 
 ### Documentation and diagrams
