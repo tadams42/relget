@@ -799,6 +799,15 @@
   man_pages: bundled
   shell_completions: unavailable
 
+- id: vivid
+  exe_name: vivid
+  url: https://github.com/sharkdp/vivid
+  category: shell
+  description: LS_COLORS manager with multiple themes for colorful terminal output
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: jsongrep
   exe_name: jg
   url: https://github.com/micahkepe/jsongrep

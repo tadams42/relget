@@ -336,6 +336,9 @@
 - [starship](https://github.com/starship/starship)
   Minimal, blazing-fast, infinitely customizable shell prompt
 
+- [vivid](https://github.com/sharkdp/vivid)
+  LS_COLORS manager with multiple themes for colorful terminal output
+
 - [zoxide](https://github.com/ajeetdsouza/zoxide)
   Smarter `cd` command with frecency-based directory jumping
 

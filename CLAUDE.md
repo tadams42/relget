@@ -104,8 +104,8 @@ GitHub app:
 5. Commit the changes first, then run `cargo xtask update-docs`, then amend the commit.
    `xtask update-docs` reads git log to build `CHANGELOG.md`, so the new commit must
    exist before xtask runs — otherwise the new app won't appear in the changelog. The
-   amend folds the updated `CHANGELOG.md` (and `README.md`) back into the same commit.
-   We prefer generating single commit per each app removed.
+   amend folds the updated `CHANGELOG.md` (and `SUPPORTED_APPS.md`) back into the same
+   commit. We prefer generating single commit per each app added.
 
 Codeberg app:
 
@@ -133,8 +133,8 @@ Note that you probably need to download and extract app binary to be able to che
 2. Commit the changes first, then run `cargo xtask update-docs`, then amend the commit.
    `xtask update-docs` reads git log to build `CHANGELOG.md`, so the new commit must
    exist before xtask runs — otherwise the new app won't appear in the changelog. The
-   amend folds the updated `CHANGELOG.md` (and `README.md`) back into the same commit.
-   We prefer generating single commit per each app removed.
+   amend folds the updated `CHANGELOG.md` (and `SUPPORTED_APPS.md`) back into the same
+   commit. We prefer generating single commit per each app removed.
 
 ## Installer helpers
 
