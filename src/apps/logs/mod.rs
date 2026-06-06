@@ -1,4 +1,3 @@
-pub mod dtop;
 pub mod gonzo;
 pub mod hl;
 pub mod lazy_journal;
@@ -8,7 +7,6 @@ pub mod nerdlog;
 pub mod rhit;
 pub mod tailspin;
 
-pub use dtop::Dtop;
 pub use gonzo::Gonzo;
 pub use hl::Hl;
 pub use lazy_journal::LazyJournal;

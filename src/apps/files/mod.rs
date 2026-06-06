@@ -1,5 +1,7 @@
 mod bat;
 mod choose;
+mod scooter;
+mod sttr;
 mod termscp;
 mod eza;
 mod f2;
@@ -13,6 +15,8 @@ mod yazi;
 
 pub use bat::Bat;
 pub use choose::Choose;
+pub use scooter::Scooter;
+pub use sttr::Sttr;
 pub use termscp::Termscp;
 pub use eza::Eza;
 pub use f2::F2;

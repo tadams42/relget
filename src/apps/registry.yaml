@@ -784,7 +784,7 @@
 - id: sttr
   exe_name: sttr
   url: https://github.com/abhimanyu003/sttr
-  category: coding
+  category: files
   description: Cross-platform CLI to perform various string operations
   has_musl: false
   man_pages: unavailable
@@ -838,7 +838,7 @@
 - id: taplo
   exe_name: taplo
   url: https://github.com/tamasfe/taplo
-  category: data_processing
+  category: coding
   description: TOML toolkit — formatter, linter, and language server
   has_musl: false
   man_pages: unavailable
@@ -883,7 +883,7 @@
 - id: scooter
   exe_name: scooter
   url: https://github.com/thomasschafer/scooter
-  category: coding
+  category: files
   description: Interactive find and replace in the terminal
   has_musl: true
   man_pages: unavailable
@@ -964,7 +964,7 @@
 - id: dtop
   exe_name: dtop
   url: https://github.com/amir20/dtop
-  category: logs
+  category: containers
   description: Terminal dashboard for Docker that monitors multiple hosts in real-time
   has_musl: false
   man_pages: unavailable
