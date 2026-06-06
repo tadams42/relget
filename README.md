@@ -219,6 +219,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 ### networking
 
 - [boring](https://github.com/alebeck/boring) — The boring SSH tunnel manager
+- [dog](https://github.com/ogham/dog) — A command-line DNS client
 
 ### Shell
 
