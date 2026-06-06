@@ -229,6 +229,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 ### System
 
+- [bottom](https://github.com/ClementTsang/bottom) — Graphical process/system monitor for the terminal (`htop`/`top` alternative)
 - [dust](https://github.com/bootandy/dust) — Intuitive disk usage visualizer, a `du` alternative
 - [dysk](https://github.com/Canop/dysk) — Terminal utility to get information on filesystems (`df` alternative)
 - [procs](https://github.com/dalance/procs) — Modern replacement for ps with colored output and search

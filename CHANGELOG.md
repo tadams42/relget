@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added bottom (btm) app
 - feat: removed --minimal-set option
 - feat: removed mise app (jdx/mise)
 - feat: removed aqua app (aquaproj/aqua)

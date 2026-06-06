@@ -34,6 +34,15 @@
   man_pages: bundled
   shell_completions: self_generated
 
+- id: bottom
+  exe_name: btm
+  url: https://github.com/ClementTsang/bottom
+  category: system
+  description: Graphical process/system monitor for the terminal (`htop`/`top` alternative)
+  has_musl: true
+  man_pages: bundled
+  shell_completions: bundled
+
 - id: caddy
   exe_name: caddy
   url: https://github.com/caddyserver/caddy
