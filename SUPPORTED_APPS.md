@@ -81,6 +81,9 @@
 - [jid](https://github.com/simeji/jid)
   Interactive JSON incremental digger
 
+- [jiq](https://github.com/bellicose100xp/jiq)
+  Interactive JSON query tool with real-time output and AI assistance
+
 - [jq](https://github.com/jqlang/jq)
   Lightweight command-line JSON processor
 

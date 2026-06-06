@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added jiq app
 - feat: added tabiew app
 - feat: added tv app
 - feat: added xan app

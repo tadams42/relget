@@ -5,7 +5,7 @@ use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 use super::App;
 use super::coding::{AstGrep, Fend, Grex, Hyperfine, Neovide, Pyrefly, Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Sqruff, Sttr, Stylua, Ty};
 use super::containers::{Ctop, D4S, DockMate, Dry, LazyDocker};
-use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Tabiew, Tv, Xan, Xq, Yq};
+use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jiq, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Tabiew, Tv, Xan, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Rage};
@@ -66,6 +66,7 @@ pub fn create_app(
         Hyperfine::ID => Some(Box::new(Hyperfine::new(client))),
         Jaq::ID => Some(Box::new(Jaq::new(client))),
         Jid::ID => Some(Box::new(Jid::new(client))),
+        Jiq::ID => Some(Box::new(Jiq::new(client))),
         Jq::ID => Some(Box::new(Jq::new(client))),
         Jqp::ID => Some(Box::new(Jqp::new(client))),
         LazyJournal::ID => Some(Box::new(LazyJournal::new(client))),

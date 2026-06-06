@@ -799,6 +799,15 @@
   man_pages: bundled
   shell_completions: unavailable
 
+- id: jiq
+  exe_name: jiq
+  url: https://github.com/bellicose100xp/jiq
+  category: data_processing
+  description: Interactive JSON query tool with real-time output and AI assistance
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: tabiew
   exe_name: tw
   url: https://github.com/shshemi/tabiew
