@@ -628,6 +628,15 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: boring
+  exe_name: boring
+  url: https://github.com/alebeck/boring
+  category: networking
+  description: The boring SSH tunnel manager
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: zoxide
   exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide

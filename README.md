@@ -216,6 +216,10 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [lazyjournal](https://github.com/Lifailon/lazyjournal) — TUI for browsing systemd journal and Docker logs
 - [logdy](https://github.com/logdyhq/logdy-core) — Web-based real-time log viewer with filtering and search
 
+### networking
+
+- [boring](https://github.com/alebeck/boring) — The boring SSH tunnel manager
+
 ### Shell
 
 - [atuin](https://github.com/atuinsh/atuin) — Shell history search backed by SQLite with sync
