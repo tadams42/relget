@@ -254,14 +254,32 @@
 
 ## Logs
 
+- [dtop](https://github.com/amir20/dtop)
+  Terminal dashboard for Docker that monitors multiple hosts in real-time
+
 - [gonzo](https://github.com/control-theory/gonzo)
   Log viewer TUI for structured and plain-text logs
+
+- [hl](https://github.com/pamburus/hl)
+  Fast log viewer that translates JSON or logfmt logs into a human-readable format
 
 - [lazyjournal](https://github.com/Lifailon/lazyjournal)
   TUI for browsing systemd journal and Docker logs
 
 - [logdy](https://github.com/logdyhq/logdy-core)
   Real-time log viewing and filtering with embedded Web UI and multiple input modes (files, stdin, sockets, REST API)
+
+- [loggo](https://github.com/aurc/loggo)
+  Live view for JSON logs in TUI
+
+- [nerdlog](https://github.com/dimonomid/nerdlog)
+  SSH to remote hosts and live view logs in TUI with timeline histogram
+
+- [rhit](https://github.com/canop/rhit)
+  Reads nginx log files and displays analysis in pretty tables
+
+- [tailspin](https://github.com/bensadeh/tailspin)
+  Generic log file highlighter (`tail` with colors)
 
 ## networking
 

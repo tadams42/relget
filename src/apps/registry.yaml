@@ -862,6 +862,60 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: rhit
+  exe_name: rhit
+  url: https://github.com/canop/rhit
+  category: logs
+  description: Reads nginx log files and displays analysis in pretty tables
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
+- id: dtop
+  exe_name: dtop
+  url: https://github.com/amir20/dtop
+  category: logs
+  description: Terminal dashboard for Docker that monitors multiple hosts in real-time
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
+- id: loggo
+  exe_name: loggo
+  url: https://github.com/aurc/loggo
+  category: logs
+  description: Live view for JSON logs in TUI
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
+
+- id: tailspin
+  exe_name: tspin
+  url: https://github.com/bensadeh/tailspin
+  category: logs
+  description: Generic log file highlighter (`tail` with colors)
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
+- id: nerdlog
+  exe_name: nerdlog
+  url: https://github.com/dimonomid/nerdlog
+  category: logs
+  description: SSH to remote hosts and live view logs in TUI with timeline histogram
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
+- id: hl
+  exe_name: hl
+  url: https://github.com/pamburus/hl
+  category: logs
+  description: Fast log viewer that translates JSON or logfmt logs into a human-readable format
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: self_generated
+
 - id: xan
   exe_name: xan
   url: https://github.com/medialab/xan

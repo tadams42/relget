@@ -12,7 +12,7 @@ use super::encryption::{Age, Doppler, Gocryptfs, Rage};
 use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Xplr, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
-use super::logs::{Gonzo, LazyJournal, Logdy};
+use super::logs::{Dtop, Gonzo, Hl, LazyJournal, Logdy, Loggo, Nerdlog, Rhit, Tailspin};
 use super::networking::{Boring, Dog, Doggo};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
 use super::system::{Bottom, Btop, Duf, Dust, Dysk, Erdtree, Procs};
@@ -41,6 +41,7 @@ pub fn create_app(
         Ctop::ID => Some(Box::new(Ctop::new(client))),
         D4S::ID => Some(Box::new(D4S::new(client))),
         Dasel::ID => Some(Box::new(Dasel::new(client))),
+        Dtop::ID => Some(Box::new(Dtop::new(client))),
         Delta::ID => Some(Box::new(Delta::new(client))),
         Difftastic::ID => Some(Box::new(Difftastic::new(client))),
         DockMate::ID => Some(Box::new(DockMate::new(client))),
@@ -62,6 +63,7 @@ pub fn create_app(
         Gocryptfs::ID => Some(Box::new(Gocryptfs::new(client))),
         GoJq::ID => Some(Box::new(GoJq::new(client))),
         Gonzo::ID => Some(Box::new(Gonzo::new(client))),
+        Hl::ID => Some(Box::new(Hl::new(client))),
         Grex::ID => Some(Box::new(Grex::new(client))),
         Hurl::ID => Some(Box::new(Hurl::new(client))),
         Hyperfine::ID => Some(Box::new(Hyperfine::new(client))),
@@ -77,6 +79,7 @@ pub fn create_app(
         D2::ID => Some(Box::new(D2::new(client))),
         Lazygit::ID => Some(Box::new(Lazygit::new(client))),
         Logdy::ID => Some(Box::new(Logdy::new(client))),
+        Loggo::ID => Some(Box::new(Loggo::new(client))),
         Mdbook::ID => Some(Box::new(Mdbook::new(client))),
         Miller::ID => Some(Box::new(Miller::new(client))),
         Mergiraf::ID => {
@@ -86,10 +89,12 @@ pub fn create_app(
         }
         Pdot::ID => Some(Box::new(Pdot::new(Arc::new(GitlabClient::new(gl_token, offline))))),
         Neovide::ID => Some(Box::new(Neovide::new(client))),
+        Nerdlog::ID => Some(Box::new(Nerdlog::new(client))),
         Pgplan::ID => Some(Box::new(Pgplan::new(client))),
         Procs::ID => Some(Box::new(Procs::new(client))),
         Pyrefly::ID => Some(Box::new(Pyrefly::new(client))),
         Rage::ID => Some(Box::new(Rage::new(client))),
+        Rhit::ID => Some(Box::new(Rhit::new(client))),
         Rclone::ID => Some(Box::new(Rclone::new(client))),
         Restish::ID => Some(Box::new(Restish::new(client))),
         Replibyte::ID => Some(Box::new(Replibyte::new(client))),
@@ -109,6 +114,7 @@ pub fn create_app(
         Sttr::ID => Some(Box::new(Sttr::new(client))),
         Stylua::ID => Some(Box::new(Stylua::new(client))),
         Tabiew::ID => Some(Box::new(Tabiew::new(client))),
+        Tailspin::ID => Some(Box::new(Tailspin::new(client))),
         Taplo::ID => Some(Box::new(Taplo::new(client))),
         Tbls::ID => Some(Box::new(Tbls::new(client))),
         Tlrc::ID => Some(Box::new(Tlrc::new(client))),
