@@ -133,3 +133,71 @@ pub struct AppAssets {
     pub man_pages:   Vec<ManPage>,
     pub completions: Vec<Completion>,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::PathBuf;
+
+    fn prefix() -> PathBuf { PathBuf::from("/usr/local") }
+
+    #[test]
+    fn binary_install_path() {
+        let b = AppBinary::descriptor("rg");
+        assert_eq!(b.install_path(&prefix()), PathBuf::from("/usr/local/bin/rg"));
+    }
+
+    #[test]
+    fn man_page_install_path_section_1() {
+        let m = ManPage::descriptor(1, "rg.1");
+        assert_eq!(
+            m.install_path(&prefix()),
+            PathBuf::from("/usr/local/share/man/man1/rg.1")
+        );
+    }
+
+    #[test]
+    fn completion_file_name_zsh() {
+        let c = Completion::zsh_desc("rg");
+        assert_eq!(c.file_name(), "_rg");
+    }
+
+    #[test]
+    fn completion_file_name_bash() {
+        let c = Completion::bash_desc("rg");
+        assert_eq!(c.file_name(), "rg");
+    }
+
+    #[test]
+    fn completion_file_name_fish() {
+        let c = Completion::fish_desc("rg");
+        assert_eq!(c.file_name(), "rg.fish");
+    }
+
+    #[test]
+    fn completion_install_path_zsh() {
+        let c = Completion::zsh_desc("rg");
+        assert_eq!(
+            c.install_path(&prefix()),
+            PathBuf::from("/usr/local/share/zsh/site-functions/_rg")
+        );
+    }
+
+    #[test]
+    fn completion_install_path_bash() {
+        let c = Completion::bash_desc("rg");
+        assert_eq!(
+            c.install_path(&prefix()),
+            PathBuf::from("/usr/local/share/bash-completion/completions/rg")
+        );
+    }
+
+    #[test]
+    fn completion_install_path_fish() {
+        let c = Completion::fish_desc("rg");
+        assert_eq!(
+            c.install_path(&prefix()),
+            PathBuf::from("/usr/local/share/fish/vendor_completions.d/rg.fish")
+        );
+    }
+}

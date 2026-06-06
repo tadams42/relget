@@ -244,6 +244,122 @@ impl RelgetCache {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::Duration;
+    use serde_json::json;
+
+    fn metadata_from(data: Value) -> ReleaseMetadata {
+        ReleaseMetadata {
+            owner:         "owner".to_string(),
+            repo:          "repo".to_string(),
+            data,
+            downloaded_at: Utc::now(),
+        }
+    }
+
+    // ── asset_names ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn asset_names_empty_when_key_missing() {
+        let m = metadata_from(json!({}));
+        assert!(m.asset_names().is_empty());
+    }
+
+    #[test]
+    fn asset_names_returns_correct_names() {
+        let m = metadata_from(json!({
+            "assets": [
+                {"name": "app-1.0.0-linux.tar.gz", "id": 1, "browser_download_url": "https://example.com/a"},
+                {"name": "app-1.0.0-macos.tar.gz", "id": 2, "browser_download_url": "https://example.com/b"},
+            ]
+        }));
+        assert_eq!(
+            m.asset_names(),
+            vec!["app-1.0.0-linux.tar.gz", "app-1.0.0-macos.tar.gz"]
+        );
+    }
+
+    // ── find_asset ───────────────────────────────────────────────────────────
+
+    #[test]
+    fn find_asset_matches_by_predicate() {
+        let m = metadata_from(json!({
+            "assets": [
+                {"name": "app-linux.tar.gz"},
+                {"name": "app-macos.tar.gz"},
+            ]
+        }));
+        let name = m.find_asset(|n| n.contains("linux")).unwrap();
+        assert_eq!(name, "app-linux.tar.gz");
+    }
+
+    #[test]
+    fn find_asset_returns_err_when_no_match() {
+        let m = metadata_from(json!({"assets": [{"name": "app-windows.zip"}]}));
+        assert!(m.find_asset(|n| n.contains("linux")).is_err());
+    }
+
+    // ── asset_download_url ───────────────────────────────────────────────────
+
+    #[test]
+    fn asset_download_url_returns_some_for_known_name() {
+        let m = metadata_from(json!({
+            "assets": [{"name": "app.tar.gz", "browser_download_url": "https://example.com/app.tar.gz"}]
+        }));
+        assert_eq!(
+            m.asset_download_url("app.tar.gz"),
+            Some("https://example.com/app.tar.gz".to_string())
+        );
+    }
+
+    #[test]
+    fn asset_download_url_returns_none_for_unknown_name() {
+        let m = metadata_from(json!({"assets": [{"name": "other.tar.gz", "browser_download_url": "https://x"}]}));
+        assert!(m.asset_download_url("app.tar.gz").is_none());
+    }
+
+    // ── version ──────────────────────────────────────────────────────────────
+
+    #[test]
+    fn version_extracted_from_tag_name() {
+        let m = metadata_from(json!({"tag_name": "v1.2.3"}));
+        assert_eq!(m.version().unwrap(), AppVersion(1, 2, 3));
+    }
+
+    #[test]
+    fn version_falls_back_to_name_field() {
+        let m = metadata_from(json!({"name": "Release 2.0.0"}));
+        assert_eq!(m.version().unwrap(), AppVersion(2, 0, 0));
+    }
+
+    #[test]
+    fn version_returns_err_when_no_version_fields() {
+        let m = metadata_from(json!({"description": "no version here"}));
+        assert!(m.version().is_err());
+    }
+
+    // ── is_expired ───────────────────────────────────────────────────────────
+
+    #[test]
+    fn is_expired_false_for_fresh_metadata() {
+        let m = ReleaseMetadata::new("o", "r", json!({})).unwrap();
+        assert!(!m.is_expired());
+    }
+
+    #[test]
+    fn is_expired_true_for_old_metadata() {
+        let m = ReleaseMetadata {
+            owner:         "o".to_string(),
+            repo:          "r".to_string(),
+            data:          json!({}),
+            downloaded_at: Utc::now() - Duration::seconds(86401),
+        };
+        assert!(m.is_expired());
+    }
+}
+
 // ── version extraction ───────────────────────────────────────────────────────
 
 fn extract_version(data: &Value) -> Option<AppVersion> {

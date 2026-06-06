@@ -217,3 +217,42 @@ impl ArchiveExtractor {
         Ok(buf)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn members_unsupported_extension_returns_err() {
+        let e = ArchiveExtractor::new("app.exe", vec![]);
+        assert!(e.members().is_err());
+    }
+
+    #[test]
+    fn members_gz_only_returns_inner_name_without_decompressing() {
+        // members() strips the .gz suffix without touching the data bytes.
+        let e = ArchiveExtractor::new("app-linux.gz", vec![]);
+        let names = e.members().unwrap();
+        assert_eq!(names, vec!["app-linux"]);
+    }
+
+    #[test]
+    fn members_xz_only_returns_inner_name_without_decompressing() {
+        let e = ArchiveExtractor::new("app-linux.xz", vec![]);
+        let names = e.members().unwrap();
+        assert_eq!(names, vec!["app-linux"]);
+    }
+
+    #[test]
+    fn members_tar_gz_not_treated_as_gz_only() {
+        // .tar.gz must not fall through to the gz-only branch.
+        // It will fail to parse as a tar (empty data), but the error must be a tar error, not a
+        // "unsupported" error, which proves it was dispatched to the tar handler.
+        let e = ArchiveExtractor::new("app.tar.gz", vec![]);
+        let err = e.members().unwrap_err();
+        assert!(
+            !err.to_string().contains("Unsupported archive type"),
+            "tar.gz was mis-dispatched to the unsupported-type handler"
+        );
+    }
+}

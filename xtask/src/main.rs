@@ -19,7 +19,9 @@ fn main() {
     }
 }
 
-const NOISE_PREFIXES: &[&str] = &["build:", "ci:", "docs:", "chore:", "refact:", "refactor"];
+const NOISE_PREFIXES: &[&str] = &[
+    "build:", "ci:", "docs:", "chore:", "refact:", "refactor", "test",
+];
 
 fn update_changelog() {
     let tag_output = std::process::Command::new("git")
