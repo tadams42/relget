@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added tailspin app
 - feat: added loggo app
 - feat: added dtop app
 - feat: added rhit app
