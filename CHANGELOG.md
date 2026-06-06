@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added hl app
 - feat: added nerdlog app
 - feat: added tailspin app
 - feat: added loggo app
