@@ -388,7 +388,7 @@
 - id: pdot
   exe_name: pdot
   url: https://gitlab.com/dmfay/pdot
-  category: databases
+  category: docs_diag
   description: PostgreSQL schema visualizer using Graphviz/Mermaid
   has_musl: false
   man_pages: unavailable
@@ -397,7 +397,7 @@
 - id: pgplan
   exe_name: pgplan
   url: https://github.com/JacobArthurs/pgplan
-  category: databases
+  category: docs_diag
   description: CLI tool for visualizing and analyzing PostgreSQL query plans
   has_musl: false
   man_pages: unavailable

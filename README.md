@@ -161,11 +161,6 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [xq](https://github.com/sibprogrammer/xq) — Command-line XML and HTML processor using XPath
 - [yq](https://github.com/mikefarah/yq) — Portable command-line YAML, JSON, XML, and CSV processor
 
-### Databases
-
-- [pdot](https://gitlab.com/dmfay/pdot) — PostgreSQL schema visualizer using Graphviz/Mermaid
-- [pgplan](https://github.com/JacobArthurs/pgplan) — CLI tool for visualizing and analyzing PostgreSQL query plans
-
 ### Development environments
 
 - [chezmoi](https://github.com/twpayne/chezmoi) — Dotfiles manager across multiple machines, think `ansible` but for dotfiles
@@ -176,6 +171,8 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 - [d2](https://github.com/terrastruct/d2) — Diagram scripting language that turns text to diagrams
 - [mdbook](https://github.com/rust-lang/mdBook) — Create books from Markdown source files
+- [pdot](https://gitlab.com/dmfay/pdot) — PostgreSQL schema visualizer using Graphviz/Mermaid
+- [pgplan](https://github.com/JacobArthurs/pgplan) — CLI tool for visualizing and analyzing PostgreSQL query plans
 - [tlrc](https://github.com/tldr-pages/tlrc) — Official [tldr-pages](https://tldr.sh/) client written in Rust
 
 ### Encryption and secrets management

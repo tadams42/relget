@@ -1,6 +1,10 @@
 mod d2;
 mod mdbook;
+mod pdot;
+mod pgplan;
 mod tlrc;
 pub use d2::D2;
 pub use mdbook::Mdbook;
+pub use pdot::Pdot;
+pub use pgplan::Pgplan;
 pub use tlrc::Tlrc;

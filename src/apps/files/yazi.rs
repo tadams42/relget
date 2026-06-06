@@ -63,7 +63,7 @@
 // - [lf](https://github.com/gokcehan/lf)
 //   - written in `Go`
 //   - heavily inspired by `ranger`
-//   - most functionality is not built-in but instead relies on shell and external utilities (wiith
+//   - most functionality is not built-in but instead relies on shell and external utilities (with
 //     many examples in `integrations` docs)
 //   - doesn't support tabs or windows (relies on terminal multiplexers instead)
 //

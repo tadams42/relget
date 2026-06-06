@@ -1,5 +1,5 @@
-// there is also [pass]((https://www.passwordstore.org/#download)) project which
-// shouldn't be cofused with this one. It implements password CLI in `sh` `gpg`
+// there is also [pass](https://www.passwordstore.org/#download) project which
+// shouldn't be confused with this one. It implements password CLI in `sh` `gpg`
 // encrypted and `git` versioned
 
 use anyhow::Result;
