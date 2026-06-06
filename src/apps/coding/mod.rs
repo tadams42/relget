@@ -1,6 +1,7 @@
 mod ast_grep;
 mod fend;
 mod grex;
+mod hyperfine;
 mod neovide;
 mod pyrefly;
 mod replibyte;
@@ -16,6 +17,7 @@ mod ty;
 pub use ast_grep::AstGrep;
 pub use fend::Fend;
 pub use grex::Grex;
+pub use hyperfine::Hyperfine;
 pub use neovide::Neovide;
 pub use pyrefly::Pyrefly;
 pub use replibyte::Replibyte;

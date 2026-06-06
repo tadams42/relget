@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added hyperfine app
 - feat: added sqruff app
 - feat: added fend app
 - feat: added sttr app

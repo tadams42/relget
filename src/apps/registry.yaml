@@ -709,6 +709,15 @@
   man_pages: bundled
   shell_completions: unavailable
 
+- id: hyperfine
+  exe_name: hyperfine
+  url: https://github.com/sharkdp/hyperfine
+  category: coding
+  description: Command-line benchmarking tool
+  has_musl: true
+  man_pages: bundled
+  shell_completions: bundled
+
 - id: sqruff
   exe_name: sqruff
   url: https://github.com/quarylabs/sqruff
