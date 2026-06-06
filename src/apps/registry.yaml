@@ -691,6 +691,15 @@
   man_pages: unavailable
   shell_completions: self_generated
 
+- id: replibyte
+  exe_name: replibyte
+  url: https://github.com/Qovery/replibyte
+  category: coding
+  description: Seed your development database with real data from production
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: zoxide
   exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide
