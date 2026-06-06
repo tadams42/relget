@@ -187,6 +187,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [age](https://github.com/FiloSottile/age) — Simple, modern and secure file encryption tool
 - [doppler](https://github.com/DopplerHQ/cli) — Secrets manager CLI — sync env vars and secrets across teams
 - [gocryptfs](https://github.com/rfjakob/gocryptfs) — Encrypted overlay filesystem written in Go
+- [rage](https://github.com/str4d/rage) — Rust implementation of the age encryption tool (installs rage, rage-keygen, rage-mount)
 
 ### Files
 

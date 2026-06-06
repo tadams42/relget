@@ -8,7 +8,7 @@ use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{D2, Mdbook, Pdot, Pgplan, Tlrc};
-use super::encryption::{Age, Doppler, Gocryptfs};
+use super::encryption::{Age, Doppler, Gocryptfs, Rage};
 use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
@@ -82,6 +82,7 @@ pub fn create_app(
         Pgplan::ID => Some(Box::new(Pgplan::new(client))),
         Procs::ID => Some(Box::new(Procs::new(client))),
         Pyrefly::ID => Some(Box::new(Pyrefly::new(client))),
+        Rage::ID => Some(Box::new(Rage::new(client))),
         Rclone::ID => Some(Box::new(Rclone::new(client))),
         Restish::ID => Some(Box::new(Restish::new(client))),
         Replibyte::ID => Some(Box::new(Replibyte::new(client))),

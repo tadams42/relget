@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added rage app
 - feat: added hyperfine app
 - feat: added sqruff app
 - feat: added fend app
