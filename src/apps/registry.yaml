@@ -682,6 +682,15 @@
   man_pages: bundled
   shell_completions: unavailable
 
+- id: erdtree
+  exe_name: erd
+  url: https://github.com/solidiquis/erdtree
+  category: system
+  description: Multi-threaded filesystem tree visualizer and disk usage analyzer, gitignore-aware
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: self_generated
+
 - id: zoxide
   exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide

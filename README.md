@@ -240,6 +240,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [duf](https://github.com/muesli/duf) — Disk Usage/Free Utility — human-friendly `df` alternative
 - [dust](https://github.com/bootandy/dust) — Intuitive disk usage visualizer, a `du` alternative
 - [dysk](https://github.com/Canop/dysk) — Terminal utility to get information on filesystems (`df` alternative)
+- [erdtree](https://github.com/solidiquis/erdtree) — Multi-threaded filesystem tree visualizer and disk usage analyzer, gitignore-aware
 - [procs](https://github.com/dalance/procs) — Modern replacement for ps with colored output and search
 
 [^1]: Previously, `relget` had been written in Python.
