@@ -43,6 +43,15 @@
   man_pages: bundled
   shell_completions: bundled
 
+- id: btop
+  exe_name: btop
+  url: https://github.com/aristocratos/btop
+  category: system
+  description: A monitor of resources (`top` / `htop` alternative)
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: caddy
   exe_name: caddy
   url: https://github.com/caddyserver/caddy

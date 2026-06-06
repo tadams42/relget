@@ -5,9 +5,9 @@ mod pyrefly;
 mod rgx;
 mod ruff;
 mod rust_analyzer;
-mod ty;
 mod scc;
 mod stylua;
+mod ty;
 
 pub use ast_grep::AstGrep;
 pub use grex::Grex;
@@ -16,6 +16,6 @@ pub use pyrefly::Pyrefly;
 pub use rgx::Rgx;
 pub use ruff::Ruff;
 pub use rust_analyzer::RustAnalyzer;
-pub use ty::Ty;
 pub use scc::Scc;
 pub use stylua::Stylua;
+pub use ty::Ty;

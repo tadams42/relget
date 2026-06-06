@@ -14,7 +14,7 @@ use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
-use super::system::{Bottom, Dust, Dysk, Procs};
+use super::system::{Bottom, Btop, Dust, Dysk, Procs};
 
 pub fn create_app(
     id: &str, gh_token: Option<String>, cb_token: Option<String>, gl_token: Option<String>,
@@ -27,6 +27,7 @@ pub fn create_app(
         Atuin::ID => Some(Box::new(Atuin::new(client))),
         Bat::ID => Some(Box::new(Bat::new(client))),
         Bottom::ID => Some(Box::new(Bottom::new(client))),
+        Btop::ID => Some(Box::new(Btop::new(client))),
         Caddy::ID => Some(Box::new(Caddy::new(client))),
         Carapace::ID => Some(Box::new(Carapace::new(client))),
         Chezmoi::ID => Some(Box::new(Chezmoi::new(client))),

@@ -42,16 +42,14 @@ impl App for Ruff {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name =
-            release.find_asset(|a| a == "ruff-x86_64-unknown-linux-musl.tar.gz")?;
+        let name = release.find_asset(|a| a == "ruff-x86_64-unknown-linux-musl.tar.gz")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let binary_data = extractor.extract_by_filename("ruff")?;
 
-        let completions =
-            with_temp_exe("ruff", &binary_data, |_| {
-                gen_completions_subcommand("ruff", &binary_data, "generate-shell-completion")
-            })?;
+        let completions = with_temp_exe("ruff", &binary_data, |_| {
+            gen_completions_subcommand("ruff", &binary_data, "generate-shell-completion")
+        })?;
 
         Ok(AppAssets {
             binary: Some(AppBinary::new("ruff", binary_data)),
