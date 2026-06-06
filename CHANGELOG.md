@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added miller app
 - feat: added doggo app
 - feat: added dog app
 - feat: added boring app

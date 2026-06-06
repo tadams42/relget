@@ -655,6 +655,15 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: miller
+  exe_name: mlr
+  url: https://github.com/johnkerl/miller
+  category: data_processing
+  description: Like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: zoxide
   exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide
