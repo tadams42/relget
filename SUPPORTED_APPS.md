@@ -229,6 +229,9 @@
 - [difftastic](https://github.com/Wilfred/difftastic)
   Structural diff tool that understands code syntax
 
+- [git-flow-next](https://github.com/gittower/git-flow-next)
+  Modern reimplementation of git-flow in Go
+
 - [gitleaks](https://github.com/gitleaks/gitleaks)
   Detect secrets and sensitive data in git repositories
 
@@ -237,6 +240,9 @@
 
 - [mergiraf](https://codeberg.org/mergiraf/mergiraf)
   Syntax-aware merge driver for `git`
+
+- [serie](https://github.com/lusingander/serie)
+  Rich git commit graph in your terminal (alternative to `git log --graph`)
 
 - [worktrunk](https://github.com/max-sixty/worktrunk)
   Git worktree manager — fast branch switching without stashing

@@ -862,6 +862,24 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: git-flow-next
+  exe_name: git-flow
+  url: https://github.com/gittower/git-flow-next
+  category: git
+  description: Modern reimplementation of git-flow in Go
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
+
+- id: serie
+  exe_name: serie
+  url: https://github.com/lusingander/serie
+  category: git
+  description: Rich git commit graph in your terminal (alternative to `git log --graph`)
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: choose
   exe_name: choose
   url: https://github.com/theryangeary/choose

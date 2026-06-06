@@ -10,7 +10,7 @@ use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Rage};
 use super::files::{Bat, Choose, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Termscp, Trash, Xplr, Yazi};
-use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
+use super::git::{Delta, Difftastic, GitFlowNext, Gitleaks, Lazygit, Mergiraf, Serie, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Dtop, Gonzo, Hl, LazyJournal, Logdy, Loggo, Nerdlog, Rhit, Tailspin};
 use super::networking::{Boring, Dog, Doggo};
@@ -60,6 +60,7 @@ pub fn create_app(
         Fq::ID => Some(Box::new(Fq::new(client))),
         Fx::ID => Some(Box::new(Fx::new(client))),
         Fzf::ID => Some(Box::new(Fzf::new(client))),
+        GitFlowNext::ID => Some(Box::new(GitFlowNext::new(client))),
         Gitleaks::ID => Some(Box::new(Gitleaks::new(client))),
         Gocryptfs::ID => Some(Box::new(Gocryptfs::new(client))),
         GoJq::ID => Some(Box::new(GoJq::new(client))),
@@ -110,6 +111,7 @@ pub fn create_app(
         Scc::ID => Some(Box::new(Scc::new(client))),
         Sqruff::ID => Some(Box::new(Sqruff::new(client))),
         SdEdit::ID => Some(Box::new(SdEdit::new(client))),
+        Serie::ID => Some(Box::new(Serie::new(client))),
         Skim::ID => Some(Box::new(Skim::new(client))),
         Starship::ID => Some(Box::new(Starship::new(client))),
         Sttr::ID => Some(Box::new(Sttr::new(client))),
