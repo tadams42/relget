@@ -4,7 +4,7 @@ use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 
 use super::App;
 use super::coding::{AstGrep, Fend, Grex, Hyperfine, Neovide, Pyrefly, Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Sqruff, Sttr, Stylua, Ty};
-use super::containers::{D4S, DockMate, Dry, LazyDocker};
+use super::containers::{Ctop, D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
@@ -38,6 +38,7 @@ pub fn create_app(
         Carapace::ID => Some(Box::new(Carapace::new(client))),
         Chezmoi::ID => Some(Box::new(Chezmoi::new(client))),
         Curlie::ID => Some(Box::new(Curlie::new(client))),
+        Ctop::ID => Some(Box::new(Ctop::new(client))),
         D4S::ID => Some(Box::new(D4S::new(client))),
         Dasel::ID => Some(Box::new(Dasel::new(client))),
         Delta::ID => Some(Box::new(Delta::new(client))),

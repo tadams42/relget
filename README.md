@@ -146,6 +146,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 ### Containers
 
+- [ctop](https://github.com/bcicen/ctop) — Top-like interface for container metrics
 - [d4s](https://github.com/jr-k/d4s) — Terminal UI for managing Docker containers and images
 - [dockmate](https://github.com/shubh-io/DockMate) — Terminal UI for managing Docker containers and images
 - [dry](https://github.com/moncho/dry) — Terminal UI for managing Docker containers and images

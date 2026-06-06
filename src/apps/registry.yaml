@@ -727,6 +727,15 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: ctop
+  exe_name: ctop
+  url: https://github.com/bcicen/ctop
+  category: containers
+  description: Top-like interface for container metrics
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: asciinema
   exe_name: asciinema
   url: https://github.com/asciinema/asciinema
