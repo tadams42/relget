@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added vacuum app
 - feat: added mailpit app
 - feat: added scooter app
 - feat: added tombi app
