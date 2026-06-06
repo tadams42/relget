@@ -182,6 +182,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [mdbook](https://github.com/rust-lang/mdBook) — Create books from Markdown source files
 - [pdot](https://gitlab.com/dmfay/pdot) — PostgreSQL schema visualizer using Graphviz/Mermaid
 - [pgplan](https://github.com/JacobArthurs/pgplan) — CLI tool for visualizing and analyzing PostgreSQL query plans
+- [tbls](https://github.com/k1LoW/tbls) — CI-friendly tool to document a database schema
 - [tlrc](https://github.com/tldr-pages/tlrc) — Official [tldr-pages](https://tldr.sh/) client written in Rust
 
 ### Encryption and secrets management

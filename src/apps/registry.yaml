@@ -736,6 +736,15 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: tbls
+  exe_name: tbls
+  url: https://github.com/k1LoW/tbls
+  category: docs_diag
+  description: CI-friendly tool to document a database schema
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
+
 - id: rage
   exe_name: rage
   url: https://github.com/str4d/rage
