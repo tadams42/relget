@@ -9,7 +9,7 @@ use super::data_processing::{Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, Js
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Rage};
-use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Xplr, Yazi};
+use super::files::{Bat, Choose, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Termscp, Trash, Xplr, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Dtop, Gonzo, Hl, LazyJournal, Logdy, Loggo, Nerdlog, Rhit, Tailspin};
@@ -36,6 +36,7 @@ pub fn create_app(
         Btop::ID => Some(Box::new(Btop::new(client))),
         Caddy::ID => Some(Box::new(Caddy::new(client))),
         Carapace::ID => Some(Box::new(Carapace::new(client))),
+        Choose::ID => Some(Box::new(Choose::new(client))),
         Chezmoi::ID => Some(Box::new(Chezmoi::new(client))),
         Curlie::ID => Some(Box::new(Curlie::new(client))),
         Ctop::ID => Some(Box::new(Ctop::new(client))),
@@ -117,6 +118,7 @@ pub fn create_app(
         Tailspin::ID => Some(Box::new(Tailspin::new(client))),
         Taplo::ID => Some(Box::new(Taplo::new(client))),
         Tbls::ID => Some(Box::new(Tbls::new(client))),
+        Termscp::ID => Some(Box::new(Termscp::new(client))),
         Tlrc::ID => Some(Box::new(Tlrc::new(client))),
         Tv::ID => Some(Box::new(Tv::new(client))),
         Ty::ID => Some(Box::new(Ty::new(client))),

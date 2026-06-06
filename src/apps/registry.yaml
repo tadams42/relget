@@ -862,6 +862,24 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: choose
+  exe_name: choose
+  url: https://github.com/theryangeary/choose
+  category: files
+  description: Human-friendly and fast alternative to `cut` (and sometimes `awk`)
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
+- id: termscp
+  exe_name: termscp
+  url: https://github.com/veeso/termscp
+  category: files
+  description: Feature-rich terminal UI file transfer and explorer (SCP/SFTP/FTP/S3)
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: rhit
   exe_name: rhit
   url: https://github.com/canop/rhit

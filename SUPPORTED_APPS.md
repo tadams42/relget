@@ -188,6 +188,9 @@
 - [bat](https://github.com/sharkdp/bat)
   `cat` clone with syntax highlighting and git integration
 
+- [choose](https://github.com/theryangeary/choose)
+  Human-friendly and fast alternative to `cut` (and sometimes `awk`)
+
 - [eza](https://github.com/eza-community/eza)
   Modern replacement for `ls` with icons and git integration
 
@@ -205,6 +208,9 @@
 
 - [sd](https://github.com/chmln/sd)
   Intuitive find-and-replace command, a `sed` alternative
+
+- [termscp](https://github.com/veeso/termscp)
+  Feature-rich terminal UI file transfer and explorer (SCP/SFTP/FTP/S3)
 
 - [trash-cli-rs](https://github.com/orf/trash)
   Safe `rm` replacement that moves files to the trash

@@ -1,4 +1,6 @@
 mod bat;
+mod choose;
+mod termscp;
 mod eza;
 mod f2;
 mod fd_find;
@@ -10,6 +12,8 @@ mod xplr;
 mod yazi;
 
 pub use bat::Bat;
+pub use choose::Choose;
+pub use termscp::Termscp;
 pub use eza::Eza;
 pub use f2::F2;
 pub use fd_find::FdFind;
