@@ -799,6 +799,24 @@
   man_pages: bundled
   shell_completions: unavailable
 
+- id: jsongrep
+  exe_name: jg
+  url: https://github.com/micahkepe/jsongrep
+  category: data_processing
+  description: Fast querying of JSON, YAML, TOML, JSONL, CBOR, and MessagePack
+  has_musl: true
+  man_pages: bundled
+  shell_completions: bundled
+
+- id: fq
+  exe_name: fq
+  url: https://github.com/wader/fq
+  category: data_processing
+  description: jq for binary formats — tool, language and decoders for working with binary and text formats
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: jd
   exe_name: jd
   url: https://github.com/josephburnett/jd

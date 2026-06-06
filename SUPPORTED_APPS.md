@@ -69,6 +69,9 @@
 - [dasel](https://github.com/TomWright/dasel)
   Query and modify data in JSON, YAML, TOML, XML, and CSV
 
+- [fq](https://github.com/wader/fq)
+  jq for binary formats — tool, language and decoders for working with binary and text formats
+
 - [fx](https://github.com/antonmedv/fx)
   Terminal JSON viewer and interactive processor
 
@@ -92,6 +95,9 @@
 
 - [jqp](https://github.com/noahgorstein/jqp)
   TUI playground for crafting `jq` queries
+
+- [jsongrep](https://github.com/micahkepe/jsongrep)
+  Fast querying of JSON, YAML, TOML, JSONL, CBOR, and MessagePack
 
 - [miller](https://github.com/johnkerl/miller)
   Like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON

@@ -1,6 +1,8 @@
 mod dasel;
+mod fq;
 mod jd;
 mod jiq;
+mod jsongrep;
 mod taplo;
 mod tabiew;
 mod tv;
@@ -20,8 +22,10 @@ mod xq;
 mod yq;
 
 pub use dasel::Dasel;
+pub use fq::Fq;
 pub use jd::Jd;
 pub use jiq::Jiq;
+pub use jsongrep::JsonGrep;
 pub use taplo::Taplo;
 pub use tabiew::Tabiew;
 pub use tv::Tv;

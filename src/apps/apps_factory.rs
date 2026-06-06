@@ -5,7 +5,7 @@ use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 use super::App;
 use super::coding::{AstGrep, Fend, Grex, Hyperfine, Neovide, Pyrefly, Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Sqruff, Sttr, Stylua, Ty};
 use super::containers::{Ctop, D4S, DockMate, Dry, LazyDocker};
-use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Tabiew, Taplo, Tv, Xan, Xq, Yq};
+use super::data_processing::{Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, JsonGrep, Miller, Qq, Qsv, QsvAll, Rsv, Tabiew, Taplo, Tv, Xan, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Rage};
@@ -55,6 +55,7 @@ pub fn create_app(
         FdFind::ID => Some(Box::new(FdFind::new(client))),
         Fend::ID => Some(Box::new(Fend::new(client))),
         Fnm::ID => Some(Box::new(Fnm::new(client))),
+        Fq::ID => Some(Box::new(Fq::new(client))),
         Fx::ID => Some(Box::new(Fx::new(client))),
         Fzf::ID => Some(Box::new(Fzf::new(client))),
         Gitleaks::ID => Some(Box::new(Gitleaks::new(client))),
@@ -69,6 +70,7 @@ pub fn create_app(
         Jid::ID => Some(Box::new(Jid::new(client))),
         Jiq::ID => Some(Box::new(Jiq::new(client))),
         Jq::ID => Some(Box::new(Jq::new(client))),
+        JsonGrep::ID => Some(Box::new(JsonGrep::new(client))),
         Jqp::ID => Some(Box::new(Jqp::new(client))),
         LazyJournal::ID => Some(Box::new(LazyJournal::new(client))),
         LazyDocker::ID => Some(Box::new(LazyDocker::new(client))),
