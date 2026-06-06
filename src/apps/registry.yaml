@@ -344,7 +344,7 @@
   exe_name: logdy
   url: https://github.com/logdyhq/logdy-core
   category: logs
-  description: Web-based real-time log viewer with filtering and search
+  description: Real-time log viewing and filtering with embedded Web UI and multiple input modes (files, stdin, sockets, REST API)
   has_musl: false
   man_pages: unavailable
   shell_completions: self_generated
@@ -767,7 +767,7 @@
   exe_name: rage
   url: https://github.com/str4d/rage
   category: encryption
-  description: Rust implementation of the age encryption tool (installs rage, rage-keygen, rage-mount)
+  description: Rust implementation of the age encryption tool
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable

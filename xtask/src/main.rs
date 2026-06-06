@@ -7,13 +7,13 @@ fn main() {
     let task = std::env::args().nth(1);
     match task.as_deref() {
         Some("update-docs") => {
-            update_readme();
+            update_supported_apps();
             update_changelog();
         }
         _ => {
             eprintln!("Available tasks:");
             eprintln!(
-                "  update-docs  Regenerate README app list and ## unreleased changelog section"
+                "  update-docs  Regenerate SUPPORTED_APPS.md and ## unreleased changelog section"
             );
         }
     }
@@ -110,44 +110,31 @@ fn category_display_name(category: &str) -> &str {
     }
 }
 
-fn update_readme() {
-    let readme_path = project_root().join("README.md");
+fn update_supported_apps() {
+    let path = project_root().join("SUPPORTED_APPS.md");
 
     let mut entries: Vec<_> = all_app_entries().iter().collect();
     entries.sort_by(|a, b| a.category.cmp(&b.category).then_with(|| a.id.cmp(&b.id)));
 
-    let mut app_lines: Vec<String> = Vec::new();
+    let mut lines: Vec<String> = vec!["# Supported apps".into(), String::new()];
     let mut current_category: Option<&str> = None;
+
     for entry in &entries {
         if current_category != Some(entry.category.as_str()) {
             if current_category.is_some() {
-                app_lines.push(String::new());
+                lines.push(String::new());
             }
-            app_lines.push(format!("### {}", category_display_name(&entry.category)));
-            app_lines.push(String::new());
+            lines.push(format!("## {}", category_display_name(&entry.category)));
+            lines.push(String::new());
             current_category = Some(entry.category.as_str());
+        } else {
+            lines.push(String::new());
         }
-        app_lines.push(format!("- [{}]({}) — {}", entry.id, entry.url, entry.description));
+        lines.push(format!("- [{}]({})", entry.id, entry.url));
+        lines.push(format!("  {}", entry.description));
     }
+    lines.push(String::new());
 
-    let readme = fs::read_to_string(&readme_path).expect("failed to read README.md");
-    let lines: Vec<&str> = readme.lines().collect();
-
-    let idx_start = lines
-        .iter()
-        .position(|l| *l == "## Supported apps")
-        .expect("'## Supported apps' marker not found in README.md");
-    let idx_end = lines
-        .iter()
-        .position(|l| l.starts_with("[^1]: "))
-        .expect("'[^1]:' marker not found in README.md");
-
-    let mut new_lines: Vec<String> = lines[..=idx_start].iter().map(|l| l.to_string()).collect();
-    new_lines.push(String::new());
-    new_lines.extend(app_lines);
-    new_lines.push(String::new());
-    new_lines.extend(lines[idx_end..].iter().map(|l| l.to_string()));
-
-    fs::write(&readme_path, new_lines.join("\n") + "\n").expect("failed to write README.md");
-    println!("README.md updated.");
+    fs::write(&path, lines.join("\n") + "\n").expect("failed to write SUPPORTED_APPS.md");
+    println!("SUPPORTED_APPS.md written.");
 }
