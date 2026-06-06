@@ -5,7 +5,7 @@ use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 use super::App;
 use super::coding::{AstGrep, Fend, Grex, Hyperfine, Neovide, Pyrefly, Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Sqruff, Sttr, Stylua, Ty};
 use super::containers::{Ctop, D4S, DockMate, Dry, LazyDocker};
-use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jiq, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Tabiew, Taplo, Tv, Xan, Xq, Yq};
+use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Tabiew, Taplo, Tv, Xan, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Rage};
@@ -65,6 +65,7 @@ pub fn create_app(
         Hurl::ID => Some(Box::new(Hurl::new(client))),
         Hyperfine::ID => Some(Box::new(Hyperfine::new(client))),
         Jaq::ID => Some(Box::new(Jaq::new(client))),
+        Jd::ID => Some(Box::new(Jd::new(client))),
         Jid::ID => Some(Box::new(Jid::new(client))),
         Jiq::ID => Some(Box::new(Jiq::new(client))),
         Jq::ID => Some(Box::new(Jq::new(client))),

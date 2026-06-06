@@ -799,6 +799,15 @@
   man_pages: bundled
   shell_completions: unavailable
 
+- id: jd
+  exe_name: jd
+  url: https://github.com/josephburnett/jd
+  category: data_processing
+  description: JSON diff and patch
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: taplo
   exe_name: taplo
   url: https://github.com/tamasfe/taplo

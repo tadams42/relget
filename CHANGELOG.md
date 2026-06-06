@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added jd app
 - feat: added taplo app
 - feat: added jiq app
 - feat: added tabiew app

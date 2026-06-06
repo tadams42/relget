@@ -78,6 +78,9 @@
 - [jaq](https://github.com/01mf02/jaq)
   jq-compatible JSON query language focused on correctness and speed
 
+- [jd](https://github.com/josephburnett/jd)
+  JSON diff and patch
+
 - [jid](https://github.com/simeji/jid)
   Interactive JSON incremental digger
 
