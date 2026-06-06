@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added fq app
 - feat: added jsongrep app
 - feat: added jd app
 - feat: added taplo app
