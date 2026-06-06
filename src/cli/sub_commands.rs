@@ -105,7 +105,24 @@ pub fn update_command(args: &UpdateArgs, offline: bool) -> Result<()> {
 
         ids
     } else {
-        select_apps(&args.apps, args.configured_set.as_deref())?
+        let mut selected = select_apps(&args.apps, args.configured_set.as_deref())?;
+        let entries = all_app_entries();
+        let bin_dir = args.prefix.join("bin");
+        selected.retain(|id| {
+            let installed = entries
+                .iter()
+                .find(|e| e.id == *id)
+                .is_some_and(|e| bin_dir.join(&e.exe_name).exists());
+            if !installed {
+                log::warn!("'{}' is not installed, skipping", id);
+            }
+            installed
+        });
+        if selected.is_empty() {
+            println!("No installed apps to update.");
+            return Ok(());
+        }
+        selected
     };
 
     log::info!("Updating {} app(s) in {:?}", to_update.len(), args.prefix);

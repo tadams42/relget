@@ -41,17 +41,14 @@
 - [scc](https://github.com/boyter/scc)
   Fast and accurate code counter with complexity calculations - better `cloc`
 
-- [scooter](https://github.com/thomasschafer/scooter)
-  Interactive find and replace in the terminal
-
 - [sqruff](https://github.com/quarylabs/sqruff)
   Fast SQL formatter and linter
 
-- [sttr](https://github.com/abhimanyu003/sttr)
-  Cross-platform CLI to perform various string operations
-
 - [stylua](https://github.com/JohnnyMorganz/stylua)
   Opinionated Lua code formatter
+
+- [taplo](https://github.com/tamasfe/taplo)
+  TOML toolkit — formatter, linter, and language server
 
 - [tombi](https://github.com/tombi-toml/tombi)
   TOML formatter, linter, and language server
@@ -75,6 +72,9 @@
 
 - [dry](https://github.com/moncho/dry)
   Terminal UI for managing Docker containers and images
+
+- [dtop](https://github.com/amir20/dtop)
+  Terminal dashboard for Docker that monitors multiple hosts in real-time
 
 - [lazydocker](https://github.com/jesseduffield/lazydocker)
   Terminal UI for Docker containers, images, and compose
@@ -131,9 +131,6 @@
 
 - [tabiew](https://github.com/shshemi/tabiew)
   Lightweight TUI to view and query tabular data files (CSV, Parquet, Arrow, etc.)
-
-- [taplo](https://github.com/tamasfe/taplo)
-  TOML toolkit — formatter, linter, and language server
 
 - [tv](https://github.com/alexhallam/tv)
   Tidy Viewer, TUI for displaying tabular data (CSV, Parquet, Feather, Arrow IPC)
@@ -221,8 +218,14 @@
 - [ripgrep](https://github.com/BurntSushi/ripgrep)
   Recursive regex search, a faster `grep`
 
+- [scooter](https://github.com/thomasschafer/scooter)
+  Interactive find and replace in the terminal
+
 - [sd](https://github.com/chmln/sd)
   Intuitive find-and-replace command, a `sed` alternative
+
+- [sttr](https://github.com/abhimanyu003/sttr)
+  Cross-platform CLI to perform various string operations
 
 - [termscp](https://github.com/veeso/termscp)
   Feature-rich terminal UI file transfer and explorer (SCP/SFTP/FTP/S3)
@@ -280,9 +283,6 @@
   Friendly and fast HTTP client, `HTTPie` and `curl` alternative
 
 ## Logs
-
-- [dtop](https://github.com/amir20/dtop)
-  Terminal dashboard for Docker that monitors multiple hosts in real-time
 
 - [gonzo](https://github.com/control-theory/gonzo)
   Log viewer TUI for structured and plain-text logs
