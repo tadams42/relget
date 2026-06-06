@@ -799,6 +799,15 @@
   man_pages: bundled
   shell_completions: unavailable
 
+- id: tv
+  exe_name: tidy-viewer
+  url: https://github.com/alexhallam/tv
+  category: data_processing
+  description: Tidy Viewer, TUI for displaying tabular data (CSV, Parquet, Feather, Arrow IPC)
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: xan
   exe_name: xan
   url: https://github.com/medialab/xan

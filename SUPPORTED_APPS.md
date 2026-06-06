@@ -102,6 +102,9 @@
 - [rsv](https://github.com/ribbondz/rsv)
   High-performance CSV/TSV toolkit for data exploration
 
+- [tv](https://github.com/alexhallam/tv)
+  Tidy Viewer, TUI for displaying tabular data (CSV, Parquet, Feather, Arrow IPC)
+
 - [xan](https://github.com/medialab/xan)
   Command line tool for processing CSV files directly from the shell
 

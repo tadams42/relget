@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added tv app
 - feat: added xan app
 - feat: added xplr app
 - feat: added ctop app

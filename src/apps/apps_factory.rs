@@ -5,7 +5,7 @@ use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 use super::App;
 use super::coding::{AstGrep, Fend, Grex, Hyperfine, Neovide, Pyrefly, Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Sqruff, Sttr, Stylua, Ty};
 use super::containers::{Ctop, D4S, DockMate, Dry, LazyDocker};
-use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Xan, Xq, Yq};
+use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Tv, Xan, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Rage};
@@ -106,6 +106,7 @@ pub fn create_app(
         Stylua::ID => Some(Box::new(Stylua::new(client))),
         Tbls::ID => Some(Box::new(Tbls::new(client))),
         Tlrc::ID => Some(Box::new(Tlrc::new(client))),
+        Tv::ID => Some(Box::new(Tv::new(client))),
         Ty::ID => Some(Box::new(Ty::new(client))),
         Trash::ID => Some(Box::new(Trash::new(client))),
         Uv::ID => Some(Box::new(Uv::new(client))),
