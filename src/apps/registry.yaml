@@ -673,6 +673,15 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: duf
+  exe_name: duf
+  url: https://github.com/muesli/duf
+  category: system
+  description: Disk Usage/Free Utility — human-friendly `df` alternative
+  has_musl: false
+  man_pages: bundled
+  shell_completions: unavailable
+
 - id: zoxide
   exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide

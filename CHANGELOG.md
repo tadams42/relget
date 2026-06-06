@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added duf app
 - feat: added qq app
 - feat: added miller app
 - feat: added doggo app

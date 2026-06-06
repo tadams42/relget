@@ -15,7 +15,7 @@ use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
 use super::networking::{Boring, Dog, Doggo};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
-use super::system::{Bottom, Btop, Dust, Dysk, Procs};
+use super::system::{Bottom, Btop, Duf, Dust, Dysk, Procs};
 
 pub fn create_app(
     id: &str, gh_token: Option<String>, cb_token: Option<String>, gl_token: Option<String>,
@@ -43,6 +43,7 @@ pub fn create_app(
         DockMate::ID => Some(Box::new(DockMate::new(client))),
         Doppler::ID => Some(Box::new(Doppler::new(client))),
         Dry::ID => Some(Box::new(Dry::new(client))),
+        Duf::ID => Some(Box::new(Duf::new(client))),
         Dust::ID => Some(Box::new(Dust::new(client))),
         Dysk::ID => Some(Box::new(Dysk::new(client))),
         Eza::ID => Some(Box::new(Eza::new(client))),

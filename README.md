@@ -237,6 +237,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 - [bottom](https://github.com/ClementTsang/bottom) — Graphical process/system monitor for the terminal (`htop`/`top` alternative)
 - [btop](https://github.com/aristocratos/btop) — A monitor of resources (`top` / `htop` alternative)
+- [duf](https://github.com/muesli/duf) — Disk Usage/Free Utility — human-friendly `df` alternative
 - [dust](https://github.com/bootandy/dust) — Intuitive disk usage visualizer, a `du` alternative
 - [dysk](https://github.com/Canop/dysk) — Terminal utility to get information on filesystems (`df` alternative)
 - [procs](https://github.com/dalance/procs) — Modern replacement for ps with colored output and search
