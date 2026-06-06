@@ -102,6 +102,9 @@
 - [rsv](https://github.com/ribbondz/rsv)
   High-performance CSV/TSV toolkit for data exploration
 
+- [xan](https://github.com/medialab/xan)
+  Command line tool for processing CSV files directly from the shell
+
 - [xq](https://github.com/sibprogrammer/xq)
   Command-line XML and HTML processor using XPath
 

@@ -798,3 +798,12 @@
   has_musl: true
   man_pages: bundled
   shell_completions: unavailable
+
+- id: xan
+  exe_name: xan
+  url: https://github.com/medialab/xan
+  category: data_processing
+  description: Command line tool for processing CSV files directly from the shell
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable

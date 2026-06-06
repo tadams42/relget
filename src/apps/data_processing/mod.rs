@@ -1,4 +1,5 @@
 mod dasel;
+mod xan;
 mod fx;
 mod gojq;
 mod jaq;
@@ -14,6 +15,7 @@ mod xq;
 mod yq;
 
 pub use dasel::Dasel;
+pub use xan::Xan;
 pub use fx::Fx;
 pub use gojq::GoJq;
 pub use jaq::Jaq;
