@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 
 use super::App;
-use super::coding::{AstGrep, Fend, Grex, Neovide, Pyrefly, Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Sttr, Stylua, Ty};
+use super::coding::{AstGrep, Fend, Grex, Neovide, Pyrefly, Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Sqruff, Sttr, Stylua, Ty};
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
@@ -93,6 +93,7 @@ pub fn create_app(
         Rsv::ID => Some(Box::new(Rsv::new(client))),
         RustAnalyzer::ID => Some(Box::new(RustAnalyzer::new(client))),
         Scc::ID => Some(Box::new(Scc::new(client))),
+        Sqruff::ID => Some(Box::new(Sqruff::new(client))),
         SdEdit::ID => Some(Box::new(SdEdit::new(client))),
         Skim::ID => Some(Box::new(Skim::new(client))),
         Starship::ID => Some(Box::new(Starship::new(client))),

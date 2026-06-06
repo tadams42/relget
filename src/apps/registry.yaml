@@ -709,6 +709,15 @@
   man_pages: bundled
   shell_completions: unavailable
 
+- id: sqruff
+  exe_name: sqruff
+  url: https://github.com/quarylabs/sqruff
+  category: coding
+  description: Fast SQL formatter and linter
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: sttr
   exe_name: sttr
   url: https://github.com/abhimanyu003/sttr

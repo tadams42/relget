@@ -138,6 +138,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [ruff](https://github.com/astral-sh/ruff) — Extremely fast Python linter and code formatter
 - [rust-analyzer](https://github.com/rust-lang/rust-analyzer) — Rust language server providing IDE integration
 - [scc](https://github.com/boyter/scc) — Fast and accurate code counter with complexity calculations - better `cloc`
+- [sqruff](https://github.com/quarylabs/sqruff) — Fast SQL formatter and linter
 - [sttr](https://github.com/abhimanyu003/sttr) — Cross-platform CLI to perform various string operations
 - [stylua](https://github.com/JohnnyMorganz/stylua) — Opinionated Lua code formatter
 - [ty](https://github.com/astral-sh/ty) — Extremely fast Python type checker
