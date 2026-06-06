@@ -108,6 +108,9 @@
 - [tabiew](https://github.com/shshemi/tabiew)
   Lightweight TUI to view and query tabular data files (CSV, Parquet, Arrow, etc.)
 
+- [taplo](https://github.com/tamasfe/taplo)
+  TOML toolkit — formatter, linter, and language server
+
 - [tv](https://github.com/alexhallam/tv)
   Tidy Viewer, TUI for displaying tabular data (CSV, Parquet, Feather, Arrow IPC)
 

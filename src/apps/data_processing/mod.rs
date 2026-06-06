@@ -1,5 +1,6 @@
 mod dasel;
 mod jiq;
+mod taplo;
 mod tabiew;
 mod tv;
 mod xan;
@@ -19,6 +20,7 @@ mod yq;
 
 pub use dasel::Dasel;
 pub use jiq::Jiq;
+pub use taplo::Taplo;
 pub use tabiew::Tabiew;
 pub use tv::Tv;
 pub use xan::Xan;

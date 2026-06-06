@@ -799,6 +799,15 @@
   man_pages: bundled
   shell_completions: unavailable
 
+- id: taplo
+  exe_name: taplo
+  url: https://github.com/tamasfe/taplo
+  category: data_processing
+  description: TOML toolkit — formatter, linter, and language server
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
+
 - id: jiq
   exe_name: jiq
   url: https://github.com/bellicose100xp/jiq
