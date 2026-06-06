@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added mkcert app
 - feat: added vacuum app
 - feat: added mailpit app
 - feat: added scooter app
