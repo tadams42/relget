@@ -176,6 +176,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
 ### Documentation and diagrams
 
+- [asciinema](https://github.com/asciinema/asciinema) — Record and replay terminal sessions as lightweight asciicast files
 - [d2](https://github.com/terrastruct/d2) — Diagram scripting language that turns text to diagrams
 - [mdbook](https://github.com/rust-lang/mdBook) — Create books from Markdown source files
 - [pdot](https://gitlab.com/dmfay/pdot) — PostgreSQL schema visualizer using Graphviz/Mermaid

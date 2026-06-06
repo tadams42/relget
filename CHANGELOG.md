@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added asciinema app
 - feat: added rage app
 - feat: added hyperfine app
 - feat: added sqruff app

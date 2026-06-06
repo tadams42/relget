@@ -718,6 +718,15 @@
   man_pages: bundled
   shell_completions: bundled
 
+- id: asciinema
+  exe_name: asciinema
+  url: https://github.com/asciinema/asciinema
+  category: docs_diag
+  description: Record and replay terminal sessions as lightweight asciicast files
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: rage
   exe_name: rage
   url: https://github.com/str4d/rage
