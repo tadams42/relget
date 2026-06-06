@@ -14,6 +14,12 @@
 - [hyperfine](https://github.com/sharkdp/hyperfine)
   Command-line benchmarking tool
 
+- [mailpit](https://github.com/axllent/mailpit)
+  Email and SMTP testing tool with a web interface to view captured emails
+
+- [mkcert](https://github.com/FiloSottile/mkcert)
+  Zero-config tool to make locally trusted development certificates
+
 - [neovide](https://github.com/neovide/neovide)
   GPU-accelerated GUI frontend for Neovim
 
@@ -35,6 +41,9 @@
 - [scc](https://github.com/boyter/scc)
   Fast and accurate code counter with complexity calculations - better `cloc`
 
+- [scooter](https://github.com/thomasschafer/scooter)
+  Interactive find and replace in the terminal
+
 - [sqruff](https://github.com/quarylabs/sqruff)
   Fast SQL formatter and linter
 
@@ -44,8 +53,14 @@
 - [stylua](https://github.com/JohnnyMorganz/stylua)
   Opinionated Lua code formatter
 
+- [tombi](https://github.com/tombi-toml/tombi)
+  TOML formatter, linter, and language server
+
 - [ty](https://github.com/astral-sh/ty)
   Extremely fast Python type checker
+
+- [vacuum](https://github.com/daveshanley/vacuum)
+  World's fastest OpenAPI 3 / Swagger linter and quality tool
 
 ## Containers
 

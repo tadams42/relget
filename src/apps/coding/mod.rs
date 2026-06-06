@@ -1,4 +1,9 @@
 mod ast_grep;
+mod mailpit;
+mod mkcert;
+mod scooter;
+mod tombi;
+mod vacuum;
 mod fend;
 mod grex;
 mod hyperfine;
@@ -15,6 +20,11 @@ mod stylua;
 mod ty;
 
 pub use ast_grep::AstGrep;
+pub use mailpit::Mailpit;
+pub use mkcert::Mkcert;
+pub use scooter::Scooter;
+pub use tombi::Tombi;
+pub use vacuum::Vacuum;
 pub use fend::Fend;
 pub use grex::Grex;
 pub use hyperfine::Hyperfine;

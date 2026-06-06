@@ -3,7 +3,7 @@ use std::sync::Arc;
 use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 
 use super::App;
-use super::coding::{AstGrep, Fend, Grex, Hyperfine, Neovide, Pyrefly, Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Sqruff, Sttr, Stylua, Ty};
+use super::coding::{AstGrep, Fend, Grex, Hyperfine, Mailpit, Mkcert, Neovide, Pyrefly, Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Scooter, Sqruff, Sttr, Stylua, Tombi, Ty, Vacuum};
 use super::containers::{Ctop, D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, JsonGrep, Miller, Qq, Qsv, QsvAll, Rsv, Tabiew, Taplo, Tv, Xan, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
@@ -81,6 +81,7 @@ pub fn create_app(
         D2::ID => Some(Box::new(D2::new(client))),
         Lazygit::ID => Some(Box::new(Lazygit::new(client))),
         Logdy::ID => Some(Box::new(Logdy::new(client))),
+        Mailpit::ID => Some(Box::new(Mailpit::new(client))),
         Loggo::ID => Some(Box::new(Loggo::new(client))),
         Mdbook::ID => Some(Box::new(Mdbook::new(client))),
         Miller::ID => Some(Box::new(Miller::new(client))),
@@ -89,6 +90,7 @@ pub fn create_app(
                 cb_token, offline,
             )))))
         }
+        Mkcert::ID => Some(Box::new(Mkcert::new(client))),
         Pdot::ID => Some(Box::new(Pdot::new(Arc::new(GitlabClient::new(gl_token, offline))))),
         Neovide::ID => Some(Box::new(Neovide::new(client))),
         Nerdlog::ID => Some(Box::new(Nerdlog::new(client))),
@@ -112,6 +114,7 @@ pub fn create_app(
         Sqruff::ID => Some(Box::new(Sqruff::new(client))),
         SdEdit::ID => Some(Box::new(SdEdit::new(client))),
         Serie::ID => Some(Box::new(Serie::new(client))),
+        Scooter::ID => Some(Box::new(Scooter::new(client))),
         Skim::ID => Some(Box::new(Skim::new(client))),
         Starship::ID => Some(Box::new(Starship::new(client))),
         Sttr::ID => Some(Box::new(Sttr::new(client))),
@@ -122,10 +125,12 @@ pub fn create_app(
         Tbls::ID => Some(Box::new(Tbls::new(client))),
         Termscp::ID => Some(Box::new(Termscp::new(client))),
         Tlrc::ID => Some(Box::new(Tlrc::new(client))),
+        Tombi::ID => Some(Box::new(Tombi::new(client))),
         Tv::ID => Some(Box::new(Tv::new(client))),
         Ty::ID => Some(Box::new(Ty::new(client))),
         Trash::ID => Some(Box::new(Trash::new(client))),
         Uv::ID => Some(Box::new(Uv::new(client))),
+        Vacuum::ID => Some(Box::new(Vacuum::new(client))),
         Xh::ID => Some(Box::new(Xh::new(client))),
         Xan::ID => Some(Box::new(Xan::new(client))),
         Xq::ID => Some(Box::new(Xq::new(client))),

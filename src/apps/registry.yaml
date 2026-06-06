@@ -862,6 +862,51 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: tombi
+  exe_name: tombi
+  url: https://github.com/tombi-toml/tombi
+  category: coding
+  description: TOML formatter, linter, and language server
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: self_generated
+
+- id: scooter
+  exe_name: scooter
+  url: https://github.com/thomasschafer/scooter
+  category: coding
+  description: Interactive find and replace in the terminal
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
+- id: mailpit
+  exe_name: mailpit
+  url: https://github.com/axllent/mailpit
+  category: coding
+  description: Email and SMTP testing tool with a web interface to view captured emails
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
+- id: vacuum
+  exe_name: vacuum
+  url: https://github.com/daveshanley/vacuum
+  category: coding
+  description: World's fastest OpenAPI 3 / Swagger linter and quality tool
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
+
+- id: mkcert
+  exe_name: mkcert
+  url: https://github.com/FiloSottile/mkcert
+  category: coding
+  description: Zero-config tool to make locally trusted development certificates
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: git-flow-next
   exe_name: git-flow
   url: https://github.com/gittower/git-flow-next
