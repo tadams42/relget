@@ -385,15 +385,6 @@
   man_pages: unavailable
   shell_completions: unavailable
 
-- id: pass-cli
-  exe_name: pass-cli
-  url: https://github.com/reyamira/pass-cli
-  category: encryption
-  description: Password manager CLI with encrypted local storage
-  has_musl: false
-  man_pages: unavailable
-  shell_completions: self_generated
-
 - id: pdot
   exe_name: pdot
   url: https://gitlab.com/dmfay/pdot

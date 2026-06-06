@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: removed pass-cli app
 - feat: removed gopass app
 - feat: added btop app
 - feat: added bottom (btm) app

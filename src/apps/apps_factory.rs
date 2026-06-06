@@ -8,7 +8,7 @@ use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{D2, Mdbook, Pdot, Pgplan, Tlrc};
-use super::encryption::{Age, Doppler, Gocryptfs, PassCli};
+use super::encryption::{Age, Doppler, Gocryptfs};
 use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
@@ -68,7 +68,6 @@ pub fn create_app(
                 cb_token, offline,
             )))))
         }
-        PassCli::ID => Some(Box::new(PassCli::new(client))),
         Pdot::ID => Some(Box::new(Pdot::new(Arc::new(GitlabClient::new(gl_token, offline))))),
         Neovide::ID => Some(Box::new(Neovide::new(client))),
         Pgplan::ID => Some(Box::new(Pgplan::new(client))),
