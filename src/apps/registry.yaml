@@ -799,6 +799,15 @@
   man_pages: bundled
   shell_completions: unavailable
 
+- id: tabiew
+  exe_name: tw
+  url: https://github.com/shshemi/tabiew
+  category: data_processing
+  description: Lightweight TUI to view and query tabular data files (CSV, Parquet, Arrow, etc.)
+  has_musl: true
+  man_pages: bundled
+  shell_completions: bundled
+
 - id: tv
   exe_name: tidy-viewer
   url: https://github.com/alexhallam/tv

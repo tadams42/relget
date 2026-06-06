@@ -102,6 +102,9 @@
 - [rsv](https://github.com/ribbondz/rsv)
   High-performance CSV/TSV toolkit for data exploration
 
+- [tabiew](https://github.com/shshemi/tabiew)
+  Lightweight TUI to view and query tabular data files (CSV, Parquet, Arrow, etc.)
+
 - [tv](https://github.com/alexhallam/tv)
   Tidy Viewer, TUI for displaying tabular data (CSV, Parquet, Feather, Arrow IPC)
 
