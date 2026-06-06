@@ -259,15 +259,6 @@
   man_pages: unavailable
   shell_completions: self_generated
 
-- id: gopass
-  exe_name: gopass
-  url: https://github.com/gopasspw/gopass
-  category: encryption
-  description: Secrets manager and password store built on GPG and Git
-  has_musl: false
-  man_pages: unavailable
-  shell_completions: self_generated
-
 - id: grex
   exe_name: grex
   url: https://github.com/pemistahl/grex

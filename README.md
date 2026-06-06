@@ -180,7 +180,6 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [age](https://github.com/FiloSottile/age) — Simple, modern and secure file encryption tool
 - [doppler](https://github.com/DopplerHQ/cli) — Secrets manager CLI — sync env vars and secrets across teams
 - [gocryptfs](https://github.com/rfjakob/gocryptfs) — Encrypted overlay filesystem written in Go
-- [gopass](https://github.com/gopasspw/gopass) — Secrets manager and password store built on GPG and Git
 - [pass-cli](https://github.com/reyamira/pass-cli) — Password manager CLI with encrypted local storage
 
 ### Files

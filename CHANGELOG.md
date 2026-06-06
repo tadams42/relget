@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: removed gopass app
 - feat: added btop app
 - feat: added bottom (btm) app
 - feat: removed --minimal-set option

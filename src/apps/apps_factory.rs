@@ -8,7 +8,7 @@ use super::containers::{D4S, DockMate, Dry, LazyDocker};
 use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{D2, Mdbook, Pdot, Pgplan, Tlrc};
-use super::encryption::{Age, Doppler, Gocryptfs, Gopass, PassCli};
+use super::encryption::{Age, Doppler, Gocryptfs, PassCli};
 use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
@@ -51,7 +51,6 @@ pub fn create_app(
         Gocryptfs::ID => Some(Box::new(Gocryptfs::new(client))),
         GoJq::ID => Some(Box::new(GoJq::new(client))),
         Gonzo::ID => Some(Box::new(Gonzo::new(client))),
-        Gopass::ID => Some(Box::new(Gopass::new(client))),
         Grex::ID => Some(Box::new(Grex::new(client))),
         Hurl::ID => Some(Box::new(Hurl::new(client))),
         Jaq::ID => Some(Box::new(Jaq::new(client))),
