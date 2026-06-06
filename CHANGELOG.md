@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added dtop app
 - feat: added rhit app
 - feat: added fq app
 - feat: added jsongrep app
