@@ -5,7 +5,7 @@ use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 use super::App;
 use super::coding::{AstGrep, Grex, Neovide, Pyrefly, Rgx, Ruff, RustAnalyzer, Scc, Stylua, Ty};
 use super::containers::{D4S, DockMate, Dry, LazyDocker};
-use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Miller, Qsv, QsvAll, Rsv, Xq, Yq};
+use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Miller, Qq, Qsv, QsvAll, Rsv, Xq, Yq};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{D2, Mdbook, Pdot, Pgplan, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs};
@@ -83,6 +83,7 @@ pub fn create_app(
         Rgx::ID => Some(Box::new(Rgx::new(client))),
         Ruff::ID => Some(Box::new(Ruff::new(client))),
         Ripgrep::ID => Some(Box::new(Ripgrep::new(client))),
+        Qq::ID => Some(Box::new(Qq::new(client))),
         Qsv::ID => Some(Box::new(Qsv::new(client))),
         QsvAll::ID => Some(Box::new(QsvAll::new(client))),
         Rsv::ID => Some(Box::new(Rsv::new(client))),

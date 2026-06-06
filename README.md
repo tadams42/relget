@@ -156,6 +156,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [jq](https://github.com/jqlang/jq) — Lightweight command-line JSON processor
 - [jqp](https://github.com/noahgorstein/jqp) — TUI playground for crafting `jq` queries
 - [miller](https://github.com/johnkerl/miller) — Like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON
+- [qq](https://github.com/JFryy/qq) — jq-inspired multi-format processor (JSON, YAML, TOML, XML, HCL, CSV, INI, and more)
 - [qsv](https://github.com/dathere/qsv) — High-performance CSV data-wrangling toolkit
 - [qsv-all](https://github.com/dathere/qsv) — High-performance CSV data-wrangling toolkit (additional binaries optimized for specific workloads)
 - [rsv](https://github.com/ribbondz/rsv) — High-performance CSV/TSV toolkit for data exploration

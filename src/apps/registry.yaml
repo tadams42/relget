@@ -664,6 +664,15 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: qq
+  exe_name: qq
+  url: https://github.com/JFryy/qq
+  category: data_processing
+  description: jq-inspired multi-format processor (JSON, YAML, TOML, XML, HCL, CSV, INI, and more)
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: zoxide
   exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide
