@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added scooter app
 - feat: added tombi app
 - feat: added serie app
 - feat: added git-flow-next app
