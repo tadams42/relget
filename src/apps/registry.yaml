@@ -736,6 +736,15 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: xplr
+  exe_name: xplr
+  url: https://github.com/sayanarijit/xplr
+  category: files
+  description: Hackable, minimal, fast TUI file manager with Lua scripting
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: asciinema
   exe_name: asciinema
   url: https://github.com/asciinema/asciinema

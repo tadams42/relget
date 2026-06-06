@@ -6,6 +6,7 @@ mod rclone;
 mod ripgrep;
 mod sd_edit;
 mod trash;
+mod xplr;
 mod yazi;
 
 pub use bat::Bat;
@@ -16,4 +17,5 @@ pub use rclone::Rclone;
 pub use ripgrep::Ripgrep;
 pub use sd_edit::SdEdit;
 pub use trash::Trash;
+pub use xplr::Xplr;
 pub use yazi::Yazi;

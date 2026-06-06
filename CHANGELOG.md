@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added xplr app
 - feat: added ctop app
 - feat: added tbls app
 - feat: added agg app

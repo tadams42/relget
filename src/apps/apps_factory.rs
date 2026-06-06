@@ -9,7 +9,7 @@ use super::data_processing::{Dasel, Fx, GoJq, Jaq, Jid, Jq, Jqp, Miller, Qq, Qsv
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Rage};
-use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Yazi};
+use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Xplr, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
@@ -111,6 +111,7 @@ pub fn create_app(
         Uv::ID => Some(Box::new(Uv::new(client))),
         Xh::ID => Some(Box::new(Xh::new(client))),
         Xq::ID => Some(Box::new(Xq::new(client))),
+        Xplr::ID => Some(Box::new(Xplr::new(client))),
         Yazi::ID => Some(Box::new(Yazi::new(client))),
         Worktrunk::ID => Some(Box::new(Worktrunk::new(client))),
         Yq::ID => Some(Box::new(Yq::new(client))),

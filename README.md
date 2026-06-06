@@ -203,6 +203,7 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 - [ripgrep](https://github.com/BurntSushi/ripgrep) — Recursive regex search, a faster `grep`
 - [sd](https://github.com/chmln/sd) — Intuitive find-and-replace command, a `sed` alternative
 - [trash-cli-rs](https://github.com/orf/trash) — Safe `rm` replacement that moves files to the trash
+- [xplr](https://github.com/sayanarijit/xplr) — Hackable, minimal, fast TUI file manager with Lua scripting
 - [yazi](https://github.com/sxyazi/yazi) — Blazing fast terminal file manager with asynchronous I/O
 
 ### git
