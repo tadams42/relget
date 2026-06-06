@@ -13,7 +13,7 @@ use super::files::{Bat, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Trash, Yazi};
 use super::git::{Delta, Difftastic, Gitleaks, Lazygit, Mergiraf, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, LazyJournal, Logdy};
-use super::networking::{Boring, Dog};
+use super::networking::{Boring, Dog, Doggo};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Zoxide};
 use super::system::{Bottom, Btop, Dust, Dysk, Procs};
 
@@ -26,6 +26,7 @@ pub fn create_app(
         Age::ID => Some(Box::new(Age::new(client))),
         Boring::ID => Some(Box::new(Boring::new(client))),
         Dog::ID => Some(Box::new(Dog::new(client))),
+        Doggo::ID => Some(Box::new(Doggo::new(client))),
         AstGrep::ID => Some(Box::new(AstGrep::new(client))),
         Atuin::ID => Some(Box::new(Atuin::new(client))),
         Bat::ID => Some(Box::new(Bat::new(client))),

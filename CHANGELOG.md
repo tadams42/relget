@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added doggo app
 - feat: added dog app
 - feat: added boring app
 - feat: removed pass-cli app

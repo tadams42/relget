@@ -646,6 +646,15 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: doggo
+  exe_name: doggo
+  url: https://github.com/mr-karan/doggo
+  category: networking
+  description: Command-line DNS client for humans, inspired by dog
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: zoxide
   exe_name: zoxide
   url: https://github.com/ajeetdsouza/zoxide
