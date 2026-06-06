@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added fend app
 - feat: added sttr app
 - feat: added replibyte app
 - feat: added erdtree app
