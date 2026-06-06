@@ -718,6 +718,15 @@
   man_pages: bundled
   shell_completions: bundled
 
+- id: agg
+  exe_name: agg
+  url: https://github.com/asciinema/agg
+  category: docs_diag
+  description: Generate animated GIFs from asciinema session recordings
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: asciinema
   exe_name: asciinema
   url: https://github.com/asciinema/asciinema
