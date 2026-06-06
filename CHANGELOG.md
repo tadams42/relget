@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added serie app
 - feat: added git-flow-next app
 - feat: added termscp app
 - feat: added choose app
