@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.6.1 (2026-06-06)
+
 - fix: update command no longer installs apps that are not already installed
 
 ## v0.6.0 (2026-06-06)
