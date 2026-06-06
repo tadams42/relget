@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.6.0 (2026-06-06)
+
 - feat: added vivid app
 - feat: added mkcert app
 - feat: added vacuum app
