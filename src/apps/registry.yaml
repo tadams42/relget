@@ -218,7 +218,7 @@
   exe_name: fx
   url: https://github.com/antonmedv/fx
   category: data_processing
-  description: Terminal JSON viewer and interactive processor
+  description: Interactive TUI for viewing JSON/YAML/TOML
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -263,7 +263,8 @@
   exe_name: gonzo
   url: https://github.com/control-theory/gonzo
   category: logs
-  description: Log viewer TUI for structured and plain-text logs
+  description: A powerful, real-time log analysis TUI. Supports OTLP (OpenTelemetry)
+    format natively, with automatic detection of JSON, logfmt, and plain text logs.
   has_musl: false
   man_pages: unavailable
   shell_completions: self_generated
@@ -290,7 +291,7 @@
   exe_name: jaq
   url: https://github.com/01mf02/jaq
   category: data_processing
-  description: jq-compatible JSON query language focused on correctness and speed
+  description: Alternative to `jq` with fewer features but faster
   has_musl: true
   man_pages: bundled
   shell_completions: unavailable
@@ -299,7 +300,7 @@
   exe_name: jid
   url: https://github.com/simeji/jid
   category: data_processing
-  description: Interactive JSON incremental digger
+  description: JSON viewer with interactive entry and execution of `jq` filter expressions.
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -317,7 +318,7 @@
   exe_name: jqp
   url: https://github.com/noahgorstein/jqp
   category: data_processing
-  description: TUI playground for crafting `jq` queries
+  description: JSON viewer with interactive entry and execution of `gojq` filter expressions (similar to `jid` but uses `gojq`)
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -353,7 +354,8 @@
   exe_name: logdy
   url: https://github.com/logdyhq/logdy-core
   category: logs
-  description: Real-time log viewing and filtering with embedded Web UI and multiple input modes (files, stdin, sockets, REST API)
+  description: real-time log viewing and filtering in self-hosted (embedded) Web UI and
+    multiple input modes (files, stdin, sockets, REST AP
   has_musl: false
   man_pages: unavailable
   shell_completions: self_generated
@@ -443,7 +445,8 @@
   exe_name: qsv
   url: https://github.com/dathere/qsv
   category: data_processing
-  description: High-performance CSV data-wrangling toolkit (additional binaries optimized for specific workloads)
+  description: High-performance CSV data-wrangling toolkit (additional binaries
+    optimized for specific workloads)
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -497,7 +500,8 @@
   exe_name: rsv
   url: https://github.com/ribbondz/rsv
   category: data_processing
-  description: High-performance CSV/TSV toolkit for data exploration
+  description: CSV/TSV toolkit for data exploration, similar to `qsv` but smaller in
+    scope and feature set.
   has_musl: true
   man_pages: unavailable
   shell_completions: unavailable
@@ -650,7 +654,8 @@
   exe_name: dog
   url: https://github.com/ogham/dog
   category: networking
-  description: A command-line DNS client
+  description: A command-line DNS client (better `dig`). Unmaintained, see `doggo`
+    instead
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -659,7 +664,7 @@
   exe_name: doggo
   url: https://github.com/mr-karan/doggo
   category: networking
-  description: Command-line DNS client for humans, inspired by dog
+  description: Command-line DNS client for humans, inspired by `dog` but written in Go
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -668,7 +673,8 @@
   exe_name: mlr
   url: https://github.com/johnkerl/miller
   category: data_processing
-  description: Like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON
+  description: Like `awk`, `sed`, `cut`, `join`, and `sort` for name-indexed data such
+    as CSV, TSV, and tabular JSON.
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -677,7 +683,8 @@
   exe_name: qq
   url: https://github.com/JFryy/qq
   category: data_processing
-  description: jq-inspired multi-format processor (JSON, YAML, TOML, XML, HCL, CSV, INI, and more)
+  description: inspired by `jq`, multi-format processor (JSON, YAML, TOML, XML, HCL,
+    CSV, INI, and more)
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -821,7 +828,8 @@
   exe_name: jg
   url: https://github.com/micahkepe/jsongrep
   category: data_processing
-  description: Fast querying of JSON, YAML, TOML, JSONL, CBOR, and MessagePack
+  description: Fast querying of `JSON`, `YAML`, `TOML`, `JSONL`, `CBOR`, and MessagePack
+    using path expressions.
   has_musl: true
   man_pages: bundled
   shell_completions: bundled
@@ -830,7 +838,7 @@
   exe_name: fq
   url: https://github.com/wader/fq
   category: data_processing
-  description: jq for binary formats — tool, language and decoders for working with binary and text formats
+  description: "`jq` for binary formats — tool, language and decoders for working with binary and text formats"
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -839,7 +847,8 @@
   exe_name: jd
   url: https://github.com/josephburnett/jd
   category: data_processing
-  description: JSON diff and patch
+  description: tool for diffing and patching JSON and YAML values. It supports a
+    internal patch format, `JSON Merge Patch` and a subset of `JSON Patch`.
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -848,7 +857,10 @@
   exe_name: taplo
   url: https://github.com/tamasfe/taplo
   category: coding
-  description: TOML toolkit — formatter, linter, and language server
+  description: Highly comprehensive, all-in-one TOML toolkit. It operates as a
+    fully-featured Language Server Protocol (LSP), formatter, and linter. Natively
+    supports JSON Schema validation applied to TOML files and extensive formatting
+    configuration. `Even Better TOML` for VSCode is built on top of it.
   has_musl: false
   man_pages: unavailable
   shell_completions: self_generated
@@ -858,6 +870,7 @@
   url: https://github.com/bellicose100xp/jiq
   category: data_processing
   description: Interactive JSON query tool with real-time output and AI assistance
+    (similar to `jid` and `jqp`).
   has_musl: true
   man_pages: unavailable
   shell_completions: unavailable
@@ -866,7 +879,8 @@
   exe_name: tw
   url: https://github.com/shshemi/tabiew
   category: data_processing
-  description: Lightweight TUI to view and query tabular data files (CSV, Parquet, Arrow, etc.)
+  description: interactive viewing and filtering of tabular data (CSV, TSV, PSV,
+    Parquet, and Arrow IPC)
   has_musl: true
   man_pages: bundled
   shell_completions: bundled
@@ -875,7 +889,8 @@
   exe_name: tidy-viewer
   url: https://github.com/alexhallam/tv
   category: data_processing
-  description: Tidy Viewer, TUI for displaying tabular data (CSV, Parquet, Feather, Arrow IPC)
+  description: (Tidy Viewer) pretty printer for tabular data (CSV, TSV, PSV, and
+    Parquet). Excels at numeric formatting and large data sets.
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -884,7 +899,7 @@
   exe_name: tombi
   url: https://github.com/tombi-toml/tombi
   category: coding
-  description: TOML formatter, linter, and language server
+  description: Modern, minimalist TOML linter and opinionated formatter. Not and LSP.
   has_musl: true
   man_pages: unavailable
   shell_completions: self_generated
@@ -965,7 +980,8 @@
   exe_name: rhit
   url: https://github.com/canop/rhit
   category: logs
-  description: Reads nginx log files and displays analysis in pretty tables
+  description: reads nginx log files in their standard location, does some analysis and
+    tells you about it in pretty tables in your console, storing and polluting nothing.
   has_musl: true
   man_pages: unavailable
   shell_completions: unavailable
@@ -983,7 +999,8 @@
   exe_name: loggo
   url: https://github.com/aurc/loggo
   category: logs
-  description: Live view for JSON logs in TUI
+  description: live streaming TUI from logs in JSON format from various local and remote
+    sources, allows interactive filtering and querying
   has_musl: false
   man_pages: unavailable
   shell_completions: self_generated
@@ -992,7 +1009,7 @@
   exe_name: tspin
   url: https://github.com/bensadeh/tailspin
   category: logs
-  description: Generic log file highlighter (`tail` with colors)
+  description: better `tail` that tries to color logs
   has_musl: true
   man_pages: unavailable
   shell_completions: unavailable
@@ -1001,7 +1018,7 @@
   exe_name: nerdlog
   url: https://github.com/dimonomid/nerdlog
   category: logs
-  description: SSH to remote hosts and live view logs in TUI with timeline histogram
+  description: SSH to (one or more) remote host(s), and live view one or more logs in TUI
   has_musl: false
   man_pages: unavailable
   shell_completions: unavailable
@@ -1010,7 +1027,7 @@
   exe_name: hl
   url: https://github.com/pamburus/hl
   category: logs
-  description: Fast log viewer that translates JSON or logfmt logs into a human-readable format
+  description: Fast log viewer for `JSON` or `logfmt` logs.
   has_musl: true
   man_pages: unavailable
   shell_completions: self_generated
@@ -1019,7 +1036,8 @@
   exe_name: xan
   url: https://github.com/medialab/xan
   category: data_processing
-  description: Command line tool for processing CSV files directly from the shell
+  description: Command line tool for processing CSV files optimized to be extremely fast
+    (forked from `BurntSushi/xsv` which is now archived)
   has_musl: true
   man_pages: unavailable
   shell_completions: unavailable

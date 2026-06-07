@@ -48,10 +48,10 @@
   Opinionated Lua code formatter
 
 - [taplo](https://github.com/tamasfe/taplo)
-  TOML toolkit — formatter, linter, and language server
+  Highly comprehensive, all-in-one TOML toolkit. It operates as a fully-featured Language Server Protocol (LSP), formatter, and linter. Natively supports JSON Schema validation applied to TOML files and extensive formatting configuration. `Even Better TOML` for VSCode is built on top of it.
 
 - [tombi](https://github.com/tombi-toml/tombi)
-  TOML formatter, linter, and language server
+  Modern, minimalist TOML linter and opinionated formatter. Not and LSP.
 
 - [ty](https://github.com/astral-sh/ty)
   Extremely fast Python type checker
@@ -88,40 +88,40 @@
   Query and modify data in JSON, YAML, TOML, XML, and CSV
 
 - [fq](https://github.com/wader/fq)
-  jq for binary formats — tool, language and decoders for working with binary and text formats
+  `jq` for binary formats — tool, language and decoders for working with binary and text formats
 
 - [fx](https://github.com/antonmedv/fx)
-  Terminal JSON viewer and interactive processor
+  Interactive TUI for viewing JSON/YAML/TOML
 
 - [gojq](https://github.com/itchyny/gojq)
   Pure Go implementation of `jq` with extended features
 
 - [jaq](https://github.com/01mf02/jaq)
-  jq-compatible JSON query language focused on correctness and speed
+  Alternative to `jq` with fewer features but faster
 
 - [jd](https://github.com/josephburnett/jd)
-  JSON diff and patch
+  tool for diffing and patching JSON and YAML values. It supports a internal patch format, `JSON Merge Patch` and a subset of `JSON Patch`.
 
 - [jid](https://github.com/simeji/jid)
-  Interactive JSON incremental digger
+  JSON viewer with interactive entry and execution of `jq` filter expressions.
 
 - [jiq](https://github.com/bellicose100xp/jiq)
-  Interactive JSON query tool with real-time output and AI assistance
+  Interactive JSON query tool with real-time output and AI assistance (similar to `jid` and `jqp`).
 
 - [jq](https://github.com/jqlang/jq)
   Lightweight command-line JSON processor
 
 - [jqp](https://github.com/noahgorstein/jqp)
-  TUI playground for crafting `jq` queries
+  JSON viewer with interactive entry and execution of `gojq` filter expressions (similar to `jid` but uses `gojq`)
 
 - [jsongrep](https://github.com/micahkepe/jsongrep)
-  Fast querying of JSON, YAML, TOML, JSONL, CBOR, and MessagePack
+  Fast querying of `JSON`, `YAML`, `TOML`, `JSONL`, `CBOR`, and MessagePack using path expressions.
 
 - [miller](https://github.com/johnkerl/miller)
-  Like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON
+  Like `awk`, `sed`, `cut`, `join`, and `sort` for name-indexed data such as CSV, TSV, and tabular JSON.
 
 - [qq](https://github.com/JFryy/qq)
-  jq-inspired multi-format processor (JSON, YAML, TOML, XML, HCL, CSV, INI, and more)
+  inspired by `jq`, multi-format processor (JSON, YAML, TOML, XML, HCL, CSV, INI, and more)
 
 - [qsv](https://github.com/dathere/qsv)
   High-performance CSV data-wrangling toolkit
@@ -130,16 +130,16 @@
   High-performance CSV data-wrangling toolkit (additional binaries optimized for specific workloads)
 
 - [rsv](https://github.com/ribbondz/rsv)
-  High-performance CSV/TSV toolkit for data exploration
+  CSV/TSV toolkit for data exploration, similar to `qsv` but smaller in scope and feature set.
 
 - [tabiew](https://github.com/shshemi/tabiew)
-  Lightweight TUI to view and query tabular data files (CSV, Parquet, Arrow, etc.)
+  interactive viewing and filtering of tabular data (CSV, TSV, PSV, Parquet, and Arrow IPC)
 
 - [tv](https://github.com/alexhallam/tv)
-  Tidy Viewer, TUI for displaying tabular data (CSV, Parquet, Feather, Arrow IPC)
+  (Tidy Viewer) pretty printer for tabular data (CSV, TSV, PSV, and Parquet). Excels at numeric formatting and large data sets.
 
 - [xan](https://github.com/medialab/xan)
-  Command line tool for processing CSV files directly from the shell
+  Command line tool for processing CSV files optimized to be extremely fast (forked from `BurntSushi/xsv` which is now archived)
 
 - [xq](https://github.com/sibprogrammer/xq)
   Command-line XML and HTML processor using XPath
@@ -288,28 +288,28 @@
 ## Logs
 
 - [gonzo](https://github.com/control-theory/gonzo)
-  Log viewer TUI for structured and plain-text logs
+  A powerful, real-time log analysis TUI. Supports OTLP (OpenTelemetry) format natively, with automatic detection of JSON, logfmt, and plain text logs.
 
 - [hl](https://github.com/pamburus/hl)
-  Fast log viewer that translates JSON or logfmt logs into a human-readable format
+  Fast log viewer for `JSON` or `logfmt` logs.
 
 - [lazyjournal](https://github.com/Lifailon/lazyjournal)
   TUI for browsing systemd journal and Docker logs
 
 - [logdy](https://github.com/logdyhq/logdy-core)
-  Real-time log viewing and filtering with embedded Web UI and multiple input modes (files, stdin, sockets, REST API)
+  real-time log viewing and filtering in self-hosted (embedded) Web UI and multiple input modes (files, stdin, sockets, REST AP
 
 - [loggo](https://github.com/aurc/loggo)
-  Live view for JSON logs in TUI
+  live streaming TUI from logs in JSON format from various local and remote sources, allows interactive filtering and querying
 
 - [nerdlog](https://github.com/dimonomid/nerdlog)
-  SSH to remote hosts and live view logs in TUI with timeline histogram
+  SSH to (one or more) remote host(s), and live view one or more logs in TUI
 
 - [rhit](https://github.com/canop/rhit)
-  Reads nginx log files and displays analysis in pretty tables
+  reads nginx log files in their standard location, does some analysis and tells you about it in pretty tables in your console, storing and polluting nothing.
 
 - [tailspin](https://github.com/bensadeh/tailspin)
-  Generic log file highlighter (`tail` with colors)
+  better `tail` that tries to color logs
 
 ## networking
 
@@ -317,10 +317,10 @@
   The boring SSH tunnel manager
 
 - [dog](https://github.com/ogham/dog)
-  A command-line DNS client
+  A command-line DNS client (better `dig`). Unmaintained, see `doggo` instead
 
 - [doggo](https://github.com/mr-karan/doggo)
-  Command-line DNS client for humans, inspired by dog
+  Command-line DNS client for humans, inspired by `dog` but written in Go
 
 ## Shell
 

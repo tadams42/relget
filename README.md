@@ -12,7 +12,7 @@ pages and completion for `ZSH`, `Bash` and `Fish` shells.
 ## TL;DR
 
 ```sh
-curl -fsSL https://github.com/tadams42/relget/releases/latest/download/relget-x86_64-linux.tar.gz | tar xz
+curl -fsSL https://github.com/tadams42/relget/releases/latest/download/relget-x86_64-unknown-linux-musl.tar.gz | tar xz
 
 # install into ~/.local/bin ...
 ./relget install --prefix ~/.local --apps bat,eza,fd,fnm,uv,jq,lazygit
