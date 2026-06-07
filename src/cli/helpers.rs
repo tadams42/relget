@@ -1,5 +1,7 @@
 use anyhow::{Result, anyhow};
 
+pub(super) const DEFAULT_PREFIX: &str = "/usr/local";
+
 use crate::apps::all_apps_identifiers;
 use crate::config::{
     load_codeberg_token, load_configured_set, load_github_token, load_gitlab_token,
@@ -57,4 +59,33 @@ pub fn select_apps(user_chosen: &[String], configured_set: Option<&str>) -> Resu
         }
     }
     Ok(user_chosen.to_vec())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn select_apps_accepts_known_id() {
+        let result = select_apps(&["bat".to_string()], None);
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), ["bat"]);
+    }
+
+    #[test]
+    fn select_apps_rejects_unknown_id() {
+        assert!(select_apps(&["nonexistent_app_xyz".to_string()], None).is_err());
+    }
+
+    #[test]
+    fn select_apps_requires_at_least_one_selector() {
+        assert!(select_apps(&[], None).is_err());
+    }
+
+    #[test]
+    fn select_apps_accepts_multiple_known_ids() {
+        let result = select_apps(&["bat".to_string(), "ripgrep".to_string()], None);
+        assert!(result.is_ok());
+        assert_eq!(result.unwrap(), ["bat", "ripgrep"]);
+    }
 }

@@ -28,10 +28,7 @@ impl GithubClient {
     /// different tag naming schemes (e.g. rust-analyzer uses `v0.3.x` for stable and
     /// `YYYY-MM-DD` for nightly). Fetches up to 100 releases to survive long nightly streaks.
     pub fn latest_release_where(
-        &self,
-        owner: &str,
-        repo: &str,
-        tag_filter: impl Fn(&str) -> bool,
+        &self, owner: &str, repo: &str, tag_filter: impl Fn(&str) -> bool,
     ) -> Result<ReleaseMetadata> {
         {
             let mut cache = CACHE.lock().unwrap();
@@ -83,7 +80,7 @@ impl GithubClient {
                     .as_array()
                     .map(|a| !a.is_empty())
                     .unwrap_or(false)
-                    && r["tag_name"].as_str().map_or(true, |t| tag_filter(t))
+                    && r["tag_name"].as_str().is_none_or(&tag_filter)
             })
             .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
 

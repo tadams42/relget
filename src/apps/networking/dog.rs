@@ -38,8 +38,9 @@ impl App for Dog {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .find_asset(|a| a.starts_with("dog-") && a.ends_with("-x86_64-unknown-linux-gnu.zip"))?;
+        let name = release.find_asset(|a| {
+            a.starts_with("dog-") && a.ends_with("-x86_64-unknown-linux-gnu.zip")
+        })?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {

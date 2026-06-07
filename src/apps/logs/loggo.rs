@@ -44,8 +44,7 @@ impl App for Loggo {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .find_asset(|a| a.contains("linux_amd64") && a.ends_with(".tar.gz"))?;
+        let name = release.find_asset(|a| a.contains("linux_amd64") && a.ends_with(".tar.gz"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let binary_data = extractor.extract_by_filename(Self::EXE_NAME)?;

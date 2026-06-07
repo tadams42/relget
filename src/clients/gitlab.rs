@@ -28,10 +28,7 @@ impl GitlabClient {
     /// Like `latest_release`, but only considers releases whose `tag_name` satisfies
     /// `tag_filter`. See `GithubClient::latest_release_where` for rationale.
     pub fn latest_release_where(
-        &self,
-        owner: &str,
-        repo: &str,
-        tag_filter: impl Fn(&str) -> bool,
+        &self, owner: &str, repo: &str, tag_filter: impl Fn(&str) -> bool,
     ) -> Result<ReleaseMetadata> {
         {
             let mut cache = CACHE.lock().unwrap();
@@ -85,7 +82,7 @@ impl GitlabClient {
                     .map(|a| !a.is_empty())
                     .unwrap_or(false)
                     && !r["upcoming_release"].as_bool().unwrap_or(false)
-                    && r["tag_name"].as_str().map_or(true, |t| tag_filter(t))
+                    && r["tag_name"].as_str().is_none_or(&tag_filter)
             })
             .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
 

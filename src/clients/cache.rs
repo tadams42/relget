@@ -252,8 +252,8 @@ mod tests {
 
     fn metadata_from(data: Value) -> ReleaseMetadata {
         ReleaseMetadata {
-            owner:         "owner".to_string(),
-            repo:          "repo".to_string(),
+            owner: "owner".to_string(),
+            repo: "repo".to_string(),
             data,
             downloaded_at: Utc::now(),
         }
@@ -316,7 +316,9 @@ mod tests {
 
     #[test]
     fn asset_download_url_returns_none_for_unknown_name() {
-        let m = metadata_from(json!({"assets": [{"name": "other.tar.gz", "browser_download_url": "https://x"}]}));
+        let m = metadata_from(
+            json!({"assets": [{"name": "other.tar.gz", "browser_download_url": "https://x"}]}),
+        );
         assert!(m.asset_download_url("app.tar.gz").is_none());
     }
 

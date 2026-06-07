@@ -18,7 +18,7 @@ mod system;
 pub use app_trait::App;
 pub use apps_factory::create_app;
 pub use apps_registry::{
-    ManPagesStatus, ShellCompletionsStatus, all_app_entries, all_apps_identifiers,
+    AppEntry, ManPagesStatus, ShellCompletionsStatus, all_app_entries, all_apps_identifiers,
 };
 
 pub(in crate::apps) use app_trait::{

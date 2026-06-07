@@ -60,18 +60,9 @@ impl App for Hyperfine {
                 extractor.extract_by_filename("hyperfine.1")?,
             )],
             completions: vec![
-                Completion::bash(
-                    Self::EXE_NAME,
-                    extractor.extract_by_filename("hyperfine.bash")?,
-                ),
-                Completion::zsh(
-                    Self::EXE_NAME,
-                    extractor.extract_by_filename("_hyperfine")?,
-                ),
-                Completion::fish(
-                    Self::EXE_NAME,
-                    extractor.extract_by_filename("hyperfine.fish")?,
-                ),
+                Completion::bash(Self::EXE_NAME, extractor.extract_by_filename("hyperfine.bash")?),
+                Completion::zsh(Self::EXE_NAME, extractor.extract_by_filename("_hyperfine")?),
+                Completion::fish(Self::EXE_NAME, extractor.extract_by_filename("hyperfine.fish")?),
             ],
             ..Default::default()
         })

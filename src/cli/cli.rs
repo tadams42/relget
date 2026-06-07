@@ -1,16 +1,14 @@
-use std::path::PathBuf;
-
 use anyhow::Result;
 use clap::builder::styling::{AnsiColor, Effects, Styles};
-use clap::{Args, CommandFactory, FromArgMatches, Parser, Subcommand};
+use clap::{CommandFactory, FromArgMatches, Parser, Subcommand};
 use clap_complete::{Shell, generate};
 
-use super::doctor::doctor_command;
-use super::sub_commands::{
-    install_apps_command, list_apps_ids_command, sync_command, uninstall_command, update_command,
-};
-
-const DEFAULT_PREFIX: &str = "/usr/local";
+use super::doctor::{DoctorArgs, doctor_command};
+use super::install::{InstallArgs, install_apps_command};
+use super::list::list_apps_ids_command;
+use super::sync::{SyncArgs, sync_command};
+use super::uninstall::{UninstallArgs, uninstall_command};
+use super::update::{UpdateArgs, update_command};
 
 fn styles() -> Styles {
     Styles::styled()
@@ -79,93 +77,6 @@ pub struct Cli {
     pub offline: bool,
 }
 
-#[derive(Args)]
-pub struct InstallArgs {
-    /// Install prefix (e.g. /usr/local or ~/.local)
-    #[arg(short = 'p', long, default_value = DEFAULT_PREFIX)]
-    pub prefix: PathBuf,
-
-    /// App(s) to install; comma-separated.
-    #[arg(
-        short = 'a',
-        long = "apps",
-        value_name = "NAME[,NAME...]",
-        value_delimiter = ',',
-        conflicts_with_all = ["configured_set"]
-    )]
-    pub apps: Vec<String>,
-
-    /// Load a named app set from the [sets] table in ~/.config/relget.toml
-    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps"])]
-    pub configured_set: Option<String>,
-}
-
-#[derive(Args)]
-pub struct UpdateArgs {
-    /// Install prefix (e.g. /usr/local or ~/.local)
-    #[arg(short = 'p', long, default_value = DEFAULT_PREFIX)]
-    pub prefix: PathBuf,
-
-    /// App(s) to update; comma-separated.
-    #[arg(
-        short = 'a',
-        long = "apps",
-        value_name = "NAME[,NAME...]",
-        value_delimiter = ',',
-        conflicts_with_all = ["configured_set"]
-    )]
-    pub apps: Vec<String>,
-
-    /// Load a named app set from the [sets] table in ~/.config/relget.toml
-    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps"])]
-    pub configured_set: Option<String>,
-}
-
-#[derive(Args)]
-pub struct UninstallArgs {
-    /// Install prefix (e.g. /usr/local or ~/.local)
-    #[arg(short = 'p', long, default_value = DEFAULT_PREFIX)]
-    pub prefix: PathBuf,
-
-    /// App(s) to uninstall; comma-separated.
-    #[arg(
-        short = 'a',
-        long = "apps",
-        value_name = "NAME[,NAME...]",
-        value_delimiter = ',',
-        conflicts_with_all = ["configured_set"]
-    )]
-    pub apps: Vec<String>,
-
-    /// Load a named app set from the [sets] table in ~/.config/relget.toml
-    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps"])]
-    pub configured_set: Option<String>,
-}
-
-#[derive(Args)]
-pub struct SyncArgs {
-    /// Install prefix (e.g. /usr/local or ~/.local)
-    #[arg(short = 'p', long, default_value = DEFAULT_PREFIX)]
-    pub prefix: PathBuf,
-
-    /// App(s) to sync; comma-separated.
-    #[arg(
-        short = 'a',
-        long = "apps",
-        value_name = "NAME[,NAME...]",
-        value_delimiter = ',',
-        conflicts_with_all = ["configured_set"]
-    )]
-    pub apps: Vec<String>,
-
-    /// Load a named app set from the [sets] table in ~/.config/relget.toml
-    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps"])]
-    pub configured_set: Option<String>,
-}
-
-#[derive(Args)]
-pub struct DoctorArgs {}
-
 #[derive(Subcommand)]
 pub enum Commands {
     /// Install selected apps into the prefix
@@ -207,4 +118,111 @@ pub enum Commands {
     /// Apps already at the latest version are skipped in both cases.
     #[command(verbatim_doc_comment)]
     Update(UpdateArgs),
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // --- mutual exclusion ---
+
+    #[test]
+    fn install_apps_and_configured_set_conflict() {
+        let result =
+            Cli::try_parse_from(["relget", "install", "--apps", "rg", "--configured-set", "s"]);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn update_apps_and_configured_set_conflict() {
+        let result =
+            Cli::try_parse_from(["relget", "update", "--apps", "rg", "--configured-set", "s"]);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn uninstall_apps_and_configured_set_conflict() {
+        let result = Cli::try_parse_from([
+            "relget",
+            "uninstall",
+            "--apps",
+            "rg",
+            "--configured-set",
+            "s",
+        ]);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn sync_apps_and_configured_set_conflict() {
+        let result =
+            Cli::try_parse_from(["relget", "sync", "--apps", "rg", "--configured-set", "s"]);
+        assert!(result.is_err());
+    }
+
+    // --- successful parses ---
+
+    #[test]
+    fn install_parses_comma_separated_apps() {
+        let cli = Cli::try_parse_from(["relget", "install", "--apps", "rg,bat"]).unwrap();
+        if let Commands::Install(args) = cli.command {
+            assert_eq!(args.apps, ["rg", "bat"]);
+        } else {
+            panic!("expected Install");
+        }
+    }
+
+    #[test]
+    fn update_allows_no_selectors() {
+        let result = Cli::try_parse_from(["relget", "update"]);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn sync_parses_apps() {
+        let cli = Cli::try_parse_from(["relget", "sync", "--apps", "rg"]).unwrap();
+        if let Commands::Sync(args) = cli.command {
+            assert_eq!(args.apps, ["rg"]);
+        } else {
+            panic!("expected Sync");
+        }
+    }
+
+    #[test]
+    fn sync_parses_configured_set() {
+        let cli = Cli::try_parse_from(["relget", "sync", "--configured-set", "mysets"]).unwrap();
+        if let Commands::Sync(args) = cli.command {
+            assert_eq!(args.configured_set.as_deref(), Some("mysets"));
+        } else {
+            panic!("expected Sync");
+        }
+    }
+
+    #[test]
+    fn offline_flag_is_global() {
+        let cli = Cli::try_parse_from(["relget", "--offline", "install", "--apps", "rg"]).unwrap();
+        assert!(cli.offline);
+    }
+
+    #[test]
+    fn prefix_defaults_to_usr_local() {
+        let cli = Cli::try_parse_from(["relget", "install", "--apps", "rg"]).unwrap();
+        if let Commands::Install(args) = cli.command {
+            assert_eq!(args.prefix.to_str().unwrap(), "/usr/local");
+        } else {
+            panic!("expected Install");
+        }
+    }
+
+    #[test]
+    fn custom_prefix_is_accepted() {
+        let cli =
+            Cli::try_parse_from(["relget", "install", "--apps", "rg", "--prefix", "/tmp/test"])
+                .unwrap();
+        if let Commands::Install(args) = cli.command {
+            assert_eq!(args.prefix.to_str().unwrap(), "/tmp/test");
+        } else {
+            panic!("expected Install");
+        }
+    }
 }

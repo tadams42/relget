@@ -45,8 +45,8 @@ impl App for Tbls {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release
-            .find_asset(|a| a.starts_with("tbls_") && a.ends_with("_linux_amd64.tar.gz"))?;
+        let name =
+            release.find_asset(|a| a.starts_with("tbls_") && a.ends_with("_linux_amd64.tar.gz"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let binary_data = extractor.extract_by_filename(Self::EXE_NAME)?;

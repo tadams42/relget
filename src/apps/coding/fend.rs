@@ -40,14 +40,17 @@ impl App for Fend {
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
-        let zip_name = release.find_asset(|a| {
-            a.starts_with("fend-") && a.ends_with("-linux-x86_64-musl.zip")
-        })?;
-        let zip_asset = self.client.download_asset(Self::OWNER, Self::REPO, &zip_name)?;
+        let zip_name = release
+            .find_asset(|a| a.starts_with("fend-") && a.ends_with("-linux-x86_64-musl.zip"))?;
+        let zip_asset = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, &zip_name)?;
         let extractor = ArchiveExtractor::new(&zip_name, zip_asset.data);
         let binary_data = extractor.extract_by_filename(Self::EXE_NAME)?;
 
-        let man_asset = self.client.download_asset(Self::OWNER, Self::REPO, "fend.1")?;
+        let man_asset = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, "fend.1")?;
 
         Ok(AppAssets {
             binary: Some(AppBinary::new(Self::EXE_NAME, binary_data)),

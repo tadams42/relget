@@ -4,8 +4,12 @@ use chrono::{DateTime, Duration, Utc};
 use crate::apps::{ManPagesStatus, ShellCompletionsStatus, all_app_entries};
 use crate::clients::{CodebergClient, GithubClient, GitlabClient, ReleaseMetadata};
 
+use clap::Args;
+
 use super::helpers::{get_codeberg_token, get_github_token, get_gitlab_token};
-use super::main_command::DoctorArgs;
+
+#[derive(Args)]
+pub struct DoctorArgs {}
 
 enum DoctorFlag {
     PotentiallyUnmaintained,

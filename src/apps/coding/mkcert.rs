@@ -36,9 +36,8 @@ impl App for Mkcert {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name = release.find_asset(|a| {
-            a.starts_with("mkcert-") && a.ends_with("-linux-amd64")
-        })?;
+        let name =
+            release.find_asset(|a| a.starts_with("mkcert-") && a.ends_with("-linux-amd64"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         Ok(AppAssets {
             binary: Some(AppBinary::new(Self::EXE_NAME, asset.data)),

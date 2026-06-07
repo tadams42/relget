@@ -1,6 +1,11 @@
+#[allow(clippy::module_inception)]
+mod cli;
 mod doctor;
 mod helpers;
-mod main_command;
-mod sub_commands;
+mod install;
+mod list;
+mod sync;
+mod uninstall;
+mod update;
 
-pub use main_command::{create_cli, execute_cli};
+pub use cli::{create_cli, execute_cli};

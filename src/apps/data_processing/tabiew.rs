@@ -44,20 +44,24 @@ impl App for Tabiew {
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
 
-        let bin_name =
-            release.find_asset(|a| a == "tw-x86_64-unknown-linux-musl")?;
-        let bin_asset =
-            self.client.download_asset(Self::OWNER, Self::REPO, &bin_name)?;
+        let bin_name = release.find_asset(|a| a == "tw-x86_64-unknown-linux-musl")?;
+        let bin_asset = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, &bin_name)?;
 
-        let extras_name =
-            release.find_asset(|a| a == "tabiew-manual-and-completions.tar.gz")?;
-        let extras_asset =
-            self.client.download_asset(Self::OWNER, Self::REPO, &extras_name)?;
+        let extras_name = release.find_asset(|a| a == "tabiew-manual-and-completions.tar.gz")?;
+        let extras_asset = self
+            .client
+            .download_asset(Self::OWNER, Self::REPO, &extras_name)?;
         let extras = ArchiveExtractor::new(&extras_name, extras_asset.data);
 
         Ok(AppAssets {
             binary: Some(AppBinary::new(Self::EXE_NAME, bin_asset.data)),
-            man_pages: vec![ManPage::new(1, "tabiew.1", extras.extract("manual/tabiew.1")?)],
+            man_pages: vec![ManPage::new(
+                1,
+                "tabiew.1",
+                extras.extract("manual/tabiew.1")?,
+            )],
             completions: vec![
                 Completion::zsh(Self::EXE_NAME, extras.extract("completion/_tw")?),
                 Completion::bash(Self::EXE_NAME, extras.extract("completion/tw.bash")?),

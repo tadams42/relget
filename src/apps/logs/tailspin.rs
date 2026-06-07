@@ -37,8 +37,7 @@ impl App for Tailspin {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name =
-            release.find_asset(|a| a == "tailspin-x86_64-unknown-linux-musl.tar.gz")?;
+        let name = release.find_asset(|a| a == "tailspin-x86_64-unknown-linux-musl.tar.gz")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {

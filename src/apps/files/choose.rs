@@ -36,8 +36,7 @@ impl App for Choose {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name =
-            release.find_asset(|a| a == "choose-x86_64-unknown-linux-musl")?;
+        let name = release.find_asset(|a| a == "choose-x86_64-unknown-linux-musl")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         Ok(AppAssets {
             binary: Some(AppBinary::new(Self::EXE_NAME, asset.data)),

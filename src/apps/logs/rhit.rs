@@ -37,8 +37,7 @@ impl App for Rhit {
 
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
-        let name =
-            release.find_asset(|a| a.starts_with("rhit_") && a.ends_with(".zip"))?;
+        let name = release.find_asset(|a| a.starts_with("rhit_") && a.ends_with(".zip"))?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let member = extractor
@@ -47,10 +46,7 @@ impl App for Rhit {
             .find(|m| m.contains("x86_64-unknown-linux-musl") && m.ends_with("/rhit"))
             .ok_or_else(|| anyhow!("Can't find rhit musl binary in zip"))?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new(
-                Self::EXE_NAME,
-                extractor.extract(&member)?,
-            )),
+            binary: Some(AppBinary::new(Self::EXE_NAME, extractor.extract(&member)?)),
             ..Default::default()
         })
     }

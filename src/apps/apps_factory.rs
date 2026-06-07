@@ -3,13 +3,22 @@ use std::sync::Arc;
 use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 
 use super::App;
-use super::coding::{AstGrep, Fend, Grex, Hyperfine, Mailpit, Mkcert, Neovide, Pyrefly, Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Sqruff, Stylua, Taplo, Tombi, Ty, Vacuum};
-use super::containers::{Ctop, D4S, DockMate, Dtop, Dry, LazyDocker};
-use super::data_processing::{Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, JsonGrep, Miller, Qq, Qsv, QsvAll, Rsv, Tabiew, Tv, Xan, Xq, Yq};
+use super::coding::{
+    AstGrep, Fend, Grex, Hyperfine, Mailpit, Mkcert, Neovide, Pyrefly, Replibyte, Rgx, Ruff,
+    RustAnalyzer, Scc, Sqruff, Stylua, Taplo, Tombi, Ty, Vacuum,
+};
+use super::containers::{Ctop, D4S, DockMate, Dry, Dtop, LazyDocker};
+use super::data_processing::{
+    Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, JsonGrep, Miller, Qq, Qsv, QsvAll, Rsv,
+    Tabiew, Tv, Xan, Xq, Yq,
+};
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Rage};
-use super::files::{Bat, Choose, Eza, F2, FdFind, Rclone, Ripgrep, SdEdit, Scooter, Sttr, Termscp, Trash, Xplr, Yazi};
+use super::files::{
+    Bat, Choose, Eza, F2, FdFind, Rclone, Ripgrep, Scooter, SdEdit, Sttr, Termscp, Trash, Xplr,
+    Yazi,
+};
 use super::git::{Delta, Difftastic, GitFlowNext, Gitleaks, Lazygit, Mergiraf, Serie, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, Hl, LazyJournal, Logdy, Loggo, Nerdlog, Rhit, Tailspin};
