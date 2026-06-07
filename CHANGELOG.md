@@ -1,5 +1,7 @@
 ## unreleased
 
+- fix: used correct version subcommand for boring and git-flow-next
+
 ## v0.6.1 (2026-06-06)
 
 - fix: update command no longer installs apps that are not already installed
