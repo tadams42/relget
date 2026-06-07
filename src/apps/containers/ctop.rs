@@ -22,6 +22,8 @@ impl Ctop {
 impl App for Ctop {
     fn exe_name(&self) -> &str { Self::EXE_NAME }
 
+    fn cli_version_arg(&self) -> &str { "-v" }
+
     fn released_version(&self) -> Result<AppVersion> {
         self.client
             .latest_release(Self::OWNER, Self::REPO)?
