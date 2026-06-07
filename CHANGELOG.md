@@ -1,5 +1,6 @@
 ## unreleased
 
+- fix: used correct version subcommand for mailpit and loggo
 - fix: used correct version subcommand for vacuum
 - fix: used atomic rename when installing binaries to avoid ETXTBSY
 - fix: used correct version subcommand for boring and git-flow-next
