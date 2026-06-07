@@ -58,3 +58,24 @@ automatically. Always use `git push --follow-tags`.
 If `CHANGELOG.md` does not contain a `## vX.Y.Z (...)` section matching the pushed tag,
 the `GitHub` release is created with an empty body. If you'd followed above instructions
 correctly, this should never happen.
+
+## `musl` build locally
+
+```sh
+sudo apt install musl-tools
+rustup target add x86_64-unknown-linux-musl
+```
+
+and add this to `./cargo/config.toml`:
+
+```toml
+[target.x86_64-unknown-linux-musl]
+# linker = "x86_64-linux-musl-gcc" or just "musl-gcc" on Linux hosts
+linker = "musl-gcc"
+```
+
+Finally:
+
+```sh
+cargo build --release --target x86_64-unknown-linux-musl
+```

@@ -35,7 +35,7 @@ jobs:
       - name: Package
         run: |
           strip target/x86_64-unknown-linux-musl/release/relget
-          tar czf relget-x86_64-linux.tar.gz -C target/x86_64-unknown-linux-musl/release relget
+          tar czf relget-x86_64-unknown-linux-musl.tar.gz -C target/x86_64-unknown-linux-musl/release relget
 
       - name: Extract release notes
         run: |
@@ -59,5 +59,5 @@ jobs:
 
       - uses: softprops/action-gh-release@v3
         with:
-          files: relget-x86_64-linux.tar.gz
+          files: relget-x86_64-unknown-linux-musl.tar.gz
           body_path: release_body.md

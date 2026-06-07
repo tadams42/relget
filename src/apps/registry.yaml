@@ -803,7 +803,7 @@
   exe_name: vivid
   url: https://github.com/sharkdp/vivid
   category: shell
-  description: LS_COLORS manager with multiple themes for colorful terminal output
+  description: LS_COLORS manager with multiple themes for colorful terminal output (better `dircolors`)
   has_musl: true
   man_pages: unavailable
   shell_completions: unavailable
