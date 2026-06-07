@@ -22,6 +22,8 @@ impl Vacuum {
 impl App for Vacuum {
     fn exe_name(&self) -> &str { Self::EXE_NAME }
 
+    fn cli_version_arg(&self) -> &str { "version" }
+
     fn released_version(&self) -> Result<AppVersion> {
         self.client
             .latest_release(Self::OWNER, Self::REPO)?
