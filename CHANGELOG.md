@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.6.2 (2026-06-07)
+
 - feat: added latest_release_where() for tag-filtered release lookup
 - fix: used correct version args for sttr, tbls, and ctop
 - fix: used correct version subcommand for mailpit and loggo
