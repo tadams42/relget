@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added sync subcommand
 
 ## v0.6.2 (2026-06-07)
 

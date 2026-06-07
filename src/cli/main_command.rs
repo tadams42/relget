@@ -7,7 +7,7 @@ use clap_complete::{Shell, generate};
 
 use super::doctor::doctor_command;
 use super::sub_commands::{
-    install_apps_command, list_apps_ids_command, uninstall_command, update_command,
+    install_apps_command, list_apps_ids_command, sync_command, uninstall_command, update_command,
 };
 
 const DEFAULT_PREFIX: &str = "/usr/local";
@@ -55,6 +55,7 @@ pub fn execute_cli(cli: &Cli) -> Result<()> {
         Commands::Install(args) => install_apps_command(args, cli.offline)?,
         Commands::Update(args) => update_command(args, cli.offline)?,
         Commands::Uninstall(args) => uninstall_command(args)?,
+        Commands::Sync(args) => sync_command(args, cli.offline)?,
         Commands::Doctor(args) => doctor_command(args, cli.offline)?,
         Commands::ListAppsIds => list_apps_ids_command(),
         Commands::Completions { shell } => {
@@ -142,6 +143,27 @@ pub struct UninstallArgs {
 }
 
 #[derive(Args)]
+pub struct SyncArgs {
+    /// Install prefix (e.g. /usr/local or ~/.local)
+    #[arg(short = 'p', long, default_value = DEFAULT_PREFIX)]
+    pub prefix: PathBuf,
+
+    /// App(s) to sync; comma-separated.
+    #[arg(
+        short = 'a',
+        long = "apps",
+        value_name = "NAME[,NAME...]",
+        value_delimiter = ',',
+        conflicts_with_all = ["configured_set"]
+    )]
+    pub apps: Vec<String>,
+
+    /// Load a named app set from the [sets] table in ~/.config/relget.toml
+    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps"])]
+    pub configured_set: Option<String>,
+}
+
+#[derive(Args)]
 pub struct DoctorArgs {}
 
 #[derive(Subcommand)]
@@ -162,6 +184,13 @@ pub enum Commands {
     /// asset descriptor, so every file relget placed is removed — no more, no less.
     #[command(verbatim_doc_comment)]
     Uninstall(UninstallArgs),
+    /// Reconcile installed apps with a selected set
+    ///
+    /// Installs apps in the set that are not yet present in the prefix, and uninstalls apps
+    /// that are present in the prefix but not in the set. Either --apps or --configured-set
+    /// must be specified.
+    #[command(verbatim_doc_comment)]
+    Sync(SyncArgs),
     /// Check all registry apps for potential issues against latest releases
     #[command(hide = true)]
     Doctor(DoctorArgs),
