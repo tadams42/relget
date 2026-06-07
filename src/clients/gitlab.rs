@@ -22,6 +22,17 @@ impl GitlabClient {
     pub fn new(token: Option<String>, offline: bool) -> Self { Self { token, offline } }
 
     pub fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
+        self.latest_release_where(owner, repo, |_| true)
+    }
+
+    /// Like `latest_release`, but only considers releases whose `tag_name` satisfies
+    /// `tag_filter`. See `GithubClient::latest_release_where` for rationale.
+    pub fn latest_release_where(
+        &self,
+        owner: &str,
+        repo: &str,
+        tag_filter: impl Fn(&str) -> bool,
+    ) -> Result<ReleaseMetadata> {
         {
             let mut cache = CACHE.lock().unwrap();
             if self.offline {
@@ -40,7 +51,7 @@ impl GitlabClient {
 
         log::info!("app={} msg=Fetching latest GitLab release", repo);
         let encoded = format!("{}%2F{}", owner, repo);
-        let url = format!("{}/{}/releases?per_page=5&page=1", GL_API_URL, encoded);
+        let url = format!("{}/{}/releases?per_page=100&page=1", GL_API_URL, encoded);
 
         let mut req = ureq::get(&url)
             .header("Accept", "application/json")
@@ -74,6 +85,7 @@ impl GitlabClient {
                     .map(|a| !a.is_empty())
                     .unwrap_or(false)
                     && !r["upcoming_release"].as_bool().unwrap_or(false)
+                    && r["tag_name"].as_str().map_or(true, |t| tag_filter(t))
             })
             .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
 

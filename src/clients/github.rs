@@ -20,6 +20,19 @@ impl GithubClient {
     pub fn new(token: Option<String>, offline: bool) -> Self { Self { token, offline } }
 
     pub fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
+        self.latest_release_where(owner, repo, |tag| tag != "nightly")
+    }
+
+    /// Like `latest_release`, but only considers releases whose `tag_name` satisfies
+    /// `tag_filter`. Use this when a repo mixes stable and nightly/dated releases under
+    /// different tag naming schemes (e.g. rust-analyzer uses `v0.3.x` for stable and
+    /// `YYYY-MM-DD` for nightly). Fetches up to 100 releases to survive long nightly streaks.
+    pub fn latest_release_where(
+        &self,
+        owner: &str,
+        repo: &str,
+        tag_filter: impl Fn(&str) -> bool,
+    ) -> Result<ReleaseMetadata> {
         {
             let mut cache = CACHE.lock().unwrap();
             if self.offline {
@@ -37,7 +50,7 @@ impl GithubClient {
         }
 
         log::info!("app={} msg=Fetching latest GitHub release", repo);
-        let url = format!("{}/{}/{}/releases?per_page=5&page=1", GH_API_URL, owner, repo);
+        let url = format!("{}/{}/{}/releases?per_page=100&page=1", GH_API_URL, owner, repo);
 
         let mut req = ureq::get(&url)
             .header("Accept", "application/vnd.github+json")
@@ -70,7 +83,7 @@ impl GithubClient {
                     .as_array()
                     .map(|a| !a.is_empty())
                     .unwrap_or(false)
-                    && r["tag_name"].as_str() != Some("nightly")
+                    && r["tag_name"].as_str().map_or(true, |t| tag_filter(t))
             })
             .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
 

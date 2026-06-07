@@ -21,6 +21,17 @@ impl CodebergClient {
     pub fn new(token: Option<String>, offline: bool) -> Self { Self { token, offline } }
 
     pub fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
+        self.latest_release_where(owner, repo, |_| true)
+    }
+
+    /// Like `latest_release`, but only considers releases whose `tag_name` satisfies
+    /// `tag_filter`. See `GithubClient::latest_release_where` for rationale.
+    pub fn latest_release_where(
+        &self,
+        owner: &str,
+        repo: &str,
+        tag_filter: impl Fn(&str) -> bool,
+    ) -> Result<ReleaseMetadata> {
         {
             let mut cache = CACHE.lock().unwrap();
             if self.offline {
@@ -38,7 +49,7 @@ impl CodebergClient {
         }
 
         log::info!("app={} msg=Fetching latest Codeberg release", repo);
-        let url = format!("{}/{}/{}/releases?limit=5&page=1", CB_API_URL, owner, repo);
+        let url = format!("{}/{}/{}/releases?limit=100&page=1", CB_API_URL, owner, repo);
 
         let mut req = ureq::get(&url)
             .header("Accept", "application/json")
@@ -72,6 +83,7 @@ impl CodebergClient {
                     .unwrap_or(false)
                     && !r["draft"].as_bool().unwrap_or(false)
                     && !r["prerelease"].as_bool().unwrap_or(false)
+                    && r["tag_name"].as_str().map_or(true, |t| tag_filter(t))
             })
             .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
 

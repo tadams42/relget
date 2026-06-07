@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added latest_release_where() for tag-filtered release lookup
 - fix: used correct version args for sttr, tbls, and ctop
 - fix: used correct version subcommand for mailpit and loggo
 - fix: used correct version subcommand for vacuum

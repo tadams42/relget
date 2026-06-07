@@ -15,7 +15,7 @@ cargo run -- uninstall --apps rg
 cargo run -- install --apps rg --offline  # use only cached data
 ```
 
-Use `--prefix /tmp/try-relget/` to avoid needing `sudo` during local testing.
+Use `--prefix tmp/try-relget/` to avoid needing `sudo` during local testing.
 
 ## Architecture
 
@@ -126,6 +126,15 @@ When installing shell completions, get the ones for `Bash`, `Fish` and `ZSH`. Ot
 Sometimes app provides both `.deb` and `.tar.gz` build artifact, but `.tar.gz` doesn't contain man pages or shell completions, and they can't be generated on the fly. In this case, download and extract `.deb` too, it sometimes includes missing pieces from `.tar.gz`
 
 Note that you probably need to download and extract app binary to be able to check if it can self-generate man pages or shell completions.
+
+Always verify which argument the binary uses to report its version. Run it with `--version`, `version`, and `-v` to find out which one works. The `App` trait defaults to `--version`; if the app uses anything else, override `cli_version_arg()`:
+
+```rust
+fn cli_version_arg(&self) -> &str { "version" }  // subcommand style
+fn cli_version_arg(&self) -> &str { "-v" }        // short flag style
+```
+
+Getting this wrong causes `installed_version()` to return `None`, which makes `needs_install()` always true and the app reinstalled on every `update` run.
 
 ## Removing an app
 
