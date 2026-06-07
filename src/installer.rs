@@ -64,8 +64,16 @@ fn install_assets(prefix: &Path, assets: &AppAssets) -> Result<Vec<PathBuf>> {
 fn install_binary(prefix: &Path, bin: &AppBinary) -> Result<PathBuf> {
     let dest = bin.install_path(prefix);
     ensure_parent(&dest)?;
-    fs::write(&dest, &bin.data).with_context(|| format!("Writing binary to {:?}", dest))?;
-    fs::set_permissions(&dest, fs::Permissions::from_mode(BIN_MODE))?;
+    // Write to a temp file then atomically rename into place, matching the standard approach used
+    // by dpkg, rpm, and Homebrew. Direct in-place write (O_TRUNC) returns ETXTBSY if any process
+    // holds the binary exec-mapped — even a short-lived one. For example, `boring` spawns 5
+    // child processes on startup; if they are still alive when we write, the install fails.
+    // rename() replaces the directory entry without touching the existing inode, so any running
+    // process keeps its mapping on the old inode while the new binary is already in place.
+    let tmp = dest.with_extension("relget-tmp");
+    fs::write(&tmp, &bin.data).with_context(|| format!("Writing binary to {:?}", dest))?;
+    fs::set_permissions(&tmp, fs::Permissions::from_mode(BIN_MODE))?;
+    fs::rename(&tmp, &dest).with_context(|| format!("Installing binary to {:?}", dest))?;
     Ok(dest)
 }
 

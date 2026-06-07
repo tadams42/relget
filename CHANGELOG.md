@@ -1,5 +1,6 @@
 ## unreleased
 
+- fix: used atomic rename when installing binaries to avoid ETXTBSY
 - fix: used correct version subcommand for boring and git-flow-next
 
 ## v0.6.1 (2026-06-06)
