@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use relget::all_app_entries;
+use relget::{all_app_entries, all_categories};
 
 fn main() {
     let task = std::env::args().nth(1);
@@ -92,50 +92,35 @@ fn project_root() -> PathBuf {
         .to_path_buf()
 }
 
-fn category_display_name(category: &str) -> &str {
-    match category {
-        "containers" => "Containers",
-        "data_processing" => "Data - processing JSON/YAML/CSV",
-        "dev_envs" => "Development environments",
-        "coding" => "Coding",
-        "databases" => "Databases",
-        "docs_diag" => "Documentation and diagrams",
-        "encryption" => "Encryption and secrets management",
-        "files" => "Files",
-        "git" => "git",
-        "http" => "HTTP",
-        "logs" => "Logs",
-        "system" => "System",
-        "shell" => "Shell",
-        "music" => "Music",
-        other => other,
-    }
-}
-
 fn update_supported_apps() {
     let path = project_root().join("SUPPORTED_APPS.md");
 
-    let mut entries: Vec<_> = all_app_entries().iter().collect();
-    entries.sort_by(|a, b| a.category.cmp(&b.category).then_with(|| a.id.cmp(&b.id)));
-
     let mut lines: Vec<String> = vec!["# Supported apps".into(), String::new()];
-    let mut current_category: Option<&str> = None;
 
-    for entry in &entries {
-        if current_category != Some(entry.category.as_str()) {
-            if current_category.is_some() {
-                lines.push(String::new());
-            }
-            lines.push(format!("## {}", category_display_name(&entry.category)));
-            lines.push(String::new());
-            current_category = Some(entry.category.as_str());
-        } else {
+    for cat in all_categories() {
+        lines.push(format!("## {}", cat.title));
+        lines.push(String::new());
+
+        if let Some(desc) = &cat.description {
+            lines.push(desc.trim_end().to_string());
             lines.push(String::new());
         }
-        lines.push(format!("- [{}]({})", entry.id, entry.url));
-        lines.push(format!("  {}", entry.description));
+
+        let mut apps: Vec<_> =
+            all_app_entries().iter().filter(|e| e.category == cat.key).collect();
+        apps.sort_by(|a, b| a.id.cmp(&b.id));
+
+        let mut first = true;
+        for entry in apps {
+            if !first {
+                lines.push(String::new());
+            }
+            first = false;
+            lines.push(format!("- [{}]({})", entry.id, entry.url));
+            lines.push(format!("  {}", entry.description));
+        }
+        lines.push(String::new());
     }
-    lines.push(String::new());
 
     fs::write(&path, lines.join("\n") + "\n").expect("failed to write SUPPORTED_APPS.md");
     println!("SUPPORTED_APPS.md written.");

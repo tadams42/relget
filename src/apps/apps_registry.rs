@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+use std::sync::OnceLock;
+
 use rust_embed::RustEmbed;
 use serde::Deserialize;
-use std::sync::OnceLock;
 
 #[derive(RustEmbed)]
 #[folder = "src/apps/"]
@@ -23,7 +25,7 @@ pub enum ShellCompletionsStatus {
     SelfGenerated,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug)]
 pub struct AppEntry {
     pub id:                String,
     pub exe_name:          String,
@@ -35,19 +37,81 @@ pub struct AppEntry {
     pub shell_completions: ShellCompletionsStatus,
 }
 
-static REGISTRY: OnceLock<Vec<AppEntry>> = OnceLock::new();
+#[derive(Debug)]
+pub struct CategoryInfo {
+    pub key:         String,
+    pub title:       String,
+    pub description: Option<String>,
+}
 
-fn registry() -> &'static [AppEntry] {
+#[derive(Deserialize)]
+struct RawAppEntry {
+    id:                String,
+    exe_name:          String,
+    url:               String,
+    description:       String,
+    has_musl:          bool,
+    man_pages:         ManPagesStatus,
+    shell_completions: ShellCompletionsStatus,
+}
+
+#[derive(Deserialize)]
+struct RawCategory {
+    title:       Option<String>,
+    description: Option<String>,
+    apps:        Vec<RawAppEntry>,
+}
+
+struct Registry {
+    entries:    Vec<AppEntry>,
+    categories: Vec<CategoryInfo>,
+}
+
+static REGISTRY: OnceLock<Registry> = OnceLock::new();
+
+fn registry() -> &'static Registry {
     REGISTRY.get_or_init(|| {
         let file = RegistryAsset::get("registry.yaml").expect("registry.yaml embedded");
-        serde_yaml::from_slice(&file.data).expect("valid registry.yaml")
+        let raw: HashMap<String, RawCategory> =
+            serde_yaml::from_slice(&file.data).expect("valid registry.yaml");
+
+        let mut cat_keys: Vec<String> = raw.keys().cloned().collect();
+        cat_keys.sort();
+
+        let mut entries = Vec::new();
+        let mut categories = Vec::new();
+
+        for key in cat_keys {
+            let cat = raw.get(&key).expect("key present");
+            categories.push(CategoryInfo {
+                key:         key.clone(),
+                title:       cat.title.clone().unwrap_or_else(|| key.clone()),
+                description: cat.description.clone(),
+            });
+            for app in &cat.apps {
+                entries.push(AppEntry {
+                    id:                app.id.clone(),
+                    exe_name:          app.exe_name.clone(),
+                    url:               app.url.clone(),
+                    category:          key.clone(),
+                    description:       app.description.clone(),
+                    has_musl:          app.has_musl,
+                    man_pages:         app.man_pages.clone(),
+                    shell_completions: app.shell_completions.clone(),
+                });
+            }
+        }
+
+        Registry { entries, categories }
     })
 }
 
-pub fn all_app_entries() -> &'static [AppEntry] { registry() }
+pub fn all_app_entries() -> &'static [AppEntry] { &registry().entries }
+
+pub fn all_categories() -> &'static [CategoryInfo] { &registry().categories }
 
 pub fn all_apps_identifiers() -> Vec<&'static str> {
-    let mut ids: Vec<&str> = registry().iter().map(|e| e.id.as_str()).collect();
+    let mut ids: Vec<&str> = registry().entries.iter().map(|e| e.id.as_str()).collect();
     ids.sort_unstable();
     ids
 }

@@ -8,5 +8,5 @@ mod types;
 mod uninstaller;
 mod version;
 
-pub use apps::{all_app_entries, all_apps_identifiers, create_app};
+pub use apps::{CategoryInfo, all_app_entries, all_apps_identifiers, all_categories, create_app};
 pub use cli::{create_cli, execute_cli};
