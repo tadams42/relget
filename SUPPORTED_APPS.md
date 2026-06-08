@@ -311,6 +311,9 @@
 - [tailspin](https://github.com/bensadeh/tailspin)
   better `tail` that tries to color logs
 
+- [vector](https://github.com/vectordotdev/vector)
+  High-performance observability data pipeline for collecting, transforming, and routing logs
+
 ## networking
 
 - [boring](https://github.com/alebeck/boring)

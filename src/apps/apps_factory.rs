@@ -21,7 +21,7 @@ use super::files::{
 };
 use super::git::{Delta, Difftastic, GitFlowNext, Gitleaks, Lazygit, Mergiraf, Serie, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
-use super::logs::{Gonzo, Hl, LazyJournal, Logdy, Loggo, Nerdlog, Rhit, Tailspin};
+use super::logs::{Gonzo, Hl, LazyJournal, Logdy, Loggo, Nerdlog, Rhit, Tailspin, Vector};
 use super::networking::{Boring, Dog, Doggo};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Vivid, Zoxide};
 use super::system::{Bottom, Btop, Duf, Dust, Dysk, Erdtree, Procs};
@@ -141,6 +141,7 @@ pub fn create_app(
         Trash::ID => Some(Box::new(Trash::new(client))),
         Uv::ID => Some(Box::new(Uv::new(client))),
         Vacuum::ID => Some(Box::new(Vacuum::new(client))),
+        Vector::ID => Some(Box::new(Vector::new(client))),
         Vivid::ID => Some(Box::new(Vivid::new(client))),
         Xh::ID => Some(Box::new(Xh::new(client))),
         Xan::ID => Some(Box::new(Xan::new(client))),

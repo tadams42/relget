@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added vector
 - feat: XDG Base Directory spec compliance
 - feat: added csvtk
 

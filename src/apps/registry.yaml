@@ -1032,6 +1032,15 @@
   man_pages: unavailable
   shell_completions: self_generated
 
+- id: vector
+  exe_name: vector
+  url: https://github.com/vectordotdev/vector
+  category: logs
+  description: High-performance observability data pipeline for collecting, transforming, and routing logs
+  has_musl: true
+  man_pages: unavailable
+  shell_completions: unavailable
+
 - id: xan
   exe_name: xan
   url: https://github.com/medialab/xan

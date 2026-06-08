@@ -6,6 +6,7 @@ pub mod loggo;
 pub mod nerdlog;
 pub mod rhit;
 pub mod tailspin;
+pub mod vector;
 
 pub use gonzo::Gonzo;
 pub use hl::Hl;
@@ -15,3 +16,4 @@ pub use loggo::Loggo;
 pub use nerdlog::Nerdlog;
 pub use rhit::Rhit;
 pub use tailspin::Tailspin;
+pub use vector::Vector;
