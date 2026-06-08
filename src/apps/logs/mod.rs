@@ -1,6 +1,7 @@
 pub mod gonzo;
 pub mod hl;
 pub mod lazy_journal;
+pub mod lnav;
 pub mod logdy;
 pub mod loggo;
 pub mod nerdlog;
@@ -11,6 +12,7 @@ pub mod vector;
 pub use gonzo::Gonzo;
 pub use hl::Hl;
 pub use lazy_journal::LazyJournal;
+pub use lnav::Lnav;
 pub use logdy::Logdy;
 pub use loggo::Loggo;
 pub use nerdlog::Nerdlog;

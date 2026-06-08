@@ -21,7 +21,7 @@ use super::files::{
 };
 use super::git::{Delta, Difftastic, GitFlowNext, Gitleaks, Lazygit, Mergiraf, Serie, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
-use super::logs::{Gonzo, Hl, LazyJournal, Logdy, Loggo, Nerdlog, Rhit, Tailspin, Vector};
+use super::logs::{Gonzo, Hl, LazyJournal, Lnav, Logdy, Loggo, Nerdlog, Rhit, Tailspin, Vector};
 use super::networking::{Boring, Dog, Doggo};
 use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Vivid, Zoxide};
 use super::system::{Bottom, Btop, Duf, Dust, Dysk, Erdtree, Procs};
@@ -87,6 +87,7 @@ pub fn create_app(
         JsonGrep::ID => Some(Box::new(JsonGrep::new(client))),
         Jqp::ID => Some(Box::new(Jqp::new(client))),
         LazyJournal::ID => Some(Box::new(LazyJournal::new(client))),
+        Lnav::ID => Some(Box::new(Lnav::new(client))),
         LazyDocker::ID => Some(Box::new(LazyDocker::new(client))),
         D2::ID => Some(Box::new(D2::new(client))),
         Lazygit::ID => Some(Box::new(Lazygit::new(client))),

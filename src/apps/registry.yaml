@@ -1032,6 +1032,15 @@
   man_pages: unavailable
   shell_completions: self_generated
 
+- id: lnav
+  exe_name: lnav
+  url: https://github.com/tstack/lnav
+  category: logs
+  description: Advanced log file navigator with syntax highlighting, filtering, and SQL querying
+  has_musl: true
+  man_pages: bundled
+  shell_completions: unavailable
+
 - id: vector
   exe_name: vector
   url: https://github.com/vectordotdev/vector

@@ -296,6 +296,9 @@
 - [lazyjournal](https://github.com/Lifailon/lazyjournal)
   TUI for browsing systemd journal and Docker logs
 
+- [lnav](https://github.com/tstack/lnav)
+  Advanced log file navigator with syntax highlighting, filtering, and SQL querying
+
 - [logdy](https://github.com/logdyhq/logdy-core)
   real-time log viewing and filtering in self-hosted (embedded) Web UI and multiple input modes (files, stdin, sockets, REST AP
 
