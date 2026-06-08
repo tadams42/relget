@@ -104,10 +104,9 @@ impl RelgetCache {
     pub fn new() -> Self { Self::new_with_prefix("") }
 
     pub fn new_with_prefix(subdir: &str) -> Self {
-        let mut cache_dir = dirs::home_dir()
-            .unwrap_or_else(|| PathBuf::from("."))
-            .join(".cache")
-            .join("relget");
+        let mut cache_dir = xdg::BaseDirectories::with_prefix("relget")
+            .map(|d| d.get_cache_home())
+            .unwrap_or_else(|_| PathBuf::from(".cache/relget"));
         if !subdir.is_empty() {
             cache_dir = cache_dir.join(subdir);
         }

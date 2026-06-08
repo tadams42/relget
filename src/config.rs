@@ -12,11 +12,16 @@ struct RelgetConfig {
     sets:           HashMap<String, Vec<String>>,
 }
 
+fn config_path() -> Option<std::path::PathBuf> {
+    xdg::BaseDirectories::with_prefix("relget")
+        .ok()?
+        .find_config_file("config.toml")
+}
+
 fn load_config() -> Result<RelgetConfig> {
-    let path = dirs::config_dir().unwrap_or_default().join("relget.toml");
-    if !path.exists() {
+    let Some(path) = config_path() else {
         return Ok(RelgetConfig::default());
-    }
+    };
     Ok(toml::from_str(&std::fs::read_to_string(&path)?)?)
 }
 
@@ -51,7 +56,7 @@ pub fn load_configured_set(name: &str) -> Result<Vec<String>> {
     let config = load_config()?;
     config.sets.get(name).cloned().ok_or_else(|| {
         anyhow!(
-            "no configured set '{}' found in ~/.config/relget.toml under [sets]",
+            "no configured set '{}' found in ~/.config/relget/config.toml under [sets]",
             name
         )
     })

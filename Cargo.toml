@@ -41,7 +41,7 @@ bzip2 = "0.6.1"
 anyhow = "1"
 log = "0.4.30"
 env_logger = "0.11"
-dirs = "6.0.0"
+xdg = "2"
 chrono = { version = "0.4", features = ["serde"] }
 tempfile = "3"
 regex = "1"

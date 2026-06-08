@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: XDG Base Directory spec compliance
 - feat: added csvtk
 
 ## v0.7.0 (2026-06-07)
