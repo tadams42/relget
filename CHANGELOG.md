@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.7.1 (2026-06-08)
+
 - feat: added lnav
 - feat: added vector
 - feat: XDG Base Directory spec compliance
