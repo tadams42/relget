@@ -9,8 +9,8 @@ use super::coding::{
 };
 use super::containers::{Ctop, D4S, DockMate, Dry, Dtop, LazyDocker};
 use super::data_processing::{
-    Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, JsonGrep, Miller, Qq, Qsv, QsvAll, Rsv,
-    Tabiew, Tv, Xan, Xq, Yq,
+    Csvtk, Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, JsonGrep, Miller, Qq, Qsv, QsvAll,
+    Rsv, Tabiew, Tv, Xan, Xq, Yq,
 };
 use super::dev_envs::{Chezmoi, Fnm, Uv};
 use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
@@ -45,6 +45,7 @@ pub fn create_app(
         Btop::ID => Some(Box::new(Btop::new(client))),
         Caddy::ID => Some(Box::new(Caddy::new(client))),
         Carapace::ID => Some(Box::new(Carapace::new(client))),
+        Csvtk::ID => Some(Box::new(Csvtk::new(client))),
         Choose::ID => Some(Box::new(Choose::new(client))),
         Chezmoi::ID => Some(Box::new(Chezmoi::new(client))),
         Curlie::ID => Some(Box::new(Curlie::new(client))),

@@ -1,3 +1,4 @@
+mod csvtk;
 mod dasel;
 mod fq;
 mod fx;
@@ -20,6 +21,7 @@ mod xan;
 mod xq;
 mod yq;
 
+pub use csvtk::Csvtk;
 pub use dasel::Dasel;
 pub use fq::Fq;
 pub use fx::Fx;

@@ -97,6 +97,15 @@
   man_pages: unavailable
   shell_completions: unavailable
 
+- id: csvtk
+  exe_name: csvtk
+  url: https://github.com/shenwei356/csvtk
+  category: data_processing
+  description: Cross-platform, efficient and practical CSV/TSV toolkit
+  has_musl: false
+  man_pages: unavailable
+  shell_completions: self_generated
+
 - id: dasel
   exe_name: dasel
   url: https://github.com/TomWright/dasel

@@ -1,5 +1,7 @@
 ## unreleased
 
+- feat: added csvtk
+
 ## v0.7.0 (2026-06-07)
 
 - feat: added sync subcommand
