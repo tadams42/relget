@@ -1,5 +1,6 @@
 use std::sync::Arc;
 
+#[allow(unused_imports)]
 use crate::clients::{CodebergClient, GithubClient, GitlabClient};
 
 use super::App;
@@ -9,11 +10,11 @@ use super::coding::{
 };
 use super::containers::{Ctop, D4S, DockMate, Dry, Dtop, LazyDocker};
 use super::data_processing::{
-    Csvtk, Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, JsonGrep, Miller, Qq, Qsv, QsvAll,
-    Rsv, Tabiew, Tv, Xan, Xq, Yq,
+    Csvtk, Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, JsonGrep, Miller, Qq, Qsv, QsvAll, Rsv,
+    Tabiew, Tv, Xan, Xq, Yq,
 };
 use super::dev_envs::{Chezmoi, Fnm, Uv};
-use super::docs_diag::{Agg, Asciinema, D2, Hugo, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
+use super::docs_diag::{Agg, Asciinema, D2, Hugo, Mdbook, Pgplan, Tbls, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Rage};
 use super::files::{
     Bat, Choose, Eza, F2, FdFind, Rclone, Ripgrep, Scooter, SdEdit, Sttr, Termscp, Trash, Xplr,
@@ -27,7 +28,7 @@ use super::shell::{Atuin, Carapace, Fzf, Skim, Starship, Vivid, Zoxide};
 use super::system::{Bottom, Btop, Duf, Dust, Dysk, Erdtree, Procs};
 
 pub fn create_app(
-    id: &str, gh_token: Option<String>, cb_token: Option<String>, gl_token: Option<String>,
+    id: &str, gh_token: Option<String>, cb_token: Option<String>, _gl_token: Option<String>,
     offline: bool,
 ) -> Option<Box<dyn App>> {
     let client = Arc::new(GithubClient::new(gh_token, offline));
@@ -103,7 +104,6 @@ pub fn create_app(
             )))))
         }
         Mkcert::ID => Some(Box::new(Mkcert::new(client))),
-        Pdot::ID => Some(Box::new(Pdot::new(Arc::new(GitlabClient::new(gl_token, offline))))),
         Neovide::ID => Some(Box::new(Neovide::new(client))),
         Nerdlog::ID => Some(Box::new(Nerdlog::new(client))),
         Pgplan::ID => Some(Box::new(Pgplan::new(client))),

@@ -25,7 +25,9 @@ impl App for Csvtk {
     fn cli_version_arg(&self) -> &str { "version" }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn assets(&self) -> AppAssets {

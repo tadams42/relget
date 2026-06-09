@@ -23,7 +23,9 @@ impl App for Lnav {
     fn exe_name(&self) -> &str { Self::EXE_NAME }
 
     fn released_version(&self) -> Result<AppVersion> {
-        self.client.latest_release(Self::OWNER, Self::REPO)?.version()
+        self.client
+            .latest_release(Self::OWNER, Self::REPO)?
+            .version()
     }
 
     fn assets(&self) -> AppAssets {
@@ -37,9 +39,7 @@ impl App for Lnav {
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release.find_asset(|a| {
-            a.starts_with("lnav-")
-                && a.contains("linux-musl-x86_64")
-                && a.ends_with(".zip")
+            a.starts_with("lnav-") && a.contains("linux-musl-x86_64") && a.ends_with(".zip")
         })?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);

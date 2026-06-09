@@ -33,8 +33,8 @@ impl App for Hugo {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages:   vec![ManPage::descriptor(1, "hugo.1")],
+            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            man_pages: vec![ManPage::descriptor(1, "hugo.1")],
             completions: vec![
                 Completion::zsh_desc(Self::EXE_NAME),
                 Completion::bash_desc(Self::EXE_NAME),
@@ -47,17 +47,14 @@ impl App for Hugo {
     fn download(&self) -> Result<AppAssets> {
         let release = self.client.latest_release(Self::OWNER, Self::REPO)?;
         let name = release.find_asset(|a| {
-            a.starts_with("hugo_")
-                && !a.contains("extended")
-                && a.ends_with("_linux-amd64.tar.gz")
+            a.starts_with("hugo_") && !a.contains("extended") && a.ends_with("_linux-amd64.tar.gz")
         })?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         let binary_data = extractor.extract_by_filename("hugo")?;
 
         let (completions, man_pages) = with_temp_exe("hugo", &binary_data, |exe_path| {
-            let completions =
-                gen_completions_subcommand("hugo", &binary_data, "completion")?;
+            let completions = gen_completions_subcommand("hugo", &binary_data, "completion")?;
             let man_tmp = tempfile::tempdir()?;
             let man_dir = man_tmp.path().to_str().context("non-UTF8 path")?;
             run_cmd(exe_path, &["gen", "man", "--dir", man_dir])?;

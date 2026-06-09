@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: removed pdot
 - feat: added [gohugoio/hugo](https://github.com/gohugoio/hugo)
 
 ## v0.7.1 (2026-06-08)

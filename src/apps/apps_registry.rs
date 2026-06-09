@@ -102,7 +102,10 @@ fn registry() -> &'static Registry {
             }
         }
 
-        Registry { entries, categories }
+        Registry {
+            entries,
+            categories,
+        }
     })
 }
 

@@ -193,11 +193,8 @@ be replayed as sequence of commands in terminal.
 - [mdbook](https://github.com/rust-lang/mdBook)
   Create books from Markdown source files
 
-- [pdot](https://gitlab.com/dmfay/pdot)
-  PostgreSQL schema visualizer outputting Graphviz or Mermaid
-
 - [pgplan](https://github.com/JacobArthurs/pgplan)
-  CLI tool for visualizing and analyzing PostgreSQL query plans
+  CLI tool for analyzing PostgreSQL query plans
 
 - [tbls](https://github.com/k1LoW/tbls)
   CI-friendly tool to document a database schema
@@ -215,16 +212,20 @@ be replayed as sequence of commands in terminal.
 
 - [gocryptfs](https://github.com/rfjakob/gocryptfs)
   Encrypted overlay filesystem written in Go. Fast, security-audited, actively
-maintained. It encrypts files and obfuscates file and directory names.
+maintained. It encrypts files and obfuscates file and directory names. It is
+usable for encrypting individual files and whole directories that are then
+synced to various cloud storage providers (`Google Drive`, `OneDrive`, ...) It
+doesn't hide overall count of files or structure of directories.
 
-It is usable for encrypting individual files and whole directories that are then
-synced to various cloud storage providers (`Google Drive`, `OneDrive`, ...)
-It doesn't hide overall count of files or structure of directories.
+To achieve maximum privacy you can also use
+[CryFS](https://github.com/cryfs/cryfs). That one encrypts everything into
+series of equally sized blocks, completely hiding folder structure. This is much
+(!!) slower process.
 
-To achieve maximum privacy you can also use [CryFS](https://github.com/cryfs).
-That one encrypts everything into series of equally sized blocks, completely
-hiding folder structure. But, this is much(!!) slower and it doesn't play that
-nicely with syncing to cloud storage.
+Encrypting each file individually (like `gocryptfs`) makes syncing to cloud
+drive is reliable and efficient. Encrypting whole storage as many small blocks,
+means that sync to cloud drive will have to transfer more data each time than
+would strictly be needed.
 
 
 - [rage](https://github.com/str4d/rage)
@@ -334,8 +335,13 @@ and converting logs use `vector`. Everything else here is pretty eye-candy that 
 not work most of the time for most of your logs.
 
 - [gonzo](https://github.com/control-theory/gonzo)
-  A powerful, real-time log analysis TUI. Supports OTLP (OpenTelemetry) format
-natively, with automatic detection of JSON, logfmt, and plain text logs.
+  A powerful, real-time log analysis.
+
+  - native streaming of OpenTelemetry.
+  - automatic detection of JSON, logfmt, and plain text logs
+  - can define custom templates for log formats in config file
+  - powerful TUI
+  - also provides embedded WebUI from the same running process
 
 
 - [hl](https://github.com/pamburus/hl)

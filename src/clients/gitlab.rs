@@ -92,6 +92,7 @@ impl GitlabClient {
         Ok(release)
     }
 
+    #[allow(dead_code)]
     pub fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<CachedFile> {
         if RATE_LIMITED.load(Ordering::Relaxed) {
             return Err(anyhow!(RateLimitError { site: "GitLab" }));

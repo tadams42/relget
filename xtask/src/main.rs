@@ -106,8 +106,10 @@ fn update_supported_apps() {
             lines.push(String::new());
         }
 
-        let mut apps: Vec<_> =
-            all_app_entries().iter().filter(|e| e.category == cat.key).collect();
+        let mut apps: Vec<_> = all_app_entries()
+            .iter()
+            .filter(|e| e.category == cat.key)
+            .collect();
         apps.sort_by(|a, b| a.id.cmp(&b.id));
 
         let mut first = true;
