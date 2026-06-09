@@ -187,6 +187,9 @@ be replayed as sequence of commands in terminal.
 - [d2](https://github.com/terrastruct/d2)
   Powerful diagram scripting language that turns text to diagrams. More complex and capable than `mermaid`, less complex than `PlantUML`.
 
+- [hugo](https://github.com/gohugoio/hugo)
+  Fast and flexible static site generator
+
 - [mdbook](https://github.com/rust-lang/mdBook)
   Create books from Markdown source files
 

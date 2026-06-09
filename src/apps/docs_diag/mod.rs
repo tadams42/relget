@@ -1,6 +1,7 @@
 mod agg;
 mod asciinema;
 mod d2;
+mod hugo;
 mod mdbook;
 mod pdot;
 mod pgplan;
@@ -9,6 +10,7 @@ mod tlrc;
 pub use agg::Agg;
 pub use asciinema::Asciinema;
 pub use d2::D2;
+pub use hugo::Hugo;
 pub use mdbook::Mdbook;
 pub use pdot::Pdot;
 pub use pgplan::Pgplan;

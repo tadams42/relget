@@ -481,6 +481,14 @@ docs_diag:
       man_pages: bundled
       shell_completions: unavailable
 
+    - id: hugo
+      exe_name: hugo
+      url: https://github.com/gohugoio/hugo
+      description: Fast and flexible static site generator
+      has_musl: false
+      man_pages: self_generated
+      shell_completions: self_generated
+
     - id: mdbook
       exe_name: mdbook
       url: https://github.com/rust-lang/mdBook

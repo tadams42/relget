@@ -13,7 +13,7 @@ use super::data_processing::{
     Rsv, Tabiew, Tv, Xan, Xq, Yq,
 };
 use super::dev_envs::{Chezmoi, Fnm, Uv};
-use super::docs_diag::{Agg, Asciinema, D2, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
+use super::docs_diag::{Agg, Asciinema, D2, Hugo, Mdbook, Pdot, Pgplan, Tbls, Tlrc};
 use super::encryption::{Age, Doppler, Gocryptfs, Rage};
 use super::files::{
     Bat, Choose, Eza, F2, FdFind, Rclone, Ripgrep, Scooter, SdEdit, Sttr, Termscp, Trash, Xplr,
@@ -77,6 +77,7 @@ pub fn create_app(
         Gonzo::ID => Some(Box::new(Gonzo::new(client))),
         Hl::ID => Some(Box::new(Hl::new(client))),
         Grex::ID => Some(Box::new(Grex::new(client))),
+        Hugo::ID => Some(Box::new(Hugo::new(client))),
         Hurl::ID => Some(Box::new(Hurl::new(client))),
         Hyperfine::ID => Some(Box::new(Hyperfine::new(client))),
         Jaq::ID => Some(Box::new(Jaq::new(client))),
