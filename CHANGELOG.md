@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.7.2 (2026-06-12)
+
 - feat: added rgxg
 - feat: removed pdot
 - feat: added [gohugoio/hugo](https://github.com/gohugoio/hugo)
