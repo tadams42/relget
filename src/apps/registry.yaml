@@ -1008,6 +1008,14 @@ shell:
       man_pages: unavailable
       shell_completions: unavailable
 
+    - id: rgxg
+      exe_name: rgxg
+      url: https://github.com/tadams42/rgxg
+      description: Command-line tool to generate extended regular expressions (ranges, CIDRs, alternations)
+      has_musl: true
+      man_pages: bundled
+      shell_completions: bundled
+
     - id: zoxide
       exe_name: zoxide
       url: https://github.com/ajeetdsouza/zoxide

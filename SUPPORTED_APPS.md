@@ -405,6 +405,9 @@ Things to improve builtin shell capabilities.
 - [fzf](https://github.com/junegunn/fzf)
   General-purpose command-line fuzzy finder
 
+- [rgxg](https://github.com/tadams42/rgxg)
+  Command-line tool to generate extended regular expressions (ranges, CIDRs, alternations)
+
 - [skim](https://github.com/skim-rs/skim)
   Fuzzy finder in Rust (alternative to `fzf`)
 

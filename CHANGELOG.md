@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added rgxg
 - feat: removed pdot
 - feat: added [gohugoio/hugo](https://github.com/gohugoio/hugo)
 
