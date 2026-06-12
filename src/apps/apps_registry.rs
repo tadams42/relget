@@ -6,7 +6,7 @@ use serde::Deserialize;
 
 #[derive(RustEmbed)]
 #[folder = "src/apps/"]
-#[include = "registry.yaml"]
+#[include = "registry.toml"]
 struct RegistryAsset;
 
 #[derive(Debug, Deserialize, PartialEq, Eq, Clone)]
@@ -71,9 +71,10 @@ static REGISTRY: OnceLock<Registry> = OnceLock::new();
 
 fn registry() -> &'static Registry {
     REGISTRY.get_or_init(|| {
-        let file = RegistryAsset::get("registry.yaml").expect("registry.yaml embedded");
+        let file = RegistryAsset::get("registry.toml").expect("registry.toml embedded");
         let raw: HashMap<String, RawCategory> =
-            serde_yaml::from_slice(&file.data).expect("valid registry.yaml");
+            toml::from_str(std::str::from_utf8(&file.data).expect("valid utf8"))
+                .expect("valid registry.toml");
 
         let mut cat_keys: Vec<String> = raw.keys().cloned().collect();
         cat_keys.sort();
@@ -145,7 +146,7 @@ mod tests {
     fn registry_ids_are_unique() {
         let ids: Vec<_> = all_app_entries().iter().map(|e| e.id.as_str()).collect();
         let unique: HashSet<_> = ids.iter().copied().collect();
-        assert_eq!(ids.len(), unique.len(), "duplicate app ids found in registry.yaml");
+        assert_eq!(ids.len(), unique.len(), "duplicate app ids found in registry.toml");
     }
 
     #[test]

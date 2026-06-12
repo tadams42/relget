@@ -27,10 +27,10 @@ src/
     app_trait.rs    # App trait: exe_name, released_version, assets, download, install
     app_factory.rs  # App implementations are kept private to `apps`. Public API exposes
                     # `str` identifiers through which `App` instances can be instantiated
-    apps_registry.rs # loads registry.yaml at startup (OnceLock); exposes all_app_entries()
+    apps_registry.rs # loads registry.toml at startup (OnceLock); exposes all_app_entries()
                     # and MINIMAL_SET
-    registry.yaml   # source of truth for app metadata: id, url, category, description;
-                    # embedded at compile time via rust-embed, parsed with serde_yaml
+    registry.toml   # source of truth for app metadata: id, url, category, description;
+                    # embedded at compile time via rust-embed, parsed with toml
     containers/    # d4s, dock_mate, dry, lazydocker
     data_processing/ # dasel, fx, gojq, jid, jq, jqp, qsv, qsv_all, rsv, xq, yq
     databases/     # pdot, pgplan, sabiql, squix, usql
@@ -65,7 +65,7 @@ GitHub app:
 1. Create `src/apps/<category>/myapp.rs` implementing the `App` trait:
    - Declare `pub const ID: &'static str = "myapp"` and `const EXE_NAME: &'static str = "myapp"`
      in the impl block. Do NOT add URL, CATEGORY, or DESCRIPTION constants — those live in
-     `registry.yaml` only.
+     `registry.toml` only.
    - Implement `fn assets(&self) -> AppAssets` returning a static descriptor of every file the
      app installs. Use `Self::EXE_NAME` for the primary binary name:
      ```rust
@@ -88,16 +88,16 @@ GitHub app:
    - Implement `fn download(&self) -> Result<AppAssets>` whose returned asset set must match
      `assets()` exactly (same files, same names).
 2. Register in `src/apps/<category>/mod.rs`: add `mod myapp;` and `pub use myapp::MyApp;`
-3. Add an entry to `src/apps/registry.yaml`:
-   ```yaml
-   - id: myapp
-     exe_name: myapp
-     url: https://github.com/owner/repo
-     category: <category>
-     description: One-line description of what the app does
-     has_musl: false
-     man_pages: unavailable        # unavailable | bundled | self_generated
-     shell_completions: unavailable # unavailable | bundled | self_generated
+3. Add an entry to `src/apps/registry.toml` under the appropriate category:
+   ```toml
+   [[<category>.apps]]
+   id = "myapp"
+   exe_name = "myapp"
+   url = "https://github.com/owner/repo"
+   description = "One-line description of what the app does"
+   has_musl = false
+   man_pages = "unavailable"        # unavailable | bundled | self_generated
+   shell_completions = "unavailable" # unavailable | bundled | self_generated
    ```
 4. Update `create_app()` in `src/apps/apps_factory.rs`: add
    `"myapp" => Some(Box::new(myapp::MyApp::new(client)))`

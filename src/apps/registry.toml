@@ -1,0 +1,1096 @@
+[coding]
+title = "Coding"
+description = "Linters, formatters and various coding helpers.\n"
+
+[[coding.apps]]
+id = "ast-grep"
+exe_name = "ast-grep"
+url = "https://github.com/ast-grep/ast-grep"
+description = "Fast code search, lint, and rewriting using AST patterns"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[coding.apps]]
+id = "fend"
+exe_name = "fend"
+url = "https://github.com/printfn/fend"
+description = "Arbitrary-precision unit-aware calculator"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "grex"
+exe_name = "grex"
+url = "https://github.com/pemistahl/grex"
+description = "Generates regular expressions from user-provided test strings"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "hyperfine"
+exe_name = "hyperfine"
+url = "https://github.com/sharkdp/hyperfine"
+description = "Command-line benchmarking tool"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "bundled"
+
+[[coding.apps]]
+id = "mailpit"
+exe_name = "mailpit"
+url = "https://github.com/axllent/mailpit"
+description = "Email and SMTP testing tool with a web interface to view captured emails"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "mkcert"
+exe_name = "mkcert"
+url = "https://github.com/FiloSottile/mkcert"
+description = "Zero-config tool to make locally trusted development certificates"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "neovide"
+exe_name = "neovide"
+url = "https://github.com/neovide/neovide"
+description = "GPU-accelerated GUI frontend for Neovim"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "pyrefly"
+exe_name = "pyrefly"
+url = "https://github.com/facebook/pyrefly"
+description = "New, fast Python type checker from Meta"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "replibyte"
+exe_name = "replibyte"
+url = "https://github.com/Qovery/replibyte"
+description = "Creates database dump from your production data and then restores it to your local development environment, replacing sensitive stuff with fake data."
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "rgx"
+exe_name = "rgx"
+url = "https://github.com/brevity1swos/rgx"
+description = "Regex debugger for the terminal — step-through execution, 3 engines, code generation. Similar to `https://regexr.com/` and `https://regex101.com/` but works locally, in TUI"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "ruff"
+exe_name = "ruff"
+url = "https://github.com/astral-sh/ruff"
+description = "Extremely fast Python linter and code formatter from authors of `uv`"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[coding.apps]]
+id = "rust-analyzer"
+exe_name = "rust-analyzer"
+url = "https://github.com/rust-lang/rust-analyzer"
+description = "Rust language server providing IDE integration"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "scc"
+exe_name = "scc"
+url = "https://github.com/boyter/scc"
+description = "Fast and accurate code counter with complexity calculations - better `cloc`"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "sqruff"
+exe_name = "sqruff"
+url = "https://github.com/quarylabs/sqruff"
+description = "Fast SQL formatter and linter"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "stylua"
+exe_name = "stylua"
+url = "https://github.com/JohnnyMorganz/stylua"
+description = "Opinionated Lua code formatter"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[coding.apps]]
+id = "taplo"
+exe_name = "taplo"
+url = "https://github.com/tamasfe/taplo"
+description = "Highly comprehensive, all-in-one TOML toolkit. It operates as a fully-featured Language Server Protocol (LSP), formatter, and linter. Natively supports JSON Schema validation applied to TOML files and extensive formatting configuration. `Even Better TOML` for VSCode is built on top of it."
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[coding.apps]]
+id = "tombi"
+exe_name = "tombi"
+url = "https://github.com/tombi-toml/tombi"
+description = "Modern, minimalist TOML linter and opinionated formatter. Not an LSP."
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[coding.apps]]
+id = "ty"
+exe_name = "ty"
+url = "https://github.com/astral-sh/ty"
+description = "Extremely fast Python type checker from authors of `uv`. Currently in `beta`."
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[coding.apps]]
+id = "vacuum"
+exe_name = "vacuum"
+url = "https://github.com/daveshanley/vacuum"
+description = "World's fastest OpenAPI 3 / Swagger linter and quality tool"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[containers]
+title = "Containers"
+
+[[containers.apps]]
+id = "ctop"
+exe_name = "ctop"
+url = "https://github.com/bcicen/ctop"
+description = "Top-like interface for container metrics"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[containers.apps]]
+id = "d4s"
+exe_name = "d4s"
+url = "https://github.com/jr-k/d4s"
+description = "Terminal UI for managing Docker containers and images, browsing running\ncontainers and viewing their logs. OP feature: a single key opens shell inside\nof selected container.\n"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[containers.apps]]
+id = "dockmate"
+exe_name = "dockmate"
+url = "https://github.com/shubh-io/DockMate"
+description = "Terminal UI for managing Docker containers and images"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[containers.apps]]
+id = "dtop"
+exe_name = "dtop"
+url = "https://github.com/amir20/dtop"
+description = "Terminal dashboard for Docker that monitors multiple hosts in real-time"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[containers.apps]]
+id = "dry"
+exe_name = "dry"
+url = "https://github.com/moncho/dry"
+description = "Terminal UI for managing Docker containers and images very similar to `d4s`"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[containers.apps]]
+id = "lazydocker"
+exe_name = "lazydocker"
+url = "https://github.com/jesseduffield/lazydocker"
+description = "Terminal UI for Docker containers, images, and compose"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[data_processing]
+title = "Data - processing JSON/YAML/CSV"
+description = "CLI filters and processors for structured data. Some of them have TUI for interactive filtering and displaying structured data in terminal. Most of them have their own query DSL to quickly find relevant data in large files."
+
+[[data_processing.apps]]
+id = "csvtk"
+exe_name = "csvtk"
+url = "https://github.com/shenwei356/csvtk"
+description = "Cross-platform, efficient and practical CSV/TSV toolkit"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[data_processing.apps]]
+id = "dasel"
+exe_name = "dasel"
+url = "https://github.com/TomWright/dasel"
+description = "Query and modify data in JSON, YAML, TOML, XML, CSV, HCL, INI and KDL."
+has_musl = false
+man_pages = "self_generated"
+shell_completions = "self_generated"
+
+[[data_processing.apps]]
+id = "fq"
+exe_name = "fq"
+url = "https://github.com/wader/fq"
+description = "`jq` for binary formats — tool, language and decoders for working with binary\nand text formats\n"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "fx"
+exe_name = "fx"
+url = "https://github.com/antonmedv/fx"
+description = "Interactive TUI for viewing JSON/YAML/TOML"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "gojq"
+exe_name = "gojq"
+url = "https://github.com/itchyny/gojq"
+description = "Pure Go implementation of `jq` with extended features"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "bundled"
+
+[[data_processing.apps]]
+id = "jaq"
+exe_name = "jaq"
+url = "https://github.com/01mf02/jaq"
+description = "Alternative to `jq` with fewer features but faster - for extremely large files."
+has_musl = true
+man_pages = "bundled"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "jd"
+exe_name = "jd"
+url = "https://github.com/josephburnett/jd"
+description = "diffing and patching JSON and YAML values. It supports a internal patch format,\n`JSON Merge Patch` and a subset of `JSON Patch`.\n"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "jid"
+exe_name = "jid"
+url = "https://github.com/simeji/jid"
+description = "JSON viewer with interactive entry and execution of `jq` filter expressions"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "jiq"
+exe_name = "jiq"
+url = "https://github.com/bellicose100xp/jiq"
+description = "Interactive JSON query tool with real-time output and AI assistance (similar to `jid` and `jqp`)."
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "jq"
+exe_name = "jq"
+url = "https://github.com/jqlang/jq"
+description = "Lightweight command-line JSON processor, golden standard for all other tools. Implements it's own query language for JSON"
+has_musl = false
+man_pages = "bundled"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "jqp"
+exe_name = "jqp"
+url = "https://github.com/noahgorstein/jqp"
+description = "JSON viewer with interactive entry and execution of `gojq` filter expressions (similar to `jid` but uses `gojq`)"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "jsongrep"
+exe_name = "jg"
+url = "https://github.com/micahkepe/jsongrep"
+description = "Fast querying of `JSON`, `YAML`, `TOML`, `JSONL`, `CBOR` and `MessagePack` using path expressions."
+has_musl = true
+man_pages = "bundled"
+shell_completions = "bundled"
+
+[[data_processing.apps]]
+id = "miller"
+exe_name = "mlr"
+url = "https://github.com/johnkerl/miller"
+description = "Like `awk`, `sed`, `cut`, `join`, and `sort` for name-indexed data such as `CSV`, `TSV`, and tabular `JSON`."
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "qq"
+exe_name = "qq"
+url = "https://github.com/JFryy/qq"
+description = "inspired by `jq`, multi-format processor (`JSON`, `YAML`, `TOML`, `XML`, `HCL`, `CSV`, `INI` and more)"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "qsv"
+exe_name = "qsv"
+url = "https://github.com/dathere/qsv"
+description = "High-performance CSV data-wrangling toolkit"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "qsv-all"
+exe_name = "qsv"
+url = "https://github.com/dathere/qsv"
+description = "High-performance CSV data-wrangling toolkit (additional binaries optimized for specific workloads). You probably don't need this - use `qsv` instead"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "rsv"
+exe_name = "rsv"
+url = "https://github.com/ribbondz/rsv"
+description = "CSV/TSV toolkit for data exploration, similar to `qsv` but smaller in scope and feature set."
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "tabiew"
+exe_name = "tw"
+url = "https://github.com/shshemi/tabiew"
+description = "interactive viewing and filtering of tabular data (CSV, TSV, PSV, Parquet, and Arrow IPC)"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "bundled"
+
+[[data_processing.apps]]
+id = "tv"
+exe_name = "tidy-viewer"
+url = "https://github.com/alexhallam/tv"
+description = "(Tidy Viewer) pretty printer for tabular data (CSV, TSV, PSV, and Parquet).\nExcels at numeric formatting and large data sets. Doesn't implement much of\nfiltering, but is quick and takes extra care on aligning (decimal) numbers for\nbetter readability.\n"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "xan"
+exe_name = "xan"
+url = "https://github.com/medialab/xan"
+description = "Command line tool for processing CSV files optimized to be extremely fast (forked from `BurntSushi/xsv` which is now archived)"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[data_processing.apps]]
+id = "xq"
+exe_name = "xq"
+url = "https://github.com/sibprogrammer/xq"
+description = "Command-line XML and HTML processor using XPath"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[data_processing.apps]]
+id = "yq"
+exe_name = "yq"
+url = "https://github.com/mikefarah/yq"
+description = "like `jq` but for YAML. In newer versions it can also work with JSON, XML and CSV"
+has_musl = false
+man_pages = "bundled"
+shell_completions = "self_generated"
+
+[dev_envs]
+title = "Development environments"
+
+[[dev_envs.apps]]
+id = "chezmoi"
+exe_name = "chezmoi"
+url = "https://github.com/twpayne/chezmoi"
+description = "Dotfiles manager across multiple machines, think `ansible` but for dotfiles"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[dev_envs.apps]]
+id = "fnm"
+exe_name = "fnm"
+url = "https://github.com/Schniz/fnm"
+description = "Fast and simple Node.js version manager"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[dev_envs.apps]]
+id = "uv"
+exe_name = "uv"
+url = "https://github.com/astral-sh/uv"
+description = "Extremely fast Python package and project manager"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[docs_diag]
+title = "Documentation and diagrams"
+
+[[docs_diag.apps]]
+id = "agg"
+exe_name = "agg"
+url = "https://github.com/asciinema/agg"
+description = "Generate animated GIFs from `asciinema` session recordings"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[docs_diag.apps]]
+id = "asciinema"
+exe_name = "asciinema"
+url = "https://github.com/asciinema/asciinema"
+description = "Record and replay terminal sessions as lightweight `asciicast` files. These\nfiles are not \"video\" but can be replayed as video. Additionally, they can also\nbe replayed as sequence of commands in terminal.\n"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[docs_diag.apps]]
+id = "d2"
+exe_name = "d2"
+url = "https://github.com/terrastruct/d2"
+description = "Powerful diagram scripting language that turns text to diagrams. More complex and capable than `mermaid`, less complex than `PlantUML`."
+has_musl = false
+man_pages = "bundled"
+shell_completions = "unavailable"
+
+[[docs_diag.apps]]
+id = "hugo"
+exe_name = "hugo"
+url = "https://github.com/gohugoio/hugo"
+description = "Fast and flexible static site generator"
+has_musl = false
+man_pages = "self_generated"
+shell_completions = "self_generated"
+
+[[docs_diag.apps]]
+id = "mdbook"
+exe_name = "mdbook"
+url = "https://github.com/rust-lang/mdBook"
+description = "Create books from Markdown source files"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[docs_diag.apps]]
+id = "pgplan"
+exe_name = "pgplan"
+url = "https://github.com/JacobArthurs/pgplan"
+description = "CLI tool for analyzing PostgreSQL query plans"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[docs_diag.apps]]
+id = "tbls"
+exe_name = "tbls"
+url = "https://github.com/k1LoW/tbls"
+description = "CI-friendly tool to document a database schema"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[docs_diag.apps]]
+id = "tlrc"
+exe_name = "tldr"
+url = "https://github.com/tldr-pages/tlrc"
+description = "Official [tldr-pages](https://tldr.sh/) client written in Rust"
+has_musl = false
+man_pages = "bundled"
+shell_completions = "bundled"
+
+[encryption]
+title = "Encryption and secrets management"
+
+[[encryption.apps]]
+id = "age"
+exe_name = "age"
+url = "https://github.com/FiloSottile/age"
+description = "Simple, modern and secure file encryption tool"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[encryption.apps]]
+id = "doppler"
+exe_name = "doppler"
+url = "https://github.com/DopplerHQ/cli"
+description = "Secrets manager CLI — sync env vars and secrets across teams, deployments and cloud providers."
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[encryption.apps]]
+id = "gocryptfs"
+exe_name = "gocryptfs"
+url = "https://github.com/rfjakob/gocryptfs"
+description = "Encrypted overlay filesystem written in Go. Fast, security-audited, actively\nmaintained. It encrypts files and obfuscates file and directory names. It is\nusable for encrypting individual files and whole directories that are then\nsynced to various cloud storage providers (`Google Drive`, `OneDrive`, ...) It\ndoesn't hide overall count of files or structure of directories.\n\nTo achieve maximum privacy you can also use\n[CryFS](https://github.com/cryfs/cryfs). That one encrypts everything into\nseries of equally sized blocks, completely hiding folder structure. This is much\n(!!) slower process.\n\nEncrypting each file individually (like `gocryptfs`) makes syncing to cloud\ndrive is reliable and efficient. Encrypting whole storage as many small blocks,\nmeans that sync to cloud drive will have to transfer more data each time than\nwould strictly be needed.\n"
+has_musl = false
+man_pages = "bundled"
+shell_completions = "unavailable"
+
+[[encryption.apps]]
+id = "rage"
+exe_name = "rage"
+url = "https://github.com/str4d/rage"
+description = "Rust implementation of the `age` encryption tool"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[files]
+title = "Files"
+description = "General tools for every day work with files in terminal."
+
+[[files.apps]]
+id = "bat"
+exe_name = "bat"
+url = "https://github.com/sharkdp/bat"
+description = "`cat` clone with syntax highlighting and git integration\n"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "self_generated"
+
+[[files.apps]]
+id = "choose"
+exe_name = "choose"
+url = "https://github.com/theryangeary/choose"
+description = "Human-friendly and fast alternative to `cut` (and sometimes `awk`)\n"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[files.apps]]
+id = "eza"
+exe_name = "eza"
+url = "https://github.com/eza-community/eza"
+description = "Modern replacement for `ls` with icons and git integration"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "bundled"
+
+[[files.apps]]
+id = "f2"
+exe_name = "f2"
+url = "https://github.com/ayoisaiah/f2"
+description = "Safe batch file renaming tool"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "bundled"
+
+[[files.apps]]
+id = "fd"
+exe_name = "fd"
+url = "https://github.com/sharkdp/fd"
+description = "Simple, fast, user-friendly alternative to `find`"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "self_generated"
+
+[[files.apps]]
+id = "rclone"
+exe_name = "rclone"
+url = "https://github.com/rclone/rclone"
+description = "`rsync` for cloud storage (S3, GDrive, Dropbox, and more)"
+has_musl = false
+man_pages = "bundled"
+shell_completions = "self_generated"
+
+[[files.apps]]
+id = "ripgrep"
+exe_name = "rg"
+url = "https://github.com/BurntSushi/ripgrep"
+description = "Recursive regex search, a faster `grep`"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "self_generated"
+
+[[files.apps]]
+id = "scooter"
+exe_name = "scooter"
+url = "https://github.com/thomasschafer/scooter"
+description = "Interactive find and replace in the terminal"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[files.apps]]
+id = "sd"
+exe_name = "sd"
+url = "https://github.com/chmln/sd"
+description = "Intuitive find-and-replace command, a `sed` alternative"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "unavailable"
+
+[[files.apps]]
+id = "sttr"
+exe_name = "sttr"
+url = "https://github.com/abhimanyu003/sttr"
+description = "Cross-platform CLI to perform various string operations"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[files.apps]]
+id = "termscp"
+exe_name = "termscp"
+url = "https://github.com/veeso/termscp"
+description = "Feature-rich terminal UI file transfer and explorer (SCP/SFTP/FTP/S3)\n"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[files.apps]]
+id = "trash-cli-rs"
+exe_name = "trash"
+url = "https://github.com/orf/trash"
+description = "Safe `rm` replacement that moves files to the trash"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[files.apps]]
+id = "xplr"
+exe_name = "xplr"
+url = "https://github.com/sayanarijit/xplr"
+description = "Hackable, minimal, fast TUI file manager with Lua scripting"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[files.apps]]
+id = "yazi"
+exe_name = "yazi"
+url = "https://github.com/sxyazi/yazi"
+description = "Blazing fast terminal file manager with asynchronous I/O and a lot of features"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "bundled"
+
+[git]
+title = "git"
+
+[[git.apps]]
+id = "delta"
+exe_name = "delta"
+url = "https://github.com/dandavison/delta"
+description = "Syntax-highlighting pager for git, diff, and grep output"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[git.apps]]
+id = "difftastic"
+exe_name = "difft"
+url = "https://github.com/Wilfred/difftastic"
+description = "Structural diff tool that understands code syntax"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[git.apps]]
+id = "git-flow-next"
+exe_name = "git-flow"
+url = "https://github.com/gittower/git-flow-next"
+description = "Modern reimplementation of git-flow in Go"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[git.apps]]
+id = "gitleaks"
+exe_name = "gitleaks"
+url = "https://github.com/gitleaks/gitleaks"
+description = "Detect secrets and sensitive data in git repositories"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[git.apps]]
+id = "lazygit"
+exe_name = "lazygit"
+url = "https://github.com/jesseduffield/lazygit"
+description = "Simple terminal UI for `git` commands"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[git.apps]]
+id = "mergiraf"
+exe_name = "mergiraf"
+url = "https://codeberg.org/mergiraf/mergiraf"
+description = "Syntax-aware merge driver for `git` - in many cases makes conflict resolution much easier"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[git.apps]]
+id = "serie"
+exe_name = "serie"
+url = "https://github.com/lusingander/serie"
+description = "Alternative to `git log --graph`. Renders pretty git commit graph in terminal -\nand nothing else\n"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[git.apps]]
+id = "worktrunk"
+exe_name = "wt"
+url = "https://github.com/max-sixty/worktrunk"
+description = "Git worktree manager — fast branch switching without stashing"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[http]
+title = "HTTP"
+
+[[http.apps]]
+id = "caddy"
+exe_name = "caddy"
+url = "https://github.com/caddyserver/caddy"
+description = "Fast, automatic HTTPS web server with TLS (pretender to the Nginx throne)"
+has_musl = false
+man_pages = "self_generated"
+shell_completions = "self_generated"
+
+[[http.apps]]
+id = "curlie"
+exe_name = "curlie"
+url = "https://github.com/rs/curlie"
+description = "curl frontend that adds HTTPie-style formatting and usability"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[http.apps]]
+id = "hurl"
+exe_name = "hurl"
+url = "https://github.com/Orange-OpenSource/hurl"
+description = "Run and test HTTP requests defined in plain text"
+has_musl = false
+man_pages = "bundled"
+shell_completions = "bundled"
+
+[[http.apps]]
+id = "restish"
+exe_name = "restish"
+url = "https://github.com/rest-sh/restish"
+description = "CLI for interacting with REST-ish HTTP APIs, `curl` alternative"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[http.apps]]
+id = "xh"
+exe_name = "xh"
+url = "https://github.com/ducaale/xh"
+description = "Friendly and fast HTTP client, `HTTPie` and `curl` alternative"
+has_musl = true
+man_pages = "self_generated"
+shell_completions = "self_generated"
+
+[logs]
+title = "Logs"
+description = "Utilities that allow easier browsing of logs in terminal. Most of them really need\nthat logs are in correct, strict data format. If you want something that just works\nand tries very hard to parse every conceivable log format without you needing to\nwrite any kind of template or regex, use `lnav`. To take absolute control on parsing\nand converting logs use `vector`. Everything else here is pretty eye-candy that will\nnot work most of the time for most of your logs.\n"
+
+[[logs.apps]]
+id = "gonzo"
+exe_name = "gonzo"
+url = "https://github.com/control-theory/gonzo"
+description = "A powerful, real-time log analysis.\n\n  - native streaming of OpenTelemetry.\n  - automatic detection of JSON, logfmt, and plain text logs\n  - can define custom templates for log formats in config file\n  - powerful TUI\n  - also provides embedded WebUI from the same running process\n"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[logs.apps]]
+id = "hl"
+exe_name = "hl"
+url = "https://github.com/pamburus/hl"
+description = "Fast log viewer for `JSON` or `logfmt` logs."
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[logs.apps]]
+id = "lazyjournal"
+exe_name = "lazyjournal"
+url = "https://github.com/Lifailon/lazyjournal"
+description = "TUI for browsing systemd journal and Docker logs"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[logs.apps]]
+id = "lnav"
+exe_name = "lnav"
+url = "https://github.com/tstack/lnav"
+description = "Tries really hard to figure out structure in \"not-so-structured\" input data\n(logs). Most of the time works like a magic, extracting maximum of structured\ndata from your logs without you needing to define single line of capture\ntemplate or regex. Aggregates everything into TUI and provides syntax\nhighlighting, filtering, and SQL querying\n"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "unavailable"
+
+[[logs.apps]]
+id = "logdy"
+exe_name = "logdy"
+url = "https://github.com/logdyhq/logdy-core"
+description = "Aggregates log input and then starts (self-hosted, embedded) Web UI that can be used for viewing and filtering them. Multiple input modes (files, stdin, sockets, REST API)"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[logs.apps]]
+id = "loggo"
+exe_name = "loggo"
+url = "https://github.com/aurc/loggo"
+description = "Define one or more local or remote (SSH) log streams. Then see them all\naggregated to single TUI on your local machine. The only problem is that they\nshould really be in correctly structured JSON, for this utility to be useful.\n"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[logs.apps]]
+id = "nerdlog"
+exe_name = "nerdlog"
+url = "https://github.com/dimonomid/nerdlog"
+description = "SSH to (one or more) remote host(s), and live view one or more logs in TUI\n"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[logs.apps]]
+id = "rhit"
+exe_name = "rhit"
+url = "https://github.com/canop/rhit"
+description = "Reads nginx log files in their standard location, does some analysis and tells you about it in pretty tables in your console, storing and polluting nothing. Not so useful for viewing individual logs, but gives some useful metrics that are calculated from logs."
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[logs.apps]]
+id = "tailspin"
+exe_name = "tspin"
+url = "https://github.com/bensadeh/tailspin"
+description = "better `tail`: tries to colorizes any kind of input thrown at it\n"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[logs.apps]]
+id = "vector"
+exe_name = "vector"
+url = "https://github.com/vectordotdev/vector"
+description = "Define input formats or use one of many pre-defined. Then apply them to logs, metrics and traces. Finally deliver structured data extracted from logs to many supported log sinks ... or to your terminal. Very similar in functionality to `Logstash`, but with much more power, many more features and much less runtime bloat (Rust instead of JDK)."
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[networking]
+title = "Networking"
+
+[[networking.apps]]
+id = "boring"
+exe_name = "boring"
+url = "https://github.com/alebeck/boring"
+description = "The boring SSH tunnel manager. Uses local SSH config and keys to manage SSH tunnels in more human-friendly way."
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[networking.apps]]
+id = "dog"
+exe_name = "dog"
+url = "https://github.com/ogham/dog"
+description = "A command-line DNS client (better `dig`). Unmaintained, see `doggo` instead"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[networking.apps]]
+id = "doggo"
+exe_name = "doggo"
+url = "https://github.com/mr-karan/doggo"
+description = "Command-line DNS client for humans, inspired by `dog` but written in Go"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[shell]
+title = "Shell"
+description = "Things to improve builtin shell capabilities."
+
+[[shell.apps]]
+id = "atuin"
+exe_name = "atuin"
+url = "https://github.com/atuinsh/atuin"
+description = "Shell history search backed by SQLite with sync"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[shell.apps]]
+id = "carapace"
+exe_name = "carapace"
+url = "https://github.com/carapace-sh/carapace-bin"
+description = "Multi-shell completion generator for command-line tools"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[shell.apps]]
+id = "fzf"
+exe_name = "fzf"
+url = "https://github.com/junegunn/fzf"
+description = "General-purpose command-line fuzzy finder"
+has_musl = false
+man_pages = "bundled"
+shell_completions = "self_generated"
+
+[[shell.apps]]
+id = "skim"
+exe_name = "sk"
+url = "https://github.com/skim-rs/skim"
+description = "Fuzzy finder in Rust (alternative to `fzf`)"
+has_musl = false
+man_pages = "bundled"
+shell_completions = "self_generated"
+
+[[shell.apps]]
+id = "starship"
+exe_name = "starship"
+url = "https://github.com/starship/starship"
+description = "Minimal, blazing-fast, infinitely customizable shell prompt"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[shell.apps]]
+id = "vivid"
+exe_name = "vivid"
+url = "https://github.com/sharkdp/vivid"
+description = "`LS_COLORS` manager with multiple themes for colorful terminal output\n(replacement for `dircolors`)\n"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[shell.apps]]
+id = "rgxg"
+exe_name = "rgxg"
+url = "https://github.com/tadams42/rgxg"
+description = "Command-line tool to generate extended regular expressions (ranges, CIDRs, alternations)"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "bundled"
+
+[[shell.apps]]
+id = "zoxide"
+exe_name = "zoxide"
+url = "https://github.com/ajeetdsouza/zoxide"
+description = "Smarter `cd` command with frecency-based directory jumping"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "unavailable"
+
+[system]
+title = "System"
+
+[[system.apps]]
+id = "bottom"
+exe_name = "btm"
+url = "https://github.com/ClementTsang/bottom"
+description = "Graphical process/system monitor for the terminal (`htop`/`top` alternative)"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "bundled"
+
+[[system.apps]]
+id = "btop"
+exe_name = "btop"
+url = "https://github.com/aristocratos/btop"
+description = "A monitor of resources (`top` / `htop` alternative)"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[system.apps]]
+id = "duf"
+exe_name = "duf"
+url = "https://github.com/muesli/duf"
+description = "Disk Usage/Free Utility — human-friendly `df` alternative"
+has_musl = false
+man_pages = "bundled"
+shell_completions = "unavailable"
+
+[[system.apps]]
+id = "dust"
+exe_name = "dust"
+url = "https://github.com/bootandy/dust"
+description = "Intuitive disk usage visualizer, a `du` alternative"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "bundled"
+
+[[system.apps]]
+id = "dysk"
+exe_name = "dysk"
+url = "https://github.com/Canop/dysk"
+description = "Terminal utility to get information on filesystems (`df` alternative)"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "bundled"
+
+[[system.apps]]
+id = "erdtree"
+exe_name = "erd"
+url = "https://github.com/solidiquis/erdtree"
+description = "Multi-threaded filesystem tree visualizer and disk usage analyzer, gitignore-aware"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[system.apps]]
+id = "procs"
+exe_name = "procs"
+url = "https://github.com/dalance/procs"
+description = "Modern replacement for ps with colored output and search"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "self_generated"
