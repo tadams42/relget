@@ -10,8 +10,8 @@ use crate::config::{
 pub fn get_github_token() -> Result<Option<String>> {
     let token = load_github_token()?;
     match &token {
-        Some(_) => log::info!("GitHub token found and loaded"),
-        None => log::warn!("GitHub token not found; app may hit API rate limits"),
+        Some(_) => log::info!("msg=github-token-loaded"),
+        None => log::warn!("msg=github token not found; app may hit API rate limits"),
     }
     Ok(token)
 }
@@ -19,8 +19,8 @@ pub fn get_github_token() -> Result<Option<String>> {
 pub fn get_codeberg_token() -> Result<Option<String>> {
     let token = load_codeberg_token()?;
     match &token {
-        Some(_) => log::info!("Codeberg token found and loaded"),
-        None => log::warn!("Codeberg token not found; app may hit API rate limits"),
+        Some(_) => log::info!("msg=codeberg-token-loaded"),
+        None => log::warn!("msg=codeberg token not found; app may hit API rate limits"),
     }
     Ok(token)
 }
@@ -28,8 +28,8 @@ pub fn get_codeberg_token() -> Result<Option<String>> {
 pub fn get_gitlab_token() -> Result<Option<String>> {
     let token = load_gitlab_token()?;
     match &token {
-        Some(_) => log::info!("GitLab token found and loaded"),
-        None => log::warn!("GitLab token not found; app may hit API rate limits"),
+        Some(_) => log::info!("msg=gitlab-token-loaded"),
+        None => log::warn!("msg=gitlab token not found; app may hit API rate limits"),
     }
     Ok(token)
 }

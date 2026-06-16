@@ -139,7 +139,7 @@ impl RelgetCache {
         // Check memory cache first
         if let Some(r) = self.releases.get(&key) {
             if !r.is_expired() {
-                log::debug!("Memory cache hit for {}/{}", owner, repo);
+                log::debug!("owner={} repo={} msg=memory-cache-hit", owner, repo);
                 return Some(r.clone());
             }
             self.releases.remove(&key);
@@ -151,7 +151,7 @@ impl RelgetCache {
             if let Ok(data) = std::fs::read_to_string(&path) {
                 if let Ok(json) = serde_json::from_str::<ReleaseMetadata>(&data) {
                     if !json.is_expired() {
-                        log::debug!("Disk cache hit for {}/{}", owner, repo);
+                        log::debug!("owner={} repo={} msg=disk-cache-hit", owner, repo);
                         self.releases.insert(key, json.clone());
                         return Some(json);
                     }
@@ -199,7 +199,7 @@ impl RelgetCache {
         let key = Self::asset_key(api_id, name);
 
         if let Some(a) = self.assets.get(&key) {
-            log::debug!("Memory cache hit for asset {}", name);
+            log::debug!("asset={} msg=memory-cache-hit", name);
             return Some(a.clone());
         }
 
@@ -211,7 +211,7 @@ impl RelgetCache {
         let path = self.repo_cache_dir(owner, repo).join(&file_name);
         if path.exists() {
             if let Ok(data) = std::fs::read(&path) {
-                log::debug!("Disk cache hit for asset {}", name);
+                log::debug!("asset={} msg=disk-cache-hit", name);
                 let asset = CachedFile {
                     api_id,
                     owner: owner.to_string(),

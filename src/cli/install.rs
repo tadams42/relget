@@ -32,7 +32,7 @@ pub struct InstallArgs {
 
 pub fn install_apps_command(args: &InstallArgs, offline: bool) -> Result<()> {
     let selected = select_apps(&args.apps, args.configured_set.as_deref())?;
-    log::info!("Installing into: {:?}", args.prefix);
+    log::info!("prefix={:?} msg=Installing", args.prefix);
     let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
     } else {

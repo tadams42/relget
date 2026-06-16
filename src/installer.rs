@@ -102,11 +102,11 @@ fn ensure_parent(path: &Path) -> Result<()> {
 
 fn install_app(app: &dyn App, prefix: &Path) -> Result<Vec<PathBuf>> {
     if !app.needs_install(prefix)? {
-        log::info!("lvl=INFO app={} msg=Already at latest version", app.exe_name());
+        log::info!("app={} msg=Already at latest version", app.exe_name());
         return Ok(vec![]);
     }
     let assets = app.download()?;
     let installed = install_assets(prefix, &assets)?;
-    log::info!("lvl=INFO app={} msg=Installed", app.exe_name());
+    log::info!("app={} msg=Installed", app.exe_name());
     Ok(installed)
 }

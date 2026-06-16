@@ -44,12 +44,11 @@ pub(super) fn resolve_update_targets(
             if installed_binaries.contains(entry.exe_name.as_str()) {
                 let winner = exe_to_id[entry.exe_name.as_str()];
                 log::warn!(
-                    "exe_name '{}' maps to both '{}' and '{}'; '{}' will be used for update \
-                     (re-run with --apps {} to update the other)",
+                    "exe_name={} winner={} duplicate={} msg=ambiguous exe_name; re-run with \
+                     --apps {} to update the other",
                     entry.exe_name,
                     winner,
                     entry.id,
-                    winner,
                     entry.id
                 );
             }
@@ -77,7 +76,7 @@ pub(super) fn filter_to_installed(
                 .find(|e| &e.id == *id)
                 .is_some_and(|e| installed_binaries.contains(e.exe_name.as_str()));
             if !present {
-                log::warn!("'{}' is not installed, skipping", id);
+                log::warn!("app={} msg=not installed, skipping", id);
             }
             present
         })
@@ -134,7 +133,7 @@ pub fn update_command(args: &UpdateArgs, offline: bool) -> Result<()> {
         filtered
     };
 
-    log::info!("Updating {} app(s) in {:?}", to_update.len(), args.prefix);
+    log::info!("count={} prefix={:?} msg=Updating", to_update.len(), args.prefix);
     let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
     } else {

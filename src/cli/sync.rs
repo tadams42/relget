@@ -78,7 +78,7 @@ pub fn sync_command(args: &SyncArgs, offline: bool) -> Result<()> {
     let (to_install, to_uninstall) = compute_sync_changes(&selected, entries, &installed_binaries);
 
     if !to_install.is_empty() {
-        log::info!("Installing {} app(s) into {:?}", to_install.len(), args.prefix);
+        log::info!("count={} prefix={:?} msg=Installing", to_install.len(), args.prefix);
         let (gh_token, cb_token, gl_token) = if offline {
             (None, None, None)
         } else {
@@ -95,7 +95,7 @@ pub fn sync_command(args: &SyncArgs, offline: bool) -> Result<()> {
     }
 
     if !to_uninstall.is_empty() {
-        log::info!("Uninstalling {} app(s) from {:?}", to_uninstall.len(), args.prefix);
+        log::info!("count={} prefix={:?} msg=Uninstalling", to_uninstall.len(), args.prefix);
         let removed = uninstall_apps(&args.prefix, &to_uninstall)?;
         if removed.is_empty() {
             println!("No files removed.");

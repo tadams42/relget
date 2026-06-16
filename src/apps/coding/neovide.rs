@@ -43,7 +43,7 @@ impl App for Neovide {
             Ok(o) => {
                 if !o.status.success() {
                     log::warn!(
-                        "neovide --version failed (known bug), assuming {}",
+                        "app=neovide fallback={} msg=--version failed (known bug)",
                         Self::FALLBACK_VERSION
                     );
                     return Ok(Some(AppVersion::parse(Self::FALLBACK_VERSION).unwrap()));
