@@ -4,9 +4,9 @@ use std::path::PathBuf;
 use anyhow::Result;
 use clap::Args;
 
-use crate::apps::{AppEntry, all_app_entries};
 use super::install::install_apps;
 use super::uninstall::uninstall_apps;
+use crate::apps::{AppEntry, all_app_entries};
 
 use super::helpers::{
     DEFAULT_PREFIX, get_codeberg_token, get_github_token, get_gitlab_token, select_apps,
@@ -28,8 +28,12 @@ pub struct SyncArgs {
     )]
     pub apps: Vec<String>,
 
-    /// Load a named app set from the [sets] table in ~/.config/relget.toml
-    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps"])]
+    #[arg(
+        long,
+        value_name = "SET_NAME",
+        conflicts_with_all = ["apps"],
+        long_help = "Load a named app set from the [sets] table in ~/.config/relget.toml"
+    )]
     pub configured_set: Option<String>,
 }
 
@@ -95,7 +99,11 @@ pub fn sync_command(args: &SyncArgs, offline: bool) -> Result<()> {
     }
 
     if !to_uninstall.is_empty() {
-        log::info!("count={} prefix={:?} msg=Uninstalling", to_uninstall.len(), args.prefix);
+        log::info!(
+            "count={} prefix={:?} msg=Uninstalling",
+            to_uninstall.len(),
+            args.prefix
+        );
         let removed = uninstall_apps(&args.prefix, &to_uninstall)?;
         if removed.is_empty() {
             println!("No files removed.");

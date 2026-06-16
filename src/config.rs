@@ -13,8 +13,7 @@ struct RelgetConfig {
 }
 
 fn config_path() -> Option<std::path::PathBuf> {
-    xdg::BaseDirectories::with_prefix("relget")
-        .find_config_file("config.toml")
+    xdg::BaseDirectories::with_prefix("relget").find_config_file("config.toml")
 }
 
 fn load_config() -> Result<RelgetConfig> {

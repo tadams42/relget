@@ -32,8 +32,12 @@ pub struct InstallArgs {
     )]
     pub apps: Vec<String>,
 
-    /// Load a named app set from the [sets] table in ~/.config/relget.toml
-    #[arg(long, value_name = "SET_NAME", conflicts_with_all = ["apps"])]
+    #[arg(
+        long,
+        value_name = "SET_NAME",
+        conflicts_with_all = ["apps"],
+        long_help = "Load a named app set from the`[sets] table in ~/.config/relget.toml"
+    )]
     pub configured_set: Option<String>,
 }
 
