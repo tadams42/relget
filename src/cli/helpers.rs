@@ -3,12 +3,10 @@ use anyhow::{Result, anyhow};
 pub(super) const DEFAULT_PREFIX: &str = "/usr/local";
 
 use crate::apps::all_apps_identifiers;
-use crate::config::{
-    load_codeberg_token, load_configured_set, load_github_token, load_gitlab_token,
-};
+use crate::config::Config;
 
 pub fn get_github_token() -> Result<Option<String>> {
-    let token = load_github_token()?;
+    let token = Config::github_token()?;
     match &token {
         Some(_) => log::info!("msg=github-token-loaded"),
         None => log::warn!("msg=github token not found; app may hit API rate limits"),
@@ -17,7 +15,7 @@ pub fn get_github_token() -> Result<Option<String>> {
 }
 
 pub fn get_codeberg_token() -> Result<Option<String>> {
-    let token = load_codeberg_token()?;
+    let token = Config::codeberg_token()?;
     match &token {
         Some(_) => log::info!("msg=codeberg-token-loaded"),
         None => log::warn!("msg=codeberg token not found; app may hit API rate limits"),
@@ -26,7 +24,7 @@ pub fn get_codeberg_token() -> Result<Option<String>> {
 }
 
 pub fn get_gitlab_token() -> Result<Option<String>> {
-    let token = load_gitlab_token()?;
+    let token = Config::gitlab_token()?;
     match &token {
         Some(_) => log::info!("msg=gitlab-token-loaded"),
         None => log::warn!("msg=gitlab token not found; app may hit API rate limits"),
@@ -38,7 +36,7 @@ pub fn select_apps(user_chosen: &[String], configured_set: Option<&str>) -> Resu
     let known: Vec<&str> = all_apps_identifiers();
 
     if let Some(set_name) = configured_set {
-        let apps = load_configured_set(set_name)?;
+        let apps = Config::configured_set(set_name)?;
         for app in &apps {
             if !known.contains(&app.as_str()) {
                 return Err(anyhow!("Unknown app '{}' in configured set '{}'", app, set_name));

@@ -23,39 +23,43 @@ fn load_config() -> Result<RelgetConfig> {
     Ok(toml::from_str(&std::fs::read_to_string(&path)?)?)
 }
 
-pub fn load_github_token() -> Result<Option<String>> {
-    if let Ok(t) = std::env::var("RELGET_GHB_TOKEN") {
-        if !t.is_empty() {
-            return Ok(Some(t));
-        }
-    }
-    Ok(load_config()?.github_token)
-}
+pub struct Config;
 
-pub fn load_codeberg_token() -> Result<Option<String>> {
-    if let Ok(t) = std::env::var("RELGET_CDB_TOKEN") {
-        if !t.is_empty() {
-            return Ok(Some(t));
+impl Config {
+    pub fn github_token() -> Result<Option<String>> {
+        if let Ok(t) = std::env::var("RELGET_GHB_TOKEN") {
+            if !t.is_empty() {
+                return Ok(Some(t));
+            }
         }
+        Ok(load_config()?.github_token)
     }
-    Ok(load_config()?.codeberg_token)
-}
 
-pub fn load_gitlab_token() -> Result<Option<String>> {
-    if let Ok(t) = std::env::var("RELGET_GLB_TOKEN") {
-        if !t.is_empty() {
-            return Ok(Some(t));
+    pub fn codeberg_token() -> Result<Option<String>> {
+        if let Ok(t) = std::env::var("RELGET_CDB_TOKEN") {
+            if !t.is_empty() {
+                return Ok(Some(t));
+            }
         }
+        Ok(load_config()?.codeberg_token)
     }
-    Ok(load_config()?.gitlab_token)
-}
 
-pub fn load_configured_set(name: &str) -> Result<Vec<String>> {
-    let config = load_config()?;
-    config.sets.get(name).cloned().ok_or_else(|| {
-        anyhow!(
-            "no configured set '{}' found in ~/.config/relget/config.toml under [sets]",
-            name
-        )
-    })
+    pub fn gitlab_token() -> Result<Option<String>> {
+        if let Ok(t) = std::env::var("RELGET_GLB_TOKEN") {
+            if !t.is_empty() {
+                return Ok(Some(t));
+            }
+        }
+        Ok(load_config()?.gitlab_token)
+    }
+
+    pub fn configured_set(name: &str) -> Result<Vec<String>> {
+        let config = load_config()?;
+        config.sets.get(name).cloned().ok_or_else(|| {
+            anyhow!(
+                "no configured set '{}' found in ~/.config/relget/config.toml under [sets]",
+                name
+            )
+        })
+    }
 }
