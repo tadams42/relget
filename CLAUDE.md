@@ -156,6 +156,9 @@ Tokens are optional. Without them, `relget` works anonymously (subject to API ra
 
 - use `cargo +nightly fmt` to format the code
 - use `cargo check --workspace` and `cargo clippy --no-deps` to lint the code
+- `cargo clippy` skips re-linting files unchanged since the last build (incremental cache); to get a
+  fresh lint of all local source without recompiling dependencies use
+  `cargo clean -p relget && cargo clippy --no-deps`
 - git commit messages should use past tense (`added foobar` instead of `add foobar`,
   `adding foobar` or `adds foobar`)
 - git commit messages should be prefixed by short category like `refact:`, `build:`,

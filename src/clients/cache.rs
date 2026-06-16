@@ -243,6 +243,33 @@ impl RelgetCache {
     }
 }
 
+// ── version extraction ───────────────────────────────────────────────────────
+
+fn extract_version(data: &Value) -> Option<AppVersion> {
+    // Try tag_name, then name, then body
+    for field in &["tag_name", "name"] {
+        if let Some(s) = data[field].as_str() {
+            if let Some(v) = AppVersion::parse(s) {
+                return Some(v);
+            }
+        }
+    }
+
+    // Try body text — look for x.y.z pattern
+    if let Some(body) = data["body"].as_str() {
+        let re = regex::Regex::new(r"\d+\.\d+\.\d+").ok()?;
+        for line in body.lines() {
+            if let Some(m) = re.find(line) {
+                if let Some(v) = AppVersion::parse(m.as_str()) {
+                    return Some(v);
+                }
+            }
+        }
+    }
+
+    None
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -359,31 +386,4 @@ mod tests {
         };
         assert!(m.is_expired());
     }
-}
-
-// ── version extraction ───────────────────────────────────────────────────────
-
-fn extract_version(data: &Value) -> Option<AppVersion> {
-    // Try tag_name, then name, then body
-    for field in &["tag_name", "name"] {
-        if let Some(s) = data[field].as_str() {
-            if let Some(v) = AppVersion::parse(s) {
-                return Some(v);
-            }
-        }
-    }
-
-    // Try body text — look for x.y.z pattern
-    if let Some(body) = data["body"].as_str() {
-        let re = regex::Regex::new(r"\d+\.\d+\.\d+").ok()?;
-        for line in body.lines() {
-            if let Some(m) = re.find(line) {
-                if let Some(v) = AppVersion::parse(m.as_str()) {
-                    return Some(v);
-                }
-            }
-        }
-    }
-
-    None
 }
