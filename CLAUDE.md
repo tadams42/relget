@@ -1,6 +1,6 @@
 # relget
 
-Rust CLI that installs/updates CLI utilities directly from GitHub and Codeberg releases.
+Rust CLI that installs/updates CLI utilities directly from GitHub, GitLab and Codeberg releases.
 
 ## Build & run
 
@@ -23,39 +23,26 @@ Use `--prefix tmp/try-relget/` to avoid needing `sudo` during local testing.
 src/
   main.rs           # entry point: env_logger init, dispatches to lib functions
   lib.rs            # public API
+  config.rs         # loads tokens from config file (~/.config/relget/config.toml)
   apps/
-    app_trait.rs    # App trait: exe_name, released_version, assets, download, install
-    app_factory.rs  # App implementations are kept private to `apps`. Public API exposes
-                    # `str` identifiers through which `App` instances can be instantiated
+    app_trait.rs    # App trait + completion/temp-exe helpers
+    apps_factory.rs # maps string IDs to Box<dyn App>; App impls are private to this module
     apps_registry.rs # loads registry.toml at startup (OnceLock); exposes all_app_entries()
-                    # and MINIMAL_SET
-    registry.toml   # source of truth for app metadata: id, url, category, description;
+    registry.toml   # source of truth for app metadata (id, url, category, description);
                     # embedded at compile time via rust-embed, parsed with toml
-    containers/    # d4s, dock_mate, dry, lazydocker
-    data_processing/ # dasel, fx, gojq, jid, jq, jqp, qsv, qsv_all, rsv, xq, yq
-    databases/     # pdot, pgplan, sabiql, squix, usql
-    docs_diag/     # mdbook, tlrc
-    dev_envs/      # aqua, chezmoi, fnm, mise, uv
-    coding/        # ast_grep, neovide, rust_analyzer, scc, stylua
-    encryption/    # age
-    files/         # bat, eza, f2, fd_find, rclone, ripgrep, sd_edit, trash, yazi
-    git/           # delta, difftastic, gitleaks, lazygit, mergiraf
-    http/          # caddy, hurl, restish, xh
-    logs/          # gonzo, lazy_journal, logdy
-    music/         # spotatui
-    shell/         # atuin, carapace, fzf, skim, starship, zoxide
-    system/        # dust, dysk, procs
-  cli/             # clap CLI structs: Cli, Commands and functions that implement them
-  clients/         # GitHub, Codeberg, and GitLab clients, caching
-    github.rs      # GithubClient with singleton Lazy<Mutex<RelgetCache>>
-    codeberg.rs    # CodebergClient with singleton Lazy<Mutex<RelgetCache>>
-    gitlab.rs      # GitlabClient with singleton Lazy<Mutex<RelgetCache>>
-    cache.rs       # memory HashMap + disk under ~/.cache/relget/
-  archive.rs       # ArchiveExtractor: .tar.gz/.tar.bz2/.tar.xz/.tar/.zip/.deb/.gz
-  installer.rs     # install_assets(), with_temp_exe(), run_cmd(), gen_completions_*()
-  uninstaller.rs   # uninstall_app(): calls app.assets() to remove exactly those paths
-  types.rs         # AppBinary, ManPage, Shell, Completion, AppAssets
-  version.rs       # AppVersion(u64, u64, u64) with find_in(), parse(), Display, Ord
+    <category>/     # one submodule per category; run `ls src/apps/` for the current list
+  cli/              # one file per subcommand (install, update, uninstall, list, doctor, …)
+  clients/
+    github.rs       # GithubClient with singleton Lazy<Mutex<RelgetCache>>
+    codeberg.rs     # CodebergClient with singleton Lazy<Mutex<RelgetCache>>
+    gitlab.rs       # GitlabClient with singleton Lazy<Mutex<RelgetCache>>
+    cache.rs        # memory HashMap + disk under ~/.cache/relget/
+    rate_limit.rs   # RateLimitError type
+  archive.rs        # ArchiveExtractor: .tar.gz/.tar.bz2/.tar.xz/.tar/.zip/.deb/.gz
+  installer.rs      # install_assets()
+  uninstaller.rs    # uninstall_app(): calls app.assets() to remove exactly those paths
+  types.rs          # AppBinary, ManPage, Shell, Completion, AppAssets
+  version.rs        # AppVersion(u64, u64, u64) with find_in(), parse(), Display, Ord
 ```
 
 ## Adding a new app
@@ -66,8 +53,7 @@ GitHub app:
    - Declare `pub const ID: &'static str = "myapp"` and `const EXE_NAME: &'static str = "myapp"`
      in the impl block. Do NOT add URL, CATEGORY, or DESCRIPTION constants — those live in
      `registry.toml` only.
-   - Implement `fn assets(&self) -> AppAssets` returning a static descriptor of every file the
-     app installs. Use `Self::EXE_NAME` for the primary binary name:
+   - Implement `fn assets(&self) -> AppAssets`. Use `Self::EXE_NAME` for the primary binary name:
      ```rust
      fn assets(&self) -> AppAssets {
          AppAssets {
@@ -82,11 +68,8 @@ GitHub app:
          }
      }
      ```
-     Secondary binaries with different names (e.g. `"hurlfmt"`, `"uvx"`) must use hardcoded
-     strings. `assets()` is the source of truth for the uninstaller — it must exactly match
-     every file that `download()` installs.
-   - Implement `fn download(&self) -> Result<AppAssets>` whose returned asset set must match
-     `assets()` exactly (same files, same names).
+     Secondary binaries with different names (e.g. `"hurlfmt"`, `"uvx"`) must use hardcoded strings.
+   - Implement `fn download(&self) -> Result<AppAssets>`.
 2. Register in `src/apps/<category>/mod.rs`: add `mod myapp;` and `pub use myapp::MyApp;`
 3. Add an entry to `src/apps/registry.toml` under the appropriate category:
    ```toml
@@ -101,11 +84,6 @@ GitHub app:
    ```
 4. Update `create_app()` in `src/apps/apps_factory.rs`: add
    `"myapp" => Some(Box::new(myapp::MyApp::new(client)))`
-5. Commit the changes first, then run `cargo xtask update-docs`, then amend the commit.
-   `xtask update-docs` reads git log to build `CHANGELOG.md`, so the new commit must
-   exist before xtask runs — otherwise the new app won't appear in the changelog. The
-   amend folds the updated `CHANGELOG.md` (and `SUPPORTED_APPS.md`) back into the same
-   commit. We prefer generating single commit per each app added.
 
 Codeberg app:
 
@@ -133,17 +111,6 @@ Always verify which argument the binary uses to report its version. Run it with 
 fn cli_version_arg(&self) -> &str { "version" }  // subcommand style
 fn cli_version_arg(&self) -> &str { "-v" }        // short flag style
 ```
-
-Getting this wrong causes `installed_version()` to return `None`, which makes `needs_install()` always true and the app reinstalled on every `update` run.
-
-## Removing an app
-
-1. remove it's implementation
-2. Commit the changes first, then run `cargo xtask update-docs`, then amend the commit.
-   `xtask update-docs` reads git log to build `CHANGELOG.md`, so the new commit must
-   exist before xtask runs — otherwise the new app won't appear in the changelog. The
-   amend folds the updated `CHANGELOG.md` (and `SUPPORTED_APPS.md`) back into the same
-   commit. We prefer generating single commit per each app removed.
 
 ## Installer helpers
 
@@ -191,8 +158,7 @@ Tokens are optional. Without them, `relget` works anonymously (subject to API ra
 - use `cargo check --workspace` and `cargo clippy --no-deps` to lint the code
 - git commit messages should use past tense (`added foobar` instead of `add foobar`,
   `adding foobar` or `adds foobar`)
-- git commit messages should be prefixed by short category like `refactor:`, `build:`,
+- git commit messages should be prefixed by short category like `refact:`, `build:`,
   `ci:`, `feat:`, `docs:`, `chore:` and similar
-- git commit messages prefixed by `build:`, `ci:`, `docs:`, `refactor:` and `chore:`
-  will be filtered from `CHANGELOG.md` so use these prefixes for stuff that is not
-  interesting to end users
+
+We use `cargo xtask update-docs` to keep `CHANGELOG.md` and `SUPPORTED_APPS.md` up to date. This means that after each `git commit` you should run `cargo xtask update-changelog` and then fold changes into that latest commit. Note that our `xtask` doesn't put all commits into `CHANGELOG.md`: the ones with prefixes defined `NOISE_PREFIXES` in `xtask/main.rs` are skipped.
