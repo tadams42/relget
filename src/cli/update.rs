@@ -5,7 +5,7 @@ use anyhow::Result;
 use clap::Args;
 
 use crate::apps::{AppEntry, all_app_entries};
-use crate::installer::install_apps;
+use super::install::install_apps;
 
 use super::helpers::{
     DEFAULT_PREFIX, get_codeberg_token, get_github_token, get_gitlab_token, select_apps,

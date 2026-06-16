@@ -3,9 +3,7 @@ mod archive;
 mod cli;
 mod clients;
 mod config;
-mod installer;
 mod types;
-mod uninstaller;
 mod version;
 
 pub use apps::{CategoryInfo, all_app_entries, all_apps_identifiers, all_categories, create_app};
