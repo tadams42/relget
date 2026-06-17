@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::{App, gen_completions_subcommand};
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Bat {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Bat {
@@ -16,7 +16,7 @@ impl Bat {
     const OWNER: &'static str = "sharkdp";
     const REPO: &'static str = "bat";
     const EXE_NAME: &'static str = "bat";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Bat {

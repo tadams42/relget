@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Rhit {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Rhit {
@@ -16,7 +16,7 @@ impl Rhit {
     const OWNER: &'static str = "canop";
     const REPO: &'static str = "rhit";
     const EXE_NAME: &'static str = "rhit";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Rhit {

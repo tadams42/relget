@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::{App, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Ripgrep {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Ripgrep {
@@ -16,7 +16,7 @@ impl Ripgrep {
     const OWNER: &'static str = "BurntSushi";
     const REPO: &'static str = "ripgrep";
     const EXE_NAME: &'static str = "rg";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Ripgrep {

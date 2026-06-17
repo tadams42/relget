@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Boring {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Boring {
@@ -17,7 +17,7 @@ impl Boring {
     const REPO: &'static str = "boring";
     const EXE_NAME: &'static str = "boring";
 
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Boring {

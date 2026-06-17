@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Scooter {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Scooter {
@@ -16,7 +16,7 @@ impl Scooter {
     const OWNER: &'static str = "thomasschafer";
     const REPO: &'static str = "scooter";
     const EXE_NAME: &'static str = "scooter";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Scooter {

@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Curlie {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Curlie {
@@ -16,7 +16,7 @@ impl Curlie {
     const OWNER: &'static str = "rs";
     const REPO: &'static str = "curlie";
     const EXE_NAME: &'static str = "curlie";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Curlie {

@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Vivid {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Vivid {
@@ -16,7 +16,7 @@ impl Vivid {
     const OWNER: &'static str = "sharkdp";
     const REPO: &'static str = "vivid";
     const EXE_NAME: &'static str = "vivid";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Vivid {

@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::{App, gen_completions_subcommand};
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct Starship {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Starship {
@@ -16,7 +16,7 @@ impl Starship {
     const OWNER: &'static str = "starship";
     const REPO: &'static str = "starship";
     const EXE_NAME: &'static str = "starship";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Starship {

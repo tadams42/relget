@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::{App, gen_completions_shell_flag};
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct Atuin {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Atuin {
@@ -16,7 +16,7 @@ impl Atuin {
     const OWNER: &'static str = "atuinsh";
     const REPO: &'static str = "atuin";
     const EXE_NAME: &'static str = "atuin";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Atuin {

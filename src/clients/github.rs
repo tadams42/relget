@@ -4,6 +4,7 @@ use std::sync::Mutex;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 use super::cache::{CachedFile, ReleaseMetadata, RelgetCache};
+use super::client_trait::RelgetClient;
 use super::rate_limit::RateLimitError;
 
 static CACHE: Lazy<Mutex<RelgetCache>> = Lazy::new(|| Mutex::new(RelgetCache::new()));
@@ -18,17 +19,15 @@ pub struct GithubClient {
 
 impl GithubClient {
     pub fn new(token: Option<String>, offline: bool) -> Self { Self { token, offline } }
+}
 
-    pub fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
-        self.latest_release_where(owner, repo, |tag| tag != "nightly")
+impl RelgetClient for GithubClient {
+    fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
+        self.latest_release_where(owner, repo, &|tag| tag != "nightly")
     }
 
-    /// Like `latest_release`, but only considers releases whose `tag_name` satisfies
-    /// `tag_filter`. Use this when a repo mixes stable and nightly/dated releases under
-    /// different tag naming schemes (e.g. rust-analyzer uses `v0.3.x` for stable and
-    /// `YYYY-MM-DD` for nightly). Fetches up to 100 releases to survive long nightly streaks.
-    pub fn latest_release_where(
-        &self, owner: &str, repo: &str, tag_filter: impl Fn(&str) -> bool,
+    fn latest_release_where(
+        &self, owner: &str, repo: &str, tag_filter: &dyn Fn(&str) -> bool,
     ) -> Result<ReleaseMetadata> {
         {
             let mut cache = CACHE.lock().unwrap();
@@ -89,7 +88,7 @@ impl GithubClient {
         Ok(release)
     }
 
-    pub fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<CachedFile> {
+    fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<CachedFile> {
         if RATE_LIMITED.load(Ordering::Relaxed) {
             return Err(anyhow!(RateLimitError { site: "GitHub" }));
         }

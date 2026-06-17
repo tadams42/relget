@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::{App, gen_completions_subcommand, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Hugo {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Hugo {
@@ -17,7 +17,7 @@ impl Hugo {
     const REPO: &'static str = "hugo";
     const EXE_NAME: &'static str = "hugo";
 
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Hugo {

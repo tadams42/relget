@@ -2,12 +2,12 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Mkcert {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Mkcert {
@@ -15,7 +15,7 @@ impl Mkcert {
     const OWNER: &'static str = "FiloSottile";
     const REPO: &'static str = "mkcert";
     const EXE_NAME: &'static str = "mkcert";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Mkcert {

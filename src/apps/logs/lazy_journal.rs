@@ -2,12 +2,12 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct LazyJournal {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl LazyJournal {
@@ -15,7 +15,7 @@ impl LazyJournal {
     const OWNER: &'static str = "Lifailon";
     const REPO: &'static str = "lazyjournal";
     const EXE_NAME: &'static str = "lazyjournal";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for LazyJournal {

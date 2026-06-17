@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct GoJq {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl GoJq {
@@ -16,7 +16,7 @@ impl GoJq {
     const OWNER: &'static str = "itchyny";
     const REPO: &'static str = "gojq";
     const EXE_NAME: &'static str = "gojq";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for GoJq {

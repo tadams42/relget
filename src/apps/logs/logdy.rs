@@ -2,12 +2,12 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::{App, gen_completions_subcommand};
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct Logdy {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Logdy {
@@ -15,7 +15,7 @@ impl Logdy {
     const OWNER: &'static str = "logdyhq";
     const REPO: &'static str = "logdy-core";
     const EXE_NAME: &'static str = "logdy";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Logdy {

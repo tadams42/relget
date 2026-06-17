@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::{App, gen_completions_subcommand, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Dasel {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Dasel {
@@ -17,7 +17,7 @@ impl Dasel {
     const REPO: &'static str = "dasel";
     const EXE_NAME: &'static str = "dasel";
     const VERSION_ARG: &'static str = "version";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Dasel {

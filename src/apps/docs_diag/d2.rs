@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct D2 {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl D2 {
@@ -16,7 +16,7 @@ impl D2 {
     const OWNER: &'static str = "terrastruct";
     const REPO: &'static str = "d2";
     const EXE_NAME: &'static str = "d2";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for D2 {

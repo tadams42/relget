@@ -5,12 +5,12 @@ use anyhow::{Result, anyhow};
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Bottom {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Bottom {
@@ -18,7 +18,7 @@ impl Bottom {
     const OWNER: &'static str = "ClementTsang";
     const REPO: &'static str = "bottom";
     const EXE_NAME: &'static str = "btm";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Bottom {

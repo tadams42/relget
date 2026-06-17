@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
 #[allow(unused_imports)]
-use crate::clients::{CodebergClient, GithubClient, GitlabClient};
+use crate::clients::GitlabClient;
+use crate::clients::{CodebergClient, GithubClient, RelgetClient};
 
 use super::App;
 use super::coding::{
@@ -31,7 +32,7 @@ pub fn create_app(
     id: &str, gh_token: Option<String>, cb_token: Option<String>, _gl_token: Option<String>,
     offline: bool,
 ) -> Option<Box<dyn App>> {
-    let client = Arc::new(GithubClient::new(gh_token, offline));
+    let client: Arc<dyn RelgetClient> = Arc::new(GithubClient::new(gh_token, offline));
     match id {
         Age::ID => Some(Box::new(Age::new(client))),
         Agg::ID => Some(Box::new(Agg::new(client))),
@@ -99,9 +100,8 @@ pub fn create_app(
         Mdbook::ID => Some(Box::new(Mdbook::new(client))),
         Miller::ID => Some(Box::new(Miller::new(client))),
         Mergiraf::ID => {
-            Some(Box::new(Mergiraf::new(Arc::new(CodebergClient::new(
-                cb_token, offline,
-            )))))
+            let cb_client: Arc<dyn RelgetClient> = Arc::new(CodebergClient::new(cb_token, offline));
+            Some(Box::new(Mergiraf::new(cb_client)))
         }
         Mkcert::ID => Some(Box::new(Mkcert::new(client))),
         Neovide::ID => Some(Box::new(Neovide::new(client))),

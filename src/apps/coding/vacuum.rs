@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::{App, gen_completions_subcommand};
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct Vacuum {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Vacuum {
@@ -16,7 +16,7 @@ impl Vacuum {
     const OWNER: &'static str = "daveshanley";
     const REPO: &'static str = "vacuum";
     const EXE_NAME: &'static str = "vacuum";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Vacuum {

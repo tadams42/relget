@@ -4,6 +4,7 @@ use std::sync::Mutex;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 use super::cache::{CachedFile, ReleaseMetadata, RelgetCache};
+use super::client_trait::RelgetClient;
 use super::rate_limit::RateLimitError;
 
 static CACHE: Lazy<Mutex<RelgetCache>> =
@@ -19,15 +20,17 @@ pub struct CodebergClient {
 
 impl CodebergClient {
     pub fn new(token: Option<String>, offline: bool) -> Self { Self { token, offline } }
+}
 
-    pub fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
-        self.latest_release_where(owner, repo, |_| true)
+impl RelgetClient for CodebergClient {
+    fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
+        self.latest_release_where(owner, repo, &|_| true)
     }
 
     /// Like `latest_release`, but only considers releases whose `tag_name` satisfies
-    /// `tag_filter`. See `GithubClient::latest_release_where` for rationale.
-    pub fn latest_release_where(
-        &self, owner: &str, repo: &str, tag_filter: impl Fn(&str) -> bool,
+    /// `tag_filter`. See [`RelgetClient::latest_release_where`] for rationale.
+    fn latest_release_where(
+        &self, owner: &str, repo: &str, tag_filter: &dyn Fn(&str) -> bool,
     ) -> Result<ReleaseMetadata> {
         {
             let mut cache = CACHE.lock().unwrap();
@@ -89,7 +92,7 @@ impl CodebergClient {
         Ok(release)
     }
 
-    pub fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<CachedFile> {
+    fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<CachedFile> {
         if RATE_LIMITED.load(Ordering::Relaxed) {
             return Err(anyhow!(RateLimitError { site: "Codeberg" }));
         }

@@ -2,7 +2,7 @@ use anyhow::{Result, anyhow};
 use chrono::{DateTime, Duration, Utc};
 
 use crate::apps::{ManPagesStatus, ShellCompletionsStatus, all_app_entries};
-use crate::clients::{CodebergClient, GithubClient, GitlabClient, ReleaseMetadata};
+use crate::clients::{CodebergClient, GithubClient, GitlabClient, ReleaseMetadata, RelgetClient};
 
 use clap::Args;
 
@@ -70,12 +70,13 @@ fn fetch_release(
 ) -> Result<ReleaseMetadata> {
     let (host, owner, repo) =
         parse_url_parts(url).ok_or_else(|| anyhow!("cannot parse url: {}", url))?;
-    match host {
-        "github.com" => GithubClient::new(gh_token, offline).latest_release(owner, repo),
-        "codeberg.org" => CodebergClient::new(cb_token, offline).latest_release(owner, repo),
-        "gitlab.com" => GitlabClient::new(gl_token, offline).latest_release(owner, repo),
-        h => Err(anyhow!("unknown host: {}", h)),
-    }
+    let client: Box<dyn RelgetClient> = match host {
+        "github.com" => Box::new(GithubClient::new(gh_token, offline)),
+        "codeberg.org" => Box::new(CodebergClient::new(cb_token, offline)),
+        "gitlab.com" => Box::new(GitlabClient::new(gl_token, offline)),
+        h => return Err(anyhow!("unknown host: {}", h)),
+    };
+    client.latest_release(owner, repo)
 }
 
 fn release_has_x86_musl(asset_names: &[String]) -> bool {

@@ -2,12 +2,12 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Choose {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Choose {
@@ -15,7 +15,7 @@ impl Choose {
     const OWNER: &'static str = "theryangeary";
     const REPO: &'static str = "choose";
     const EXE_NAME: &'static str = "choose";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Choose {

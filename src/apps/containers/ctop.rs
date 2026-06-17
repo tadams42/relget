@@ -2,12 +2,12 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Ctop {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Ctop {
@@ -16,7 +16,7 @@ impl Ctop {
     const REPO: &'static str = "ctop";
     const EXE_NAME: &'static str = "ctop";
 
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Ctop {

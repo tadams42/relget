@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct Lnav {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Lnav {
@@ -16,7 +16,7 @@ impl Lnav {
     const OWNER: &'static str = "tstack";
     const REPO: &'static str = "lnav";
     const EXE_NAME: &'static str = "lnav";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Lnav {

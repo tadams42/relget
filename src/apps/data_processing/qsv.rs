@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::{GithubClient, ReleaseMetadata};
+use crate::clients::{ReleaseMetadata, RelgetClient};
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
@@ -31,13 +31,13 @@ pub fn extract_named(
 }
 
 pub struct Qsv {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Qsv {
     pub const ID: &'static str = "qsv";
     const EXE_NAME: &'static str = "qsv";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Qsv {

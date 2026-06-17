@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::CodebergClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Mergiraf {
-    client: Arc<CodebergClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Mergiraf {
@@ -17,7 +17,7 @@ impl Mergiraf {
     const REPO: &'static str = "mergiraf";
 
     const EXE_NAME: &'static str = "mergiraf";
-    pub fn new(client: Arc<CodebergClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Mergiraf {

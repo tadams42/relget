@@ -62,7 +62,7 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
@@ -73,13 +73,13 @@ const NAMED_BINS: &[&str] = &[
 ];
 
 pub struct QsvAll {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl QsvAll {
     pub const ID: &'static str = "qsv-all";
     const EXE_NAME: &'static str = "qsv";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for QsvAll {

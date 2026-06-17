@@ -2,12 +2,12 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct Jaq {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Jaq {
@@ -15,7 +15,7 @@ impl Jaq {
     const OWNER: &'static str = "01mf02";
     const REPO: &'static str = "jaq";
     const EXE_NAME: &'static str = "jaq";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Jaq {

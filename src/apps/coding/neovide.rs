@@ -4,12 +4,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Neovide {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Neovide {
@@ -18,7 +18,7 @@ impl Neovide {
     const REPO: &'static str = "neovide";
     const FALLBACK_VERSION: &'static str = "0.15.2";
     const EXE_NAME: &'static str = "neovide";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Neovide {

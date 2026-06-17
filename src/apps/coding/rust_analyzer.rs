@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct RustAnalyzer {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl RustAnalyzer {
@@ -16,7 +16,7 @@ impl RustAnalyzer {
     const OWNER: &'static str = "rust-lang";
     const REPO: &'static str = "rust-analyzer";
     const EXE_NAME: &'static str = "rust-analyzer";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for RustAnalyzer {
@@ -25,7 +25,7 @@ impl App for RustAnalyzer {
     fn released_version(&self) -> Result<AppVersion> {
         let release = self
             .client
-            .latest_release_where(Self::OWNER, Self::REPO, |tag| tag.starts_with('v'))?;
+            .latest_release_where(Self::OWNER, Self::REPO, &|tag| tag.starts_with('v'))?;
         // GitHub tags use CalVer ("2026-05-18") but the binary reports a build-counter
         // version ("0.3.2904"). The release body always contains the latter on line 2 as
         // "(v0.3.2904)", so we scan the body first to get a version comparable to the
@@ -48,7 +48,7 @@ impl App for RustAnalyzer {
     fn download(&self) -> Result<AppAssets> {
         let release = self
             .client
-            .latest_release_where(Self::OWNER, Self::REPO, |tag| tag.starts_with('v'))?;
+            .latest_release_where(Self::OWNER, Self::REPO, &|tag| tag.starts_with('v'))?;
         let name = release.find_asset(|a| a == "rust-analyzer-x86_64-unknown-linux-gnu.gz")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);

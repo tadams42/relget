@@ -4,12 +4,12 @@ use anyhow::{Result, anyhow};
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Btop {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Btop {
@@ -17,7 +17,7 @@ impl Btop {
     const OWNER: &'static str = "aristocratos";
     const REPO: &'static str = "btop";
     const EXE_NAME: &'static str = "btop";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Btop {

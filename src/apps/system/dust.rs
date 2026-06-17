@@ -73,12 +73,12 @@ use anyhow::{Result, anyhow};
 
 use crate::apps::App;
 use crate::archive::ArchiveExtractor;
-use crate::clients::GithubClient;
+use crate::clients::RelgetClient;
 use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Dust {
-    client: Arc<GithubClient>,
+    client: Arc<dyn RelgetClient>,
 }
 
 impl Dust {
@@ -86,7 +86,7 @@ impl Dust {
     const OWNER: &'static str = "bootandy";
     const REPO: &'static str = "dust";
     const EXE_NAME: &'static str = "dust";
-    pub fn new(client: Arc<GithubClient>) -> Self { Self { client } }
+    pub fn new(client: Arc<dyn RelgetClient>) -> Self { Self { client } }
 }
 
 impl App for Dust {
