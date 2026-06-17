@@ -1,11 +1,11 @@
 use anyhow::{Result, anyhow};
 
-pub(super) const DEFAULT_PREFIX: &str = "/usr/local";
-
 use crate::apps::all_apps_identifiers;
 use crate::config::Config;
 
-pub fn get_github_token() -> Result<Option<String>> {
+pub(super) const DEFAULT_PREFIX: &str = "/usr/local";
+
+pub(super) fn get_github_token() -> Result<Option<String>> {
     let token = Config::github_token()?;
     match &token {
         Some(_) => log::info!("msg=github-token-loaded"),
@@ -14,7 +14,7 @@ pub fn get_github_token() -> Result<Option<String>> {
     Ok(token)
 }
 
-pub fn get_codeberg_token() -> Result<Option<String>> {
+pub(super) fn get_codeberg_token() -> Result<Option<String>> {
     let token = Config::codeberg_token()?;
     match &token {
         Some(_) => log::info!("msg=codeberg-token-loaded"),
@@ -23,7 +23,7 @@ pub fn get_codeberg_token() -> Result<Option<String>> {
     Ok(token)
 }
 
-pub fn get_gitlab_token() -> Result<Option<String>> {
+pub(super) fn get_gitlab_token() -> Result<Option<String>> {
     let token = Config::gitlab_token()?;
     match &token {
         Some(_) => log::info!("msg=gitlab-token-loaded"),
@@ -32,7 +32,9 @@ pub fn get_gitlab_token() -> Result<Option<String>> {
     Ok(token)
 }
 
-pub fn select_apps(user_chosen: &[String], configured_set: Option<&str>) -> Result<Vec<String>> {
+pub(super) fn select_apps(
+    user_chosen: &[String], configured_set: Option<&str>,
+) -> Result<Vec<String>> {
     let known: Vec<&str> = all_apps_identifiers();
 
     if let Some(set_name) = configured_set {

@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, ManPage};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct Fend {
@@ -31,8 +31,8 @@ impl App for Fend {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "fend.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "fend.1")],
             ..Default::default()
         }
     }
@@ -53,8 +53,8 @@ impl App for Fend {
             .download_asset(Self::OWNER, Self::REPO, "fend.1")?;
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new(Self::EXE_NAME, binary_data)),
-            man_pages: vec![ManPage::new(1, "fend.1", man_asset.data)],
+            binary: Some(AppBinary::new_with_data(Self::EXE_NAME, binary_data)),
+            man_pages: vec![ManPage::new_with_data(1, "fend.1", man_asset.data)],
             ..Default::default()
         })
     }

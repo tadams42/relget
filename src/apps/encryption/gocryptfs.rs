@@ -34,9 +34,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, ManPage};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct Gocryptfs {
@@ -63,11 +63,11 @@ impl App for Gocryptfs {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            other_bins: vec![AppBinary::descriptor("gocryptfs-xray")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            other_bins: vec![AppBinary::new("gocryptfs-xray")],
             man_pages: vec![
-                ManPage::descriptor(1, "gocryptfs.1"),
-                ManPage::descriptor(1, "gocryptfs-xray.1"),
+                ManPage::new(1, "gocryptfs.1"),
+                ManPage::new(1, "gocryptfs-xray.1"),
             ],
             ..Default::default()
         }
@@ -79,17 +79,21 @@ impl App for Gocryptfs {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new(
+            binary: Some(AppBinary::new_with_data(
                 Self::EXE_NAME,
                 extractor.extract_by_filename(Self::EXE_NAME)?,
             )),
-            other_bins: vec![AppBinary::new(
+            other_bins: vec![AppBinary::new_with_data(
                 "gocryptfs-xray",
                 extractor.extract_by_filename("gocryptfs-xray")?,
             )],
             man_pages: vec![
-                ManPage::new(1, "gocryptfs.1", extractor.extract_by_filename("gocryptfs.1")?),
-                ManPage::new(
+                ManPage::new_with_data(
+                    1,
+                    "gocryptfs.1",
+                    extractor.extract_by_filename("gocryptfs.1")?,
+                ),
+                ManPage::new_with_data(
                     1,
                     "gocryptfs-xray.1",
                     extractor.extract_by_filename("gocryptfs-xray.1")?,

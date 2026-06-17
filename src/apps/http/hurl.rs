@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Hurl {
@@ -30,19 +30,19 @@ impl App for Hurl {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-            other_bins:  vec![AppBinary::descriptor("hurlfmt")],
+            binary:      Some(AppBinary::new(Self::EXE_NAME)),
+            other_bins:  vec![AppBinary::new("hurlfmt")],
             man_pages:   vec![
-                ManPage::descriptor(1, "hurl.1.gz"),
-                ManPage::descriptor(1, "hurlfmt.1.gz"),
+                ManPage::new(1, "hurl.1.gz"),
+                ManPage::new(1, "hurlfmt.1.gz"),
             ],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
-                Completion::zsh_desc("hurlfmt"),
-                Completion::bash_desc("hurlfmt"),
-                Completion::fish_desc("hurlfmt"),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
+                Completion::new(Shell::Zsh, "hurlfmt"),
+                Completion::new(Shell::Bash, "hurlfmt"),
+                Completion::new(Shell::Fish, "hurlfmt"),
             ],
         }
     }
@@ -53,19 +53,34 @@ impl App for Hurl {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let e = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary:      Some(AppBinary::new("hurl", e.extract_by_filename("hurl")?)),
-            other_bins:  vec![AppBinary::new("hurlfmt", e.extract_by_filename("hurlfmt")?)],
+            binary:      Some(AppBinary::new_with_data("hurl", e.extract_by_filename("hurl")?)),
+            other_bins:  vec![AppBinary::new_with_data(
+                "hurlfmt",
+                e.extract_by_filename("hurlfmt")?,
+            )],
             man_pages:   vec![
-                ManPage::new(1, "hurl.1.gz", e.extract_by_filename("hurl.1.gz")?),
-                ManPage::new(1, "hurlfmt.1.gz", e.extract_by_filename("hurlfmt.1.gz")?),
+                ManPage::new_with_data(1, "hurl.1.gz", e.extract_by_filename("hurl.1.gz")?),
+                ManPage::new_with_data(1, "hurlfmt.1.gz", e.extract_by_filename("hurlfmt.1.gz")?),
             ],
             completions: vec![
-                Completion::zsh("hurl", e.extract_by_filename("_hurl")?),
-                Completion::bash("hurl", e.extract_by_filename("hurl.bash")?),
-                Completion::fish("hurl", e.extract_by_filename("hurl.fish")?),
-                Completion::zsh("hurlfmt", e.extract_by_filename("_hurlfmt")?),
-                Completion::bash("hurlfmt", e.extract_by_filename("hurlfmt.bash")?),
-                Completion::fish("hurlfmt", e.extract_by_filename("hurlfmt.fish")?),
+                Completion::new_with_data(Shell::Zsh, "hurl", e.extract_by_filename("_hurl")?),
+                Completion::new_with_data(Shell::Bash, "hurl", e.extract_by_filename("hurl.bash")?),
+                Completion::new_with_data(Shell::Fish, "hurl", e.extract_by_filename("hurl.fish")?),
+                Completion::new_with_data(
+                    Shell::Zsh,
+                    "hurlfmt",
+                    e.extract_by_filename("_hurlfmt")?,
+                ),
+                Completion::new_with_data(
+                    Shell::Bash,
+                    "hurlfmt",
+                    e.extract_by_filename("hurlfmt.bash")?,
+                ),
+                Completion::new_with_data(
+                    Shell::Fish,
+                    "hurlfmt",
+                    e.extract_by_filename("hurlfmt.fish")?,
+                ),
             ],
         })
     }

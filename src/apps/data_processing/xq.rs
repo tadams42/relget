@@ -1,10 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, Shell};
 use crate::apps::{App, gen_completions_subcommand};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct Xq {
@@ -30,11 +30,11 @@ impl App for Xq {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -49,7 +49,7 @@ impl App for Xq {
         let binary_data = extractor.extract_by_filename("xq")?;
         let completions = gen_completions_subcommand("xq", &binary_data, "completion")?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("xq", binary_data)),
+            binary: Some(AppBinary::new_with_data("xq", binary_data)),
             completions,
             ..Default::default()
         })

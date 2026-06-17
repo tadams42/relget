@@ -1,10 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::apps::{App, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Rclone {
@@ -32,12 +32,12 @@ impl App for Rclone {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "rclone.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "rclone.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -53,14 +53,26 @@ impl App for Rclone {
         let man_data = extractor.extract_by_filename("rclone.1")?;
         let completions = with_temp_exe("rclone", &binary_data, |exe_path| {
             Ok(vec![
-                Completion::zsh("rclone", run_cmd(exe_path, &["completion", "zsh", "-"])?),
-                Completion::bash("rclone", run_cmd(exe_path, &["completion", "bash", "-"])?),
-                Completion::fish("rclone", run_cmd(exe_path, &["completion", "fish", "-"])?),
+                Completion::new_with_data(
+                    Shell::Zsh,
+                    "rclone",
+                    run_cmd(exe_path, &["completion", "zsh", "-"])?,
+                ),
+                Completion::new_with_data(
+                    Shell::Bash,
+                    "rclone",
+                    run_cmd(exe_path, &["completion", "bash", "-"])?,
+                ),
+                Completion::new_with_data(
+                    Shell::Fish,
+                    "rclone",
+                    run_cmd(exe_path, &["completion", "fish", "-"])?,
+                ),
             ])
         })?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("rclone", binary_data)),
-            man_pages: vec![ManPage::new(1, "rclone.1", man_data)],
+            binary: Some(AppBinary::new_with_data("rclone", binary_data)),
+            man_pages: vec![ManPage::new_with_data(1, "rclone.1", man_data)],
             completions,
             ..Default::default()
         })

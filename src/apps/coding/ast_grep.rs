@@ -1,10 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, Shell};
 use crate::apps::{App, gen_completions_subcommand};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct AstGrep {
@@ -30,15 +30,15 @@ impl App for AstGrep {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            other_bins: vec![AppBinary::descriptor("sg")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            other_bins: vec![AppBinary::new("sg")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
-                Completion::zsh_desc("sg"),
-                Completion::bash_desc("sg"),
-                Completion::fish_desc("sg"),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
+                Completion::new(Shell::Zsh, "sg"),
+                Completion::new(Shell::Bash, "sg"),
+                Completion::new(Shell::Fish, "sg"),
             ],
             ..Default::default()
         }
@@ -54,8 +54,8 @@ impl App for AstGrep {
         let mut completions = gen_completions_subcommand("ast-grep", &ag_data, "completions")?;
         completions.extend(gen_completions_subcommand("sg", &sg_data, "completions")?);
         Ok(AppAssets {
-            binary: Some(AppBinary::new("ast-grep", ag_data)),
-            other_bins: vec![AppBinary::new("sg", sg_data)],
+            binary: Some(AppBinary::new_with_data("ast-grep", ag_data)),
+            other_bins: vec![AppBinary::new_with_data("sg", sg_data)],
             completions,
             ..Default::default()
         })

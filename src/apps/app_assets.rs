@@ -2,32 +2,40 @@ use std::path::{Path, PathBuf};
 
 #[derive(Debug, Clone)]
 pub struct AppBinary {
-    pub name: String,
-    pub data: Vec<u8>,
+    name: String,
+    data: Vec<u8>,
 }
 
 impl AppBinary {
-    pub fn new(name: impl Into<String>, data: Vec<u8>) -> Self {
+    pub fn new(name: impl Into<String>) -> Self { Self::new_with_data(name, vec![]) }
+
+    pub fn new_with_data(name: impl Into<String>, data: Vec<u8>) -> Self {
         Self {
             name: name.into(),
             data,
         }
     }
 
-    pub fn descriptor(name: impl Into<String>) -> Self { Self::new(name, vec![]) }
+    pub fn name(&self) -> &str { &self.name }
+
+    pub fn data(&self) -> &[u8] { &self.data }
 
     pub fn install_path(&self, prefix: &Path) -> PathBuf { prefix.join("bin").join(&self.name) }
 }
 
 #[derive(Debug, Clone)]
 pub struct ManPage {
-    pub section:   u8,
-    pub file_name: String,
-    pub data:      Vec<u8>,
+    section:   u8,
+    file_name: String,
+    data:      Vec<u8>,
 }
 
 impl ManPage {
-    pub fn new(section: u8, file_name: impl Into<String>, data: Vec<u8>) -> Self {
+    pub fn new(section: u8, file_name: impl Into<String>) -> Self {
+        Self::new_with_data(section, file_name, vec![])
+    }
+
+    pub fn new_with_data(section: u8, file_name: impl Into<String>, data: Vec<u8>) -> Self {
         Self {
             section,
             file_name: file_name.into(),
@@ -35,9 +43,7 @@ impl ManPage {
         }
     }
 
-    pub fn descriptor(section: u8, file_name: impl Into<String>) -> Self {
-        Self::new(section, file_name, vec![])
-    }
+    pub fn data(&self) -> &[u8] { &self.data }
 
     pub fn install_path(&self, prefix: &Path) -> PathBuf {
         prefix
@@ -57,39 +63,29 @@ pub enum Shell {
 
 #[derive(Debug, Clone)]
 pub struct Completion {
-    pub shell:    Shell,
-    pub app_name: String,
-    pub data:     Vec<u8>,
+    shell:    Shell,
+    app_name: String,
+    data:     Vec<u8>,
 }
 
 impl Completion {
-    pub fn zsh(app_name: impl Into<String>, data: Vec<u8>) -> Self {
+    pub fn new(shell: Shell, app_name: impl Into<String>) -> Self {
         Self {
-            shell: Shell::Zsh,
+            shell,
+            app_name: app_name.into(),
+            data: vec![],
+        }
+    }
+
+    pub fn new_with_data(shell: Shell, app_name: impl Into<String>, data: Vec<u8>) -> Self {
+        Self {
+            shell,
             app_name: app_name.into(),
             data,
         }
     }
 
-    pub fn bash(app_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self {
-            shell: Shell::Bash,
-            app_name: app_name.into(),
-            data,
-        }
-    }
-
-    pub fn fish(app_name: impl Into<String>, data: Vec<u8>) -> Self {
-        Self {
-            shell: Shell::Fish,
-            app_name: app_name.into(),
-            data,
-        }
-    }
-
-    pub fn zsh_desc(app_name: impl Into<String>) -> Self { Self::zsh(app_name, vec![]) }
-    pub fn bash_desc(app_name: impl Into<String>) -> Self { Self::bash(app_name, vec![]) }
-    pub fn fish_desc(app_name: impl Into<String>) -> Self { Self::fish(app_name, vec![]) }
+    pub fn data(&self) -> &[u8] { &self.data }
 
     pub fn file_name(&self) -> String {
         match self.shell {
@@ -143,13 +139,13 @@ mod tests {
 
     #[test]
     fn binary_install_path() {
-        let b = AppBinary::descriptor("rg");
+        let b = AppBinary::new("rg");
         assert_eq!(b.install_path(&prefix()), PathBuf::from("/usr/local/bin/rg"));
     }
 
     #[test]
     fn man_page_install_path_section_1() {
-        let m = ManPage::descriptor(1, "rg.1");
+        let m = ManPage::new(1, "rg.1");
         assert_eq!(
             m.install_path(&prefix()),
             PathBuf::from("/usr/local/share/man/man1/rg.1")
@@ -158,25 +154,25 @@ mod tests {
 
     #[test]
     fn completion_file_name_zsh() {
-        let c = Completion::zsh_desc("rg");
+        let c = Completion::new(Shell::Zsh, "rg");
         assert_eq!(c.file_name(), "_rg");
     }
 
     #[test]
     fn completion_file_name_bash() {
-        let c = Completion::bash_desc("rg");
+        let c = Completion::new(Shell::Bash, "rg");
         assert_eq!(c.file_name(), "rg");
     }
 
     #[test]
     fn completion_file_name_fish() {
-        let c = Completion::fish_desc("rg");
+        let c = Completion::new(Shell::Fish, "rg");
         assert_eq!(c.file_name(), "rg.fish");
     }
 
     #[test]
     fn completion_install_path_zsh() {
-        let c = Completion::zsh_desc("rg");
+        let c = Completion::new(Shell::Zsh, "rg");
         assert_eq!(
             c.install_path(&prefix()),
             PathBuf::from("/usr/local/share/zsh/site-functions/_rg")
@@ -185,7 +181,7 @@ mod tests {
 
     #[test]
     fn completion_install_path_bash() {
-        let c = Completion::bash_desc("rg");
+        let c = Completion::new(Shell::Bash, "rg");
         assert_eq!(
             c.install_path(&prefix()),
             PathBuf::from("/usr/local/share/bash-completion/completions/rg")
@@ -194,7 +190,7 @@ mod tests {
 
     #[test]
     fn completion_install_path_fish() {
-        let c = Completion::fish_desc("rg");
+        let c = Completion::new(Shell::Fish, "rg");
         assert_eq!(
             c.install_path(&prefix()),
             PathBuf::from("/usr/local/share/fish/vendor_completions.d/rg.fish")

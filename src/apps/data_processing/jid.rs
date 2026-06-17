@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Jid {
@@ -30,7 +30,7 @@ impl App for Jid {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             ..Default::default()
         }
     }
@@ -41,7 +41,7 @@ impl App for Jid {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new("jid", extractor.extract_by_filename("jid")?)),
+            binary: Some(AppBinary::new_with_data("jid", extractor.extract_by_filename("jid")?)),
             ..Default::default()
         })
     }

@@ -1,10 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::apps::{App, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Xh {
@@ -30,12 +30,12 @@ impl App for Xh {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "xh.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "xh.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -53,15 +53,27 @@ impl App for Xh {
         let (man_pages, completions) = with_temp_exe("xh", &binary_data, |exe_path| {
             let man_data = run_cmd(exe_path, &["--generate", "man"])?;
             let completions = vec![
-                Completion::bash("xh", run_cmd(exe_path, &["--generate", "complete-bash"])?),
-                Completion::zsh("xh", run_cmd(exe_path, &["--generate", "complete-zsh"])?),
-                Completion::fish("xh", run_cmd(exe_path, &["--generate", "complete-fish"])?),
+                Completion::new_with_data(
+                    Shell::Bash,
+                    "xh",
+                    run_cmd(exe_path, &["--generate", "complete-bash"])?,
+                ),
+                Completion::new_with_data(
+                    Shell::Zsh,
+                    "xh",
+                    run_cmd(exe_path, &["--generate", "complete-zsh"])?,
+                ),
+                Completion::new_with_data(
+                    Shell::Fish,
+                    "xh",
+                    run_cmd(exe_path, &["--generate", "complete-fish"])?,
+                ),
             ];
-            Ok((vec![ManPage::new(1, "xh.1", man_data)], completions))
+            Ok((vec![ManPage::new_with_data(1, "xh.1", man_data)], completions))
         })?;
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("xh", binary_data)),
+            binary: Some(AppBinary::new_with_data("xh", binary_data)),
             man_pages,
             completions,
             ..Default::default()

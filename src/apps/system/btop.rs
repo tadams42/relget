@@ -3,9 +3,9 @@ use std::sync::Arc;
 use anyhow::{Result, anyhow};
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Btop {
@@ -31,7 +31,7 @@ impl App for Btop {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             ..Default::default()
         }
     }
@@ -49,7 +49,7 @@ impl App for Btop {
         let extractor = ArchiveExtractor::new(&bin_name, asset.data);
         let binary_data = extractor.extract_by_filename(Self::EXE_NAME)?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new(Self::EXE_NAME, binary_data)),
+            binary: Some(AppBinary::new_with_data(Self::EXE_NAME, binary_data)),
             ..Default::default()
         })
     }

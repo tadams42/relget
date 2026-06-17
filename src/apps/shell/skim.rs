@@ -1,10 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::apps::{App, gen_completions_subcommand};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Skim {
@@ -30,15 +30,12 @@ impl App for Skim {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![
-                ManPage::descriptor(1, "sk.1"),
-                ManPage::descriptor(1, "sk-tmux.1"),
-            ],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "sk.1"), ManPage::new(1, "sk-tmux.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -54,14 +51,14 @@ impl App for Skim {
         let mut man_pages = Vec::new();
         for man_name in &["sk.1", "sk-tmux.1"] {
             if let Ok(data) = extractor.extract_by_filename(man_name) {
-                man_pages.push(ManPage::new(1, *man_name, data));
+                man_pages.push(ManPage::new_with_data(1, *man_name, data));
             }
         }
 
         let completions = gen_completions_subcommand("sk", &binary_data, "--shell")?;
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("sk", binary_data)),
+            binary: Some(AppBinary::new_with_data("sk", binary_data)),
             man_pages,
             completions,
             ..Default::default()

@@ -1,10 +1,10 @@
 use anyhow::{Context, Result};
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::apps::{App, gen_completions_subcommand, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Hugo {
@@ -33,12 +33,12 @@ impl App for Hugo {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "hugo.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "hugo.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -59,11 +59,11 @@ impl App for Hugo {
             let man_dir = man_tmp.path().to_str().context("non-UTF8 path")?;
             run_cmd(exe_path, &["gen", "man", "--dir", man_dir])?;
             let man_data = std::fs::read(man_tmp.path().join("hugo.1"))?;
-            Ok((completions, vec![ManPage::new(1, "hugo.1", man_data)]))
+            Ok((completions, vec![ManPage::new_with_data(1, "hugo.1", man_data)]))
         })?;
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("hugo", binary_data)),
+            binary: Some(AppBinary::new_with_data("hugo", binary_data)),
             completions,
             man_pages,
             ..Default::default()

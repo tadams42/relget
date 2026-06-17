@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Mergiraf {
@@ -31,7 +31,7 @@ impl App for Mergiraf {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             ..Default::default()
         }
     }
@@ -44,7 +44,10 @@ impl App for Mergiraf {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new("mergiraf", extractor.extract_by_filename("mergiraf")?)),
+            binary: Some(AppBinary::new_with_data(
+                "mergiraf",
+                extractor.extract_by_filename("mergiraf")?,
+            )),
             ..Default::default()
         })
     }

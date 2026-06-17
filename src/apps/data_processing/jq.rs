@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, ManPage};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct Jq {
@@ -30,8 +30,8 @@ impl App for Jq {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "jq.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "jq.1")],
             ..Default::default()
         }
     }
@@ -52,8 +52,8 @@ impl App for Jq {
             .download_asset(Self::OWNER, Self::REPO, &bin_name)?;
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("jq", bin_asset.data)),
-            man_pages: vec![ManPage::new(1, "jq.1", man_data)],
+            binary: Some(AppBinary::new_with_data("jq", bin_asset.data)),
+            man_pages: vec![ManPage::new_with_data(1, "jq.1", man_data)],
             ..Default::default()
         })
     }

@@ -1,3 +1,4 @@
+pub(crate) mod app_assets;
 mod app_trait;
 mod apps_factory;
 mod apps_registry;

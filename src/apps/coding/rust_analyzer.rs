@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct RustAnalyzer {
@@ -40,7 +40,7 @@ impl App for RustAnalyzer {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             ..Default::default()
         }
     }
@@ -55,7 +55,7 @@ impl App for RustAnalyzer {
         // Single .gz file decompresses to one file; member name = name without .gz
         let binary_data = extractor.extract("rust-analyzer-x86_64-unknown-linux-gnu")?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("rust-analyzer", binary_data)),
+            binary: Some(AppBinary::new_with_data("rust-analyzer", binary_data)),
             ..Default::default()
         })
     }

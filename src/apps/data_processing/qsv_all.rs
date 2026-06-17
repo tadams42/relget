@@ -61,9 +61,9 @@ use std::path::Path;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 use super::qsv::{OWNER, REPO, extract_named, gnu_zip_asset_name};
@@ -91,18 +91,18 @@ impl App for QsvAll {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             other_bins: vec![
-                AppBinary::descriptor("qsvdp"),
-                AppBinary::descriptor("qsvlite"),
-                AppBinary::descriptor("qsvmcp"),
-                AppBinary::descriptor("qsvp"),
-                AppBinary::descriptor("qsvpdp"),
-                AppBinary::descriptor("qsvplite"),
-                AppBinary::descriptor("qsvpmcp"),
-                AppBinary::descriptor("qsvpy311"),
-                AppBinary::descriptor("qsvpy312"),
-                AppBinary::descriptor("qsvpy313"),
+                AppBinary::new("qsvdp"),
+                AppBinary::new("qsvlite"),
+                AppBinary::new("qsvmcp"),
+                AppBinary::new("qsvp"),
+                AppBinary::new("qsvpdp"),
+                AppBinary::new("qsvplite"),
+                AppBinary::new("qsvpmcp"),
+                AppBinary::new("qsvpy311"),
+                AppBinary::new("qsvpy312"),
+                AppBinary::new("qsvpy313"),
             ],
             ..Default::default()
         }
@@ -120,7 +120,7 @@ impl App for QsvAll {
         let mut other_bins = Vec::new();
         for &bin_name in NAMED_BINS {
             let data = extract_named(&extractor, &members, bin_name)?;
-            other_bins.push(AppBinary::new(bin_name, data));
+            other_bins.push(AppBinary::new_with_data(bin_name, data));
         }
 
         // qsvpy* glob
@@ -131,12 +131,12 @@ impl App for QsvAll {
             };
             if fname.starts_with("qsvpy") && !fname.contains('.') {
                 let data = extractor.extract(member)?;
-                other_bins.push(AppBinary::new(fname, data));
+                other_bins.push(AppBinary::new_with_data(fname, data));
             }
         }
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("qsv", qsv_data)),
+            binary: Some(AppBinary::new_with_data("qsv", qsv_data)),
             other_bins,
             ..Default::default()
         })

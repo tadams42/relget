@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Rgxg {
@@ -32,12 +32,12 @@ impl App for Rgxg {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "rgxg.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "rgxg.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -56,12 +56,12 @@ impl App for Rgxg {
         let fish_data = extractor.extract_by_filename("rgxg.fish")?;
         let zsh_data = extractor.extract_by_filename("_rgxg")?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new(Self::EXE_NAME, binary_data)),
-            man_pages: vec![ManPage::new(1, "rgxg.1", man_data)],
+            binary: Some(AppBinary::new_with_data(Self::EXE_NAME, binary_data)),
+            man_pages: vec![ManPage::new_with_data(1, "rgxg.1", man_data)],
             completions: vec![
-                Completion::zsh(Self::EXE_NAME, zsh_data),
-                Completion::bash(Self::EXE_NAME, bash_data),
-                Completion::fish(Self::EXE_NAME, fish_data),
+                Completion::new_with_data(Shell::Zsh, Self::EXE_NAME, zsh_data),
+                Completion::new_with_data(Shell::Bash, Self::EXE_NAME, bash_data),
+                Completion::new_with_data(Shell::Fish, Self::EXE_NAME, fish_data),
             ],
             ..Default::default()
         })

@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Worktrunk {
@@ -30,8 +30,8 @@ impl App for Worktrunk {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            other_bins: vec![AppBinary::descriptor("git-wt")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            other_bins: vec![AppBinary::new("git-wt")],
             ..Default::default()
         }
     }
@@ -43,8 +43,8 @@ impl App for Worktrunk {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new("wt", extractor.extract_by_filename("wt")?)),
-            other_bins: vec![AppBinary::new(
+            binary: Some(AppBinary::new_with_data("wt", extractor.extract_by_filename("wt")?)),
+            other_bins: vec![AppBinary::new_with_data(
                 "git-wt",
                 extractor.extract_by_filename("git-wt")?,
             )],

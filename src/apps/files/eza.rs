@@ -3,9 +3,9 @@ use std::path::Path;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Eza {
@@ -31,16 +31,16 @@ impl App for Eza {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             man_pages: vec![
-                ManPage::descriptor(1, "eza.1"),
-                ManPage::descriptor(5, "eza_colors.5"),
-                ManPage::descriptor(5, "eza_colors-explanation.5"),
+                ManPage::new(1, "eza.1"),
+                ManPage::new(5, "eza_colors.5"),
+                ManPage::new(5, "eza_colors-explanation.5"),
             ],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -75,9 +75,17 @@ impl App for Eza {
             .cloned()
             .ok_or_else(|| anyhow!("Can't find eza bash completion"))?;
         let completions = vec![
-            Completion::zsh("eza", comp_extractor.extract_by_filename("_eza")?),
-            Completion::fish("eza", comp_extractor.extract_by_filename("eza.fish")?),
-            Completion::bash("eza", comp_extractor.extract(&bash_entry)?),
+            Completion::new_with_data(
+                Shell::Zsh,
+                "eza",
+                comp_extractor.extract_by_filename("_eza")?,
+            ),
+            Completion::new_with_data(
+                Shell::Fish,
+                "eza",
+                comp_extractor.extract_by_filename("eza.fish")?,
+            ),
+            Completion::new_with_data(Shell::Bash, "eza", comp_extractor.extract(&bash_entry)?),
         ];
 
         let man_name = release.find_asset(|a| a.starts_with("man-") && a.ends_with(".tar.gz"))?;
@@ -91,7 +99,7 @@ impl App for Eza {
             let file_name = path.file_name().and_then(|f| f.to_str()).unwrap_or("");
             if let Some(section_str) = path.extension().and_then(|e| e.to_str()) {
                 if let Ok(section) = section_str.parse::<u8>() {
-                    man_pages.push(ManPage::new(
+                    man_pages.push(ManPage::new_with_data(
                         section,
                         file_name,
                         man_extractor.extract(&member)?,
@@ -101,7 +109,7 @@ impl App for Eza {
         }
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("eza", binary_data)),
+            binary: Some(AppBinary::new_with_data("eza", binary_data)),
             man_pages,
             completions,
             ..Default::default()

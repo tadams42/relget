@@ -1,10 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::apps::{App, gen_completions_subcommand, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Caddy {
@@ -32,40 +32,40 @@ impl App for Caddy {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             man_pages: vec![
-                ManPage::descriptor(8, "caddy.8"),
-                ManPage::descriptor(8, "caddy-adapt.8"),
-                ManPage::descriptor(8, "caddy-add-package.8"),
-                ManPage::descriptor(8, "caddy-build-info.8"),
-                ManPage::descriptor(8, "caddy-completion.8"),
-                ManPage::descriptor(8, "caddy-environ.8"),
-                ManPage::descriptor(8, "caddy-file-server.8"),
-                ManPage::descriptor(8, "caddy-file-server-export-template.8"),
-                ManPage::descriptor(8, "caddy-fmt.8"),
-                ManPage::descriptor(8, "caddy-hash-password.8"),
-                ManPage::descriptor(8, "caddy-list-modules.8"),
-                ManPage::descriptor(8, "caddy-manpage.8"),
-                ManPage::descriptor(8, "caddy-reload.8"),
-                ManPage::descriptor(8, "caddy-remove-package.8"),
-                ManPage::descriptor(8, "caddy-respond.8"),
-                ManPage::descriptor(8, "caddy-reverse-proxy.8"),
-                ManPage::descriptor(8, "caddy-run.8"),
-                ManPage::descriptor(8, "caddy-start.8"),
-                ManPage::descriptor(8, "caddy-stop.8"),
-                ManPage::descriptor(8, "caddy-storage.8"),
-                ManPage::descriptor(8, "caddy-storage-export.8"),
-                ManPage::descriptor(8, "caddy-storage-import.8"),
-                ManPage::descriptor(8, "caddy-trust.8"),
-                ManPage::descriptor(8, "caddy-untrust.8"),
-                ManPage::descriptor(8, "caddy-upgrade.8"),
-                ManPage::descriptor(8, "caddy-validate.8"),
-                ManPage::descriptor(8, "caddy-version.8"),
+                ManPage::new(8, "caddy.8"),
+                ManPage::new(8, "caddy-adapt.8"),
+                ManPage::new(8, "caddy-add-package.8"),
+                ManPage::new(8, "caddy-build-info.8"),
+                ManPage::new(8, "caddy-completion.8"),
+                ManPage::new(8, "caddy-environ.8"),
+                ManPage::new(8, "caddy-file-server.8"),
+                ManPage::new(8, "caddy-file-server-export-template.8"),
+                ManPage::new(8, "caddy-fmt.8"),
+                ManPage::new(8, "caddy-hash-password.8"),
+                ManPage::new(8, "caddy-list-modules.8"),
+                ManPage::new(8, "caddy-manpage.8"),
+                ManPage::new(8, "caddy-reload.8"),
+                ManPage::new(8, "caddy-remove-package.8"),
+                ManPage::new(8, "caddy-respond.8"),
+                ManPage::new(8, "caddy-reverse-proxy.8"),
+                ManPage::new(8, "caddy-run.8"),
+                ManPage::new(8, "caddy-start.8"),
+                ManPage::new(8, "caddy-stop.8"),
+                ManPage::new(8, "caddy-storage.8"),
+                ManPage::new(8, "caddy-storage-export.8"),
+                ManPage::new(8, "caddy-storage-import.8"),
+                ManPage::new(8, "caddy-trust.8"),
+                ManPage::new(8, "caddy-untrust.8"),
+                ManPage::new(8, "caddy-upgrade.8"),
+                ManPage::new(8, "caddy-validate.8"),
+                ManPage::new(8, "caddy-version.8"),
             ],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -91,14 +91,14 @@ impl App for Caddy {
                 if path.extension().and_then(|e| e.to_str()) == Some("8") {
                     let fname = path.file_name().unwrap().to_str().unwrap().to_string();
                     let data = std::fs::read(&path)?;
-                    man_pages.push(ManPage::new(8, fname, data));
+                    man_pages.push(ManPage::new_with_data(8, fname, data));
                 }
             }
             Ok((completions, man_pages))
         })?;
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("caddy", binary_data)),
+            binary: Some(AppBinary::new_with_data("caddy", binary_data)),
             completions,
             man_pages,
             ..Default::default()

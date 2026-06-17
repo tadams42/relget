@@ -1,10 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::apps::{App, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Fzf {
@@ -30,15 +30,12 @@ impl App for Fzf {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![
-                ManPage::descriptor(1, "fzf.1"),
-                ManPage::descriptor(1, "fzf-tmux.1"),
-            ],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "fzf.1"), ManPage::new(1, "fzf-tmux.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -57,9 +54,9 @@ impl App for Fzf {
 
         let completions = with_temp_exe("fzf", &binary_data, |exe_path| {
             Ok(vec![
-                Completion::zsh("fzf", run_cmd(exe_path, &["--zsh"])?),
-                Completion::bash("fzf", run_cmd(exe_path, &["--bash"])?),
-                Completion::fish("fzf", run_cmd(exe_path, &["--fish"])?),
+                Completion::new_with_data(Shell::Zsh, "fzf", run_cmd(exe_path, &["--zsh"])?),
+                Completion::new_with_data(Shell::Bash, "fzf", run_cmd(exe_path, &["--bash"])?),
+                Completion::new_with_data(Shell::Fish, "fzf", run_cmd(exe_path, &["--fish"])?),
             ])
         })?;
 
@@ -70,7 +67,7 @@ impl App for Fzf {
         let tb_extractor = ArchiveExtractor::new(&tb_name, tarball.data);
         let mut man_pages = Vec::new();
         for man_name in &["fzf.1", "fzf-tmux.1"] {
-            man_pages.push(ManPage::new(
+            man_pages.push(ManPage::new_with_data(
                 1,
                 *man_name,
                 tb_extractor.extract_by_filename(man_name)?,
@@ -78,7 +75,7 @@ impl App for Fzf {
         }
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("fzf", binary_data)),
+            binary: Some(AppBinary::new_with_data("fzf", binary_data)),
             man_pages,
             completions,
             ..Default::default()

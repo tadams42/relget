@@ -1,10 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::apps::{App, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Ripgrep {
@@ -30,12 +30,12 @@ impl App for Ripgrep {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "rg.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "rg.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -52,14 +52,26 @@ impl App for Ripgrep {
         let man_data = extractor.extract_by_filename("rg.1")?;
         let completions = with_temp_exe("rg", &binary_data, |exe| {
             Ok(vec![
-                Completion::zsh("rg", run_cmd(exe, &["--generate", "complete-zsh"])?),
-                Completion::bash("rg", run_cmd(exe, &["--generate", "complete-bash"])?),
-                Completion::fish("rg", run_cmd(exe, &["--generate", "complete-fish"])?),
+                Completion::new_with_data(
+                    Shell::Zsh,
+                    "rg",
+                    run_cmd(exe, &["--generate", "complete-zsh"])?,
+                ),
+                Completion::new_with_data(
+                    Shell::Bash,
+                    "rg",
+                    run_cmd(exe, &["--generate", "complete-bash"])?,
+                ),
+                Completion::new_with_data(
+                    Shell::Fish,
+                    "rg",
+                    run_cmd(exe, &["--generate", "complete-fish"])?,
+                ),
             ])
         })?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("rg", binary_data)),
-            man_pages: vec![ManPage::new(1, "rg.1", man_data)],
+            binary: Some(AppBinary::new_with_data("rg", binary_data)),
+            man_pages: vec![ManPage::new_with_data(1, "rg.1", man_data)],
             completions,
             ..Default::default()
         })

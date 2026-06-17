@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Tabiew {
@@ -30,12 +30,12 @@ impl App for Tabiew {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "tabiew.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "tabiew.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -56,16 +56,28 @@ impl App for Tabiew {
         let extras = ArchiveExtractor::new(&extras_name, extras_asset.data);
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new(Self::EXE_NAME, bin_asset.data)),
-            man_pages: vec![ManPage::new(
+            binary: Some(AppBinary::new_with_data(Self::EXE_NAME, bin_asset.data)),
+            man_pages: vec![ManPage::new_with_data(
                 1,
                 "tabiew.1",
                 extras.extract("manual/tabiew.1")?,
             )],
             completions: vec![
-                Completion::zsh(Self::EXE_NAME, extras.extract("completion/_tw")?),
-                Completion::bash(Self::EXE_NAME, extras.extract("completion/tw.bash")?),
-                Completion::fish(Self::EXE_NAME, extras.extract("completion/tw.fish")?),
+                Completion::new_with_data(
+                    Shell::Zsh,
+                    Self::EXE_NAME,
+                    extras.extract("completion/_tw")?,
+                ),
+                Completion::new_with_data(
+                    Shell::Bash,
+                    Self::EXE_NAME,
+                    extras.extract("completion/tw.bash")?,
+                ),
+                Completion::new_with_data(
+                    Shell::Fish,
+                    Self::EXE_NAME,
+                    extras.extract("completion/tw.fish")?,
+                ),
             ],
             ..Default::default()
         })

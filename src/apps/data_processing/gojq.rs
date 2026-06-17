@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, Shell};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct GoJq {
@@ -30,8 +30,8 @@ impl App for GoJq {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            completions: vec![Completion::zsh_desc(Self::EXE_NAME)],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            completions: vec![Completion::new(Shell::Zsh, Self::EXE_NAME)],
             ..Default::default()
         }
     }
@@ -43,9 +43,13 @@ impl App for GoJq {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new("gojq", extractor.extract_by_filename("gojq")?)),
+            binary: Some(AppBinary::new_with_data(
+                "gojq",
+                extractor.extract_by_filename("gojq")?,
+            )),
             // Only zsh completion is packaged (no runtime generation supported)
-            completions: vec![Completion::zsh(
+            completions: vec![Completion::new_with_data(
+                Shell::Zsh,
                 "gojq",
                 extractor.extract_by_filename("_gojq")?,
             )],

@@ -2,10 +2,10 @@ use anyhow::Result;
 use std::os::unix::fs::PermissionsExt;
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, Shell};
 use crate::apps::{App, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct Uv {
@@ -31,15 +31,15 @@ impl App for Uv {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            other_bins: vec![AppBinary::descriptor("uvx")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            other_bins: vec![AppBinary::new("uvx")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
-                Completion::zsh_desc("uvx"),
-                Completion::bash_desc("uvx"),
-                Completion::fish_desc("uvx"),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
+                Completion::new(Shell::Zsh, "uvx"),
+                Completion::new(Shell::Bash, "uvx"),
+                Completion::new(Shell::Fish, "uvx"),
             ],
             ..Default::default()
         }
@@ -58,15 +58,33 @@ impl App for Uv {
             std::fs::write(&uvx_path, &uvx_data)?;
             std::fs::set_permissions(&uvx_path, std::fs::Permissions::from_mode(0o755))?;
             let comps = vec![
-                Completion::zsh("uv", run_cmd(exe_path, &["generate-shell-completion", "zsh"])?),
-                Completion::bash("uv", run_cmd(exe_path, &["generate-shell-completion", "bash"])?),
-                Completion::fish("uv", run_cmd(exe_path, &["generate-shell-completion", "fish"])?),
-                Completion::zsh("uvx", run_cmd(exe_path, &["--generate-shell-completion", "zsh"])?),
-                Completion::bash(
+                Completion::new_with_data(
+                    Shell::Zsh,
+                    "uv",
+                    run_cmd(exe_path, &["generate-shell-completion", "zsh"])?,
+                ),
+                Completion::new_with_data(
+                    Shell::Bash,
+                    "uv",
+                    run_cmd(exe_path, &["generate-shell-completion", "bash"])?,
+                ),
+                Completion::new_with_data(
+                    Shell::Fish,
+                    "uv",
+                    run_cmd(exe_path, &["generate-shell-completion", "fish"])?,
+                ),
+                Completion::new_with_data(
+                    Shell::Zsh,
+                    "uvx",
+                    run_cmd(exe_path, &["--generate-shell-completion", "zsh"])?,
+                ),
+                Completion::new_with_data(
+                    Shell::Bash,
                     "uvx",
                     run_cmd(exe_path, &["--generate-shell-completion", "bash"])?,
                 ),
-                Completion::fish(
+                Completion::new_with_data(
+                    Shell::Fish,
                     "uvx",
                     run_cmd(exe_path, &["--generate-shell-completion", "fish"])?,
                 ),
@@ -75,8 +93,8 @@ impl App for Uv {
         })?;
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("uv", uv_data)),
-            other_bins: vec![AppBinary::new("uvx", uvx_data)],
+            binary: Some(AppBinary::new_with_data("uv", uv_data)),
+            other_bins: vec![AppBinary::new_with_data("uvx", uvx_data)],
             completions,
             ..Default::default()
         })

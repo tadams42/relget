@@ -3,9 +3,9 @@ use std::path::Path;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, ManPage};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct Zoxide {
@@ -31,14 +31,14 @@ impl App for Zoxide {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             man_pages: vec![
-                ManPage::descriptor(1, "zoxide.1"),
-                ManPage::descriptor(1, "zoxide-add.1"),
-                ManPage::descriptor(1, "zoxide-import.1"),
-                ManPage::descriptor(1, "zoxide-init.1"),
-                ManPage::descriptor(1, "zoxide-query.1"),
-                ManPage::descriptor(1, "zoxide-remove.1"),
+                ManPage::new(1, "zoxide.1"),
+                ManPage::new(1, "zoxide-add.1"),
+                ManPage::new(1, "zoxide-import.1"),
+                ManPage::new(1, "zoxide-init.1"),
+                ManPage::new(1, "zoxide-query.1"),
+                ManPage::new(1, "zoxide-remove.1"),
             ],
             ..Default::default()
         }
@@ -59,13 +59,17 @@ impl App for Zoxide {
             let file_name = path.file_name().and_then(|f| f.to_str()).unwrap_or("");
             if let Some(section_str) = path.extension().and_then(|e| e.to_str()) {
                 if let Ok(section) = section_str.parse::<u8>() {
-                    man_pages.push(ManPage::new(section, file_name, extractor.extract(&member)?));
+                    man_pages.push(ManPage::new_with_data(
+                        section,
+                        file_name,
+                        extractor.extract(&member)?,
+                    ));
                 }
             }
         }
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("zoxide", binary_data)),
+            binary: Some(AppBinary::new_with_data("zoxide", binary_data)),
             man_pages,
             // zoxide init generates completions at shell init time; no static files needed
             ..Default::default()

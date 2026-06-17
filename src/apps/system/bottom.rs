@@ -4,9 +4,9 @@ use std::sync::Arc;
 use anyhow::{Result, anyhow};
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Bottom {
@@ -32,12 +32,12 @@ impl App for Bottom {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "btm.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "btm.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -81,7 +81,7 @@ impl App for Bottom {
             .ok_or_else(|| anyhow!("Can't find btm.1.gz in manpage.tar.gz"))?;
         let compressed = man_extractor.extract(&man_gz_entry)?;
         let decompressed = ArchiveExtractor::new("man.gz", compressed).extract("man")?;
-        let man_pages = vec![ManPage::new(1, "btm.1", decompressed)];
+        let man_pages = vec![ManPage::new_with_data(1, "btm.1", decompressed)];
 
         // Completions from completion.tar.gz — contains btm.bash, _btm, btm.fish
         let comp_asset_name = release
@@ -102,7 +102,11 @@ impl App for Bottom {
                 .map(|f| f == "btm.bash")
                 .unwrap_or(false)
         }) {
-            completions.push(Completion::bash(Self::EXE_NAME, comp_extractor.extract(m)?));
+            completions.push(Completion::new_with_data(
+                Shell::Bash,
+                Self::EXE_NAME,
+                comp_extractor.extract(m)?,
+            ));
         }
         if let Some(m) = comp_members.iter().find(|m| {
             Path::new(m)
@@ -110,7 +114,11 @@ impl App for Bottom {
                 .map(|f| f == "_btm")
                 .unwrap_or(false)
         }) {
-            completions.push(Completion::zsh(Self::EXE_NAME, comp_extractor.extract(m)?));
+            completions.push(Completion::new_with_data(
+                Shell::Zsh,
+                Self::EXE_NAME,
+                comp_extractor.extract(m)?,
+            ));
         }
         if let Some(m) = comp_members.iter().find(|m| {
             Path::new(m)
@@ -118,11 +126,15 @@ impl App for Bottom {
                 .map(|f| f == "btm.fish")
                 .unwrap_or(false)
         }) {
-            completions.push(Completion::fish(Self::EXE_NAME, comp_extractor.extract(m)?));
+            completions.push(Completion::new_with_data(
+                Shell::Fish,
+                Self::EXE_NAME,
+                comp_extractor.extract(m)?,
+            ));
         }
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new(Self::EXE_NAME, binary_data)),
+            binary: Some(AppBinary::new_with_data(Self::EXE_NAME, binary_data)),
             man_pages,
             completions,
             ..Default::default()

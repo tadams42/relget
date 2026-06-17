@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Hyperfine {
@@ -31,12 +31,12 @@ impl App for Hyperfine {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "hyperfine.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "hyperfine.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -50,19 +50,31 @@ impl App for Hyperfine {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new(
+            binary: Some(AppBinary::new_with_data(
                 Self::EXE_NAME,
                 extractor.extract_by_filename(Self::EXE_NAME)?,
             )),
-            man_pages: vec![ManPage::new(
+            man_pages: vec![ManPage::new_with_data(
                 1,
                 "hyperfine.1",
                 extractor.extract_by_filename("hyperfine.1")?,
             )],
             completions: vec![
-                Completion::bash(Self::EXE_NAME, extractor.extract_by_filename("hyperfine.bash")?),
-                Completion::zsh(Self::EXE_NAME, extractor.extract_by_filename("_hyperfine")?),
-                Completion::fish(Self::EXE_NAME, extractor.extract_by_filename("hyperfine.fish")?),
+                Completion::new_with_data(
+                    Shell::Bash,
+                    Self::EXE_NAME,
+                    extractor.extract_by_filename("hyperfine.bash")?,
+                ),
+                Completion::new_with_data(
+                    Shell::Zsh,
+                    Self::EXE_NAME,
+                    extractor.extract_by_filename("_hyperfine")?,
+                ),
+                Completion::new_with_data(
+                    Shell::Fish,
+                    Self::EXE_NAME,
+                    extractor.extract_by_filename("hyperfine.fish")?,
+                ),
             ],
             ..Default::default()
         })

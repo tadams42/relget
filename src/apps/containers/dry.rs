@@ -2,8 +2,8 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary};
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Dry {
@@ -29,7 +29,7 @@ impl App for Dry {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             ..Default::default()
         }
     }
@@ -39,7 +39,7 @@ impl App for Dry {
         let name = release.find_asset(|a| a == "dry-linux-amd64")?;
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("dry", asset.data)),
+            binary: Some(AppBinary::new_with_data("dry", asset.data)),
             ..Default::default()
         })
     }

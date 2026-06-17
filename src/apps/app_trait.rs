@@ -1,4 +1,4 @@
-use crate::types::{AppAssets, Completion, Shell};
+use crate::apps::app_assets::{AppAssets, Completion, Shell};
 use crate::version::AppVersion;
 use anyhow::{Context, Result};
 use std::fs;
@@ -42,11 +42,7 @@ pub(in crate::apps) fn gen_completions_with_shell_arg(
             let mut args: Vec<&str> = prefix_args.to_vec();
             args.push(shell_name);
             let stdout = run_cmd(exe, &args)?;
-            completions.push(Completion {
-                shell:    *shell,
-                app_name: exe_name.to_string(),
-                data:     stdout,
-            });
+            completions.push(Completion::new_with_data(*shell, exe_name, stdout));
         }
         Ok(completions)
     })
@@ -69,11 +65,7 @@ pub(in crate::apps) fn gen_completions_shell_flag(
             (Shell::Fish, "fish"),
         ] {
             let stdout = run_cmd(exe, &[subcommand, flag, shell_name])?;
-            completions.push(Completion {
-                shell:    *shell,
-                app_name: exe_name.to_string(),
-                data:     stdout,
-            });
+            completions.push(Completion::new_with_data(*shell, exe_name, stdout));
         }
         Ok(completions)
     })

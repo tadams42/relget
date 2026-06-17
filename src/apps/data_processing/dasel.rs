@@ -1,10 +1,10 @@
 use anyhow::Result;
 use std::sync::Arc;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::apps::{App, gen_completions_subcommand, run_cmd, with_temp_exe};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Dasel {
@@ -32,12 +32,12 @@ impl App for Dasel {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "dasel.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "dasel.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -53,11 +53,11 @@ impl App for Dasel {
         let (completions, man_pages) = with_temp_exe("dasel", &binary_data, |exe_path| {
             let completions = gen_completions_subcommand("dasel", &binary_data, "completion")?;
             let man_data = run_cmd(exe_path, &["man"])?;
-            Ok((completions, vec![ManPage::new(1, "dasel.1", man_data)]))
+            Ok((completions, vec![ManPage::new_with_data(1, "dasel.1", man_data)]))
         })?;
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("dasel", binary_data)),
+            binary: Some(AppBinary::new_with_data("dasel", binary_data)),
             completions,
             man_pages,
             ..Default::default()

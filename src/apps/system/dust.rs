@@ -72,9 +72,9 @@ use std::sync::Arc;
 use anyhow::{Result, anyhow};
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 use crate::version::AppVersion;
 
 pub struct Dust {
@@ -100,12 +100,12 @@ impl App for Dust {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "dust.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "dust.1")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
             ],
             ..Default::default()
         }
@@ -179,7 +179,7 @@ impl App for Dust {
                     let compressed = data_extractor.extract(member)?;
                     let decompressed =
                         ArchiveExtractor::new("man.gz", compressed).extract("man")?;
-                    man_pages.push(ManPage::new(section, stem, decompressed));
+                    man_pages.push(ManPage::new_with_data(section, stem, decompressed));
                 }
             } else if let Some(Ok(section)) = path
                 .extension()
@@ -187,7 +187,7 @@ impl App for Dust {
                 .map(|e| e.parse::<u8>())
             {
                 let data = data_extractor.extract(member)?;
-                man_pages.push(ManPage::new(section, file_name, data));
+                man_pages.push(ManPage::new_with_data(section, file_name, data));
             }
         }
 
@@ -200,7 +200,11 @@ impl App for Dust {
                     .map(|f| f == "dust")
                     .unwrap_or(false)
         }) {
-            completions.push(Completion::bash("dust", data_extractor.extract(m)?));
+            completions.push(Completion::new_with_data(
+                Shell::Bash,
+                "dust",
+                data_extractor.extract(m)?,
+            ));
         }
         if let Some(m) = data_members.iter().find(|m| {
             Path::new(m)
@@ -208,7 +212,11 @@ impl App for Dust {
                 .map(|f| f == "_dust")
                 .unwrap_or(false)
         }) {
-            completions.push(Completion::zsh("dust", data_extractor.extract(m)?));
+            completions.push(Completion::new_with_data(
+                Shell::Zsh,
+                "dust",
+                data_extractor.extract(m)?,
+            ));
         }
         if let Some(m) = data_members.iter().find(|m| {
             Path::new(m)
@@ -216,11 +224,15 @@ impl App for Dust {
                 .map(|f| f == "dust.fish")
                 .unwrap_or(false)
         }) {
-            completions.push(Completion::fish("dust", data_extractor.extract(m)?));
+            completions.push(Completion::new_with_data(
+                Shell::Fish,
+                "dust",
+                data_extractor.extract(m)?,
+            ));
         }
 
         Ok(AppAssets {
-            binary: Some(AppBinary::new("dust", binary_data)),
+            binary: Some(AppBinary::new_with_data("dust", binary_data)),
             man_pages,
             completions,
             ..Default::default()

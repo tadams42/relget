@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub struct Rage {
@@ -31,11 +31,8 @@ impl App for Rage {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            other_bins: vec![
-                AppBinary::descriptor("rage-keygen"),
-                AppBinary::descriptor("rage-mount"),
-            ],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            other_bins: vec![AppBinary::new("rage-keygen"), AppBinary::new("rage-mount")],
             ..Default::default()
         }
     }
@@ -47,13 +44,19 @@ impl App for Rage {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new(
+            binary: Some(AppBinary::new_with_data(
                 Self::EXE_NAME,
                 extractor.extract_by_filename(Self::EXE_NAME)?,
             )),
             other_bins: vec![
-                AppBinary::new("rage-keygen", extractor.extract_by_filename("rage-keygen")?),
-                AppBinary::new("rage-mount", extractor.extract_by_filename("rage-mount")?),
+                AppBinary::new_with_data(
+                    "rage-keygen",
+                    extractor.extract_by_filename("rage-keygen")?,
+                ),
+                AppBinary::new_with_data(
+                    "rage-mount",
+                    extractor.extract_by_filename("rage-mount")?,
+                ),
             ],
             ..Default::default()
         })

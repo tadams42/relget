@@ -2,9 +2,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, ManPage};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, ManPage};
 use crate::version::AppVersion;
 
 pub struct Duf {
@@ -31,8 +31,8 @@ impl App for Duf {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            man_pages: vec![ManPage::descriptor(1, "duf.1")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            man_pages: vec![ManPage::new(1, "duf.1")],
             ..Default::default()
         }
     }
@@ -44,11 +44,11 @@ impl App for Duf {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let extractor = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new(
+            binary: Some(AppBinary::new_with_data(
                 Self::EXE_NAME,
                 extractor.extract_by_filename(Self::EXE_NAME)?,
             )),
-            man_pages: vec![ManPage::new(
+            man_pages: vec![ManPage::new_with_data(
                 1,
                 "duf.1",
                 extractor.extract_by_filename("duf.1")?,

@@ -5,9 +5,9 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result, anyhow};
 use clap::Args;
 
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage};
 use crate::apps::{App, create_app};
 use crate::clients::RateLimitError;
-use crate::types::{AppAssets, AppBinary, Completion, ManPage};
 
 use super::helpers::{
     DEFAULT_PREFIX, get_codeberg_token, get_github_token, get_gitlab_token, select_apps,
@@ -131,7 +131,7 @@ fn install_binary(prefix: &Path, bin: &AppBinary) -> Result<PathBuf> {
     // rename() replaces the directory entry without touching the existing inode, so any running
     // process keeps its mapping on the old inode while the new binary is already in place.
     let tmp = dest.with_extension("relget-tmp");
-    fs::write(&tmp, &bin.data).with_context(|| format!("Writing binary to {:?}", dest))?;
+    fs::write(&tmp, bin.data()).with_context(|| format!("Writing binary to {:?}", dest))?;
     fs::set_permissions(&tmp, fs::Permissions::from_mode(BIN_MODE))?;
     fs::rename(&tmp, &dest).with_context(|| format!("Installing binary to {:?}", dest))?;
     Ok(dest)
@@ -140,7 +140,7 @@ fn install_binary(prefix: &Path, bin: &AppBinary) -> Result<PathBuf> {
 fn install_man_page(prefix: &Path, man: &ManPage) -> Result<PathBuf> {
     let dest = man.install_path(prefix);
     ensure_parent(&dest)?;
-    fs::write(&dest, &man.data).with_context(|| format!("Writing man page to {:?}", dest))?;
+    fs::write(&dest, man.data()).with_context(|| format!("Writing man page to {:?}", dest))?;
     fs::set_permissions(&dest, fs::Permissions::from_mode(DOC_MODE))?;
     Ok(dest)
 }
@@ -148,7 +148,7 @@ fn install_man_page(prefix: &Path, man: &ManPage) -> Result<PathBuf> {
 fn install_completion(prefix: &Path, comp: &Completion) -> Result<PathBuf> {
     let dest = comp.install_path(prefix);
     ensure_parent(&dest)?;
-    fs::write(&dest, &comp.data).with_context(|| format!("Writing completion to {:?}", dest))?;
+    fs::write(&dest, comp.data()).with_context(|| format!("Writing completion to {:?}", dest))?;
     fs::set_permissions(&dest, fs::Permissions::from_mode(DOC_MODE))?;
     Ok(dest)
 }

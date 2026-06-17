@@ -3,9 +3,9 @@ use std::path::Path;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary};
 use crate::archive::ArchiveExtractor;
 use crate::clients::{ReleaseMetadata, RelgetClient};
-use crate::types::{AppAssets, AppBinary};
 use crate::version::AppVersion;
 
 pub const OWNER: &str = "dathere";
@@ -49,7 +49,7 @@ impl App for Qsv {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
             ..Default::default()
         }
     }
@@ -62,7 +62,7 @@ impl App for Qsv {
         let members = extractor.members()?;
         let data = extract_named(&extractor, &members, "qsv")?;
         Ok(AppAssets {
-            binary: Some(AppBinary::new("qsv", data)),
+            binary: Some(AppBinary::new_with_data("qsv", data)),
             ..Default::default()
         })
     }

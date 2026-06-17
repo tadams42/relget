@@ -97,9 +97,9 @@ use anyhow::Result;
 use std::sync::Arc;
 
 use crate::apps::App;
+use crate::apps::app_assets::{AppAssets, AppBinary, Completion, Shell};
 use crate::archive::ArchiveExtractor;
 use crate::clients::RelgetClient;
-use crate::types::{AppAssets, AppBinary, Completion};
 use crate::version::AppVersion;
 
 pub struct Yazi {
@@ -125,15 +125,15 @@ impl App for Yazi {
 
     fn assets(&self) -> AppAssets {
         AppAssets {
-            binary: Some(AppBinary::descriptor(Self::EXE_NAME)),
-            other_bins: vec![AppBinary::descriptor("ya")],
+            binary: Some(AppBinary::new(Self::EXE_NAME)),
+            other_bins: vec![AppBinary::new("ya")],
             completions: vec![
-                Completion::zsh_desc(Self::EXE_NAME),
-                Completion::bash_desc(Self::EXE_NAME),
-                Completion::fish_desc(Self::EXE_NAME),
-                Completion::zsh_desc("ya"),
-                Completion::bash_desc("ya"),
-                Completion::fish_desc("ya"),
+                Completion::new(Shell::Zsh, Self::EXE_NAME),
+                Completion::new(Shell::Bash, Self::EXE_NAME),
+                Completion::new(Shell::Fish, Self::EXE_NAME),
+                Completion::new(Shell::Zsh, "ya"),
+                Completion::new(Shell::Bash, "ya"),
+                Completion::new(Shell::Fish, "ya"),
             ],
             ..Default::default()
         }
@@ -145,15 +145,15 @@ impl App for Yazi {
         let asset = self.client.download_asset(Self::OWNER, Self::REPO, &name)?;
         let e = ArchiveExtractor::new(&name, asset.data);
         Ok(AppAssets {
-            binary: Some(AppBinary::new("yazi", e.extract_by_filename("yazi")?)),
-            other_bins: vec![AppBinary::new("ya", e.extract_by_filename("ya")?)],
+            binary: Some(AppBinary::new_with_data("yazi", e.extract_by_filename("yazi")?)),
+            other_bins: vec![AppBinary::new_with_data("ya", e.extract_by_filename("ya")?)],
             completions: vec![
-                Completion::zsh("yazi", e.extract_by_filename("_yazi")?),
-                Completion::bash("yazi", e.extract_by_filename("yazi.bash")?),
-                Completion::fish("yazi", e.extract_by_filename("yazi.fish")?),
-                Completion::zsh("ya", e.extract_by_filename("_ya")?),
-                Completion::bash("ya", e.extract_by_filename("ya.bash")?),
-                Completion::fish("ya", e.extract_by_filename("ya.fish")?),
+                Completion::new_with_data(Shell::Zsh, "yazi", e.extract_by_filename("_yazi")?),
+                Completion::new_with_data(Shell::Bash, "yazi", e.extract_by_filename("yazi.bash")?),
+                Completion::new_with_data(Shell::Fish, "yazi", e.extract_by_filename("yazi.fish")?),
+                Completion::new_with_data(Shell::Zsh, "ya", e.extract_by_filename("_ya")?),
+                Completion::new_with_data(Shell::Bash, "ya", e.extract_by_filename("ya.bash")?),
+                Completion::new_with_data(Shell::Fish, "ya", e.extract_by_filename("ya.fish")?),
             ],
             ..Default::default()
         })
