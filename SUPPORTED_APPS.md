@@ -448,6 +448,9 @@ Things to improve builtin shell capabilities.
 - [erdtree](https://github.com/solidiquis/erdtree)
   Multi-threaded filesystem tree visualizer and disk usage analyzer, gitignore-aware
 
+- [netwatch](https://github.com/matthart1983/netwatch)
+  See what your network is actually doing — live, in your terminal. A network monitor that reads encrypted traffic, names the process behind every connection, and catches malware calling home. One binary. Zero config.
+
 - [procs](https://github.com/dalance/procs)
   Modern replacement for ps with colored output and search
 

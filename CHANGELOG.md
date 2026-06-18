@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added netwatch app in system category
 - feat: added syswatch app in system category
 - feat: added axe app in shell category
 - feat: added rust-parallel app in shell category
