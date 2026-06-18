@@ -26,7 +26,7 @@ use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, Hl, LazyJournal, Lnav, Logdy, Loggo, Nerdlog, Rhit, Tailspin, Vector};
 use super::networking::{Boring, Dog, Doggo};
 use super::shell::{Atuin, Axe, Carapace, Fzf, Rgxg, RustParallel, Skim, Starship, Vivid, Zoxide};
-use super::system::{Bottom, Btop, Duf, Dust, Dysk, Erdtree, Procs};
+use super::system::{Bottom, Btop, Duf, Dust, Dysk, Erdtree, Procs, Syswatch};
 
 pub fn create_app(
     id: &str, gh_token: Option<String>, cb_token: Option<String>, _gl_token: Option<String>,
@@ -155,6 +155,7 @@ pub fn create_app(
         Yazi::ID => Some(Box::new(Yazi::new(client))),
         Worktrunk::ID => Some(Box::new(Worktrunk::new(client))),
         Yq::ID => Some(Box::new(Yq::new(client))),
+        Syswatch::ID => Some(Box::new(Syswatch::new(client))),
         Zoxide::ID => Some(Box::new(Zoxide::new(client))),
         _ => None,
     }

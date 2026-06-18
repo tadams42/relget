@@ -451,3 +451,6 @@ Things to improve builtin shell capabilities.
 - [procs](https://github.com/dalance/procs)
   Modern replacement for ps with colored output and search
 
+- [syswatch](https://github.com/matthart1983/syswatch)
+  Single-host system diagnostics in your terminal. The terminal you open when something feels off — before you reach for htop, iostat, nettop, powermetrics, and a notebook full of one-liners.
+
