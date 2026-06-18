@@ -399,6 +399,9 @@ Things to improve builtin shell capabilities.
 - [atuin](https://github.com/atuinsh/atuin)
   Shell history search backed by SQLite with sync
 
+- [axe](https://github.com/jacek-kurlit/axe)
+  xargs alternative that supports arguments ordering
+
 - [carapace](https://github.com/carapace-sh/carapace-bin)
   Multi-shell completion generator for command-line tools
 

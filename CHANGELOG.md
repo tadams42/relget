@@ -1,5 +1,7 @@
 ## unreleased
 
+- feat: added axe app in shell category
+- feat: added rust-parallel app in shell category
 
 ## v0.7.2 (2026-06-12)
 

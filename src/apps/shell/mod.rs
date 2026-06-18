@@ -1,4 +1,5 @@
 pub mod atuin;
+pub mod axe;
 pub mod carapace;
 pub mod fzf;
 pub mod rgxg;
@@ -9,6 +10,7 @@ pub mod vivid;
 pub mod zoxide;
 
 pub use atuin::Atuin;
+pub use axe::Axe;
 pub use carapace::Carapace;
 pub use fzf::Fzf;
 pub use rgxg::Rgxg;

@@ -1038,6 +1038,15 @@ has_musl = false
 man_pages = "unavailable"
 shell_completions = "unavailable"
 
+[[shell.apps]]
+id = "axe"
+exe_name = "axe"
+url = "https://github.com/jacek-kurlit/axe"
+description = "xargs alternative that supports arguments ordering"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
 [system]
 title = "System"
 
