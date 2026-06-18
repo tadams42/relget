@@ -1,4 +1,5 @@
 mod ast_grep;
+mod deadbranch;
 mod fend;
 mod grex;
 mod hyperfine;
@@ -19,6 +20,7 @@ mod ty;
 mod vacuum;
 
 pub use ast_grep::AstGrep;
+pub use deadbranch::Deadbranch;
 pub use fend::Fend;
 pub use grex::Grex;
 pub use hyperfine::Hyperfine;

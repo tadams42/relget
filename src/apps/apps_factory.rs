@@ -6,8 +6,8 @@ use crate::clients::{CodebergClient, GithubClient, RelgetClient};
 
 use super::App;
 use super::coding::{
-    AstGrep, Fend, Grex, Hyperfine, Mailpit, Mkcert, Neovide, Pyrefly, Replibyte, Rgx, Ruff,
-    RustAnalyzer, Scc, Sqruff, Stylua, Taplo, Tombi, Ty, Vacuum,
+    AstGrep, Deadbranch, Fend, Grex, Hyperfine, Mailpit, Mkcert, Neovide, Pyrefly, Replibyte, Rgx,
+    Ruff, RustAnalyzer, Scc, Sqruff, Stylua, Taplo, Tombi, Ty, Vacuum,
 };
 use super::containers::{Ctop, D4S, DockMate, Dry, Dtop, LazyDocker};
 use super::data_processing::{
@@ -54,6 +54,7 @@ pub fn create_app(
         Curlie::ID => Some(Box::new(Curlie::new(client))),
         Ctop::ID => Some(Box::new(Ctop::new(client))),
         D4S::ID => Some(Box::new(D4S::new(client))),
+        Deadbranch::ID => Some(Box::new(Deadbranch::new(client))),
         Dasel::ID => Some(Box::new(Dasel::new(client))),
         Dtop::ID => Some(Box::new(Dtop::new(client))),
         Delta::ID => Some(Box::new(Delta::new(client))),

@@ -12,6 +12,15 @@ man_pages = "unavailable"
 shell_completions = "self_generated"
 
 [[coding.apps]]
+id = "deadbranch"
+exe_name = "deadbranch"
+url = "https://github.com/armgabrielyan/deadbranch"
+description = "Clean up stale git branches safely"
+has_musl = true
+man_pages = "bundled"
+shell_completions = "self_generated"
+
+[[coding.apps]]
 id = "fend"
 exe_name = "fend"
 url = "https://github.com/printfn/fend"

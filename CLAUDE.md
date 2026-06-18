@@ -41,7 +41,7 @@ src/
   archive.rs        # ArchiveExtractor: .tar.gz/.tar.bz2/.tar.xz/.tar/.zip/.deb/.gz
   installer.rs      # install_assets()
   uninstaller.rs    # uninstall_app(): calls app.assets() to remove exactly those paths
-  types.rs          # AppBinary, ManPage, Shell, Completion, AppAssets
+    app_assets.rs   # AppBinary, ManPage, Shell, Completion, AppAssets
   version.rs        # AppVersion(u64, u64, u64) with find_in(), parse(), Display, Ord
 ```
 
@@ -57,12 +57,12 @@ GitHub app:
      ```rust
      fn assets(&self) -> AppAssets {
          AppAssets {
-             binary:      Some(AppBinary::descriptor(Self::EXE_NAME)),
-             man_pages:   vec![ManPage::descriptor(1, "myapp.1")],
+             binary:      Some(AppBinary::new(Self::EXE_NAME)),
+             man_pages:   vec![ManPage::new(1, "myapp.1")],
              completions: vec![
-                 Completion::zsh_desc(Self::EXE_NAME),
-                 Completion::bash_desc(Self::EXE_NAME),
-                 Completion::fish_desc(Self::EXE_NAME),
+                 Completion::new(Shell::Zsh, Self::EXE_NAME),
+                 Completion::new(Shell::Bash, Self::EXE_NAME),
+                 Completion::new(Shell::Fish, Self::EXE_NAME),
              ],
              ..Default::default()
          }
@@ -83,7 +83,7 @@ GitHub app:
    shell_completions = "unavailable" # unavailable | bundled | self_generated
    ```
 4. Update `create_app()` in `src/apps/apps_factory.rs`: add
-   `"myapp" => Some(Box::new(myapp::MyApp::new(client)))`
+   `MyApp::ID => Some(Box::new(MyApp::new(client)))`
 
 Codeberg app:
 

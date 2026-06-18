@@ -7,6 +7,9 @@ Linters, formatters and various coding helpers.
 - [ast-grep](https://github.com/ast-grep/ast-grep)
   Fast code search, lint, and rewriting using AST patterns
 
+- [deadbranch](https://github.com/armgabrielyan/deadbranch)
+  Clean up stale git branches safely
+
 - [fend](https://github.com/printfn/fend)
   Arbitrary-precision unit-aware calculator
 
