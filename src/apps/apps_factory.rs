@@ -25,7 +25,7 @@ use super::git::{Delta, Difftastic, GitFlowNext, Gitleaks, Lazygit, Mergiraf, Se
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
 use super::logs::{Gonzo, Hl, LazyJournal, Lnav, Logdy, Loggo, Nerdlog, Rhit, Tailspin, Vector};
 use super::networking::{Boring, Dog, Doggo};
-use super::shell::{Atuin, Carapace, Fzf, Rgxg, Skim, Starship, Vivid, Zoxide};
+use super::shell::{Atuin, Carapace, Fzf, Rgxg, RustParallel, Skim, Starship, Vivid, Zoxide};
 use super::system::{Bottom, Btop, Duf, Dust, Dysk, Erdtree, Procs};
 
 pub fn create_app(
@@ -118,6 +118,7 @@ pub fn create_app(
         Rgxg::ID => Some(Box::new(Rgxg::new(client))),
         Ruff::ID => Some(Box::new(Ruff::new(client))),
         Ripgrep::ID => Some(Box::new(Ripgrep::new(client))),
+        RustParallel::ID => Some(Box::new(RustParallel::new(client))),
         Qq::ID => Some(Box::new(Qq::new(client))),
         Qsv::ID => Some(Box::new(Qsv::new(client))),
         QsvAll::ID => Some(Box::new(QsvAll::new(client))),

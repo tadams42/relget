@@ -408,6 +408,9 @@ Things to improve builtin shell capabilities.
 - [rgxg](https://github.com/tadams42/rgxg)
   Command-line tool to generate extended regular expressions (ranges, CIDRs, alternations)
 
+- [rust-parallel](https://github.com/aaronriekenberg/rust-parallel)
+  Parallel command runner with stdin/args dispatch and rate limiting
+
 - [skim](https://github.com/skim-rs/skim)
   Fuzzy finder in Rust (alternative to `fzf`)
 

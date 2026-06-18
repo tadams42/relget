@@ -1029,6 +1029,15 @@ has_musl = true
 man_pages = "bundled"
 shell_completions = "unavailable"
 
+[[shell.apps]]
+id = "rust-parallel"
+exe_name = "rust-parallel"
+url = "https://github.com/aaronriekenberg/rust-parallel"
+description = "Parallel command runner with stdin/args dispatch and rate limiting"
+has_musl = false
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
 [system]
 title = "System"
 
