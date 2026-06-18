@@ -436,6 +436,9 @@ Things to improve builtin shell capabilities.
 - [btop](https://github.com/aristocratos/btop)
   A monitor of resources (`top` / `htop` alternative)
 
+- [diskwatch](https://github.com/matthart1983/diskwatch)
+  Single-host disk diagnostics in your terminal. The terminal you open when the disk light won't stop blinking — before you reach for iostat, iotop, smartctl, lsblk, df, du, and a panic.
+
 - [duf](https://github.com/muesli/duf)
   Disk Usage/Free Utility — human-friendly `df` alternative
 

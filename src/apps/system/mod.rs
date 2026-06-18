@@ -1,5 +1,6 @@
 mod bottom;
 mod btop;
+mod diskwatch;
 mod duf;
 mod dust;
 mod dysk;
@@ -10,6 +11,7 @@ mod syswatch;
 
 pub use bottom::Bottom;
 pub use btop::Btop;
+pub use diskwatch::Diskwatch;
 pub use duf::Duf;
 pub use dust::Dust;
 pub use dysk::Dysk;

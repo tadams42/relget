@@ -1114,6 +1114,15 @@ man_pages = "unavailable"
 shell_completions = "self_generated"
 
 [[system.apps]]
+id = "diskwatch"
+exe_name = "diskwatch"
+url = "https://github.com/matthart1983/diskwatch"
+description = "Single-host disk diagnostics in your terminal. The terminal you open when the disk light won't stop blinking — before you reach for iostat, iotop, smartctl, lsblk, df, du, and a panic."
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "unavailable"
+
+[[system.apps]]
 id = "netwatch"
 exe_name = "netwatch"
 url = "https://github.com/matthart1983/netwatch"

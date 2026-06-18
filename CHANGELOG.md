@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added diskwatch app in system category
 - feat: added netwatch app in system category
 - feat: added syswatch app in system category
 - feat: added axe app in shell category
