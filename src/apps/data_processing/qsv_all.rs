@@ -56,17 +56,13 @@
 //   under a shorter filename for automated fallback logic within qsv.
 // - `qsv-20.1.0-geocode-index.rkyv.cities15000.sz`: The Snappy-compressed version of the database.
 //   It is much smaller to download but requires decompression.
-use anyhow::Result;
 use std::path::Path;
 use std::sync::Arc;
 
-use crate::apps::App;
-use crate::apps::app_assets::{AppAssets, AppBinary};
-use crate::archive::ArchiveExtractor;
-use crate::clients::RelgetClient;
-use crate::version::AppVersion;
+use anyhow::Result;
 
 use super::qsv::{OWNER, REPO, extract_named, gnu_zip_asset_name};
+use crate::{App, AppAssets, AppBinary, AppVersion, ArchiveExtractor, RelgetClient};
 
 const NAMED_BINS: &[&str] = &[
     "qsvdp", "qsvlite", "qsvmcp", "qsvp", "qsvpdp", "qsvplite", "qsvpmcp",

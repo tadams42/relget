@@ -1,12 +1,11 @@
-use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
-use crate::apps::App;
-use crate::apps::app_assets::{AppAssets, AppBinary};
-use crate::archive::ArchiveExtractor;
-use crate::clients::{ReleaseMetadata, RelgetClient};
-use crate::version::AppVersion;
+use anyhow::{Result, anyhow};
+
+use crate::{
+    App, AppAssets, AppBinary, AppVersion, ArchiveExtractor, ReleaseMetadata, RelgetClient,
+};
 
 pub const OWNER: &str = "dathere";
 pub const REPO: &str = "qsv";

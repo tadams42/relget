@@ -1,9 +1,18 @@
 mod apps;
 mod archive;
-mod cli;
 mod clients;
 mod config;
+mod prefix;
 mod version;
 
-pub use apps::{CategoryInfo, all_app_entries, all_apps_identifiers, all_categories, create_app};
-pub use cli::{create_cli, execute_cli};
+pub use apps::{
+    App, AppAssets, AppBinary, AppEntry, CategoryInfo, Completion, ManPage, ManPagesStatus, Shell,
+    ShellCompletionsStatus, all_app_entries, all_apps_identifiers, all_categories, create_app,
+};
+pub use archive::ArchiveExtractor;
+pub use clients::{
+    CodebergClient, GithubClient, GitlabClient, RateLimitError, ReleaseMetadata, RelgetClient,
+};
+pub use config::Config;
+pub use prefix::Prefix;
+pub use version::AppVersion;

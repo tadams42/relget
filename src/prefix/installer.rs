@@ -1,39 +1,124 @@
 use std::collections::{HashMap, HashSet};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
-use anyhow::Result;
-use clap::Args;
+use anyhow::{Result, anyhow};
 
-use super::install::install_apps;
-use crate::apps::{AppEntry, all_app_entries};
+use super::helpers;
+use crate::{AppEntry, RateLimitError, all_app_entries, create_app};
 
-use super::helpers::{
-    DEFAULT_PREFIX, get_codeberg_token, get_github_token, get_gitlab_token, select_apps,
-};
+pub(super) fn install(
+    prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
+) -> Result<()> {
+    log::info!("prefix={:?} msg=Installing", prefix_path);
 
-#[derive(Args)]
-pub struct UpdateArgs {
-    /// Install prefix (e.g. /usr/local or ~/.local)
-    #[arg(short = 'p', long, default_value = DEFAULT_PREFIX)]
-    pub prefix: PathBuf,
+    let selected = helpers::select_apps(apps, configured_set)?;
+    let installed = install_apps(prefix_path, &selected, offline)?;
 
-    /// App(s) to update; comma-separated.
-    #[arg(
-        short = 'a',
-        long = "apps",
-        value_name = "NAME[,NAME...]",
-        value_delimiter = ',',
-        conflicts_with_all = ["configured_set"]
-    )]
-    pub apps: Vec<String>,
+    if !installed.is_empty() {
+        println!("Installed files:");
+        for path in installed {
+            println!("- {}", path.display());
+        }
+    }
 
-    #[arg(
-        long,
-        value_name = "SET_NAME",
-        conflicts_with_all = ["apps"],
-        long_help = "Load a named app set from the [sets] table in ~/.config/relget.toml"
-    )]
-    pub configured_set: Option<String>,
+    Ok(())
+}
+
+pub(super) fn update(
+    prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
+) -> Result<()> {
+    let to_update: Vec<String> = if apps.is_empty() && configured_set.is_none() {
+        let bin_dir = prefix_path.join("bin");
+        let owned: HashSet<String> = std::fs::read_dir(&bin_dir)
+            .map_err(|e| anyhow::anyhow!("cannot read {}: {}", bin_dir.display(), e))?
+            .filter_map(|e| e.ok())
+            .filter_map(|e| {
+                let path = e.path();
+                if path.is_file() {
+                    Some(e.file_name().to_string_lossy().into_owned())
+                } else {
+                    None
+                }
+            })
+            .collect();
+
+        if owned.is_empty() {
+            println!("No binaries found in {}.", bin_dir.display());
+            return Ok(());
+        }
+
+        let installed_binaries: HashSet<&str> = owned.iter().map(String::as_str).collect();
+        let ids = resolve_update_targets(&installed_binaries, all_app_entries());
+
+        if ids.is_empty() {
+            println!("No relget-managed apps found in {}.", bin_dir.display());
+            return Ok(());
+        }
+
+        ids
+    } else {
+        let selected = helpers::select_apps(apps, configured_set)?;
+        let entries = all_app_entries();
+        let bin_dir = prefix_path.join("bin");
+        let owned: HashSet<String> = selected
+            .iter()
+            .filter_map(|id| entries.iter().find(|e| &e.id == id))
+            .filter(|e| bin_dir.join(&e.exe_name).exists())
+            .map(|e| e.exe_name.clone())
+            .collect();
+        let installed_binaries: HashSet<&str> = owned.iter().map(String::as_str).collect();
+        let filtered = filter_to_installed(&selected, entries, &installed_binaries);
+        if filtered.is_empty() {
+            println!("No installed apps to update.");
+            return Ok(());
+        }
+        filtered
+    };
+
+    log::info!("count={} prefix={:?} msg=Updating", to_update.len(), prefix_path);
+    let installed = install_apps(prefix_path, &to_update, offline)?;
+    if installed.is_empty() {
+        println!("All apps already at latest version.");
+    } else {
+        println!("Installed files:");
+        for path in installed {
+            println!("- {}", path.display());
+        }
+    }
+
+    Ok(())
+}
+
+pub(super) fn install_apps(
+    prefix_path: &Path, selected: &[String], offline: bool,
+) -> Result<Vec<PathBuf>> {
+    let (gh_token, cb_token, gl_token) = if offline {
+        (None, None, None)
+    } else {
+        (
+            helpers::get_github_token()?,
+            helpers::get_codeberg_token()?,
+            helpers::get_gitlab_token()?,
+        )
+    };
+    let mut installed = Vec::new();
+    for app_id in selected {
+        let app = create_app(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
+            .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
+        match app.install(prefix_path) {
+            Ok(paths) => installed.extend(paths),
+            Err(e) => {
+                if e.chain().any(|cause| cause.is::<RateLimitError>()) {
+                    log::warn!("app={} msg=Skipping (rate limit): {}", app_id, e.root_cause());
+                } else if offline {
+                    log::warn!("app={} msg=Skipping (offline, no cached data): {:#}", app_id, e);
+                } else {
+                    log::error!("app={} msg=Install failed: {:#}", app_id, e);
+                }
+            }
+        }
+    }
+    Ok(installed)
 }
 
 /// Auto-detect path: given the set of binary names present in the prefix, return the app IDs
@@ -49,7 +134,7 @@ pub(super) fn resolve_update_targets(
                 let winner = exe_to_id[entry.exe_name.as_str()];
                 log::warn!(
                     "exe_name={} winner={} duplicate={} msg=ambiguous exe_name; re-run with \
-                     --apps {} to update the other",
+                    --apps {} to update the other",
                     entry.exe_name,
                     winner,
                     entry.id,
@@ -88,78 +173,10 @@ pub(super) fn filter_to_installed(
         .collect()
 }
 
-pub fn update_command(args: &UpdateArgs, offline: bool) -> Result<()> {
-    let to_update: Vec<String> = if args.apps.is_empty() && args.configured_set.is_none() {
-        let bin_dir = args.prefix.join("bin");
-        let owned: HashSet<String> = std::fs::read_dir(&bin_dir)
-            .map_err(|e| anyhow::anyhow!("cannot read {}: {}", bin_dir.display(), e))?
-            .filter_map(|e| e.ok())
-            .filter_map(|e| {
-                let path = e.path();
-                if path.is_file() {
-                    Some(e.file_name().to_string_lossy().into_owned())
-                } else {
-                    None
-                }
-            })
-            .collect();
-
-        if owned.is_empty() {
-            println!("No binaries found in {}.", bin_dir.display());
-            return Ok(());
-        }
-
-        let installed_binaries: HashSet<&str> = owned.iter().map(String::as_str).collect();
-        let ids = resolve_update_targets(&installed_binaries, all_app_entries());
-
-        if ids.is_empty() {
-            println!("No relget-managed apps found in {}.", bin_dir.display());
-            return Ok(());
-        }
-
-        ids
-    } else {
-        let selected = select_apps(&args.apps, args.configured_set.as_deref())?;
-        let entries = all_app_entries();
-        let bin_dir = args.prefix.join("bin");
-        let owned: HashSet<String> = selected
-            .iter()
-            .filter_map(|id| entries.iter().find(|e| &e.id == id))
-            .filter(|e| bin_dir.join(&e.exe_name).exists())
-            .map(|e| e.exe_name.clone())
-            .collect();
-        let installed_binaries: HashSet<&str> = owned.iter().map(String::as_str).collect();
-        let filtered = filter_to_installed(&selected, entries, &installed_binaries);
-        if filtered.is_empty() {
-            println!("No installed apps to update.");
-            return Ok(());
-        }
-        filtered
-    };
-
-    log::info!("count={} prefix={:?} msg=Updating", to_update.len(), args.prefix);
-    let (gh_token, cb_token, gl_token) = if offline {
-        (None, None, None)
-    } else {
-        (get_github_token()?, get_codeberg_token()?, get_gitlab_token()?)
-    };
-    let installed = install_apps(&args.prefix, &to_update, gh_token, cb_token, gl_token, offline)?;
-    if installed.is_empty() {
-        println!("All apps already at latest version.");
-    } else {
-        println!("Installed files:");
-        for path in installed {
-            println!("- {}", path.display());
-        }
-    }
-
-    Ok(())
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::apps::{ManPagesStatus, ShellCompletionsStatus};
+    use crate::{ManPagesStatus, ShellCompletionsStatus};
 
     fn make_entry(id: &str, exe_name: &str) -> AppEntry {
         AppEntry {
@@ -173,8 +190,6 @@ mod tests {
             shell_completions: ShellCompletionsStatus::Unavailable,
         }
     }
-
-    // --- resolve_update_targets ---
 
     #[test]
     fn resolve_matches_installed_binary() {
@@ -217,8 +232,6 @@ mod tests {
         result.sort();
         assert_eq!(result, ["bat", "rg"]);
     }
-
-    // --- filter_to_installed ---
 
     #[test]
     fn filter_keeps_apps_whose_binary_is_present() {

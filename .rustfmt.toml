@@ -2,10 +2,15 @@ unstable_features = true
 
 style_edition = "2024"
 
-# Reorder impl items. type and const are put first, then macros and methods.
-# Default value: false
+# Merge imports from the same module into one use statement
+# Default value: "Preserve"
 # Stable: No
 imports_granularity = "Module"
+
+# Group imports: std first, then external crates, then crate/super/self
+# Default value: "Preserve"
+# Stable: No
+group_imports = "StdExternalCrate"
 
 # Reorder impl items. type and const are put first, then macros and methods.
 # Default value: false

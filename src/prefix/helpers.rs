@@ -1,9 +1,6 @@
 use anyhow::{Result, anyhow};
 
-use crate::apps::all_apps_identifiers;
-use crate::config::Config;
-
-pub(super) const DEFAULT_PREFIX: &str = "/usr/local";
+use crate::{Config, all_apps_identifiers};
 
 pub(super) fn get_github_token() -> Result<Option<String>> {
     let token = Config::github_token()?;
@@ -49,7 +46,8 @@ pub(super) fn select_apps(
 
     if user_chosen.is_empty() {
         return Err(anyhow!(
-            "you must specify one of --apps <NAME[,NAME...]> or --configured-set <SET_NAME>; run `relget install --help` for usage"
+            "you must specify one of --apps <NAME[,NAME...]> or --configured-set <SET_NAME>; run \
+             `relget install --help` for usage"
         ));
     }
 

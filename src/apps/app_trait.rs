@@ -1,15 +1,16 @@
-use crate::apps::app_assets::{AppAssets, Completion, Shell};
-use crate::version::AppVersion;
-use anyhow::{Context, Result};
 use std::fs;
 use std::os::unix::fs::PermissionsExt;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 
-const DEFAULT_VERSION_ARG: &str = "--version";
-const BIN_MODE: u32 = 0o755;
+use anyhow::{Context, Result};
 
-pub(in crate::apps) fn with_temp_exe<F, T>(exe_name: &str, data: &[u8], f: F) -> Result<T>
+use super::app_assets::{AppAssets, BIN_MODE, Completion, Shell};
+use crate::AppVersion;
+
+const DEFAULT_VERSION_ARG: &str = "--version";
+
+pub fn with_temp_exe<F, T>(exe_name: &str, data: &[u8], f: F) -> Result<T>
 where
     F: FnOnce(&Path) -> Result<T>,
 {
@@ -20,7 +21,7 @@ where
     f(&exe_path)
 }
 
-pub(in crate::apps) fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
+pub fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
     let out = Command::new(exe_path)
         .args(args)
         .output()
@@ -28,7 +29,7 @@ pub(in crate::apps) fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>
     Ok(out.stdout)
 }
 
-pub(in crate::apps) fn gen_completions_with_shell_arg(
+pub fn gen_completions_with_shell_arg(
     exe_name: &str, data: &[u8], prefix_args: &[&str],
 ) -> Result<Vec<Completion>> {
     with_temp_exe(exe_name, data, |exe| {
@@ -48,13 +49,13 @@ pub(in crate::apps) fn gen_completions_with_shell_arg(
     })
 }
 
-pub(in crate::apps) fn gen_completions_subcommand(
+pub fn gen_completions_subcommand(
     exe_name: &str, data: &[u8], subcommand: &str,
 ) -> Result<Vec<Completion>> {
     gen_completions_with_shell_arg(exe_name, data, &[subcommand])
 }
 
-pub(in crate::apps) fn gen_completions_shell_flag(
+pub fn gen_completions_shell_flag(
     exe_name: &str, data: &[u8], subcommand: &str, flag: &str,
 ) -> Result<Vec<Completion>> {
     with_temp_exe(exe_name, data, |exe| {
@@ -151,5 +152,63 @@ pub trait App {
             None => Ok(true),
             Some(iv) => Ok(iv != self.released_version()?),
         }
+    }
+
+    fn install(&self, prefix: &Path) -> Result<Vec<PathBuf>> {
+        if !self.needs_install(prefix)? {
+            log::info!("app={} msg=Already at latest version", self.exe_name());
+            return Ok(vec![]);
+        }
+        let assets = self.download()?;
+
+        let mut installed = Vec::new();
+
+        if let Some(bin) = &assets.binary {
+            installed.push(bin.install(prefix)?);
+        }
+
+        for bin in &assets.other_bins {
+            installed.push(bin.install(prefix)?);
+        }
+
+        for man in &assets.man_pages {
+            installed.push(man.install(prefix)?);
+        }
+
+        for completion in &assets.completions {
+            installed.push(completion.install(prefix)?);
+        }
+
+        log::info!("app={} msg=Installed", self.exe_name());
+
+        Ok(installed)
+    }
+
+    fn uninstall(&self, prefix: &Path) -> Vec<PathBuf> {
+        let assets = self.assets();
+        let mut removed = Vec::new();
+
+        if let Some(bin) = &assets.binary {
+            if let Some(uninstalled) = bin.uninstall(prefix) {
+                removed.push(uninstalled);
+            }
+        }
+        for bin in &assets.other_bins {
+            if let Some(uninstalled) = bin.uninstall(prefix) {
+                removed.push(uninstalled);
+            }
+        }
+        for man in &assets.man_pages {
+            if let Some(uninstalled) = man.uninstall(prefix) {
+                removed.push(uninstalled);
+            }
+        }
+        for comp in &assets.completions {
+            if let Some(uninstalled) = comp.uninstall(prefix) {
+                removed.push(uninstalled);
+            }
+        }
+
+        removed
     }
 }

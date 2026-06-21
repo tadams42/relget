@@ -1,11 +1,11 @@
-use anyhow::Result;
 use std::sync::Arc;
 
-use crate::apps::app_assets::{AppAssets, AppBinary, Completion, Shell};
-use crate::apps::{App, gen_completions_shell_flag};
-use crate::archive::ArchiveExtractor;
-use crate::clients::RelgetClient;
-use crate::version::AppVersion;
+use anyhow::Result;
+
+use crate::apps::gen_completions_shell_flag;
+use crate::{
+    App, AppAssets, AppBinary, AppVersion, ArchiveExtractor, Completion, RelgetClient, Shell,
+};
 
 pub struct Fnm {
     client: Arc<dyn RelgetClient>,

@@ -2,11 +2,11 @@ use std::sync::Arc;
 
 use anyhow::Result;
 
-use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
-use crate::apps::{App, gen_completions_subcommand};
-use crate::archive::ArchiveExtractor;
-use crate::clients::RelgetClient;
-use crate::version::AppVersion;
+use crate::apps::gen_completions_subcommand;
+use crate::{
+    App, AppAssets, AppBinary, AppVersion, ArchiveExtractor, Completion, ManPage, RelgetClient,
+    Shell,
+};
 
 pub struct Deadbranch {
     client: Arc<dyn RelgetClient>,

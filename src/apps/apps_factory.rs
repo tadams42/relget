@@ -1,9 +1,5 @@
 use std::sync::Arc;
 
-#[allow(unused_imports)]
-use crate::clients::GitlabClient;
-use crate::clients::{CodebergClient, GithubClient, RelgetClient};
-
 use super::App;
 use super::coding::{
     AstGrep, Deadbranch, Fend, Grex, Hyperfine, Mailpit, Mkcert, Neovide, Pyrefly, Replibyte, Rgx,
@@ -27,6 +23,9 @@ use super::logs::{Gonzo, Hl, LazyJournal, Lnav, Logdy, Loggo, Nerdlog, Rhit, Tai
 use super::networking::{Boring, Dog, Doggo};
 use super::shell::{Atuin, Axe, Carapace, Fzf, Rgxg, RustParallel, Skim, Starship, Vivid, Zoxide};
 use super::system::{Bottom, Btop, Diskwatch, Duf, Dust, Dysk, Erdtree, Netwatch, Procs, Syswatch};
+#[allow(unused_imports)]
+use crate::GitlabClient;
+use crate::{CodebergClient, GithubClient, RelgetClient};
 
 pub fn create_app(
     id: &str, gh_token: Option<String>, cb_token: Option<String>, _gl_token: Option<String>,

@@ -122,9 +122,10 @@ pub fn all_apps_identifiers() -> Vec<&'static str> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::apps::create_app;
     use std::collections::HashSet;
+
+    use super::*;
+    use crate::create_app;
 
     #[test]
     fn registry_exe_names_match_app_trait() {

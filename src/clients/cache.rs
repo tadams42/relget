@@ -77,21 +77,22 @@
 //! Ok(fresh)
 //! ```
 
+use std::collections::HashMap;
+use std::path::{Path, PathBuf};
+
 use anyhow::{Context, Result, anyhow};
 use chrono::{DateTime, Duration, Utc};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::collections::HashMap;
-use std::path::{Path, PathBuf};
 
-use crate::version::AppVersion;
+use crate::AppVersion;
 
 const RELEASE_CACHE_SECONDS: i64 = 86400;
 
 /// Release metadata fetched from a forge API and stored in the cache.
 ///
-/// `data` always holds **GitHub-API-shaped** JSON (see the [module-level
-/// normalisation contract](self#normalised-json-contract)).  The accessor
+/// `data` always holds **GitHub-API-shaped** JSON (see the *Normalised JSON
+/// contract* section in the `cache` module docs).  The accessor
 /// methods on this type — [`asset_names`], [`asset_download_url`], etc. —
 /// decode fields from that shape.
 ///
@@ -438,9 +439,10 @@ fn extract_version(data: &Value) -> Option<AppVersion> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use chrono::Duration;
     use serde_json::json;
+
+    use super::*;
 
     fn metadata_from(data: Value) -> ReleaseMetadata {
         ReleaseMetadata {

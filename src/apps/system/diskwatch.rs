@@ -2,11 +2,7 @@ use std::sync::Arc;
 
 use anyhow::Result;
 
-use crate::apps::App;
-use crate::apps::app_assets::{AppAssets, AppBinary};
-use crate::archive::ArchiveExtractor;
-use crate::clients::RelgetClient;
-use crate::version::AppVersion;
+use crate::{App, AppAssets, AppBinary, AppVersion, ArchiveExtractor, RelgetClient};
 
 pub struct Diskwatch {
     client: Arc<dyn RelgetClient>,

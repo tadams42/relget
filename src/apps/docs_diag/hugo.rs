@@ -1,11 +1,12 @@
-use anyhow::{Context, Result};
 use std::sync::Arc;
 
-use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
-use crate::apps::{App, gen_completions_subcommand, run_cmd, with_temp_exe};
-use crate::archive::ArchiveExtractor;
-use crate::clients::RelgetClient;
-use crate::version::AppVersion;
+use anyhow::{Context, Result};
+
+use crate::apps::{gen_completions_subcommand, run_cmd, with_temp_exe};
+use crate::{
+    App, AppAssets, AppBinary, AppVersion, ArchiveExtractor, Completion, ManPage, RelgetClient,
+    Shell,
+};
 
 pub struct Hugo {
     client: Arc<dyn RelgetClient>,

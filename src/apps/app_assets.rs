@@ -1,4 +1,18 @@
+use std::fs;
+use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
+
+use anyhow::{Context, Result};
+
+fn ensure_parent(path: &Path) -> Result<()> {
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+    Ok(())
+}
+
+pub const BIN_MODE: u32 = 0o755;
+pub const DOC_MODE: u32 = 0o644;
 
 #[derive(Debug, Clone)]
 pub struct AppBinary {
@@ -16,11 +30,33 @@ impl AppBinary {
         }
     }
 
-    pub fn name(&self) -> &str { &self.name }
+    fn install_path(&self, prefix: &Path) -> PathBuf { prefix.join("bin").join(&self.name) }
 
-    pub fn data(&self) -> &[u8] { &self.data }
+    pub fn install(&self, prefix: &Path) -> Result<PathBuf> {
+        let dest = self.install_path(prefix);
+        ensure_parent(&dest)?;
+        // Write to a temp file then atomically rename into place, matching the standard approach
+        // used by dpkg, rpm, and Homebrew. Direct in-place write (O_TRUNC) returns ETXTBSY if any
+        // process holds the binary exec-mapped — even a short-lived one. For example, `boring`
+        // spawns 5 child processes on startup; if they are still alive when we write, the install
+        // fails. rename() replaces the directory entry without touching the existing inode, so any
+        // running process keeps its mapping on the old inode while the new binary is already in
+        // place.
+        let tmp = dest.with_extension("relget-tmp");
+        fs::write(&tmp, &self.data).with_context(|| format!("Writing binary to {:?}", dest))?;
+        fs::set_permissions(&tmp, fs::Permissions::from_mode(BIN_MODE))?;
+        fs::rename(&tmp, &dest).with_context(|| format!("Installing binary to {:?}", dest))?;
+        Ok(dest)
+    }
 
-    pub fn install_path(&self, prefix: &Path) -> PathBuf { prefix.join("bin").join(&self.name) }
+    pub fn uninstall(&self, prefix: &Path) -> Option<PathBuf> {
+        let path = self.install_path(prefix);
+        if fs::remove_file(&path).is_ok() {
+            Some(path)
+        } else {
+            None
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -43,14 +79,29 @@ impl ManPage {
         }
     }
 
-    pub fn data(&self) -> &[u8] { &self.data }
-
-    pub fn install_path(&self, prefix: &Path) -> PathBuf {
+    fn install_path(&self, prefix: &Path) -> PathBuf {
         prefix
             .join("share")
             .join("man")
             .join(format!("man{}", self.section))
             .join(&self.file_name)
+    }
+
+    pub fn install(&self, prefix: &Path) -> Result<PathBuf> {
+        let dest = self.install_path(prefix);
+        ensure_parent(&dest)?;
+        fs::write(&dest, &self.data).with_context(|| format!("Writing man page to {:?}", dest))?;
+        fs::set_permissions(&dest, fs::Permissions::from_mode(DOC_MODE))?;
+        Ok(dest)
+    }
+
+    pub fn uninstall(&self, prefix: &Path) -> Option<PathBuf> {
+        let path = self.install_path(prefix);
+        if fs::remove_file(&path).is_ok() {
+            Some(path)
+        } else {
+            None
+        }
     }
 }
 
@@ -85,9 +136,7 @@ impl Completion {
         }
     }
 
-    pub fn data(&self) -> &[u8] { &self.data }
-
-    pub fn file_name(&self) -> String {
+    fn file_name(&self) -> String {
         match self.shell {
             Shell::Zsh => format!("_{}", self.app_name),
             Shell::Fish => format!("{}.fish", self.app_name),
@@ -95,7 +144,7 @@ impl Completion {
         }
     }
 
-    pub fn install_path(&self, prefix: &Path) -> PathBuf {
+    fn install_path(&self, prefix: &Path) -> PathBuf {
         match self.shell {
             Shell::Zsh => {
                 prefix
@@ -120,6 +169,24 @@ impl Completion {
             }
         }
     }
+
+    pub fn install(&self, prefix: &Path) -> Result<PathBuf> {
+        let dest = self.install_path(prefix);
+        ensure_parent(&dest)?;
+        fs::write(&dest, &self.data)
+            .with_context(|| format!("Writing completion to {:?}", dest))?;
+        fs::set_permissions(&dest, fs::Permissions::from_mode(DOC_MODE))?;
+        Ok(dest)
+    }
+
+    pub fn uninstall(&self, prefix: &Path) -> Option<PathBuf> {
+        let path = self.install_path(prefix);
+        if fs::remove_file(&path).is_ok() {
+            Some(path)
+        } else {
+            None
+        }
+    }
 }
 
 #[derive(Debug, Default)]
@@ -132,8 +199,9 @@ pub struct AppAssets {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::path::PathBuf;
+
+    use super::*;
 
     fn prefix() -> PathBuf { PathBuf::from("/usr/local") }
 

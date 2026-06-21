@@ -53,6 +53,10 @@ impl Config {
         Ok(load_config()?.gitlab_token)
     }
 
+    pub fn configured_set_names() -> Result<Vec<String>> {
+        Ok(load_config()?.sets.into_keys().collect())
+    }
+
     pub fn configured_set(name: &str) -> Result<Vec<String>> {
         let config = load_config()?;
         config.sets.get(name).cloned().ok_or_else(|| {

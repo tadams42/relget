@@ -1,8 +1,9 @@
+use std::sync::Mutex;
+use std::sync::atomic::{AtomicBool, Ordering};
+
 use anyhow::{Context, Result, anyhow};
 use once_cell::sync::Lazy;
 use serde_json::Value;
-use std::sync::Mutex;
-use std::sync::atomic::{AtomicBool, Ordering};
 
 use super::cache::{CachedFile, ReleaseMetadata, RelgetCache};
 use super::client_trait::RelgetClient;

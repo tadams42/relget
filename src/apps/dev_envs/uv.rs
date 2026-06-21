@@ -1,12 +1,12 @@
-use anyhow::Result;
 use std::os::unix::fs::PermissionsExt;
 use std::sync::Arc;
 
-use crate::apps::app_assets::{AppAssets, AppBinary, Completion, Shell};
-use crate::apps::{App, run_cmd, with_temp_exe};
-use crate::archive::ArchiveExtractor;
-use crate::clients::RelgetClient;
-use crate::version::AppVersion;
+use anyhow::Result;
+
+use crate::apps::{BIN_MODE, run_cmd, with_temp_exe};
+use crate::{
+    App, AppAssets, AppBinary, AppVersion, ArchiveExtractor, Completion, RelgetClient, Shell,
+};
 
 pub struct Uv {
     client: Arc<dyn RelgetClient>,
@@ -56,7 +56,7 @@ impl App for Uv {
         let completions = with_temp_exe("uv", &uv_data, |exe_path| {
             let uvx_path = exe_path.parent().unwrap().join("uvx");
             std::fs::write(&uvx_path, &uvx_data)?;
-            std::fs::set_permissions(&uvx_path, std::fs::Permissions::from_mode(0o755))?;
+            std::fs::set_permissions(&uvx_path, std::fs::Permissions::from_mode(BIN_MODE))?;
             let comps = vec![
                 Completion::new_with_data(
                     Shell::Zsh,

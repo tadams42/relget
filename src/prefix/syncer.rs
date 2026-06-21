@@ -1,40 +1,56 @@
 use std::collections::HashSet;
-use std::path::PathBuf;
+use std::path::Path;
 
 use anyhow::Result;
-use clap::Args;
 
-use super::install::install_apps;
-use super::uninstall::uninstall_apps;
-use crate::apps::{AppEntry, all_app_entries};
+use super::{helpers, installer, uninstaller};
+use crate::{AppEntry, all_app_entries};
 
-use super::helpers::{
-    DEFAULT_PREFIX, get_codeberg_token, get_github_token, get_gitlab_token, select_apps,
-};
+pub(super) fn sync(
+    prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
+) -> Result<()> {
+    let selected = helpers::select_apps(apps, configured_set)?;
+    let entries = all_app_entries();
+    let bin_dir = prefix_path.join("bin");
 
-#[derive(Args)]
-pub struct SyncArgs {
-    /// Install prefix (e.g. /usr/local or ~/.local)
-    #[arg(short = 'p', long, default_value = DEFAULT_PREFIX)]
-    pub prefix: PathBuf,
+    let owned: HashSet<String> = entries
+        .iter()
+        .filter(|e| bin_dir.join(&e.exe_name).exists())
+        .map(|e| e.exe_name.clone())
+        .collect();
+    let installed_binaries: HashSet<&str> = owned.iter().map(String::as_str).collect();
 
-    /// App(s) to sync; comma-separated.
-    #[arg(
-        short = 'a',
-        long = "apps",
-        value_name = "NAME[,NAME...]",
-        value_delimiter = ',',
-        conflicts_with_all = ["configured_set"]
-    )]
-    pub apps: Vec<String>,
+    let (to_install, to_uninstall) = compute_sync_changes(&selected, entries, &installed_binaries);
 
-    #[arg(
-        long,
-        value_name = "SET_NAME",
-        conflicts_with_all = ["apps"],
-        long_help = "Load a named app set from the [sets] table in ~/.config/relget.toml"
-    )]
-    pub configured_set: Option<String>,
+    if !to_install.is_empty() {
+        log::info!("count={} prefix={:?} msg=Installing", to_install.len(), prefix_path);
+        let installed = installer::install_apps(prefix_path, &to_install, offline)?;
+        if !installed.is_empty() {
+            println!("Installed files:");
+            for path in installed {
+                println!("- {}", path.display());
+            }
+        }
+    }
+
+    if !to_uninstall.is_empty() {
+        log::info!(
+            "count={} prefix={:?} msg=Uninstalling",
+            to_uninstall.len(),
+            prefix_path
+        );
+        let removed = uninstaller::uninstall_apps(prefix_path, &to_uninstall)?;
+        if removed.is_empty() {
+            println!("No files removed.");
+        } else {
+            println!("Removed files:");
+            for path in removed {
+                println!("- {}", path.display());
+            }
+        }
+    }
+
+    Ok(())
 }
 
 /// Compute the install/uninstall sets needed to reconcile the prefix with `selected`.
@@ -67,61 +83,10 @@ pub(super) fn compute_sync_changes(
     (to_install, to_uninstall)
 }
 
-pub fn sync_command(args: &SyncArgs, offline: bool) -> Result<()> {
-    let selected = select_apps(&args.apps, args.configured_set.as_deref())?;
-    let entries = all_app_entries();
-    let bin_dir = args.prefix.join("bin");
-
-    let owned: HashSet<String> = entries
-        .iter()
-        .filter(|e| bin_dir.join(&e.exe_name).exists())
-        .map(|e| e.exe_name.clone())
-        .collect();
-    let installed_binaries: HashSet<&str> = owned.iter().map(String::as_str).collect();
-
-    let (to_install, to_uninstall) = compute_sync_changes(&selected, entries, &installed_binaries);
-
-    if !to_install.is_empty() {
-        log::info!("count={} prefix={:?} msg=Installing", to_install.len(), args.prefix);
-        let (gh_token, cb_token, gl_token) = if offline {
-            (None, None, None)
-        } else {
-            (get_github_token()?, get_codeberg_token()?, get_gitlab_token()?)
-        };
-        let installed =
-            install_apps(&args.prefix, &to_install, gh_token, cb_token, gl_token, offline)?;
-        if !installed.is_empty() {
-            println!("Installed files:");
-            for path in installed {
-                println!("- {}", path.display());
-            }
-        }
-    }
-
-    if !to_uninstall.is_empty() {
-        log::info!(
-            "count={} prefix={:?} msg=Uninstalling",
-            to_uninstall.len(),
-            args.prefix
-        );
-        let removed = uninstall_apps(&args.prefix, &to_uninstall)?;
-        if removed.is_empty() {
-            println!("No files removed.");
-        } else {
-            println!("Removed files:");
-            for path in removed {
-                println!("- {}", path.display());
-            }
-        }
-    }
-
-    Ok(())
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::apps::{ManPagesStatus, ShellCompletionsStatus};
+    use crate::{ManPagesStatus, ShellCompletionsStatus};
 
     fn make_entry(id: &str, exe_name: &str) -> AppEntry {
         AppEntry {

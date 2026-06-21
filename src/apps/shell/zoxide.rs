@@ -1,12 +1,9 @@
-use anyhow::Result;
 use std::path::Path;
 use std::sync::Arc;
 
-use crate::apps::App;
-use crate::apps::app_assets::{AppAssets, AppBinary, ManPage};
-use crate::archive::ArchiveExtractor;
-use crate::clients::RelgetClient;
-use crate::version::AppVersion;
+use anyhow::Result;
+
+use crate::{App, AppAssets, AppBinary, AppVersion, ArchiveExtractor, ManPage, RelgetClient};
 
 pub struct Zoxide {
     client: Arc<dyn RelgetClient>,

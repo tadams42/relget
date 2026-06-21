@@ -1,6 +1,7 @@
-use anyhow::{Context, Result, anyhow};
 use std::io::{Cursor, Read};
 use std::path::Path;
+
+use anyhow::{Context, Result, anyhow};
 
 pub struct ArchiveExtractor {
     archive_name: String,

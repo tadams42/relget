@@ -1,12 +1,12 @@
-use anyhow::{Result, anyhow};
 use std::path::Path;
 use std::sync::Arc;
 
-use crate::apps::App;
-use crate::apps::app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
-use crate::archive::ArchiveExtractor;
-use crate::clients::RelgetClient;
-use crate::version::AppVersion;
+use anyhow::{Result, anyhow};
+
+use crate::{
+    App, AppAssets, AppBinary, AppVersion, ArchiveExtractor, Completion, ManPage, RelgetClient,
+    Shell,
+};
 
 pub struct Eza {
     client: Arc<dyn RelgetClient>,

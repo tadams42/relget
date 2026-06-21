@@ -1,15 +1,91 @@
+use std::path::Path;
+
 use anyhow::{Result, anyhow};
 use chrono::{DateTime, Duration, Utc};
 
-use crate::apps::{ManPagesStatus, ShellCompletionsStatus, all_app_entries};
-use crate::clients::{CodebergClient, GithubClient, GitlabClient, ReleaseMetadata, RelgetClient};
+use super::helpers;
+use crate::{
+    CodebergClient, GithubClient, GitlabClient, ManPagesStatus, ReleaseMetadata, RelgetClient,
+    ShellCompletionsStatus, all_app_entries,
+};
 
-use clap::Args;
+pub(super) fn doctor(_prefix_path: &Path, offline: bool) -> Result<()> {
+    let (gh_token, cb_token, gl_token) = if offline {
+        (None, None, None)
+    } else {
+        (
+            helpers::get_github_token()?,
+            helpers::get_codeberg_token()?,
+            helpers::get_gitlab_token()?,
+        )
+    };
 
-use super::helpers::{get_codeberg_token, get_github_token, get_gitlab_token};
+    let mut flagged: Vec<FlaggedApp> = Vec::new();
+    let threshold = Utc::now() - Duration::days(365);
 
-#[derive(Args)]
-pub struct DoctorArgs {}
+    for entry in all_app_entries() {
+        let release = match fetch_release(
+            &entry.url,
+            gh_token.clone(),
+            cb_token.clone(),
+            gl_token.clone(),
+            offline,
+        ) {
+            Ok(r) => r,
+            Err(e) => {
+                eprintln!("warning: {}: {}", entry.id, e);
+                continue;
+            }
+        };
+
+        let published_at = release_date(&release);
+        let version_str = release
+            .version()
+            .map(|v| v.to_string())
+            .unwrap_or_else(|_| "unknown".to_string());
+        let date_str = published_at
+            .map(|d| d.format("%Y-%m-%d").to_string())
+            .unwrap_or_else(|| "unknown".to_string());
+
+        let asset_names = release.asset_names();
+        let release_musl = release_has_x86_musl(&asset_names);
+
+        let mut flags: Vec<DoctorFlag> = Vec::new();
+
+        if let Some(date) = published_at {
+            if date < threshold {
+                flags.push(DoctorFlag::PotentiallyUnmaintained);
+            }
+        }
+
+        if !entry.has_musl && release_musl {
+            flags.push(DoctorFlag::MuslNowAvailable);
+        }
+        if entry.has_musl && !release_musl {
+            flags.push(DoctorFlag::MuslNoLongerAvailable);
+        }
+
+        if entry.man_pages == ManPagesStatus::Bundled {
+            flags.push(DoctorFlag::BundledManPages);
+        }
+        if entry.shell_completions == ShellCompletionsStatus::Bundled {
+            flags.push(DoctorFlag::BundledCompletions);
+        }
+
+        if !flags.is_empty() {
+            flagged.push(FlaggedApp {
+                id: entry.id.clone(),
+                release_date: date_str,
+                version: version_str,
+                flags,
+            });
+        }
+    }
+
+    use std::io::IsTerminal;
+    print_table(&flagged, std::io::stdout().is_terminal());
+    Ok(())
+}
 
 enum DoctorFlag {
     PotentiallyUnmaintained,
@@ -103,80 +179,6 @@ fn release_date(release: &ReleaseMetadata) -> Option<DateTime<Utc>> {
                 .and_then(|s| DateTime::parse_from_rfc3339(s).ok())
                 .map(|d| d.with_timezone(&Utc))
         })
-}
-
-pub fn doctor_command(_args: &DoctorArgs, offline: bool) -> Result<()> {
-    let (gh_token, cb_token, gl_token) = if offline {
-        (None, None, None)
-    } else {
-        (get_github_token()?, get_codeberg_token()?, get_gitlab_token()?)
-    };
-
-    let mut flagged: Vec<FlaggedApp> = Vec::new();
-    let threshold = Utc::now() - Duration::days(365);
-
-    for entry in all_app_entries() {
-        let release = match fetch_release(
-            &entry.url,
-            gh_token.clone(),
-            cb_token.clone(),
-            gl_token.clone(),
-            offline,
-        ) {
-            Ok(r) => r,
-            Err(e) => {
-                eprintln!("warning: {}: {}", entry.id, e);
-                continue;
-            }
-        };
-
-        let published_at = release_date(&release);
-        let version_str = release
-            .version()
-            .map(|v| v.to_string())
-            .unwrap_or_else(|_| "unknown".to_string());
-        let date_str = published_at
-            .map(|d| d.format("%Y-%m-%d").to_string())
-            .unwrap_or_else(|| "unknown".to_string());
-
-        let asset_names = release.asset_names();
-        let release_musl = release_has_x86_musl(&asset_names);
-
-        let mut flags: Vec<DoctorFlag> = Vec::new();
-
-        if let Some(date) = published_at {
-            if date < threshold {
-                flags.push(DoctorFlag::PotentiallyUnmaintained);
-            }
-        }
-
-        if !entry.has_musl && release_musl {
-            flags.push(DoctorFlag::MuslNowAvailable);
-        }
-        if entry.has_musl && !release_musl {
-            flags.push(DoctorFlag::MuslNoLongerAvailable);
-        }
-
-        if entry.man_pages == ManPagesStatus::Bundled {
-            flags.push(DoctorFlag::BundledManPages);
-        }
-        if entry.shell_completions == ShellCompletionsStatus::Bundled {
-            flags.push(DoctorFlag::BundledCompletions);
-        }
-
-        if !flags.is_empty() {
-            flagged.push(FlaggedApp {
-                id: entry.id.clone(),
-                release_date: date_str,
-                version: version_str,
-                flags,
-            });
-        }
-    }
-
-    use std::io::IsTerminal;
-    print_table(&flagged, std::io::stdout().is_terminal());
-    Ok(())
 }
 
 fn print_table(apps: &[FlaggedApp], use_color: bool) {

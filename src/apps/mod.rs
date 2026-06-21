@@ -1,4 +1,4 @@
-pub(crate) mod app_assets;
+mod app_assets;
 mod app_trait;
 mod apps_factory;
 mod apps_registry;
@@ -16,14 +16,15 @@ mod networking;
 mod shell;
 mod system;
 
+use app_assets::BIN_MODE;
+pub use app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 pub use app_trait::App;
+use app_trait::{
+    gen_completions_shell_flag, gen_completions_subcommand, gen_completions_with_shell_arg,
+    run_cmd, with_temp_exe,
+};
 pub use apps_factory::create_app;
 pub use apps_registry::{
     AppEntry, CategoryInfo, ManPagesStatus, ShellCompletionsStatus, all_app_entries,
     all_apps_identifiers, all_categories,
-};
-
-pub(in crate::apps) use app_trait::{
-    gen_completions_shell_flag, gen_completions_subcommand, gen_completions_with_shell_arg,
-    run_cmd, with_temp_exe,
 };
