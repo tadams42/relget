@@ -328,7 +328,7 @@ and nothing else
 - [xh](https://github.com/ducaale/xh)
   Friendly and fast HTTP client, `HTTPie` and `curl` alternative
 
-## Logs
+## Logging
 
 Utilities that allow easier browsing of logs in terminal. Most of them really need
 that logs are in correct, strict data format. If you want something that just works

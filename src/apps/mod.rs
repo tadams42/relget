@@ -11,7 +11,7 @@ mod encryption;
 mod files;
 mod git;
 mod http;
-mod logs;
+mod logging;
 mod networking;
 mod shell;
 mod system;

@@ -838,11 +838,11 @@ has_musl = true
 man_pages = "self_generated"
 shell_completions = "self_generated"
 
-[logs]
-title = "Logs"
+[logging]
+title = "Logging"
 description = "Utilities that allow easier browsing of logs in terminal. Most of them really need\nthat logs are in correct, strict data format. If you want something that just works\nand tries very hard to parse every conceivable log format without you needing to\nwrite any kind of template or regex, use `lnav`. To take absolute control on parsing\nand converting logs use `vector`. Everything else here is pretty eye-candy that will\nnot work most of the time for most of your logs.\n"
 
-[[logs.apps]]
+[[logging.apps]]
 id = "gonzo"
 exe_name = "gonzo"
 url = "https://github.com/control-theory/gonzo"
@@ -851,7 +851,7 @@ has_musl = false
 man_pages = "unavailable"
 shell_completions = "self_generated"
 
-[[logs.apps]]
+[[logging.apps]]
 id = "hl"
 exe_name = "hl"
 url = "https://github.com/pamburus/hl"
@@ -860,7 +860,7 @@ has_musl = true
 man_pages = "unavailable"
 shell_completions = "self_generated"
 
-[[logs.apps]]
+[[logging.apps]]
 id = "lazyjournal"
 exe_name = "lazyjournal"
 url = "https://github.com/Lifailon/lazyjournal"
@@ -869,7 +869,7 @@ has_musl = false
 man_pages = "unavailable"
 shell_completions = "unavailable"
 
-[[logs.apps]]
+[[logging.apps]]
 id = "lnav"
 exe_name = "lnav"
 url = "https://github.com/tstack/lnav"
@@ -878,7 +878,7 @@ has_musl = true
 man_pages = "bundled"
 shell_completions = "unavailable"
 
-[[logs.apps]]
+[[logging.apps]]
 id = "logdy"
 exe_name = "logdy"
 url = "https://github.com/logdyhq/logdy-core"
@@ -887,7 +887,7 @@ has_musl = false
 man_pages = "unavailable"
 shell_completions = "self_generated"
 
-[[logs.apps]]
+[[logging.apps]]
 id = "loggo"
 exe_name = "loggo"
 url = "https://github.com/aurc/loggo"
@@ -896,7 +896,7 @@ has_musl = false
 man_pages = "unavailable"
 shell_completions = "self_generated"
 
-[[logs.apps]]
+[[logging.apps]]
 id = "nerdlog"
 exe_name = "nerdlog"
 url = "https://github.com/dimonomid/nerdlog"
@@ -905,7 +905,7 @@ has_musl = false
 man_pages = "unavailable"
 shell_completions = "unavailable"
 
-[[logs.apps]]
+[[logging.apps]]
 id = "rhit"
 exe_name = "rhit"
 url = "https://github.com/canop/rhit"
@@ -914,7 +914,7 @@ has_musl = true
 man_pages = "unavailable"
 shell_completions = "unavailable"
 
-[[logs.apps]]
+[[logging.apps]]
 id = "tailspin"
 exe_name = "tspin"
 url = "https://github.com/bensadeh/tailspin"
@@ -923,7 +923,7 @@ has_musl = true
 man_pages = "unavailable"
 shell_completions = "unavailable"
 
-[[logs.apps]]
+[[logging.apps]]
 id = "vector"
 exe_name = "vector"
 url = "https://github.com/vectordotdev/vector"

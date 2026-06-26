@@ -17,42 +17,13 @@ cargo run -- install --apps rg --offline  # use only cached data
 
 Use `--prefix tmp/try-relget/` to avoid needing `sudo` during local testing.
 
-## Architecture
-
-```
-src/
-  main.rs           # entry point: env_logger init, dispatches to lib functions
-  lib.rs            # public API
-  config.rs         # loads tokens from config file (~/.config/relget/config.toml)
-  apps/
-    app_trait.rs    # App trait + completion/temp-exe helpers
-    apps_factory.rs # maps string IDs to Box<dyn App>; App impls are private to this module
-    apps_registry.rs # loads registry.toml at startup (OnceLock); exposes all_app_entries()
-    registry.toml   # source of truth for app metadata (id, url, category, description);
-                    # embedded at compile time via rust-embed, parsed with toml
-    <category>/     # one submodule per category; run `ls src/apps/` for the current list
-  cli/              # one file per subcommand (install, update, uninstall, list, doctor, …)
-  clients/
-    github.rs       # GithubClient with singleton Lazy<Mutex<RelgetCache>>
-    codeberg.rs     # CodebergClient with singleton Lazy<Mutex<RelgetCache>>
-    gitlab.rs       # GitlabClient with singleton Lazy<Mutex<RelgetCache>>
-    cache.rs        # memory HashMap + disk under ~/.cache/relget/
-    rate_limit.rs   # RateLimitError type
-  archive.rs        # ArchiveExtractor: .tar.gz/.tar.bz2/.tar.xz/.tar/.zip/.deb/.gz
-  installer.rs      # install_assets()
-  uninstaller.rs    # uninstall_app(): calls app.assets() to remove exactly those paths
-    app_assets.rs   # AppBinary, ManPage, Shell, Completion, AppAssets
-  version.rs        # AppVersion(u64, u64, u64) with find_in(), parse(), Display, Ord
-```
-
 ## Adding a new app
 
 GitHub app:
 
 1. Create `src/apps/<category>/myapp.rs` implementing the `App` trait:
    - Declare `pub const ID: &'static str = "myapp"` and `const EXE_NAME: &'static str = "myapp"`
-     in the impl block. Do NOT add URL, CATEGORY, or DESCRIPTION constants — those live in
-     `registry.toml` only.
+     in the impl block.
    - Implement `fn assets(&self) -> AppAssets`. Use `Self::EXE_NAME` for the primary binary name:
      ```rust
      fn assets(&self) -> AppAssets {
@@ -85,13 +56,9 @@ GitHub app:
 4. Update `create_app()` in `src/apps/apps_factory.rs`: add
    `MyApp::ID => Some(Box::new(MyApp::new(client)))`
 
-Codeberg app:
+Codeberg app: Same as above but use `CodebergClient` instead of `GithubClient`.
 
-Same as above but use `CodebergClient` instead of `GithubClient`.
-
-GitLab app:
-
-Same as above but use `GitlabClient` instead of `GithubClient`. Note that GitLab release assets are stored under `assets.links[].{id, name, direct_asset_url}` in the API response; `GitlabClient` normalizes this to the same shape as GitHub/Codeberg before storing in `GhRelease`, so the same `release.asset_names()` / `release.asset_download_url()` helpers work.
+GitLab app: Same as above but use `GitlabClient` instead of `GithubClient`. Note that GitLab release assets are stored under `assets.links[].{id, name, direct_asset_url}` in the API response; `GitlabClient` normalizes this to the same shape as GitHub/Codeberg before storing in `GhRelease`, so the same `release.asset_names()` / `release.asset_download_url()` helpers work.
 
 When choosing build artifact to download for new app, use the one for Linux, `x86_64` architecture.
 

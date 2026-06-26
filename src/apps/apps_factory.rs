@@ -19,7 +19,7 @@ use super::files::{
 };
 use super::git::{Delta, Difftastic, GitFlowNext, Gitleaks, Lazygit, Mergiraf, Serie, Worktrunk};
 use super::http::{Caddy, Curlie, Hurl, Restish, Xh};
-use super::logs::{Gonzo, Hl, LazyJournal, Lnav, Logdy, Loggo, Nerdlog, Rhit, Tailspin, Vector};
+use super::logging::{Gonzo, Hl, LazyJournal, Lnav, Logdy, Loggo, Nerdlog, Rhit, Tailspin, Vector};
 use super::networking::{Boring, Dog, Doggo};
 use super::shell::{Atuin, Axe, Carapace, Fzf, Rgxg, RustParallel, Skim, Starship, Vivid, Zoxide};
 use super::system::{Bottom, Btop, Diskwatch, Duf, Dust, Dysk, Erdtree, Netwatch, Procs, Syswatch};
