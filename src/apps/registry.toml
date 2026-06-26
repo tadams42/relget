@@ -84,6 +84,15 @@ man_pages = "unavailable"
 shell_completions = "unavailable"
 
 [[coding.apps]]
+id = "relget"
+exe_name = "relget"
+url = "https://github.com/tadams42/relget"
+description = "Installs and updates CLI utilities directly from GitHub, GitLab and Codeberg releases"
+has_musl = true
+man_pages = "unavailable"
+shell_completions = "self_generated"
+
+[[coding.apps]]
 id = "replibyte"
 exe_name = "replibyte"
 url = "https://github.com/Qovery/replibyte"

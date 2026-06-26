@@ -2,8 +2,8 @@ use std::sync::Arc;
 
 use super::App;
 use super::coding::{
-    AstGrep, Deadbranch, Fend, Grex, Hyperfine, Mailpit, Mkcert, Neovide, Pyrefly, Replibyte, Rgx,
-    Ruff, RustAnalyzer, Scc, Sqruff, Stylua, Taplo, Tombi, Ty, Vacuum,
+    AstGrep, Deadbranch, Fend, Grex, Hyperfine, Mailpit, Mkcert, Neovide, Pyrefly, Relget,
+    Replibyte, Rgx, Ruff, RustAnalyzer, Scc, Sqruff, Stylua, Taplo, Tombi, Ty, Vacuum,
 };
 use super::containers::{Ctop, D4S, DockMate, Dry, Dtop, LazyDocker};
 use super::data_processing::{
@@ -111,6 +111,7 @@ pub fn create_app(
         Pgplan::ID => Some(Box::new(Pgplan::new(client))),
         Procs::ID => Some(Box::new(Procs::new(client))),
         Pyrefly::ID => Some(Box::new(Pyrefly::new(client))),
+        Relget::ID => Some(Box::new(Relget::new(client))),
         Rage::ID => Some(Box::new(Rage::new(client))),
         Rhit::ID => Some(Box::new(Rhit::new(client))),
         Rclone::ID => Some(Box::new(Rclone::new(client))),

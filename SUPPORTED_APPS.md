@@ -31,6 +31,9 @@ Linters, formatters and various coding helpers.
 - [pyrefly](https://github.com/facebook/pyrefly)
   New, fast Python type checker from Meta
 
+- [relget](https://github.com/tadams42/relget)
+  Installs and updates CLI utilities directly from GitHub, GitLab and Codeberg releases
+
 - [replibyte](https://github.com/Qovery/replibyte)
   Creates database dump from your production data and then restores it to your local development environment, replacing sensitive stuff with fake data.
 
