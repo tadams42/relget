@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Result, anyhow};
 
 use super::helpers;
-use crate::{AppEntry, GenericApp, RateLimitError, Registry};
+use crate::{App, AppEntry, RateLimitError, Registry};
 
 pub(super) fn install(
     prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
@@ -104,7 +104,7 @@ pub(super) fn install_apps(
     let mut installed = Vec::new();
     for app_id in selected {
         let app =
-            GenericApp::from_id(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
+            App::from_id(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
                 .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
         match app.install(prefix_path) {
             Ok(paths) => installed.extend(paths),

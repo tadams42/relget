@@ -6,13 +6,13 @@ use std::sync::Arc;
 
 use anyhow::{Context, Result, bail};
 
-use super::app_assets::BIN_MODE;
+use super::assets::BIN_MODE;
 use crate::registry::{
     AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ShellKind,
 };
 use crate::{
-    AppAssets, AppBinary, AppVersion, ArchiveExtractor, CodebergClient, Completion, GithubClient,
-    GitlabClient, ManPage, Registry, RelgetClient, Shell,
+    AppVersion, ArchiveExtractor, Assets, Binary, CodebergClient, GithubClient, GitlabClient,
+    ManPage, Registry, RelgetClient, ShellCompletion,
 };
 
 fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
@@ -23,19 +23,23 @@ fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
     Ok(out.stdout)
 }
 
-pub struct GenericApp {
+pub struct App {
     entry:  AppEntry,
     client: Arc<dyn RelgetClient>,
 }
 
-impl GenericApp {
+impl App {
     pub fn new(entry: AppEntry, client: Arc<dyn RelgetClient>) -> Self { Self { entry, client } }
 
     pub fn from_id(
-        id: &str, gh_token: Option<String>, cb_token: Option<String>,
-        gl_token: Option<String>, offline: bool,
+        id: &str, gh_token: Option<String>, cb_token: Option<String>, gl_token: Option<String>,
+        offline: bool,
     ) -> Option<Self> {
-        let entry = Registry::global().entries().iter().find(|e| e.id == id)?.clone();
+        let entry = Registry::global()
+            .entries()
+            .iter()
+            .find(|e| e.id == id)?
+            .clone();
         let client = Self::client_for(&entry, gh_token, cb_token, gl_token, offline);
         Some(Self::new(entry, client))
     }
@@ -74,14 +78,6 @@ impl GenericApp {
                 .is_none_or(|s| !name.contains(s))
             && def.ends_with.as_deref().is_none_or(|s| name.ends_with(s))
             && def.equals.as_deref().is_none_or(|s| name == s)
-    }
-
-    fn shell_kind_to_shell(sk: &ShellKind) -> Shell {
-        match sk {
-            ShellKind::Bash => Shell::Bash,
-            ShellKind::Zsh => Shell::Zsh,
-            ShellKind::Fish => Shell::Fish,
-        }
     }
 
     fn app_name_from_path(path: &str, shell: &ShellKind) -> String {
@@ -218,7 +214,7 @@ impl GenericApp {
     }
 }
 
-impl GenericApp {
+impl App {
     pub fn exe_name(&self) -> &str { self.entry.main_exe_name() }
 
     pub fn cli_version_arg(&self) -> &str {
@@ -235,7 +231,8 @@ impl GenericApp {
         let release = match &self.entry.released_version_parse {
             Some(cfg) if cfg.tag_starts_with.is_some() => {
                 let prefix = cfg.tag_starts_with.as_deref().unwrap();
-                self.client.latest_release_where(owner, repo, &|tag| tag.starts_with(prefix))?
+                self.client
+                    .latest_release_where(owner, repo, &|tag| tag.starts_with(prefix))?
             }
             _ => self.client.latest_release(owner, repo)?,
         };
@@ -251,23 +248,22 @@ impl GenericApp {
         release.version()
     }
 
-    pub fn assets(&self) -> AppAssets {
+    pub fn assets(&self) -> Assets {
         let main_bin = self.entry.binaries.iter().find(|b| b.is_main).unwrap();
-        let binary = Some(AppBinary::new(&main_bin.name));
-        let other_bins: Vec<AppBinary> = self
+        let binary = Some(Binary::new(&main_bin.name));
+        let other_bins: Vec<Binary> = self
             .entry
             .binaries
             .iter()
             .filter(|b| !b.is_main)
-            .map(|b| AppBinary::new(&b.name))
+            .map(|b| Binary::new(&b.name))
             .collect();
 
-        let completions: Vec<Completion> = self
+        let completions: Vec<ShellCompletion> = self
             .entry
             .shell_completions
             .iter()
             .map(|sc| {
-                let shell = Self::shell_kind_to_shell(&sc.shell);
                 let app_name = match &sc.source {
                     CompletionSource::SelfGenerated { binary_id, .. } => {
                         self.binary_name_by_id(*binary_id).to_owned()
@@ -276,7 +272,7 @@ impl GenericApp {
                         Self::app_name_from_path(path, &sc.shell)
                     }
                 };
-                Completion::new(shell, app_name)
+                ShellCompletion::new(sc.shell.clone(), app_name)
             })
             .collect();
 
@@ -300,7 +296,7 @@ impl GenericApp {
             })
             .collect();
 
-        AppAssets {
+        Assets {
             binary,
             other_bins,
             completions,
@@ -308,7 +304,7 @@ impl GenericApp {
         }
     }
 
-    pub fn download(&self) -> Result<AppAssets> {
+    pub fn download(&self) -> Result<Assets> {
         let (owner, repo) = Self::owner_repo(&self.entry.url);
         let release = self.client.latest_release(owner, repo)?;
 
@@ -374,7 +370,7 @@ impl GenericApp {
         }
 
         // Run self-generated completions and man pages with all binaries in a temp dir
-        let mut completions: Vec<Completion> = Vec::new();
+        let mut completions: Vec<ShellCompletion> = Vec::new();
         let mut man_pages: Vec<ManPage> = Vec::new();
 
         let has_self_gen = self
@@ -402,8 +398,8 @@ impl GenericApp {
                     let exe_path = tmp.path().join(bin_name);
                     let args: Vec<&str> = command.split_whitespace().collect();
                     let data = run_cmd(&exe_path, &args)?;
-                    completions.push(Completion::new_with_data(
-                        Self::shell_kind_to_shell(&sc.shell),
+                    completions.push(ShellCompletion::new_with_data(
+                        sc.shell.clone(),
                         bin_name,
                         data,
                     ));
@@ -464,8 +460,8 @@ impl GenericApp {
                     .find(|a| a.id == *asset_id)
                     .expect("registry validates asset_id");
                 let data = Self::extract_from_asset(asset_def, asset_name, asset_data, path)?;
-                completions.push(Completion::new_with_data(
-                    Self::shell_kind_to_shell(&sc.shell),
+                completions.push(ShellCompletion::new_with_data(
+                    sc.shell.clone(),
                     Self::app_name_from_path(path, &sc.shell),
                     data,
                 ));
@@ -495,19 +491,19 @@ impl GenericApp {
         // Assemble result
         let main_def = self.entry.binaries.iter().find(|b| b.is_main).unwrap();
         let main_data = binary_data.remove(&main_def.name).unwrap();
-        let binary = Some(AppBinary::new_with_data(&main_def.name, main_data));
-        let other_bins: Vec<AppBinary> = self
+        let binary = Some(Binary::new_with_data(&main_def.name, main_data));
+        let other_bins: Vec<Binary> = self
             .entry
             .binaries
             .iter()
             .filter(|b| !b.is_main)
             .map(|b| {
                 let data = binary_data.remove(&b.name).unwrap();
-                AppBinary::new_with_data(&b.name, data)
+                Binary::new_with_data(&b.name, data)
             })
             .collect();
 
-        Ok(AppAssets {
+        Ok(Assets {
             binary,
             other_bins,
             completions,

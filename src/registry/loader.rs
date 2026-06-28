@@ -31,18 +31,18 @@ struct RawReleasedVersionParseDef {
 
 #[derive(Deserialize)]
 struct RawApp {
-    id:                      String,
-    category_id:             String,
-    description:             Option<String>,
-    url:                     String,
-    has_musl:                bool,
-    binaries:                Vec<RawBinaryDef>,
-    assets:                  Vec<RawAssetDef>,
+    id:                     String,
+    category_id:            String,
+    description:            Option<String>,
+    url:                    String,
+    has_musl:               bool,
+    binaries:               Vec<RawBinaryDef>,
+    assets:                 Vec<RawAssetDef>,
     #[serde(default)]
-    shell_completions:       Vec<RawShellCompletionDef>,
+    shell_completions:      Vec<RawShellCompletionDef>,
     #[serde(default)]
-    man_pages:               Vec<RawManPageDef>,
-    released_version_parse:  Option<RawReleasedVersionParseDef>,
+    man_pages:              Vec<RawManPageDef>,
+    released_version_parse: Option<RawReleasedVersionParseDef>,
 }
 
 #[derive(Deserialize)]
@@ -199,9 +199,11 @@ fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
         })
         .collect::<Result<Vec<_>>>()?;
 
-    let released_version_parse = raw.released_version_parse.map(|r| ReleasedVersionParseDef {
-        tag_starts_with: r.tag_starts_with,
-        try_in_body:     r.try_in_body,
+    let released_version_parse = raw.released_version_parse.map(|r| {
+        ReleasedVersionParseDef {
+            tag_starts_with: r.tag_starts_with,
+            try_in_body:     r.try_in_body,
+        }
     });
 
     Ok(AppEntry {

@@ -89,18 +89,18 @@ mod tests {
 
     fn make_entry(id: &str, exe_name: &str) -> AppEntry {
         AppEntry {
-            id:                id.to_string(),
-            category_id:       String::new(),
-            description:       None,
-            url:               String::new(),
-            has_musl:          false,
-            binaries:          vec![AppBinaryDef {
+            id:                     id.to_string(),
+            category_id:            String::new(),
+            description:            None,
+            url:                    String::new(),
+            has_musl:               false,
+            binaries:               vec![AppBinaryDef {
                 id:              1,
                 name:            exe_name.to_string(),
                 version_cmdline: String::new(),
                 is_main:         true,
             }],
-            assets:            vec![AppAssetDef {
+            assets:                 vec![AppAssetDef {
                 id:           1,
                 asset_type:   AssetType::Archive,
                 starts_with:  None,

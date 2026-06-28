@@ -1,4 +1,4 @@
-mod apps;
+mod app;
 mod archive;
 mod clients;
 mod config;
@@ -6,7 +6,7 @@ mod prefix;
 mod registry;
 mod version;
 
-pub use apps::{AppAssets, AppBinary, Completion, GenericApp, ManPage, Shell};
+pub use app::{App, Assets, Binary, ManPage, ShellCompletion};
 pub use archive::ArchiveExtractor;
 pub use clients::{
     CodebergClient, GithubClient, GitlabClient, RateLimitError, ReleaseMetadata, RelgetClient,

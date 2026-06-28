@@ -362,18 +362,18 @@ mod tests {
 
     fn make_app(id: &str) -> AppEntry {
         AppEntry {
-            id:                id.into(),
-            category_id:       "test".into(),
-            description:       None,
-            url:               "https://example.com".into(),
-            has_musl:          false,
-            binaries:          vec![AppBinaryDef {
+            id:                     id.into(),
+            category_id:            "test".into(),
+            description:            None,
+            url:                    "https://example.com".into(),
+            has_musl:               false,
+            binaries:               vec![AppBinaryDef {
                 id:              1,
                 name:            id.into(),
                 version_cmdline: "--version".into(),
                 is_main:         true,
             }],
-            assets:            vec![AppAssetDef {
+            assets:                 vec![AppAssetDef {
                 id:           1,
                 asset_type:   AssetType::Archive,
                 starts_with:  None,
@@ -1028,9 +1028,9 @@ mod tests {
 
     #[test]
     fn registry_exe_names_match_app_trait() {
-        use crate::GenericApp;
+        use crate::App;
         for app in Registry::global().entries() {
-            let instance = GenericApp::from_id(&app.id, None, None, None, true)
+            let instance = App::from_id(&app.id, None, None, None, true)
                 .unwrap_or_else(|| panic!("from_id returned None for id '{}'", app.id));
             assert_eq!(
                 app.main_exe_name(),
@@ -1045,10 +1045,10 @@ mod tests {
 
     #[test]
     fn all_apps_have_factory_entry() {
-        use crate::GenericApp;
+        use crate::App;
         for app in Registry::global().entries() {
             assert!(
-                GenericApp::from_id(&app.id, None, None, None, true).is_some(),
+                App::from_id(&app.id, None, None, None, true).is_some(),
                 "from_id returned None for registry id '{}'",
                 app.id
             );
@@ -1057,9 +1057,9 @@ mod tests {
 
     #[test]
     fn all_apps_have_binary_descriptor() {
-        use crate::GenericApp;
+        use crate::App;
         for app in Registry::global().entries() {
-            let instance = GenericApp::from_id(&app.id, None, None, None, true)
+            let instance = App::from_id(&app.id, None, None, None, true)
                 .unwrap_or_else(|| panic!("from_id returned None for id '{}'", app.id));
             assert!(
                 instance.assets().binary.is_some(),
