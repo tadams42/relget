@@ -388,15 +388,6 @@ man_pages = "unavailable"
 shell_completions = "unavailable"
 
 [[data_processing.apps]]
-id = "qsv-all"
-exe_name = "qsv"
-url = "https://github.com/dathere/qsv"
-description = "High-performance CSV data-wrangling toolkit (additional binaries optimized for specific workloads). You probably don't need this - use `qsv` instead"
-has_musl = false
-man_pages = "unavailable"
-shell_completions = "unavailable"
-
-[[data_processing.apps]]
 id = "rsv"
 exe_name = "rsv"
 url = "https://github.com/ribbondz/rsv"

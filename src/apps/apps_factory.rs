@@ -7,7 +7,7 @@ use super::coding::{
 };
 use super::containers::{Ctop, D4S, DockMate, Dry, Dtop, LazyDocker};
 use super::data_processing::{
-    Csvtk, Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, JsonGrep, Miller, Qq, Qsv, QsvAll, Rsv,
+    Csvtk, Dasel, Fq, Fx, GoJq, Jaq, Jd, Jid, Jiq, Jq, Jqp, JsonGrep, Miller, Qq, Qsv, Rsv,
     Tabiew, Tv, Xan, Xq, Yq,
 };
 use super::dev_envs::{Chezmoi, Fnm, Uv};
@@ -124,7 +124,6 @@ pub fn create_app(
         RustParallel::ID => Some(Box::new(RustParallel::new(client))),
         Qq::ID => Some(Box::new(Qq::new(client))),
         Qsv::ID => Some(Box::new(Qsv::new(client))),
-        QsvAll::ID => Some(Box::new(QsvAll::new(client))),
         Rsv::ID => Some(Box::new(Rsv::new(client))),
         RustAnalyzer::ID => Some(Box::new(RustAnalyzer::new(client))),
         Scc::ID => Some(Box::new(Scc::new(client))),

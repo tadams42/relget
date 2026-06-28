@@ -1,5 +1,7 @@
 ## unreleased
 
+- feat: removed qsv-all
+- feat: added registry validation rules and unit tests
 - feat: added JSON-based declarative app registry with schema validation
 - feat: added relget app in coding category
 - feat: added deadbranch app in coding category

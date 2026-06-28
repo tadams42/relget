@@ -143,9 +143,6 @@ and text formats
 - [qsv](https://github.com/dathere/qsv)
   High-performance CSV data-wrangling toolkit
 
-- [qsv-all](https://github.com/dathere/qsv)
-  High-performance CSV data-wrangling toolkit (additional binaries optimized for specific workloads). You probably don't need this - use `qsv` instead
-
 - [rsv](https://github.com/ribbondz/rsv)
   CSV/TSV toolkit for data exploration, similar to `qsv` but smaller in scope and feature set.
 
