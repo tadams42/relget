@@ -287,8 +287,11 @@ impl App for GenericApp {
             };
             let cached = self.client.download_asset(owner, repo, &name)?;
             // ArchiveExtractor needs a recognizable extension; tarball is always .tar.gz
-            let archive_name =
-                if is_tarball { format!("{}.tar.gz", cached.name) } else { name };
+            let archive_name = if is_tarball {
+                format!("{}.tar.gz", cached.name)
+            } else {
+                name
+            };
             downloaded.insert(asset_def.id, (archive_name, cached.data));
         }
 
@@ -366,13 +369,15 @@ impl App for GenericApp {
                     let exe_path = tmp.path().join(bin_name);
                     let filename = format!("{}.{}", bin_name, mp.section);
 
-                    let data = if let Some(dir_flag) = &mp.output_dir_flag {
+                    let data = if command.contains("{{ tmp-dir }}") {
                         let man_tmp = tempfile::tempdir()?;
                         let dir_str = man_tmp.path().to_str().context("non-UTF8 temp dir")?;
-                        let mut args: Vec<&str> = command.split_whitespace().collect();
-                        args.push(dir_flag.as_str());
-                        args.push(dir_str);
-                        run_cmd(&exe_path, &args)?;
+                        let args: Vec<String> = command
+                            .split_whitespace()
+                            .map(|t| t.replace("{{ tmp-dir }}", dir_str))
+                            .collect();
+                        let args_refs: Vec<&str> = args.iter().map(String::as_str).collect();
+                        run_cmd(&exe_path, &args_refs)?;
                         std::fs::read(man_tmp.path().join(&filename))
                             .with_context(|| format!("reading generated man page {filename}"))?
                     } else {

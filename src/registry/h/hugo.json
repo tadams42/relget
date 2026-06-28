@@ -49,8 +49,7 @@
       "section": 1,
       "self_generated": {
         "binary_id": 1,
-        "command": "gen man",
-        "output_dir_flag": "--dir"
+        "command": "gen man --dir {{ tmp-dir }}"
       }
     }
   ]

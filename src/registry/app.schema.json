@@ -165,10 +165,6 @@
               "command": {
                 "type": "string",
                 "minLength": 1
-              },
-              "output_dir_flag": {
-                "type": "string",
-                "minLength": 1
               }
             }
           },

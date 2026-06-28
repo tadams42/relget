@@ -58,9 +58,8 @@ pub enum CompletionSource {
 
 #[derive(Debug, Clone)]
 pub struct ManPageDef {
-    pub section:         u8,
-    pub source:          CompletionSource,
-    pub output_dir_flag: Option<String>,
+    pub section: u8,
+    pub source:  CompletionSource,
 }
 
 impl AppEntry {
