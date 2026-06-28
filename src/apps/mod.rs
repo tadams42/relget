@@ -1,7 +1,6 @@
 mod app_assets;
 mod app_trait;
 mod apps_factory;
-mod apps_registry;
 mod coding;
 mod containers;
 mod data_processing;
@@ -24,7 +23,3 @@ use app_trait::{
     run_cmd, with_temp_exe,
 };
 pub use apps_factory::create_app;
-pub use apps_registry::{
-    AppEntry, CategoryInfo, ManPagesStatus, ShellCompletionsStatus, all_app_entries,
-    all_apps_identifiers, all_categories,
-};

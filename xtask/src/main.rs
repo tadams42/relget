@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use relget::{all_app_entries, all_categories};
+use relget::Registry;
 
 fn main() {
     let task = std::env::args().nth(1);
@@ -97,7 +97,8 @@ fn update_supported_apps() {
 
     let mut lines: Vec<String> = vec!["# Supported apps".into(), String::new()];
 
-    for cat in all_categories() {
+    let registry = Registry::global();
+    for cat in registry.categories() {
         lines.push(format!("## {}", cat.title));
         lines.push(String::new());
 
@@ -106,9 +107,10 @@ fn update_supported_apps() {
             lines.push(String::new());
         }
 
-        let mut apps: Vec<_> = all_app_entries()
+        let mut apps: Vec<_> = registry
+            .entries()
             .iter()
-            .filter(|e| e.category == cat.key)
+            .filter(|e| e.category_id == cat.id)
             .collect();
         apps.sort_by(|a, b| a.id.cmp(&b.id));
 
@@ -119,7 +121,7 @@ fn update_supported_apps() {
             }
             first = false;
             lines.push(format!("- [{}]({})", entry.id, entry.url));
-            lines.push(format!("  {}", entry.description));
+            lines.push(format!("  {}", entry.description.as_deref().unwrap_or("")));
         }
         lines.push(String::new());
     }

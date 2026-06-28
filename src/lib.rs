@@ -6,15 +6,12 @@ mod prefix;
 mod registry;
 mod version;
 
-pub use apps::{
-    App, AppAssets, AppBinary, AppEntry, CategoryInfo, Completion, ManPage, ManPagesStatus, Shell,
-    ShellCompletionsStatus, all_app_entries, all_apps_identifiers, all_categories, create_app,
-};
+pub use apps::{App, AppAssets, AppBinary, Completion, ManPage, Shell, create_app};
 pub use archive::ArchiveExtractor;
 pub use clients::{
     CodebergClient, GithubClient, GitlabClient, RateLimitError, ReleaseMetadata, RelgetClient,
 };
 pub use config::Config;
 pub use prefix::Prefix;
-pub use registry::{Registry, RegistryApp, RegistryCategory};
+pub use registry::{AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry, Registry};
 pub use version::AppVersion;

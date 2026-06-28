@@ -1,4 +1,7 @@
+mod doctor;
+
 use std::collections::{HashMap, HashSet};
+use std::sync::OnceLock;
 
 use anyhow::{Context, Result, anyhow, bail};
 use rust_embed::RustEmbed;
@@ -13,19 +16,19 @@ struct RegistryFiles;
 
 #[derive(Debug, Clone)]
 pub struct Registry {
-    pub categories: Vec<RegistryCategory>,
-    pub apps:       Vec<RegistryApp>,
+    pub categories: Vec<CategoryEntry>,
+    pub apps:       Vec<AppEntry>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
-pub struct RegistryCategory {
+pub struct CategoryEntry {
     pub id:          String,
     pub title:       String,
     pub description: Option<String>,
 }
 
 #[derive(Debug, Clone)]
-pub struct RegistryApp {
+pub struct AppEntry {
     pub id:                String,
     pub category_id:       String,
     pub description:       Option<String>,
@@ -91,7 +94,7 @@ pub struct ManPageDef {
 
 #[derive(Deserialize)]
 struct RawCategories {
-    categories: Vec<RegistryCategory>,
+    categories: Vec<CategoryEntry>,
 }
 
 #[derive(Deserialize)]
@@ -189,33 +192,37 @@ fn parse_shell_kind(s: &str, ctx: &str) -> Result<ShellKind> {
 }
 
 fn parse_completion_source(
-    self_generated: Option<RawSelfGeneratedDef>,
-    extracted: Option<RawExtractedDef>,
-    ctx: &str,
+    self_generated: Option<RawSelfGeneratedDef>, extracted: Option<RawExtractedDef>, ctx: &str,
 ) -> Result<CompletionSource> {
     match (self_generated, extracted) {
-        (Some(sg), None) => Ok(CompletionSource::SelfGenerated {
-            binary_id: sg.binary_id,
-            command:   sg.command,
-        }),
-        (None, Some(ex)) => Ok(CompletionSource::Extracted {
-            asset_id: ex.asset_id,
-            path:     ex.path,
-        }),
+        (Some(sg), None) => {
+            Ok(CompletionSource::SelfGenerated {
+                binary_id: sg.binary_id,
+                command:   sg.command,
+            })
+        }
+        (None, Some(ex)) => {
+            Ok(CompletionSource::Extracted {
+                asset_id: ex.asset_id,
+                path:     ex.path,
+            })
+        }
         (Some(_), Some(_)) => bail!("{}: both self_generated and extracted specified", ctx),
         (None, None) => bail!("{}: neither self_generated nor extracted specified", ctx),
     }
 }
 
-fn convert_app(raw: RawApp, path: &str) -> Result<RegistryApp> {
+fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
     let binaries = raw
         .binaries
         .into_iter()
-        .map(|b| AppBinaryDef {
-            id:              b.id,
-            name:            b.name,
-            version_cmdline: b.version_cmdline,
-            is_main:         b.is_main,
+        .map(|b| {
+            AppBinaryDef {
+                id:              b.id,
+                name:            b.name,
+                version_cmdline: b.version_cmdline,
+                is_main:         b.is_main,
+            }
         })
         .collect();
 
@@ -257,7 +264,7 @@ fn convert_app(raw: RawApp, path: &str) -> Result<RegistryApp> {
         })
         .collect::<Result<Vec<_>>>()?;
 
-    Ok(RegistryApp {
+    Ok(AppEntry {
         id: raw.id,
         category_id: raw.category_id,
         description: raw.description,
@@ -288,8 +295,8 @@ impl Registry {
 
         for path in &paths {
             let file = RegistryFiles::get(path).expect("file was just listed");
-            let raw: RawApp = serde_json::from_slice(&file.data)
-                .with_context(|| format!("parsing {}", path))?;
+            let raw: RawApp =
+                serde_json::from_slice(&file.data).with_context(|| format!("parsing {}", path))?;
             apps.push(convert_app(raw, path).with_context(|| format!("converting {}", path))?);
         }
 
@@ -320,8 +327,8 @@ impl Registry {
         let cat_schema_raw = RegistryFiles::get("categories.schema.json")
             .ok_or_else(|| anyhow!("categories.schema.json not embedded"))?;
 
-        let app_schema: serde_json::Value = serde_json::from_slice(&app_schema_raw.data)
-            .context("parsing app.schema.json")?;
+        let app_schema: serde_json::Value =
+            serde_json::from_slice(&app_schema_raw.data).context("parsing app.schema.json")?;
         let cat_schema: serde_json::Value = serde_json::from_slice(&cat_schema_raw.data)
             .context("parsing categories.schema.json")?;
 
@@ -381,10 +388,7 @@ impl Registry {
 
             // category_id must exist in loaded categories
             if !category_ids.contains(app.category_id.as_str()) {
-                errors.push(format!(
-                    "{app_id}: unknown category_id '{}'",
-                    app.category_id
-                ));
+                errors.push(format!("{app_id}: unknown category_id '{}'", app.category_id));
             }
 
             let binary_ids: HashSet<u32> = app.binaries.iter().map(|b| b.id).collect();
@@ -400,10 +404,7 @@ impl Registry {
                 let mut seen: HashSet<&str> = HashSet::new();
                 for b in &app.binaries {
                     if !seen.insert(b.name.as_str()) {
-                        errors.push(format!(
-                            "{app_id}: duplicate binary name '{}'",
-                            b.name
-                        ));
+                        errors.push(format!("{app_id}: duplicate binary name '{}'", b.name));
                     }
                 }
             }
@@ -595,6 +596,53 @@ impl Registry {
     }
 }
 
+// ===== Static global accessor =====
+
+static REGISTRY: OnceLock<Registry> = OnceLock::new();
+
+impl Registry {
+    pub fn global() -> &'static Self {
+        REGISTRY.get_or_init(|| Self::load().expect("failed to load registry"))
+    }
+
+    pub fn entries(&self) -> &[AppEntry] { &self.apps }
+
+    pub fn identifiers(&self) -> Vec<&str> {
+        let mut ids: Vec<&str> = self.apps.iter().map(|a| a.id.as_str()).collect();
+        ids.sort_unstable();
+        ids
+    }
+
+    pub fn categories(&self) -> &[CategoryEntry] { &self.categories }
+
+    pub fn doctor(&self, offline: bool) -> Result<()> { doctor::doctor(&self.apps, offline) }
+}
+
+// ===== RegistryApp helpers =====
+
+impl AppEntry {
+    pub fn main_exe_name(&self) -> &str {
+        self.binaries
+            .iter()
+            .find(|b| b.is_main)
+            .expect("registry validation ensures exactly one is_main binary")
+            .name
+            .as_str()
+    }
+
+    pub fn has_bundled_man_pages(&self) -> bool {
+        self.man_pages
+            .iter()
+            .any(|mp| matches!(mp.source, CompletionSource::Extracted { .. }))
+    }
+
+    pub fn has_bundled_completions(&self) -> bool {
+        self.shell_completions
+            .iter()
+            .any(|sc| matches!(sc.source, CompletionSource::Extracted { .. }))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use serde_json::json;
@@ -624,9 +672,9 @@ mod tests {
         })
     }
 
-    fn make_registry(apps: Vec<RegistryApp>) -> Registry {
+    fn make_registry(apps: Vec<AppEntry>) -> Registry {
         Registry {
-            categories: vec![RegistryCategory {
+            categories: vec![CategoryEntry {
                 id:          "test".into(),
                 title:       "Test".into(),
                 description: None,
@@ -635,8 +683,8 @@ mod tests {
         }
     }
 
-    fn make_app(id: &str) -> RegistryApp {
-        RegistryApp {
+    fn make_app(id: &str) -> AppEntry {
+        AppEntry {
             id:                id.into(),
             category_id:       "test".into(),
             description:       None,
@@ -1570,10 +1618,7 @@ mod tests {
     fn existing_category_id_not_found() {
         let mut app = make_app("foo");
         app.category_id = "nonexistent".into();
-        has_error(
-            &make_registry(vec![app]).collect_rule_errors(),
-            "unknown category_id",
-        );
+        has_error(&make_registry(vec![app]).collect_rule_errors(), "unknown category_id");
     }
 
     #[test]
@@ -1666,10 +1711,7 @@ mod tests {
             ends_with:   None,
             equals:      Some("foo.deb".into()),
         });
-        has_error(
-            &make_registry(vec![app]).collect_rule_errors(),
-            "duplicate asset ids",
-        );
+        has_error(&make_registry(vec![app]).collect_rule_errors(), "duplicate asset ids");
     }
 
     #[test]
@@ -1695,5 +1737,69 @@ mod tests {
             &make_registry(vec![app]).collect_rule_errors(),
             "expected exactly 1 binary with is_main=true, found 2",
         );
+    }
+
+    // ===== Cross-module invariant tests =====
+
+    #[test]
+    fn registry_ids_are_unique() {
+        use std::collections::HashSet;
+        let ids: Vec<_> = Registry::global()
+            .entries()
+            .iter()
+            .map(|a| a.id.as_str())
+            .collect();
+        let unique: HashSet<_> = ids.iter().copied().collect();
+        assert_eq!(ids.len(), unique.len(), "duplicate app ids in registry");
+    }
+
+    #[test]
+    fn identifiers_is_sorted() {
+        let ids = Registry::global().identifiers();
+        let sorted = ids.windows(2).all(|w| w[0] <= w[1]);
+        assert!(sorted, "identifiers() is not sorted");
+    }
+
+    #[test]
+    fn registry_exe_names_match_app_trait() {
+        use crate::create_app;
+        for app in Registry::global().entries() {
+            let instance = create_app(&app.id, None, None, None, true)
+                .unwrap_or_else(|| panic!("create_app returned None for id '{}'", app.id));
+            assert_eq!(
+                app.main_exe_name(),
+                instance.exe_name(),
+                "registry main_exe_name mismatch for id '{}': registry='{}' trait='{}'",
+                app.id,
+                app.main_exe_name(),
+                instance.exe_name()
+            );
+        }
+    }
+
+    #[test]
+    fn all_apps_have_factory_entry() {
+        use crate::create_app;
+        for app in Registry::global().entries() {
+            assert!(
+                create_app(&app.id, None, None, None, true).is_some(),
+                "create_app returned None for registry id '{}'",
+                app.id
+            );
+        }
+    }
+
+    #[test]
+    fn all_apps_have_binary_descriptor() {
+        use crate::create_app;
+        for app in Registry::global().entries() {
+            let instance = create_app(&app.id, None, None, None, true)
+                .unwrap_or_else(|| panic!("create_app returned None for id '{}'", app.id));
+            assert!(
+                instance.assets().binary.is_some(),
+                "app '{}' has no primary binary descriptor in assets()",
+                app.id
+            );
+        }
     }
 }

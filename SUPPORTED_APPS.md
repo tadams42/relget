@@ -69,14 +69,13 @@ Linters, formatters and various coding helpers.
 
 ## Containers
 
+Docker and container management tools.
+
 - [ctop](https://github.com/bcicen/ctop)
   Top-like interface for container metrics
 
 - [d4s](https://github.com/jr-k/d4s)
-  Terminal UI for managing Docker containers and images, browsing running
-containers and viewing their logs. OP feature: a single key opens shell inside
-of selected container.
-
+  Terminal UI for managing Docker containers and images, browsing running containers and viewing their logs. OP feature: a single key opens shell inside of selected container.
 
 - [dockmate](https://github.com/shubh-io/DockMate)
   Terminal UI for managing Docker containers and images
@@ -90,9 +89,9 @@ of selected container.
 - [lazydocker](https://github.com/jesseduffield/lazydocker)
   Terminal UI for Docker containers, images, and compose
 
-## Data - processing JSON/YAML/CSV
+## Data Processing
 
-CLI filters and processors for structured data. Some of them have TUI for interactive filtering and displaying structured data in terminal. Most of them have their own query DSL to quickly find relevant data in large files.
+Tools for processing JSON, YAML, CSV and other data formats.
 
 - [csvtk](https://github.com/shenwei356/csvtk)
   Cross-platform, efficient and practical CSV/TSV toolkit
@@ -101,9 +100,7 @@ CLI filters and processors for structured data. Some of them have TUI for intera
   Query and modify data in JSON, YAML, TOML, XML, CSV, HCL, INI and KDL.
 
 - [fq](https://github.com/wader/fq)
-  `jq` for binary formats — tool, language and decoders for working with binary
-and text formats
-
+  `jq` for binary formats — tool, language and decoders for working with binary and text formats
 
 - [fx](https://github.com/antonmedv/fx)
   Interactive TUI for viewing JSON/YAML/TOML
@@ -115,9 +112,7 @@ and text formats
   Alternative to `jq` with fewer features but faster - for extremely large files.
 
 - [jd](https://github.com/josephburnett/jd)
-  diffing and patching JSON and YAML values. It supports a internal patch format,
-`JSON Merge Patch` and a subset of `JSON Patch`.
-
+  diffing and patching JSON and YAML values. It supports a internal patch format, `JSON Merge Patch` and a subset of `JSON Patch`.
 
 - [jid](https://github.com/simeji/jid)
   JSON viewer with interactive entry and execution of `jq` filter expressions
@@ -150,11 +145,7 @@ and text formats
   interactive viewing and filtering of tabular data (CSV, TSV, PSV, Parquet, and Arrow IPC)
 
 - [tv](https://github.com/alexhallam/tv)
-  (Tidy Viewer) pretty printer for tabular data (CSV, TSV, PSV, and Parquet).
-Excels at numeric formatting and large data sets. Doesn't implement much of
-filtering, but is quick and takes extra care on aligning (decimal) numbers for
-better readability.
-
+  (Tidy Viewer) pretty printer for tabular data (CSV, TSV, PSV, and Parquet). Excels at numeric formatting and large data sets. Doesn't implement much of filtering, but is quick and takes extra care on aligning (decimal) numbers for better readability.
 
 - [xan](https://github.com/medialab/xan)
   Command line tool for processing CSV files optimized to be extremely fast (forked from `BurntSushi/xsv` which is now archived)
@@ -165,7 +156,9 @@ better readability.
 - [yq](https://github.com/mikefarah/yq)
   like `jq` but for YAML. In newer versions it can also work with JSON, XML and CSV
 
-## Development environments
+## Development Environments
+
+Tools for managing development environments and language toolchains.
 
 - [chezmoi](https://github.com/twpayne/chezmoi)
   Dotfiles manager across multiple machines, think `ansible` but for dotfiles
@@ -176,16 +169,15 @@ better readability.
 - [uv](https://github.com/astral-sh/uv)
   Extremely fast Python package and project manager
 
-## Documentation and diagrams
+## Documentation and Diagrams
+
+Documentation generators, diagram tools and related utilities.
 
 - [agg](https://github.com/asciinema/agg)
   Generate animated GIFs from `asciinema` session recordings
 
 - [asciinema](https://github.com/asciinema/asciinema)
-  Record and replay terminal sessions as lightweight `asciicast` files. These
-files are not "video" but can be replayed as video. Additionally, they can also
-be replayed as sequence of commands in terminal.
-
+  Record and replay terminal sessions as lightweight `asciicast` files
 
 - [d2](https://github.com/terrastruct/d2)
   Powerful diagram scripting language that turns text to diagrams. More complex and capable than `mermaid`, less complex than `PlantUML`.
@@ -205,7 +197,9 @@ be replayed as sequence of commands in terminal.
 - [tlrc](https://github.com/tldr-pages/tlrc)
   Official [tldr-pages](https://tldr.sh/) client written in Rust
 
-## Encryption and secrets management
+## Encryption and Secrets
+
+Encryption tools and secrets management utilities.
 
 - [age](https://github.com/FiloSottile/age)
   Simple, modern and secure file encryption tool
@@ -236,15 +230,13 @@ would strictly be needed.
 
 ## Files
 
-General tools for every day work with files in terminal.
+File management, search and manipulation tools.
 
 - [bat](https://github.com/sharkdp/bat)
   `cat` clone with syntax highlighting and git integration
 
-
 - [choose](https://github.com/theryangeary/choose)
   Human-friendly and fast alternative to `cut` (and sometimes `awk`)
-
 
 - [eza](https://github.com/eza-community/eza)
   Modern replacement for `ls` with icons and git integration
@@ -273,7 +265,6 @@ General tools for every day work with files in terminal.
 - [termscp](https://github.com/veeso/termscp)
   Feature-rich terminal UI file transfer and explorer (SCP/SFTP/FTP/S3)
 
-
 - [trash-cli-rs](https://github.com/orf/trash)
   Safe `rm` replacement that moves files to the trash
 
@@ -283,7 +274,9 @@ General tools for every day work with files in terminal.
 - [yazi](https://github.com/sxyazi/yazi)
   Blazing fast terminal file manager with asynchronous I/O and a lot of features
 
-## git
+## Git
+
+Git utilities and extensions.
 
 - [delta](https://github.com/dandavison/delta)
   Syntax-highlighting pager for git, diff, and grep output
@@ -304,14 +297,14 @@ General tools for every day work with files in terminal.
   Syntax-aware merge driver for `git` - in many cases makes conflict resolution much easier
 
 - [serie](https://github.com/lusingander/serie)
-  Alternative to `git log --graph`. Renders pretty git commit graph in terminal -
-and nothing else
-
+  Alternative to `git log --graph`. Renders pretty git commit graph in terminal
 
 - [worktrunk](https://github.com/max-sixty/worktrunk)
   Git worktree manager — fast branch switching without stashing
 
 ## HTTP
+
+HTTP clients and server tools.
 
 - [caddy](https://github.com/caddyserver/caddy)
   Fast, automatic HTTPS web server with TLS (pretender to the Nginx throne)
@@ -330,45 +323,25 @@ and nothing else
 
 ## Logging
 
-Utilities that allow easier browsing of logs in terminal. Most of them really need
-that logs are in correct, strict data format. If you want something that just works
-and tries very hard to parse every conceivable log format without you needing to
-write any kind of template or regex, use `lnav`. To take absolute control on parsing
-and converting logs use `vector`. Everything else here is pretty eye-candy that will
-not work most of the time for most of your logs.
+Log viewers and log processing tools.
 
 - [gonzo](https://github.com/control-theory/gonzo)
-  A powerful, real-time log analysis.
-
-  - native streaming of OpenTelemetry.
-  - automatic detection of JSON, logfmt, and plain text logs
-  - can define custom templates for log formats in config file
-  - powerful TUI
-  - also provides embedded WebUI from the same running process
-
+  A powerful, real-time log analysis tool with streaming OpenTelemetry support, automatic detection of JSON/logfmt/plain text logs, configurable templates, TUI and embedded WebUI
 
 - [hl](https://github.com/pamburus/hl)
-  Fast log viewer for `JSON` or `logfmt` logs.
+  Fast log viewer for JSON or logfmt logs
 
 - [lazyjournal](https://github.com/Lifailon/lazyjournal)
   TUI for browsing systemd journal and Docker logs
 
 - [lnav](https://github.com/tstack/lnav)
-  Tries really hard to figure out structure in "not-so-structured" input data
-(logs). Most of the time works like a magic, extracting maximum of structured
-data from your logs without you needing to define single line of capture
-template or regex. Aggregates everything into TUI and provides syntax
-highlighting, filtering, and SQL querying
-
+  Tries really hard to figure out structure in unstructured log input; aggregates into TUI with syntax highlighting, filtering, and SQL querying
 
 - [logdy](https://github.com/logdyhq/logdy-core)
-  Aggregates log input and then starts (self-hosted, embedded) Web UI that can be used for viewing and filtering them. Multiple input modes (files, stdin, sockets, REST API)
+  Aggregates log input and serves a self-hosted embedded Web UI for viewing and filtering; supports files, stdin, sockets and REST API
 
 - [loggo](https://github.com/aurc/loggo)
-  Define one or more local or remote (SSH) log streams. Then see them all
-aggregated to single TUI on your local machine. The only problem is that they
-should really be in correctly structured JSON, for this utility to be useful.
-
+  Aggregate local or remote SSH log streams into a single TUI; works best with structured JSON logs
 
 - [nerdlog](https://github.com/dimonomid/nerdlog)
   SSH to (one or more) remote host(s), and live view one or more logs in TUI
@@ -386,6 +359,8 @@ should really be in correctly structured JSON, for this utility to be useful.
 
 ## Networking
 
+Networking and DNS tools.
+
 - [boring](https://github.com/alebeck/boring)
   The boring SSH tunnel manager. Uses local SSH config and keys to manage SSH tunnels in more human-friendly way.
 
@@ -397,7 +372,7 @@ should really be in correctly structured JSON, for this utility to be useful.
 
 ## Shell
 
-Things to improve builtin shell capabilities.
+Shell improvements, completions and productivity tools.
 
 - [atuin](https://github.com/atuinsh/atuin)
   Shell history search backed by SQLite with sync
@@ -418,7 +393,7 @@ Things to improve builtin shell capabilities.
   Parallel command runner with stdin/args dispatch and rate limiting
 
 - [skim](https://github.com/skim-rs/skim)
-  Fuzzy finder in Rust (alternative to `fzf`)
+  Fuzzy finder in Rust (alternative to fzf)
 
 - [starship](https://github.com/starship/starship)
   Minimal, blazing-fast, infinitely customizable shell prompt
@@ -429,9 +404,11 @@ Things to improve builtin shell capabilities.
 
 
 - [zoxide](https://github.com/ajeetdsouza/zoxide)
-  Smarter `cd` command with frecency-based directory jumping
+  Smarter cd command with frecency-based directory jumping
 
 ## System
+
+System monitoring and resource management utilities.
 
 - [bottom](https://github.com/ClementTsang/bottom)
   Graphical process/system monitor for the terminal (`htop`/`top` alternative)

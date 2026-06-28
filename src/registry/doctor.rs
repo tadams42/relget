@@ -1,31 +1,26 @@
-use std::path::Path;
-
 use anyhow::{Result, anyhow};
 use chrono::{DateTime, Duration, Utc};
 
-use super::helpers;
-use crate::{
-    CodebergClient, GithubClient, GitlabClient, ManPagesStatus, ReleaseMetadata, RelgetClient,
-    ShellCompletionsStatus, all_app_entries,
-};
+use super::AppEntry;
+use crate::{CodebergClient, Config, GithubClient, GitlabClient, ReleaseMetadata, RelgetClient};
 
-pub(super) fn doctor(_prefix_path: &Path, offline: bool) -> Result<()> {
+pub(super) fn doctor(apps: &[AppEntry], offline: bool) -> Result<()> {
     let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
     } else {
         (
-            helpers::get_github_token()?,
-            helpers::get_codeberg_token()?,
-            helpers::get_gitlab_token()?,
+            load_token("github", Config::github_token()?)?,
+            load_token("codeberg", Config::codeberg_token()?)?,
+            load_token("gitlab", Config::gitlab_token()?)?,
         )
     };
 
     let mut flagged: Vec<FlaggedApp> = Vec::new();
     let threshold = Utc::now() - Duration::days(365);
 
-    for entry in all_app_entries() {
+    for app in apps {
         let release = match fetch_release(
-            &entry.url,
+            &app.url,
             gh_token.clone(),
             cb_token.clone(),
             gl_token.clone(),
@@ -33,7 +28,7 @@ pub(super) fn doctor(_prefix_path: &Path, offline: bool) -> Result<()> {
         ) {
             Ok(r) => r,
             Err(e) => {
-                eprintln!("warning: {}: {}", entry.id, e);
+                eprintln!("warning: {}: {}", app.id, e);
                 continue;
             }
         };
@@ -58,23 +53,23 @@ pub(super) fn doctor(_prefix_path: &Path, offline: bool) -> Result<()> {
             }
         }
 
-        if !entry.has_musl && release_musl {
+        if !app.has_musl && release_musl {
             flags.push(DoctorFlag::MuslNowAvailable);
         }
-        if entry.has_musl && !release_musl {
+        if app.has_musl && !release_musl {
             flags.push(DoctorFlag::MuslNoLongerAvailable);
         }
 
-        if entry.man_pages == ManPagesStatus::Bundled {
+        if app.has_bundled_man_pages() {
             flags.push(DoctorFlag::BundledManPages);
         }
-        if entry.shell_completions == ShellCompletionsStatus::Bundled {
+        if app.has_bundled_completions() {
             flags.push(DoctorFlag::BundledCompletions);
         }
 
         if !flags.is_empty() {
             flagged.push(FlaggedApp {
-                id: entry.id.clone(),
+                id: app.id.clone(),
                 release_date: date_str,
                 version: version_str,
                 flags,
@@ -85,6 +80,14 @@ pub(super) fn doctor(_prefix_path: &Path, offline: bool) -> Result<()> {
     use std::io::IsTerminal;
     print_table(&flagged, std::io::stdout().is_terminal());
     Ok(())
+}
+
+fn load_token(provider: &str, token: Option<String>) -> Result<Option<String>> {
+    match &token {
+        Some(_) => log::info!("msg={provider}-token-loaded"),
+        None => log::warn!("msg={provider} token not found; app may hit API rate limits"),
+    }
+    Ok(token)
 }
 
 enum DoctorFlag {

@@ -9,7 +9,7 @@ cargo build
 cargo run -- --help
 cargo run -- install --apps rg
 cargo run -- install --apps rg,bat        # comma-separated
-cargo run -- list-apps-ids
+cargo run -- registry list-apps-ids
 cargo run -- completions zsh
 cargo run -- uninstall --apps rg
 cargo run -- install --apps rg --offline  # use only cached data

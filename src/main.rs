@@ -4,7 +4,7 @@ use anyhow::Result;
 use clap::builder::styling::{AnsiColor, Effects, Styles};
 use clap::{Args, CommandFactory, FromArgMatches, Parser, Subcommand};
 use clap_complete::{Shell, generate};
-use relget::{Prefix, Registry, all_apps_identifiers};
+use relget::{Prefix, Registry};
 
 fn main() -> Result<()> {
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
@@ -61,12 +61,10 @@ pub fn execute_cli(cli: &Cli) -> Result<()> {
         Commands::Update(args) => update_command(args, cli.offline)?,
         Commands::Uninstall(args) => uninstall_command(args)?,
         Commands::Sync(args) => sync_command(args, cli.offline)?,
-        Commands::Doctor(args) => doctor_command(args, cli.offline)?,
-        Commands::ListAppsIds => list_apps_ids_command(),
         Commands::Completions { shell } => {
             generate(*shell, &mut Cli::command(), "relget", &mut std::io::stdout())
         }
-        Commands::Registry(args) => registry_command(args)?,
+        Commands::Registry(args) => registry_command(args, cli.offline)?,
     }
 
     Ok(())
@@ -163,14 +161,6 @@ pub fn uninstall_command(args: &UninstallArgs) -> Result<()> {
 }
 
 #[derive(Args)]
-pub struct DoctorArgs {}
-
-pub fn doctor_command(_args: &DoctorArgs, offline: bool) -> Result<()> {
-    let prefix = Prefix::new(Prefix::DEFAULT_PREFIX.into());
-    prefix.doctor(offline)
-}
-
-#[derive(Args)]
 pub struct InstallArgs {
     /// Install prefix (e.g. /usr/local or ~/.local)
     #[arg(short = 'p', long, default_value = Prefix::DEFAULT_PREFIX)]
@@ -201,6 +191,9 @@ pub fn install_apps_command(args: &InstallArgs, offline: bool) -> Result<()> {
 }
 
 #[derive(Args)]
+pub struct DoctorArgs {}
+
+#[derive(Args)]
 pub struct RegistryArgs {
     #[command(subcommand)]
     pub command: RegistrySubcommands,
@@ -210,23 +203,28 @@ pub struct RegistryArgs {
 pub enum RegistrySubcommands {
     /// Validate all registry JSON files against their schemas
     Validate,
+    /// Print all supported app identifiers
+    ListAppsIds,
+    /// Check all registry apps for potential issues against latest releases
+    #[command(hide = true)]
+    Doctor(DoctorArgs),
 }
 
-pub fn registry_command(args: &RegistryArgs) -> Result<()> {
+pub fn registry_command(args: &RegistryArgs, offline: bool) -> Result<()> {
     match &args.command {
         RegistrySubcommands::Validate => {
             let registry = Registry::load()?;
             registry.validate()?;
             println!("Registry valid. {} apps validated.", registry.apps.len());
         }
+        RegistrySubcommands::ListAppsIds => {
+            for id in Registry::global().identifiers() {
+                println!("{}", id);
+            }
+        }
+        RegistrySubcommands::Doctor(_) => Registry::global().doctor(offline)?,
     }
     Ok(())
-}
-
-pub fn list_apps_ids_command() {
-    for id in all_apps_identifiers() {
-        println!("{}", id);
-    }
 }
 
 #[derive(Parser)]
@@ -246,8 +244,6 @@ pub struct Cli {
 pub enum Commands {
     /// Install selected apps into the prefix
     Install(InstallArgs),
-    /// Print all supported app identifiers
-    ListAppsIds,
     /// Print shell completion script to stdout
     Completions {
         /// Shell to generate completions for
@@ -267,9 +263,6 @@ pub enum Commands {
     /// must be specified.
     #[command(verbatim_doc_comment)]
     Sync(SyncArgs),
-    /// Check all registry apps for potential issues against latest releases
-    #[command(hide = true)]
-    Doctor(DoctorArgs),
     /// Update relget-managed apps in the prefix
     ///
     /// Without selectors: scans `<prefix>/bin/` for executables that match a known app in the
