@@ -109,8 +109,9 @@ mod tests {
                 ends_with:    None,
                 equals:       None,
             }],
-            shell_completions: vec![],
-            man_pages:         vec![],
+            shell_completions:      vec![],
+            man_pages:              vec![],
+            released_version_parse: None,
         }
     }
 

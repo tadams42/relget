@@ -141,6 +141,19 @@
         ]
       }
     },
+    "released_version_parse": {
+      "type": "object",
+      "properties": {
+        "tag_starts_with": {
+          "type": "string",
+          "minLength": 1
+        },
+        "try_in_body": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
     "man_pages": {
       "type": "array",
       "items": {

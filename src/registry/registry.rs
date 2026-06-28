@@ -382,8 +382,9 @@ mod tests {
                 ends_with:    None,
                 equals:       Some("foo.tar.gz".into()),
             }],
-            shell_completions: vec![],
-            man_pages:         vec![],
+            shell_completions:      vec![],
+            man_pages:              vec![],
+            released_version_parse: None,
         }
     }
 
@@ -1027,14 +1028,14 @@ mod tests {
 
     #[test]
     fn registry_exe_names_match_app_trait() {
-        use crate::create_app;
+        use crate::GenericApp;
         for app in Registry::global().entries() {
-            let instance = create_app(&app.id, None, None, None, true)
-                .unwrap_or_else(|| panic!("create_app returned None for id '{}'", app.id));
+            let instance = GenericApp::from_id(&app.id, None, None, None, true)
+                .unwrap_or_else(|| panic!("from_id returned None for id '{}'", app.id));
             assert_eq!(
                 app.main_exe_name(),
                 instance.exe_name(),
-                "registry main_exe_name mismatch for id '{}': registry='{}' trait='{}'",
+                "registry main_exe_name mismatch for id '{}': registry='{}' instance='{}'",
                 app.id,
                 app.main_exe_name(),
                 instance.exe_name()
@@ -1044,11 +1045,11 @@ mod tests {
 
     #[test]
     fn all_apps_have_factory_entry() {
-        use crate::create_app;
+        use crate::GenericApp;
         for app in Registry::global().entries() {
             assert!(
-                create_app(&app.id, None, None, None, true).is_some(),
-                "create_app returned None for registry id '{}'",
+                GenericApp::from_id(&app.id, None, None, None, true).is_some(),
+                "from_id returned None for registry id '{}'",
                 app.id
             );
         }
@@ -1056,10 +1057,10 @@ mod tests {
 
     #[test]
     fn all_apps_have_binary_descriptor() {
-        use crate::create_app;
+        use crate::GenericApp;
         for app in Registry::global().entries() {
-            let instance = create_app(&app.id, None, None, None, true)
-                .unwrap_or_else(|| panic!("create_app returned None for id '{}'", app.id));
+            let instance = GenericApp::from_id(&app.id, None, None, None, true)
+                .unwrap_or_else(|| panic!("from_id returned None for id '{}'", app.id));
             assert!(
                 instance.assets().binary.is_some(),
                 "app '{}' has no primary binary descriptor in assets()",

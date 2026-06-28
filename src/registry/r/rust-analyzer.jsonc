@@ -20,5 +20,9 @@
     }
   ],
   "shell_completions": [],
-  "man_pages": []
+  "man_pages": [],
+  "released_version_parse": {
+    "tag_starts_with": "v",
+    "try_in_body": true
+  }
 }

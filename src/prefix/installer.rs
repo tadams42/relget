@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Result, anyhow};
 
 use super::helpers;
-use crate::{AppEntry, RateLimitError, Registry, create_app};
+use crate::{AppEntry, GenericApp, RateLimitError, Registry};
 
 pub(super) fn install(
     prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
@@ -103,8 +103,9 @@ pub(super) fn install_apps(
     };
     let mut installed = Vec::new();
     for app_id in selected {
-        let app = create_app(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
-            .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
+        let app =
+            GenericApp::from_id(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
+                .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
         match app.install(prefix_path) {
             Ok(paths) => installed.extend(paths),
             Err(e) => {
@@ -181,18 +182,18 @@ mod tests {
 
     fn make_entry(id: &str, exe_name: &str) -> AppEntry {
         AppEntry {
-            id:                id.to_string(),
-            category_id:       String::new(),
-            description:       None,
-            url:               String::new(),
-            has_musl:          false,
-            binaries:          vec![AppBinaryDef {
+            id:                     id.to_string(),
+            category_id:            String::new(),
+            description:            None,
+            url:                    String::new(),
+            has_musl:               false,
+            binaries:               vec![AppBinaryDef {
                 id:              1,
                 name:            exe_name.to_string(),
                 version_cmdline: String::new(),
                 is_main:         true,
             }],
-            assets:            vec![AppAssetDef {
+            assets:                 vec![AppAssetDef {
                 id:           1,
                 asset_type:   AssetType::Archive,
                 starts_with:  None,
@@ -201,8 +202,9 @@ mod tests {
                 ends_with:    None,
                 equals:       None,
             }],
-            shell_completions: vec![],
-            man_pages:         vec![],
+            shell_completions:      vec![],
+            man_pages:              vec![],
+            released_version_parse: None,
         }
     }
 

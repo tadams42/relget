@@ -1,14 +1,21 @@
 #[derive(Debug, Clone)]
+pub struct ReleasedVersionParseDef {
+    pub tag_starts_with: Option<String>,
+    pub try_in_body:     bool,
+}
+
+#[derive(Debug, Clone)]
 pub struct AppEntry {
-    pub id:                String,
-    pub category_id:       String,
-    pub description:       Option<String>,
-    pub url:               String,
-    pub has_musl:          bool,
-    pub binaries:          Vec<AppBinaryDef>,
-    pub assets:            Vec<AppAssetDef>,
-    pub shell_completions: Vec<ShellCompletionDef>,
-    pub man_pages:         Vec<ManPageDef>,
+    pub id:                     String,
+    pub category_id:            String,
+    pub description:            Option<String>,
+    pub url:                    String,
+    pub has_musl:               bool,
+    pub binaries:               Vec<AppBinaryDef>,
+    pub assets:                 Vec<AppAssetDef>,
+    pub shell_completions:      Vec<ShellCompletionDef>,
+    pub man_pages:              Vec<ManPageDef>,
+    pub released_version_parse: Option<ReleasedVersionParseDef>,
 }
 
 #[derive(Debug, Clone)]

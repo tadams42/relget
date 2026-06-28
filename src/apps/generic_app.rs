@@ -1,20 +1,27 @@
 use std::collections::{HashMap, HashSet};
 use std::os::unix::fs::PermissionsExt;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::process::Command;
 use std::sync::Arc;
 
 use anyhow::{Context, Result, bail};
 
-use super::App;
 use super::app_assets::BIN_MODE;
-use super::app_trait::run_cmd;
 use crate::registry::{
     AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ShellKind,
 };
 use crate::{
     AppAssets, AppBinary, AppVersion, ArchiveExtractor, CodebergClient, Completion, GithubClient,
-    GitlabClient, ManPage, RelgetClient, Shell,
+    GitlabClient, ManPage, Registry, RelgetClient, Shell,
 };
+
+fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
+    let out = Command::new(exe_path)
+        .args(args)
+        .output()
+        .with_context(|| format!("Running {:?} {:?}", exe_path, args))?;
+    Ok(out.stdout)
+}
 
 pub struct GenericApp {
     entry:  AppEntry,
@@ -23,6 +30,15 @@ pub struct GenericApp {
 
 impl GenericApp {
     pub fn new(entry: AppEntry, client: Arc<dyn RelgetClient>) -> Self { Self { entry, client } }
+
+    pub fn from_id(
+        id: &str, gh_token: Option<String>, cb_token: Option<String>,
+        gl_token: Option<String>, offline: bool,
+    ) -> Option<Self> {
+        let entry = Registry::global().entries().iter().find(|e| e.id == id)?.clone();
+        let client = Self::client_for(&entry, gh_token, cb_token, gl_token, offline);
+        Some(Self::new(entry, client))
+    }
 
     pub fn client_for(
         entry: &AppEntry, gh_token: Option<String>, cb_token: Option<String>,
@@ -202,10 +218,10 @@ impl GenericApp {
     }
 }
 
-impl App for GenericApp {
-    fn exe_name(&self) -> &str { self.entry.main_exe_name() }
+impl GenericApp {
+    pub fn exe_name(&self) -> &str { self.entry.main_exe_name() }
 
-    fn cli_version_arg(&self) -> &str {
+    pub fn cli_version_arg(&self) -> &str {
         self.entry
             .binaries
             .iter()
@@ -214,12 +230,28 @@ impl App for GenericApp {
             .unwrap_or("--version")
     }
 
-    fn released_version(&self) -> Result<AppVersion> {
+    pub fn released_version(&self) -> Result<AppVersion> {
         let (owner, repo) = Self::owner_repo(&self.entry.url);
-        self.client.latest_release(owner, repo)?.version()
+        let release = match &self.entry.released_version_parse {
+            Some(cfg) if cfg.tag_starts_with.is_some() => {
+                let prefix = cfg.tag_starts_with.as_deref().unwrap();
+                self.client.latest_release_where(owner, repo, &|tag| tag.starts_with(prefix))?
+            }
+            _ => self.client.latest_release(owner, repo)?,
+        };
+        if let Some(cfg) = &self.entry.released_version_parse {
+            if cfg.try_in_body {
+                if let Some(body) = release.data["body"].as_str() {
+                    if let Some(v) = AppVersion::find_in(body) {
+                        return Ok(v);
+                    }
+                }
+            }
+        }
+        release.version()
     }
 
-    fn assets(&self) -> AppAssets {
+    pub fn assets(&self) -> AppAssets {
         let main_bin = self.entry.binaries.iter().find(|b| b.is_main).unwrap();
         let binary = Some(AppBinary::new(&main_bin.name));
         let other_bins: Vec<AppBinary> = self
@@ -276,7 +308,7 @@ impl App for GenericApp {
         }
     }
 
-    fn download(&self) -> Result<AppAssets> {
+    pub fn download(&self) -> Result<AppAssets> {
         let (owner, repo) = Self::owner_repo(&self.entry.url);
         let release = self.client.latest_release(owner, repo)?;
 
@@ -481,5 +513,81 @@ impl App for GenericApp {
             completions,
             man_pages,
         })
+    }
+
+    pub fn installed_version(&self, prefix: &Path) -> Result<Option<AppVersion>> {
+        let bin = prefix.join("bin").join(self.exe_name());
+        if !bin.exists() {
+            return Ok(None);
+        }
+        let out = std::process::Command::new(&bin)
+            .arg(self.cli_version_arg())
+            .output();
+        match out {
+            Err(_) => Ok(None),
+            Ok(o) => {
+                let stdout = String::from_utf8_lossy(&o.stdout);
+                let stderr = String::from_utf8_lossy(&o.stderr);
+                let combined = format!("{}{}", stdout, stderr);
+                Ok(AppVersion::find_in(&combined))
+            }
+        }
+    }
+
+    pub fn needs_install(&self, prefix: &Path) -> Result<bool> {
+        let installed = self.installed_version(prefix)?;
+        match installed {
+            None => Ok(true),
+            Some(iv) => Ok(iv != self.released_version()?),
+        }
+    }
+
+    pub fn install(&self, prefix: &Path) -> Result<Vec<PathBuf>> {
+        if !self.needs_install(prefix)? {
+            log::info!("app={} msg=Already at latest version", self.exe_name());
+            return Ok(vec![]);
+        }
+        let assets = self.download()?;
+        let mut installed = Vec::new();
+        if let Some(bin) = &assets.binary {
+            installed.push(bin.install(prefix)?);
+        }
+        for bin in &assets.other_bins {
+            installed.push(bin.install(prefix)?);
+        }
+        for man in &assets.man_pages {
+            installed.push(man.install(prefix)?);
+        }
+        for completion in &assets.completions {
+            installed.push(completion.install(prefix)?);
+        }
+        log::info!("app={} msg=Installed", self.exe_name());
+        Ok(installed)
+    }
+
+    pub fn uninstall(&self, prefix: &Path) -> Vec<PathBuf> {
+        let assets = self.assets();
+        let mut removed = Vec::new();
+        if let Some(bin) = &assets.binary {
+            if let Some(uninstalled) = bin.uninstall(prefix) {
+                removed.push(uninstalled);
+            }
+        }
+        for bin in &assets.other_bins {
+            if let Some(uninstalled) = bin.uninstall(prefix) {
+                removed.push(uninstalled);
+            }
+        }
+        for man in &assets.man_pages {
+            if let Some(uninstalled) = man.uninstall(prefix) {
+                removed.push(uninstalled);
+            }
+        }
+        for comp in &assets.completions {
+            if let Some(uninstalled) = comp.uninstall(prefix) {
+                removed.push(uninstalled);
+            }
+        }
+        removed
     }
 }
