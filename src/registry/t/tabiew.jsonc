@@ -1,0 +1,59 @@
+{
+  "id": "tabiew",
+  "category_id": "data_processing",
+  "description": "interactive viewing and filtering of tabular data (CSV, TSV, PSV, Parquet, and Arrow IPC)",
+  "url": "https://github.com/shshemi/tabiew",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "tw",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "binary",
+      "equals": "tw-x86_64-unknown-linux-musl"
+    },
+    {
+      "id": 2,
+      "type": "archive",
+      "equals": "tabiew-manual-and-completions.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 2,
+        "path": "completion/tw.bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 2,
+        "path": "completion/_tw"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 2,
+        "path": "completion/tw.fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 2,
+        "path": "manual/tabiew.1"
+      }
+    }
+  ]
+}

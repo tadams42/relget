@@ -1,0 +1,55 @@
+{
+  "id": "dysk",
+  "category_id": "system",
+  "description": "Terminal utility to get information on filesystems (`df` alternative)",
+  "url": "https://github.com/Canop/dysk",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "dysk",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "dysk_",
+      "ends_with": ".zip"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 1,
+        "path": "build/completion/dysk.bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "build/completion/_dysk"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 1,
+        "path": "build/completion/dysk.fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 1,
+        "path": "build/man/dysk.1"
+      }
+    }
+  ]
+}

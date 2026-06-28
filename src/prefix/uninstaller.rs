@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use anyhow::Result;
 
 use super::helpers;
-use crate::create_app;
+use crate::App;
 
 pub(super) fn uninstall(
     prefix_path: &Path, apps: &[String], configured_set: Option<&str>,
@@ -25,7 +25,7 @@ pub(super) fn uninstall(
 pub(super) fn uninstall_apps(prefix_path: &Path, selected: &[String]) -> Result<Vec<PathBuf>> {
     let mut removed = Vec::new();
     for app_id in selected {
-        let app = create_app(app_id, None, None, None, false)
+        let app = App::from_id(app_id, None, None, None, false)
             .ok_or_else(|| anyhow::anyhow!("Unknown app '{}'", app_id))?;
         removed.extend(app.uninstall(prefix_path));
     }

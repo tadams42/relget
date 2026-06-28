@@ -1,0 +1,47 @@
+{
+  "id": "procs",
+  "category_id": "system",
+  "description": "Modern replacement for ps with colored output and search",
+  "url": "https://github.com/dalance/procs",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "procs",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "procs-",
+      "ends_with": "-x86_64-linux.zip"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "--gen-completion-out bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "--gen-completion-out zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "--gen-completion-out fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

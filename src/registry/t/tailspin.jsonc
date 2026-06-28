@@ -1,0 +1,24 @@
+{
+  "id": "tailspin",
+  "category_id": "logging",
+  "description": "better `tail`: tries to colorizes any kind of input thrown at it\n",
+  "url": "https://github.com/bensadeh/tailspin",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "tspin",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "tailspin-x86_64-unknown-linux-musl.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

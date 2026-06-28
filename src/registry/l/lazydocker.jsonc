@@ -1,0 +1,25 @@
+{
+  "id": "lazydocker",
+  "category_id": "containers",
+  "description": "Terminal UI for Docker containers, images, and compose",
+  "url": "https://github.com/jesseduffield/lazydocker",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "lazydocker",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "lazydocker",
+      "ends_with": "inux_x86_64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

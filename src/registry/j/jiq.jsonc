@@ -1,0 +1,24 @@
+{
+  "id": "jiq",
+  "category_id": "data_processing",
+  "description": "Interactive JSON query tool with real-time output and AI assistance (similar to `jid` and `jqp`).",
+  "url": "https://github.com/bellicose100xp/jiq",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "jiq",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "jiq-x86_64-unknown-linux-musl.tar.xz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

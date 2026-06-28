@@ -1,0 +1,33 @@
+{
+  "id": "gojq",
+  "category_id": "data_processing",
+  "description": "Pure Go implementation of `jq` with extended features",
+  "url": "https://github.com/itchyny/gojq",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "gojq",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "gojq_",
+      "ends_with": "_linux_amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "_gojq"
+      }
+    }
+  ],
+  "man_pages": []
+}

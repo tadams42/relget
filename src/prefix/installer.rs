@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Result, anyhow};
 
 use super::helpers;
-use crate::{AppEntry, RateLimitError, all_app_entries, create_app};
+use crate::{App, AppEntry, RateLimitError, Registry};
 
 pub(super) fn install(
     prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
@@ -48,7 +48,7 @@ pub(super) fn update(
         }
 
         let installed_binaries: HashSet<&str> = owned.iter().map(String::as_str).collect();
-        let ids = resolve_update_targets(&installed_binaries, all_app_entries());
+        let ids = resolve_update_targets(&installed_binaries, Registry::global().entries());
 
         if ids.is_empty() {
             println!("No relget-managed apps found in {}.", bin_dir.display());
@@ -58,13 +58,13 @@ pub(super) fn update(
         ids
     } else {
         let selected = helpers::select_apps(apps, configured_set)?;
-        let entries = all_app_entries();
+        let entries = Registry::global().entries();
         let bin_dir = prefix_path.join("bin");
         let owned: HashSet<String> = selected
             .iter()
             .filter_map(|id| entries.iter().find(|e| &e.id == id))
-            .filter(|e| bin_dir.join(&e.exe_name).exists())
-            .map(|e| e.exe_name.clone())
+            .filter(|e| bin_dir.join(e.main_exe_name()).exists())
+            .map(|e| e.main_exe_name().to_owned())
             .collect();
         let installed_binaries: HashSet<&str> = owned.iter().map(String::as_str).collect();
         let filtered = filter_to_installed(&selected, entries, &installed_binaries);
@@ -103,8 +103,9 @@ pub(super) fn install_apps(
     };
     let mut installed = Vec::new();
     for app_id in selected {
-        let app = create_app(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
-            .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
+        let app =
+            App::from_id(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
+                .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
         match app.install(prefix_path) {
             Ok(paths) => installed.extend(paths),
             Err(e) => {
@@ -129,20 +130,21 @@ pub(super) fn resolve_update_targets(
 ) -> Vec<String> {
     let mut exe_to_id: HashMap<&str, &str> = HashMap::new();
     for entry in entries {
-        if exe_to_id.contains_key(entry.exe_name.as_str()) {
-            if installed_binaries.contains(entry.exe_name.as_str()) {
-                let winner = exe_to_id[entry.exe_name.as_str()];
+        let exe = entry.main_exe_name();
+        if exe_to_id.contains_key(exe) {
+            if installed_binaries.contains(exe) {
+                let winner = exe_to_id[exe];
                 log::warn!(
                     "exe_name={} winner={} duplicate={} msg=ambiguous exe_name; re-run with \
                     --apps {} to update the other",
-                    entry.exe_name,
+                    exe,
                     winner,
                     entry.id,
                     entry.id
                 );
             }
         } else {
-            exe_to_id.insert(&entry.exe_name, &entry.id);
+            exe_to_id.insert(exe, &entry.id);
         }
     }
 
@@ -163,7 +165,7 @@ pub(super) fn filter_to_installed(
             let present = entries
                 .iter()
                 .find(|e| &e.id == *id)
-                .is_some_and(|e| installed_binaries.contains(e.exe_name.as_str()));
+                .is_some_and(|e| installed_binaries.contains(e.main_exe_name()));
             if !present {
                 log::warn!("app={} msg=not installed, skipping", id);
             }
@@ -176,18 +178,33 @@ pub(super) fn filter_to_installed(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{ManPagesStatus, ShellCompletionsStatus};
+    use crate::{AppAssetDef, AppBinaryDef, AssetType};
 
     fn make_entry(id: &str, exe_name: &str) -> AppEntry {
         AppEntry {
-            id:                id.to_string(),
-            exe_name:          exe_name.to_string(),
-            url:               String::new(),
-            category:          String::new(),
-            description:       String::new(),
-            has_musl:          false,
-            man_pages:         ManPagesStatus::Unavailable,
-            shell_completions: ShellCompletionsStatus::Unavailable,
+            id:                     id.to_string(),
+            category_id:            String::new(),
+            description:            None,
+            url:                    String::new(),
+            has_musl:               false,
+            binaries:               vec![AppBinaryDef {
+                id:              1,
+                name:            exe_name.to_string(),
+                version_cmdline: String::new(),
+                is_main:         true,
+            }],
+            assets:                 vec![AppAssetDef {
+                id:           1,
+                asset_type:   AssetType::Archive,
+                starts_with:  None,
+                contains:     None,
+                not_contains: None,
+                ends_with:    None,
+                equals:       None,
+            }],
+            shell_completions:      vec![],
+            man_pages:              vec![],
+            released_version_parse: None,
         }
     }
 

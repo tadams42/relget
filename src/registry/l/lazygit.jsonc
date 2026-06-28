@@ -1,0 +1,25 @@
+{
+  "id": "lazygit",
+  "category_id": "git",
+  "description": "Simple terminal UI for `git` commands",
+  "url": "https://github.com/jesseduffield/lazygit",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "lazygit",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "lazygit_",
+      "ends_with": "inux_x86_64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

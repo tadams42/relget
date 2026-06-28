@@ -1,0 +1,87 @@
+{
+  "id": "hurl",
+  "category_id": "http",
+  "description": "Run and test HTTP requests defined in plain text",
+  "url": "https://github.com/Orange-OpenSource/hurl",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "hurl",
+      "version_cmdline": "--version",
+      "is_main": true
+    },
+    {
+      "id": 2,
+      "name": "hurlfmt",
+      "version_cmdline": "--version"
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "ends_with": "-x86_64-unknown-linux-gnu.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "_hurl"
+      }
+    },
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 1,
+        "path": "hurl.bash"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 1,
+        "path": "hurl.fish"
+      }
+    },
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "_hurlfmt"
+      }
+    },
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 1,
+        "path": "hurlfmt.bash"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 1,
+        "path": "hurlfmt.fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 1,
+        "path": "hurl.1.gz"
+      }
+    },
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 1,
+        "path": "hurlfmt.1.gz"
+      }
+    }
+  ]
+}

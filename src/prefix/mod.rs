@@ -1,4 +1,3 @@
-mod doctor;
 mod helpers;
 mod installer;
 mod syncer;
@@ -37,6 +36,4 @@ impl Prefix {
     pub fn sync(&self, apps: &[String], configured_set: Option<&str>, offline: bool) -> Result<()> {
         syncer::sync(&self.path, apps, configured_set, offline)
     }
-
-    pub fn doctor(&self, offline: bool) -> Result<()> { doctor::doctor(&self.path, offline) }
 }

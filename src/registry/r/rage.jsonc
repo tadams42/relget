@@ -1,0 +1,37 @@
+{
+  "id": "rage",
+  "category_id": "encryption",
+  "description": "Rust implementation of the `age` encryption tool",
+  "url": "https://github.com/str4d/rage",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "rage",
+      "version_cmdline": "--version",
+      "is_main": true
+    },
+    {
+      "id": 2,
+      "name": "rage-keygen",
+      "version_cmdline": "--version",
+      "is_main": false
+    },
+    {
+      "id": 3,
+      "name": "rage-mount",
+      "version_cmdline": "--version",
+      "is_main": false
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "rage-",
+      "ends_with": "-x86_64-linux.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

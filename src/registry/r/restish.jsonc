@@ -1,0 +1,47 @@
+{
+  "id": "restish",
+  "category_id": "http",
+  "description": "CLI for interacting with REST-ish HTTP APIs, `curl` alternative",
+  "url": "https://github.com/rest-sh/restish",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "restish",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "restish-",
+      "ends_with": "-linux-amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

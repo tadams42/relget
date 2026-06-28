@@ -1,0 +1,33 @@
+{
+  "id": "duf",
+  "category_id": "system",
+  "description": "Disk Usage/Free Utility — human-friendly `df` alternative",
+  "url": "https://github.com/muesli/duf",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "duf",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "duf_",
+      "ends_with": "_linux_x86_64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 1,
+        "path": "duf.1"
+      }
+    }
+  ]
+}

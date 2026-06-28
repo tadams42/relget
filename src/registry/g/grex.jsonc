@@ -1,0 +1,25 @@
+{
+  "id": "grex",
+  "category_id": "coding",
+  "description": "Generates regular expressions from user-provided test strings",
+  "url": "https://github.com/pemistahl/grex",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "grex",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "contains": "x86_64-unknown-linux-musl",
+      "ends_with": ".tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

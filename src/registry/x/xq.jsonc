@@ -1,0 +1,47 @@
+{
+  "id": "xq",
+  "category_id": "data_processing",
+  "description": "Command-line XML and HTML processor using XPath",
+  "url": "https://github.com/sibprogrammer/xq",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "xq",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "xq_",
+      "ends_with": "_linux_amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

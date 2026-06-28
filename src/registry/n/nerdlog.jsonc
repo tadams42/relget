@@ -1,0 +1,25 @@
+{
+  "id": "nerdlog",
+  "category_id": "logging",
+  "description": "SSH to (one or more) remote host(s), and live view one or more logs in TUI\n",
+  "url": "https://github.com/dimonomid/nerdlog",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "nerdlog",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "contains": "linux_amd64",
+      "ends_with": ".tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

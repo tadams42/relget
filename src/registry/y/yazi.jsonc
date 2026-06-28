@@ -1,0 +1,166 @@
+// - [yazi](https://github.com/sxyazi/yazi)
+//   - Rust, async I/O
+//   - plugins and package manager for them
+//   - images, code highlighting, multi tab, cross-directory selection, scrollable Preview (for
+//     videos, PDFs, archives, code, directories, etc.)
+//   - bulk rename/vreate, archive Extraction, visual mode, file chooser, git integration, mount
+//     manager
+//   - optional dependencies:
+//     - `file`
+//     - `ffmpeg`
+//     - [poppler](https://poppler.freedesktop.org/) - for PDF preview
+//     - `fd`
+//     - `rg`
+//     - `fzf`
+//     - `zoxide`
+//     - [resvg](https://github.com/linebender/resvg) - Rust cli for SVG preview
+//     - `ImageMagick`
+//     - `xclip` / `wl-clipboard` / `xsel` for Linux clipboard support
+//     - [Überzug++](https://github.com/jstkdng/ueberzugpp)
+//       - command line utility written in C++ which allows to draw images on terminals by using
+//         X11/wayland child windows, sixels, kitty and iterm2...
+//       - needs [PPA](https://software.opensuse.org/download.html?project=home%3Ajustkidding&package=ueberzugpp)
+//         to install on Ubuntu
+//     - [chafa](https://hpjansson.org/chafa/) - fallback image preview in terminal, renders images
+//       as ASCII art (Unicode block)
+//
+// - [xplr](https://github.com/sayanarijit/xplr)
+//   - Rust
+//   - hackable, minimal, fast
+//   - provides almost nothing out of the box, but is infinitelly configurable with Lua
+//
+// - [nnn](https://github.com/jarun/nnn)
+//   - `n³`
+//   - written in C, but has statically linked `musl` builds available
+//   - huge repository of plugins (shell scripts or compiled binaries - no embeded interpreter ie.
+//     Lua)
+//
+// - [rfm](https://github.com/dsxmachina/rfm)
+//   - Rust
+//   - terminal file manager with VI-bindings
+//   - heavily inspired by ranger, but to make it fast
+//   - basic preview engine, shell operations, etc..
+//
+// - [joshuto](https://github.com/kamiyaa/joshuto)
+//   - ranger-like terminal file manager written in Rust
+//
+// - [clifm](https://github.com/leo-arch/clifm)
+//   - C
+//   - bookmarks, search, file selection, file tags, file filters, file previews (including image
+//     previews), bulk rename, archiving, trash, file opener, directory jumper, autocommands,
+//     workspaces, plugins, autosuggestions...
+//   - very thing TUI, tries to behave more like CLI - you type commands in it instead opening
+//     menues: "No GUI, no TUI, and no menus: just you and a powerful, file-management-oriented
+//     command line."
+//   - not to be confused with `https://github.com/pasqu4le/clifm` that is also terminal file
+//     manager, written in Haskell and unmaintained
+//
+// - [felix](https://github.com/kyoheiu/felix)
+//   - Rust
+//   - very simple, no plugins, no extensive configurability
+//   - must have `chafa` installed for image preview
+//
+// - [lf](https://github.com/gokcehan/lf)
+//   - written in `Go`
+//   - heavily inspired by `ranger`
+//   - most functionality is not built-in but instead relies on shell and external utilities (with
+//     many examples in `integrations` docs)
+//   - doesn't support tabs or windows (relies on terminal multiplexers instead)
+//
+// - [hunter](https://github.com/rabite0/hunter)
+//   - Rust
+//   - `ranger` inspired, Emacs-flavoured
+//   - tabs, bookmarks, search, filter, preview
+//   - It has no built in primitives for file manipulation like delete, rename, move, and so on.
+//     Instead it relies on its easy and extensive integration with the standard cli tools to do its
+//     job
+//   - seems unmaintained
+//
+// - [broot](https://github.com/Canop/broot)
+//   - Rust
+//   - autmatically hides `.gitignre`-ed files
+//   - very simple interface - tree of files, directories and sizs
+//   - fast (fuzzy) search and selection
+//
+// - [vifm](https://github.com/vifm/vifm)
+//   - written in C
+//   - curses based, very Vim-like
+//
+// - [mc](https://github.com/MidnightCommander/mc)
+//   - written in C, curses based
+//   - old, reliable
+//
+// - [ranger](https://github.com/ranger/ranger)
+//   - written in Python
+{
+  "id": "yazi",
+  "category_id": "files",
+  "description": "Blazing fast terminal file manager with asynchronous I/O and a lot of features",
+  "url": "https://github.com/sxyazi/yazi",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "yazi",
+      "version_cmdline": "--version",
+      "is_main": true
+    },
+    {
+      "id": 2,
+      "name": "ya",
+      "version_cmdline": "--version"
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "yazi-x86_64-unknown-linux-musl.zip"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "_yazi"
+      }
+    },
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 1,
+        "path": "yazi.bash"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 1,
+        "path": "yazi.fish"
+      }
+    },
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "_ya"
+      }
+    },
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 1,
+        "path": "ya.bash"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 1,
+        "path": "ya.fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

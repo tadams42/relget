@@ -1,6 +1,6 @@
 use anyhow::{Result, anyhow};
 
-use crate::{Config, all_apps_identifiers};
+use crate::{Config, Registry};
 
 pub(super) fn get_github_token() -> Result<Option<String>> {
     let token = Config::github_token()?;
@@ -32,7 +32,7 @@ pub(super) fn get_gitlab_token() -> Result<Option<String>> {
 pub(super) fn select_apps(
     user_chosen: &[String], configured_set: Option<&str>,
 ) -> Result<Vec<String>> {
-    let known: Vec<&str> = all_apps_identifiers();
+    let known = Registry::global().identifiers();
 
     if let Some(set_name) = configured_set {
         let apps = Config::configured_set(set_name)?;

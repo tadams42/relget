@@ -1,5 +1,13 @@
 ## unreleased
 
+- feat: added declarative released_version_parse, removed App trait and apps_factory
+- feat: added JSONC support for registry data files
+- feat: migrated caddy to GenericApp using batch {{ tmp-dir }} man page generator
+- fix: handle tarball sentinel in GenericApp download
+- feat: replaced 121 hand-written App implementations with GenericApp
+- feat: removed qsv-all
+- feat: added registry validation rules and unit tests
+- feat: added JSON-based declarative app registry with schema validation
 - feat: added relget app in coding category
 - feat: added deadbranch app in coding category
 - feat: added diskwatch app in system category

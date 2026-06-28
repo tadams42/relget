@@ -1,0 +1,25 @@
+{
+  "id": "ctop",
+  "category_id": "containers",
+  "description": "Top-like interface for container metrics",
+  "url": "https://github.com/bcicen/ctop",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "ctop",
+      "version_cmdline": "-v",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "binary",
+      "starts_with": "ctop-",
+      "ends_with": "-linux-amd64"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

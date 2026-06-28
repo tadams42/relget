@@ -1,0 +1,47 @@
+{
+  "id": "f2",
+  "category_id": "files",
+  "description": "Safe batch file renaming tool",
+  "url": "https://github.com/ayoisaiah/f2",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "f2",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "f2_",
+      "ends_with": "_linux_amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "f2.zsh"
+      }
+    },
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 1,
+        "path": "f2.bash"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 1,
+        "path": "f2.fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

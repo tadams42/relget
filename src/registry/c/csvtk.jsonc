@@ -1,0 +1,46 @@
+{
+  "id": "csvtk",
+  "category_id": "data_processing",
+  "description": "Cross-platform, efficient and practical CSV/TSV toolkit",
+  "url": "https://github.com/shenwei356/csvtk",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "csvtk",
+      "version_cmdline": "version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "csvtk_linux_amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "genautocomplete --shell bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "genautocomplete --shell zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "genautocomplete --shell fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

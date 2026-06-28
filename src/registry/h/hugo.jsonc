@@ -1,0 +1,56 @@
+{
+  "id": "hugo",
+  "category_id": "docs_diag",
+  "description": "Fast and flexible static site generator",
+  "url": "https://github.com/gohugoio/hugo",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "hugo",
+      "version_cmdline": "version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "hugo_",
+      "not_contains": "extended",
+      "ends_with": "_linux-amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "self_generated": {
+        "binary_id": 1,
+        "command": "gen man --dir {{ tmp-dir }}"
+      }
+    }
+  ]
+}

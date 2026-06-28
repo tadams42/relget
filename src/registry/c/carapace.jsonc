@@ -1,0 +1,15 @@
+{
+  "id": "carapace",
+  "category_id": "shell",
+  "description": "Multi-shell completion generator for command-line tools",
+  "url": "https://github.com/carapace-sh/carapace-bin",
+  "has_musl": false,
+  "binaries": [
+    { "id": 1, "name": "carapace", "version_cmdline": "--version", "is_main": true }
+  ],
+  "assets": [
+    { "id": 1, "type": "archive", "starts_with": "carapace", "ends_with": "linux_amd64.tar.gz" }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

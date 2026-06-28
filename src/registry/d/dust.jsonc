@@ -1,0 +1,129 @@
+// Alternatives:
+//
+// [dust](https://github.com/bootandy/dust)
+// - Rust
+// - non-interactive static tree with horizontal bar charts
+// - `dust` is built on the philosophy that you shouldn't need to pass a bunch of flags (like `-h`
+//   for human-readable or `-d 1` for depth) to get a clear picture of your disk usage.
+// - Instead of printing thousands of lines, it intelligently limits its output to roughly the
+//   height of your terminal window, highlighting only the largest subdirectories and files.
+// - It does an excellent job of showing exactly where a large file lives inside a deep folder
+//   structure. In traditional tools, a folder might look large, but finding the exact culprit file
+//   requires digging; dust bubbles the largest files right into the root tree printout.
+//
+// [pdu](https://github.com/KSXGitHub/parallel-disk-usage)
+// - Rust, generates tree, but no colors
+// - probably the fastest
+// - pdu is heavily inspired by dust but aims to optimize raw performance and scriptability.
+// - Visually, pdu looks very similar to dust, outputting a static tree with graphical horizontal
+//   bars to depict size distributions.
+// - One of pdu's standout features is its extreme friendliness to scripting. It includes
+//   --json-output and --json-input flags. This allows you to scan a massive filesystem on a remote
+//   server, export the layout to a lightweight JSON file, and then feed that JSON into pdu on a
+//   local machine later to render the visualization.
+// - It deliberately trades away certain edge-case features for raw speed; for instance, it does not
+//   follow symbolic links, and it cannot naturally calculate reflinks on Copy-on-Write (COW)
+//   filesystems like BTRFS or ZFS.
+//
+// [gdu](https://github.com/dundee/gdu)
+// - Go TUI
+// - a drop-in replacement for `ncdu` rewritten from scratch in Go to maximize multi-core execution.
+// - Unlike dust and pdu, gdu drops you into a fully interactive terminal application. You use the
+//   arrow keys (or Vim keys h/j/k/l) to dive into folders, sort entries by name or size, and press
+//   the d key to delete space-wasting files safely right from the interface.
+// - While it defaults to an interactive TUI, it will automatically fall back to a non-interactive
+//   text summary if it detects it isn't running in a real terminal (e.g., if you pipe its output to
+//   a file or a cron job log).
+// - It includes specialized features like archive browsing (allowing you to look inside .zip,
+//   .tar.gz, and .jar files without extracting them) and a constant-memory execution mode for
+//   non-interactive scans.
+//
+// [ncdu](https://dev.yorhel.nl/ncdu)
+// - `NCurses Disk Usage`
+//
+// [dutree](https://github.com/nachoparker/dutree)
+// - Rust TUI
+// - seems unmaintained
+//
+// [dua](https://github.com/Byron/dua-cli/)
+// - Rust TUI
+// - slightly unmaintained
+//
+// [dirstat-rs](https://github.com/scullionw/dirstat-rs)
+// - Rust CLI that generates tree view
+// - slightly unmaintained
+//
+// [godu](https://github.com/viktomas/godu)
+// - Go TUI
+// - for finding stuff that occupies most of disk space
+//
+// [tdu](https://github.com/josephpaul0/tdu)
+// - prints output similar to `top`
+// - seems unmaintained
+//
+// [duc](https://github.com/zevv/duc)
+// - C, doesn't have pre-compiled static binaries
+// - collection of tools for indexing, inspecting and visualizing disk usage
+// - most scalable: "it has been tested on systems with more than 500 million files and several
+//   petabytes of storage"
+{
+  "id": "dust",
+  "category_id": "system",
+  "description": "Intuitive disk usage visualizer, a `du` alternative",
+  "url": "https://github.com/bootandy/dust",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "dust",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "contains": "x86_64-unknown-linux-musl",
+      "ends_with": ".tar.gz"
+    },
+    {
+      "id": 2,
+      "type": "deb",
+      "starts_with": "du-dust_",
+      "ends_with": "_amd64.deb"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 2,
+        "path": "dust"
+      }
+    },
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 2,
+        "path": "_dust"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 2,
+        "path": "dust.fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 2,
+        "path": "dust.1"
+      }
+    }
+  ]
+}

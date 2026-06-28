@@ -1,0 +1,26 @@
+{
+  "id": "vector",
+  "category_id": "logging",
+  "description": "Define input formats or use one of many pre-defined. Then apply them to logs, metrics and traces. Finally deliver structured data extracted from logs to many supported log sinks ... or to your terminal. Very similar in functionality to `Logstash`, but with much more power, many more features and much less runtime bloat (Rust instead of JDK).",
+  "url": "https://github.com/vectordotdev/vector",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "vector",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "vector-",
+      "contains": "x86_64-unknown-linux-musl",
+      "ends_with": ".tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

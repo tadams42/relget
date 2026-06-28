@@ -1,0 +1,54 @@
+{
+  "id": "dasel",
+  "category_id": "data_processing",
+  "description": "Query and modify data in JSON, YAML, TOML, XML, CSV, HCL, INI and KDL.",
+  "url": "https://github.com/TomWright/dasel",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "dasel",
+      "version_cmdline": "version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "dasel_linux_amd64.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "self_generated": {
+        "binary_id": 1,
+        "command": "man"
+      }
+    }
+  ]
+}

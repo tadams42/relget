@@ -1,0 +1,24 @@
+{
+  "id": "xplr",
+  "category_id": "files",
+  "description": "Hackable, minimal, fast TUI file manager with Lua scripting",
+  "url": "https://github.com/sayanarijit/xplr",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "xplr",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "xplr-linux.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

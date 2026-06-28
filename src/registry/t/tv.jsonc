@@ -1,0 +1,25 @@
+{
+  "id": "tv",
+  "category_id": "data_processing",
+  "description": "(Tidy Viewer) pretty printer for tabular data (CSV, TSV, PSV, and Parquet). Excels at numeric formatting and large data sets. Doesn't implement much of filtering, but is quick and takes extra care on aligning (decimal) numbers for better readability.",
+  "url": "https://github.com/alexhallam/tv",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "tidy-viewer",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "deb",
+      "starts_with": "tidy-viewer_",
+      "ends_with": "_amd64.deb"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

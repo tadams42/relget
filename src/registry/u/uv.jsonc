@@ -1,0 +1,72 @@
+{
+  "id": "uv",
+  "category_id": "dev_envs",
+  "description": "Extremely fast Python package and project manager",
+  "url": "https://github.com/astral-sh/uv",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "uv",
+      "version_cmdline": "--version",
+      "is_main": true
+    },
+    {
+      "id": 2,
+      "name": "uvx",
+      "version_cmdline": "--version"
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "uv-x86_64-unknown-linux-musl.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "generate-shell-completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "generate-shell-completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "generate-shell-completion fish"
+      }
+    },
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 2,
+        "command": "--generate-shell-completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 2,
+        "command": "--generate-shell-completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 2,
+        "command": "--generate-shell-completion fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

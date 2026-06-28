@@ -1,0 +1,25 @@
+{
+  "id": "scooter",
+  "category_id": "files",
+  "description": "Interactive find and replace in the terminal",
+  "url": "https://github.com/thomasschafer/scooter",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "scooter",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "contains": "x86_64-unknown-linux-musl",
+      "ends_with": ".tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

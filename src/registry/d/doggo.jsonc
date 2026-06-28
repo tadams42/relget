@@ -1,0 +1,25 @@
+{
+  "id": "doggo",
+  "category_id": "networking",
+  "description": "Command-line DNS client for humans, inspired by `dog` but written in Go",
+  "url": "https://github.com/mr-karan/doggo",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "doggo",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "doggo_",
+      "ends_with": "_Linux_x86_64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

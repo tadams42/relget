@@ -1,0 +1,24 @@
+{
+  "id": "scc",
+  "category_id": "coding",
+  "description": "Fast and accurate code counter with complexity calculations - better `cloc`",
+  "url": "https://github.com/boyter/scc",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "scc",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "scc_Linux_x86_64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

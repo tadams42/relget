@@ -1,0 +1,24 @@
+{
+  "id": "netwatch",
+  "category_id": "system",
+  "description": "See what your network is actually doing — live, in your terminal. A network monitor that reads encrypted traffic, names the process behind every connection, and catches malware calling home. One binary. Zero config.",
+  "url": "https://github.com/matthart1983/netwatch",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "netwatch",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "netwatch-linux-x86_64-static.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

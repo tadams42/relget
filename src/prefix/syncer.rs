@@ -4,19 +4,19 @@ use std::path::Path;
 use anyhow::Result;
 
 use super::{helpers, installer, uninstaller};
-use crate::{AppEntry, all_app_entries};
+use crate::{AppEntry, Registry};
 
 pub(super) fn sync(
     prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
 ) -> Result<()> {
     let selected = helpers::select_apps(apps, configured_set)?;
-    let entries = all_app_entries();
+    let entries = Registry::global().entries();
     let bin_dir = prefix_path.join("bin");
 
     let owned: HashSet<String> = entries
         .iter()
-        .filter(|e| bin_dir.join(&e.exe_name).exists())
-        .map(|e| e.exe_name.clone())
+        .filter(|e| bin_dir.join(e.main_exe_name()).exists())
+        .map(|e| e.main_exe_name().to_owned())
         .collect();
     let installed_binaries: HashSet<&str> = owned.iter().map(String::as_str).collect();
 
@@ -66,7 +66,7 @@ pub(super) fn compute_sync_changes(
             entries
                 .iter()
                 .find(|e| &e.id == *id)
-                .is_some_and(|e| !installed_binaries.contains(e.exe_name.as_str()))
+                .is_some_and(|e| !installed_binaries.contains(e.main_exe_name()))
         })
         .cloned()
         .collect();
@@ -74,8 +74,7 @@ pub(super) fn compute_sync_changes(
     let to_uninstall: Vec<String> = entries
         .iter()
         .filter(|e| {
-            !selected_set.contains(e.id.as_str())
-                && installed_binaries.contains(e.exe_name.as_str())
+            !selected_set.contains(e.id.as_str()) && installed_binaries.contains(e.main_exe_name())
         })
         .map(|e| e.id.clone())
         .collect();
@@ -86,18 +85,33 @@ pub(super) fn compute_sync_changes(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{ManPagesStatus, ShellCompletionsStatus};
+    use crate::{AppAssetDef, AppBinaryDef, AssetType};
 
     fn make_entry(id: &str, exe_name: &str) -> AppEntry {
         AppEntry {
-            id:                id.to_string(),
-            exe_name:          exe_name.to_string(),
-            url:               String::new(),
-            category:          String::new(),
-            description:       String::new(),
-            has_musl:          false,
-            man_pages:         ManPagesStatus::Unavailable,
-            shell_completions: ShellCompletionsStatus::Unavailable,
+            id:                     id.to_string(),
+            category_id:            String::new(),
+            description:            None,
+            url:                    String::new(),
+            has_musl:               false,
+            binaries:               vec![AppBinaryDef {
+                id:              1,
+                name:            exe_name.to_string(),
+                version_cmdline: String::new(),
+                is_main:         true,
+            }],
+            assets:                 vec![AppAssetDef {
+                id:           1,
+                asset_type:   AssetType::Archive,
+                starts_with:  None,
+                contains:     None,
+                not_contains: None,
+                ends_with:    None,
+                equals:       None,
+            }],
+            shell_completions:      vec![],
+            man_pages:              vec![],
+            released_version_parse: None,
         }
     }
 

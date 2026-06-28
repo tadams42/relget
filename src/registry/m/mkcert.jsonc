@@ -1,0 +1,25 @@
+{
+  "id": "mkcert",
+  "category_id": "coding",
+  "description": "Zero-config tool to make locally trusted development certificates",
+  "url": "https://github.com/FiloSottile/mkcert",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "mkcert",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "binary",
+      "starts_with": "mkcert-",
+      "ends_with": "-linux-amd64"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

@@ -1,0 +1,47 @@
+{
+  "id": "gitleaks",
+  "category_id": "git",
+  "description": "Detect secrets and sensitive data in git repositories",
+  "url": "https://github.com/gitleaks/gitleaks",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "gitleaks",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "gitleaks_",
+      "ends_with": "_linux_x64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

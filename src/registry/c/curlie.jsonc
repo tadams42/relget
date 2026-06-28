@@ -1,0 +1,25 @@
+{
+  "id": "curlie",
+  "category_id": "http",
+  "description": "curl frontend that adds HTTPie-style formatting and usability",
+  "url": "https://github.com/rs/curlie",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "curlie",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "curlie_",
+      "ends_with": "_linux_amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

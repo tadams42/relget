@@ -1,0 +1,47 @@
+{
+  "id": "chezmoi",
+  "category_id": "dev_envs",
+  "description": "Dotfiles manager across multiple machines, think `ansible` but for dotfiles",
+  "url": "https://github.com/twpayne/chezmoi",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "chezmoi",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "chezmoi_",
+      "ends_with": "_linux-musl_amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

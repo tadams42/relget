@@ -1,0 +1,47 @@
+{
+  "id": "vacuum",
+  "category_id": "coding",
+  "description": "World's fastest OpenAPI 3 / Swagger linter and quality tool",
+  "url": "https://github.com/daveshanley/vacuum",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "vacuum",
+      "version_cmdline": "version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "contains": "linux_x86_64",
+      "ends_with": ".tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

@@ -15,6 +15,12 @@ static RATE_LIMITED: AtomicBool = AtomicBool::new(false);
 
 const GL_API_URL: &str = "https://gitlab.com/api/v4/projects";
 
+/// API client for GitLab releases.
+///
+/// GitLab stores release assets under `assets.links[].{ id, name, direct_asset_url }` in the API
+/// response. `GitlabClient` normalizes these to the same shape as GitHub/Codeberg before storing
+/// in [`ReleaseMetadata`], so the same `release.find_asset()` / download helpers work across all
+/// three forges.
 pub struct GitlabClient {
     pub token:   Option<String>,
     pub offline: bool,

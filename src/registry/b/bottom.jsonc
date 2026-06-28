@@ -1,0 +1,65 @@
+{
+  "id": "bottom",
+  "category_id": "system",
+  "description": "Graphical process/system monitor for the terminal (`htop`/`top` alternative)",
+  "url": "https://github.com/ClementTsang/bottom",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "btm",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "contains": "x86_64-unknown-linux-musl",
+      "ends_with": ".tar.gz"
+    },
+    {
+      "id": 2,
+      "type": "archive",
+      "equals": "manpage.tar.gz"
+    },
+    {
+      "id": 3,
+      "type": "archive",
+      "equals": "completion.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 3,
+        "path": "btm.bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 3,
+        "path": "_btm"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 3,
+        "path": "btm.fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 2,
+        "path": "btm.1"
+      }
+    }
+  ]
+}

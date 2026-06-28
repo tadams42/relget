@@ -1,0 +1,46 @@
+{
+  "id": "ty",
+  "category_id": "coding",
+  "description": "Extremely fast Python type checker from authors of `uv`. Currently in `beta`.",
+  "url": "https://github.com/astral-sh/ty",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "ty",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "ty-x86_64-unknown-linux-musl.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "generate-shell-completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "generate-shell-completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "generate-shell-completion fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

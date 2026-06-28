@@ -1,0 +1,24 @@
+{
+  "id": "neovide",
+  "category_id": "coding",
+  "description": "GPU-accelerated GUI frontend for Neovim",
+  "url": "https://github.com/neovide/neovide",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "neovide",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "neovide-linux-x86_64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

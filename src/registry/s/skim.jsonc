@@ -1,0 +1,22 @@
+{
+  "id": "skim",
+  "category_id": "shell",
+  "description": "Fuzzy finder in Rust (alternative to fzf)",
+  "url": "https://github.com/skim-rs/skim",
+  "has_musl": false,
+  "binaries": [
+    { "id": 1, "name": "sk", "version_cmdline": "--version", "is_main": true }
+  ],
+  "assets": [
+    { "id": 1, "type": "archive", "equals": "skim-x86_64-unknown-linux-gnu.tar.xz" }
+  ],
+  "shell_completions": [
+    { "shell": "bash", "self_generated": { "binary_id": 1, "command": "--shell bash" } },
+    { "shell": "zsh", "self_generated": { "binary_id": 1, "command": "--shell zsh" } },
+    { "shell": "fish", "self_generated": { "binary_id": 1, "command": "--shell fish" } }
+  ],
+  "man_pages": [
+    { "section": 1, "extracted": { "asset_id": 1, "path": "sk.1" } },
+    { "section": 1, "extracted": { "asset_id": 1, "path": "sk-tmux.1" } }
+  ]
+}
