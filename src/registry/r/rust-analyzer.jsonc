@@ -22,6 +22,10 @@
   "shell_completions": [],
   "man_pages": [],
   "released_version_parse": {
+    // GitHub tags use CalVer ("2026-05-18") but the binary reports a build-counter
+    // version ("0.3.2904"). The release body always contains the latter on line 2 as
+    // "(v0.3.2904)", so we scan the body first to get a version comparable to the
+    // installed one, falling back to the tag if the body format ever changes.
     "tag_starts_with": "v",
     "try_in_body": true
   }

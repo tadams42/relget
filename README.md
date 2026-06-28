@@ -124,6 +124,173 @@ Access Tokens`. `relget` can be configured to read `PAT`s:
 
   Env variables take precedence over the config file.
 
+## Contributing a new app
+
+Each supported app is described by a single JSONC file in the source tree. No Rust code is
+required — the registry file is all you need.
+
+### File location
+
+```
+src/registry/<first-letter-of-id>/<app-id>.jsonc
+```
+
+For example: `src/registry/b/bat.jsonc`. The file name (without `.jsonc`) must match the `id`
+field and must be globally unique in the registry.
+
+Valid `category_id` values (from `src/registry/categories.jsonc`):
+
+| `category_id`    | Title                        |
+| ---------------- | ---------------------------- |
+| `coding`         | Coding                       |
+| `containers`     | Containers                   |
+| `data_processing`| Data Processing              |
+| `dev_envs`       | Development Environments     |
+| `docs_diag`      | Documentation and Diagrams   |
+| `encryption`     | Encryption and Secrets       |
+| `files`          | Files                        |
+| `git`            | Git                          |
+| `http`           | HTTP                         |
+| `logging`        | Logging                      |
+| `networking`     | Networking                   |
+| `shell`          | Shell                        |
+| `system`         | System                       |
+
+### Registry file structure
+
+```jsonc
+{
+  // Required. Must match the filename (without .jsonc) and be globally unique.
+  "id": "myapp",
+
+  // Required. Must match a category id in categories.jsonc.
+  "category_id": "files",
+
+  // Optional but encouraged.
+  "description": "One-line description of what the app does",
+
+  // Forge URL. Determines which API client is used automatically:
+  // github.com → GithubClient, codeberg.org → CodebergClient, gitlab.com → GitlabClient
+  "url": "https://github.com/owner/myapp",
+
+  // Whether a musl build is available. Informational — the actual musl asset
+  // is selected via the assets[] entries below.
+  "has_musl": true,
+
+  // One entry per binary that gets installed. At least one entry required.
+  "binaries": [
+    {
+      "id": 1,              // Numeric id; referenced by shell_completions[].binary_id
+                            // and man_pages[].binary_id entries.
+      "name": "myapp",     // Exact binary filename as it appears in the release archive.
+      "version_cmdline": "--version", // Arg(s) to pass to get the version string.
+                            // Try --version, then version (subcommand), then -v.
+      "is_main": true       // Exactly one binary must be true. Its version is used for
+                            // update checks and its name is the installed exe name.
+    }
+    // Additional binaries (e.g. "uvx", "hurlfmt") follow the same shape with is_main: false.
+  ],
+
+  // One entry per release artifact to download. At least one entry required.
+  "assets": [
+    {
+      "id": 1,              // Numeric id; referenced by shell_completions[].asset_id
+                            // and man_pages[].asset_id entries.
+      "type": "archive",   // "archive" (tar/zip), "deb", or "binary" (raw executable).
+      // Matching conditions — all specified conditions must hold simultaneously.
+      // Use the minimum set needed to uniquely identify the asset.
+      "contains": "x86_64-unknown-linux-musl",
+      "ends_with": ".tar.gz"
+      // Other matchers: "starts_with", "not_contains", "equals".
+      // Special sentinel: "equals": "tarball" downloads the repo source tarball.
+    }
+  ],
+
+  // One entry per (shell, binary) completion pair. Empty array if none.
+  "shell_completions": [
+    // Option A: binary generates it on stdout.
+    { "shell": "bash", "self_generated": { "binary_id": 1, "command": "completions bash" } },
+    { "shell": "zsh",  "self_generated": { "binary_id": 1, "command": "completions zsh" } },
+    { "shell": "fish", "self_generated": { "binary_id": 1, "command": "completions fish" } }
+    // Option B: extract a file from a downloaded asset.
+    // { "shell": "zsh", "extracted": { "asset_id": 1, "path": "_myapp" } }
+  ],
+
+  // One entry per man page. Empty array if none.
+  "man_pages": [
+    // Option A: binary generates it (stdout captured, named "<binary>.<section>").
+    { "section": 1, "self_generated": { "binary_id": 1, "command": "man" } }
+    // Option B: binary generates many pages into a directory — see {{ tmp-dir }} below.
+    // Option C: extract a file from a downloaded asset.
+    // { "section": 1, "extracted": { "asset_id": 1, "path": "myapp.1" } }
+  ]
+
+  // Optional. Omit if the default behavior works (latest release, version from tag).
+  // "released_version_parse": { ... }  — see below
+}
+```
+
+### `released_version_parse`
+
+By default `relget` fetches the latest release and parses the version from its tag. Two fields
+let you override that behavior:
+
+```jsonc
+"released_version_parse": {
+  // Only consider releases whose tag starts with this prefix.
+  // Use when the repo publishes nightly/pre-release tags (e.g. "nightly-20240101")
+  // alongside stable ones (e.g. "v1.2.3") and you only want the stable ones.
+  "tag_starts_with": "v",
+
+  // Scan the release body for a version string before falling back to the tag.
+  // Use when the tag format (e.g. CalVer "2026-05-18") is not the same value the
+  // binary reports at runtime (e.g. "0.3.2904"). See rust-analyzer.jsonc for an example.
+  "try_in_body": false
+}
+```
+
+### `{{ tmp-dir }}` — batch man page generators
+
+Some apps generate all their man pages at once by writing them to a directory:
+
+```jsonc
+{ "section": 8, "self_generated": { "binary_id": 1, "command": "manpage --directory {{ tmp-dir }}" } }
+```
+
+`relget` substitutes `{{ tmp-dir }}` (spelling is load-bearing — use a hyphen, not an underscore)
+with a real temp directory path, runs the command, and collects every file written there.
+
+When a batch generator is present, you must also list each expected man page as an `extracted`
+entry. These entries are never actually downloaded — they exist only so the uninstaller knows
+which files to remove. Any `asset_id` is fine for these metadata entries. See
+`src/registry/c/caddy.jsonc` for a complete example.
+
+### Preference rules
+
+- **Architecture**: always choose the `x86_64` Linux artifact.
+- **musl vs glibc**: prefer musl builds when available; set `"has_musl": true` and point the
+  asset matcher at the musl archive.
+- **Generated vs extracted**: if the binary can self-generate man pages or shell completions,
+  prefer `self_generated` — the output is always current. Only use `extracted` when the binary
+  can't generate them.
+- **Shell completions to include**: Bash, Fish, and Zsh only.
+- **Using `.deb` for man pages / completions**: if the main archive doesn't include man pages
+  or completions and the binary can't generate them, add a second `deb` asset and point the
+  relevant `extracted` entries at it. The primary binary still comes from the tar.gz or musl
+  archive. See `src/registry/d/dust.jsonc` for an example.
+- **Version cmdline**: download the binary locally and try `--version`, then `version`
+  (subcommand style), then `-v`. Use whichever works in `version_cmdline`.
+
+### Validation
+
+After adding the file:
+
+```sh
+cargo check --workspace
+cargo run -- registry list-apps-ids   # your new id should appear
+cargo run -- install --prefix tmp/try-relget/ --apps <id>
+```
+
 [^1]: Previously, `relget` had been written in Python.
       Workflow that required me to deploy Python to be able to deploy `relget` to be
       able to deploy various CLI utilities was not one of my brightest ideas. Luckily,

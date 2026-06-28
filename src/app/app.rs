@@ -23,6 +23,11 @@ fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
     Ok(out.stdout)
 }
 
+/// Runtime wrapper for a single registry entry.
+///
+/// `App` combines an [`AppEntry`] (all data parsed from the app's `.jsonc` registry file) with a
+/// [`RelgetClient`] (GitHub / GitLab / Codeberg API). There is no per-app Rust code; all behavior
+/// is driven by the `AppEntry` fields.
 pub struct App {
     entry:  AppEntry,
     client: Arc<dyn RelgetClient>,
@@ -226,6 +231,21 @@ impl App {
             .unwrap_or("--version")
     }
 
+    /// Returns the version of the latest release on the forge.
+    ///
+    /// If `released_version_parse.tag_starts_with` is set, only releases whose tag starts with
+    /// that prefix are considered (via `latest_release_where`). This lets you skip nightly or
+    /// pre-release tags when the repo publishes both.
+    ///
+    /// If `released_version_parse.try_in_body` is true, the release body is scanned for a version
+    /// string first; the tag is used as fallback. Needed when the tag format (e.g. CalVer
+    /// `2026-05-18`) is not comparable to what the installed binary reports at runtime.
+    ///
+    /// **Asymmetry with `download()`**: this method may select a filtered release via
+    /// `latest_release_where`, but `download()` always calls `latest_release()` unconditionally.
+    /// If `tag_starts_with` is in use, version comparison and the actual download may therefore
+    /// reference different releases — intentional design for apps like `rust-analyzer` where
+    /// CalVer tags coexist with a different stable-release tag scheme.
     pub fn released_version(&self) -> Result<AppVersion> {
         let (owner, repo) = Self::owner_repo(&self.entry.url);
         let release = match &self.entry.released_version_parse {
@@ -248,6 +268,12 @@ impl App {
         release.version()
     }
 
+    /// Returns static asset metadata derived from the registry entry — no network calls.
+    ///
+    /// Used by the uninstaller to know which files to remove. `SelfGenerated` man page entries
+    /// whose command contains `{{ tmp-dir }}` are excluded: a batch generator produces a dynamic
+    /// set of files at runtime, so the *extracted* sibling entries in the same registry file serve
+    /// as the authoritative static list for uninstall purposes (see `src/registry/c/caddy.jsonc`).
     pub fn assets(&self) -> Assets {
         let main_bin = self.entry.binaries.iter().find(|b| b.is_main).unwrap();
         let binary = Some(Binary::new(&main_bin.name));
@@ -304,6 +330,26 @@ impl App {
         }
     }
 
+    /// Downloads and extracts all release assets, returning ready-to-install [`Assets`].
+    ///
+    /// Always calls `latest_release()` — `released_version_parse` is not consulted here.
+    ///
+    /// **Asset matching**: each `AppAssetDef` in the registry is matched against the release's
+    /// asset list; all specified conditions (`starts_with`, `ends_with`, `contains`, etc.) must
+    /// hold. The special sentinel `"equals": "tarball"` bypasses matching entirely and downloads
+    /// the repository source tarball, which is handed to `ArchiveExtractor` as a `.tar.gz`.
+    ///
+    /// **Self-generated completions/man pages**: all binaries are written to a shared temp dir
+    /// before any generation commands run. Each `self_generated` entry's command is invoked
+    /// against the appropriate binary in that dir and stdout is captured as the completion/man
+    /// page content. If the command contains `{{ tmp-dir }}`, each whitespace-separated token
+    /// equal to `{{ tmp-dir }}` is replaced with a second temp dir path; the command writes
+    /// multiple man page files there and `download()` collects them all. When a batch generator
+    /// is present, the `extracted` man page entries in the registry are treated as metadata only
+    /// and are never actually extracted.
+    ///
+    /// **Binary extraction priority**: archive/deb assets are tried in `id` order; a `Binary`
+    /// asset not referenced by any `Extracted` completion or man page source is the final fallback.
     pub fn download(&self) -> Result<Assets> {
         let (owner, repo) = Self::owner_repo(&self.entry.url);
         let release = self.client.latest_release(owner, repo)?;
@@ -511,6 +557,12 @@ impl App {
         })
     }
 
+    /// Returns the version of the currently installed binary, or `None` if not installed.
+    ///
+    /// Runs the main binary with `version_cmdline` from the registry (`--version`, `version`,
+    /// `-v`, etc.) and scans both stdout and stderr for a version string. Returning `None` on
+    /// a missing binary or a crashed process is intentional — it means "needs install", not an
+    /// error.
     pub fn installed_version(&self, prefix: &Path) -> Result<Option<AppVersion>> {
         let bin = prefix.join("bin").join(self.exe_name());
         if !bin.exists() {

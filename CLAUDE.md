@@ -19,81 +19,9 @@ Use `--prefix tmp/try-relget/` to avoid needing `sudo` during local testing.
 
 ## Adding a new app
 
-GitHub app:
-
-1. Create `src/apps/<category>/myapp.rs` implementing the `App` trait:
-   - Declare `pub const ID: &'static str = "myapp"` and `const EXE_NAME: &'static str = "myapp"`
-     in the impl block.
-   - Implement `fn assets(&self) -> AppAssets`. Use `Self::EXE_NAME` for the primary binary name:
-     ```rust
-     fn assets(&self) -> AppAssets {
-         AppAssets {
-             binary:      Some(AppBinary::new(Self::EXE_NAME)),
-             man_pages:   vec![ManPage::new(1, "myapp.1")],
-             completions: vec![
-                 Completion::new(Shell::Zsh, Self::EXE_NAME),
-                 Completion::new(Shell::Bash, Self::EXE_NAME),
-                 Completion::new(Shell::Fish, Self::EXE_NAME),
-             ],
-             ..Default::default()
-         }
-     }
-     ```
-     Secondary binaries with different names (e.g. `"hurlfmt"`, `"uvx"`) must use hardcoded strings.
-   - Implement `fn download(&self) -> Result<AppAssets>`.
-2. Register in `src/apps/<category>/mod.rs`: add `mod myapp;` and `pub use myapp::MyApp;`
-3. Add an entry to `src/apps/registry.toml` under the appropriate category:
-   ```toml
-   [[<category>.apps]]
-   id = "myapp"
-   exe_name = "myapp"
-   url = "https://github.com/owner/repo"
-   description = "One-line description of what the app does"
-   has_musl = false
-   man_pages = "unavailable"        # unavailable | bundled | self_generated
-   shell_completions = "unavailable" # unavailable | bundled | self_generated
-   ```
-4. Update `create_app()` in `src/apps/apps_factory.rs`: add
-   `MyApp::ID => Some(Box::new(MyApp::new(client)))`
-
-Codeberg app: Same as above but use `CodebergClient` instead of `GithubClient`.
-
-GitLab app: Same as above but use `GitlabClient` instead of `GithubClient`. Note that GitLab release assets are stored under `assets.links[].{id, name, direct_asset_url}` in the API response; `GitlabClient` normalizes this to the same shape as GitHub/Codeberg before storing in `GhRelease`, so the same `release.asset_names()` / `release.asset_download_url()` helpers work.
-
-When choosing build artifact to download for new app, use the one for Linux, `x86_64` architecture.
-
-Prefer `musl` builds if available.
-
-If downloaded artifact contains `man` pages, and app can also generate them, prefer generating them by running downloaded app. Same goes for shell completions: prefer running the app and generating them. Of course, if they can't be generated, use the ones shipped in build artifact.
-
-When installing shell completions, get the ones for `Bash`, `Fish` and `ZSH`. Others don't interest us.
-
-Sometimes app provides both `.deb` and `.tar.gz` build artifact, but `.tar.gz` doesn't contain man pages or shell completions, and they can't be generated on the fly. In this case, download and extract `.deb` too, it sometimes includes missing pieces from `.tar.gz`
-
-Note that you probably need to download and extract app binary to be able to check if it can self-generate man pages or shell completions.
-
-Always verify which argument the binary uses to report its version. Run it with `--version`, `version`, and `-v` to find out which one works. The `App` trait defaults to `--version`; if the app uses anything else, override `cli_version_arg()`:
-
-```rust
-fn cli_version_arg(&self) -> &str { "version" }  // subcommand style
-fn cli_version_arg(&self) -> &str { "-v" }        // short flag style
-```
-
-## Installer helpers
-
-```rust
-// Generate completions: `<exe> <subcommand> <shell>` (e.g. "starship completions zsh"):
-gen_completions_subcommand("myapp", &data, "completions")
-
-// Generate completions: `<exe> <subcommand> <flag> <shell>` (e.g. "atuin gen-completions --shell zsh"):
-gen_completions_shell_flag("myapp", &data, "gen-completions", "--shell")
-
-// Generic: `<exe> [prefix_args...] <shell>` — basis for the helpers above:
-gen_completions_with_shell_arg("myapp", &data, &["subcommand"])
-
-// Run any command against a temp-installed binary:
-with_temp_exe("myapp", &data, |path| { ... })
-```
+To add support for a new app, see the **[Contributing a new app](README.md#contributing-a-new-app)**
+section in `README.md`. All app definitions live in `src/registry/<letter>/<app-id>.jsonc` — no
+Rust code is required.
 
 ## Token handling
 
@@ -109,15 +37,6 @@ Tokens are optional. Without them, `relget` works anonymously (subject to API ra
 - GitLab: `~/.cache/relget/gitlab/{owner}/{repo}/release.json` and `asset.{id}`
 - Release cache TTL: 1 day
 - Asset cache: permanent (keyed by asset ID, which changes when a new release is published)
-
-## Special cases
-
-- `dev_envs/uv.rs`: installs two binaries (`uv` + `uvx`) and generates completions for both
-- `http/hurl.rs`: installs `hurl` + `hurlfmt`, each with their own man pages and completions
-- `coding/ast_grep.rs`: installs `ast-grep` + `sg`, each with their own completions
-- `files/yazi.rs`: installs `yazi` + `ya`, each with their own completions
-- `encryption/age.rs`: installs `age` + `age-keygen` (no completions)
-- `data/qsv_all.rs`: installs `qsv` plus many variant binaries (`qsvdp`, `qsvlite`, etc.)
 
 ## Code conventions
 
