@@ -55,23 +55,6 @@ pub fn gen_completions_subcommand(
     gen_completions_with_shell_arg(exe_name, data, &[subcommand])
 }
 
-pub fn gen_completions_shell_flag(
-    exe_name: &str, data: &[u8], subcommand: &str, flag: &str,
-) -> Result<Vec<Completion>> {
-    with_temp_exe(exe_name, data, |exe| {
-        let mut completions = Vec::new();
-        for (shell, shell_name) in &[
-            (Shell::Zsh, "zsh"),
-            (Shell::Bash, "bash"),
-            (Shell::Fish, "fish"),
-        ] {
-            let stdout = run_cmd(exe, &[subcommand, flag, shell_name])?;
-            completions.push(Completion::new_with_data(*shell, exe_name, stdout));
-        }
-        Ok(completions)
-    })
-}
-
 /// Describes a single installable CLI application sourced from a GitHub, GitLab, or Codeberg
 /// release.
 ///

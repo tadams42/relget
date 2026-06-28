@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: replaced 121 hand-written App implementations with GenericApp
 - feat: removed qsv-all
 - feat: added registry validation rules and unit tests
 - feat: added JSON-based declarative app registry with schema validation

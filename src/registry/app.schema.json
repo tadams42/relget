@@ -72,6 +72,10 @@
             "type": "string",
             "minLength": 1
           },
+          "not_contains": {
+            "type": "string",
+            "minLength": 1
+          },
           "ends_with": {
             "type": "string",
             "minLength": 1
@@ -159,6 +163,10 @@
                 "minimum": 1
               },
               "command": {
+                "type": "string",
+                "minLength": 1
+              },
+              "output_dir_flag": {
                 "type": "string",
                 "minLength": 1
               }

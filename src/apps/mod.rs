@@ -2,24 +2,10 @@ mod app_assets;
 mod app_trait;
 mod apps_factory;
 mod coding;
-mod containers;
-mod data_processing;
-mod dev_envs;
-mod docs_diag;
-mod encryption;
-mod files;
-mod git;
+mod generic_app;
 mod http;
-mod logging;
-mod networking;
-mod shell;
-mod system;
 
-use app_assets::BIN_MODE;
 pub use app_assets::{AppAssets, AppBinary, Completion, ManPage, Shell};
 pub use app_trait::App;
-use app_trait::{
-    gen_completions_shell_flag, gen_completions_subcommand, gen_completions_with_shell_arg,
-    run_cmd, with_temp_exe,
-};
+pub(crate) use app_trait::{gen_completions_subcommand, run_cmd, with_temp_exe};
 pub use apps_factory::create_app;

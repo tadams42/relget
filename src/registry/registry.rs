@@ -334,21 +334,18 @@ impl Registry {
 
     pub fn categories(&self) -> &[CategoryEntry] { &self.categories }
 
-    pub fn doctor(&self, offline: bool) -> Result<()> {
-        super::doctor::doctor(&self.apps, offline)
-    }
+    pub fn doctor(&self, offline: bool) -> Result<()> { super::doctor::doctor(&self.apps, offline) }
 }
 
 // ===== Tests =====
 
 #[cfg(test)]
 mod tests {
-    use crate::registry::{
-        AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry, CompletionSource, ManPageDef,
-        ShellCompletionDef, ShellKind,
-    };
-
     use super::Registry;
+    use crate::registry::{
+        AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry, CompletionSource,
+        ManPageDef, ShellCompletionDef, ShellKind,
+    };
 
     // ===== Helpers =====
 
@@ -377,12 +374,13 @@ mod tests {
                 is_main:         true,
             }],
             assets:            vec![AppAssetDef {
-                id:          1,
-                asset_type:  AssetType::Archive,
-                starts_with: None,
-                contains:    None,
-                ends_with:   None,
-                equals:      Some("foo.tar.gz".into()),
+                id:           1,
+                asset_type:   AssetType::Archive,
+                starts_with:  None,
+                contains:     None,
+                not_contains: None,
+                ends_with:    None,
+                equals:       Some("foo.tar.gz".into()),
             }],
             shell_completions: vec![],
             man_pages:         vec![],
@@ -673,18 +671,20 @@ mod tests {
         let mut app = make_app("foo");
         app.man_pages = vec![
             ManPageDef {
-                section: 1,
-                source:  CompletionSource::SelfGenerated {
+                section:         1,
+                source:          CompletionSource::SelfGenerated {
                     binary_id: 1,
                     command:   "man --section 1".into(),
                 },
+                output_dir_flag: None,
             },
             ManPageDef {
-                section: 5,
-                source:  CompletionSource::SelfGenerated {
+                section:         5,
+                source:          CompletionSource::SelfGenerated {
                     binary_id: 1,
                     command:   "man --section 5".into(), // different command
                 },
+                output_dir_flag: None,
             },
         ];
         no_errors(&make_registry(vec![app]).collect_rule_errors());
@@ -695,18 +695,20 @@ mod tests {
         let mut app = make_app("foo");
         app.man_pages = vec![
             ManPageDef {
-                section: 1,
-                source:  CompletionSource::SelfGenerated {
+                section:         1,
+                source:          CompletionSource::SelfGenerated {
                     binary_id: 1,
                     command:   "man".into(),
                 },
+                output_dir_flag: None,
             },
             ManPageDef {
-                section: 1,
-                source:  CompletionSource::SelfGenerated {
+                section:         1,
+                source:          CompletionSource::SelfGenerated {
                     binary_id: 1,
                     command:   "man".into(), // same binary_id + command
                 },
+                output_dir_flag: None,
             },
         ];
         has_error(
@@ -720,18 +722,20 @@ mod tests {
         let mut app = make_app("foo");
         app.man_pages = vec![
             ManPageDef {
-                section: 1,
-                source:  CompletionSource::Extracted {
+                section:         1,
+                source:          CompletionSource::Extracted {
                     asset_id: 1,
                     path:     "foo.1".into(),
                 },
+                output_dir_flag: None,
             },
             ManPageDef {
-                section: 5,
-                source:  CompletionSource::Extracted {
+                section:         5,
+                source:          CompletionSource::Extracted {
                     asset_id: 1,
                     path:     "foo.5".into(),
                 },
+                output_dir_flag: None,
             },
         ];
         no_errors(&make_registry(vec![app]).collect_rule_errors());
@@ -742,18 +746,20 @@ mod tests {
         let mut app = make_app("foo");
         app.man_pages = vec![
             ManPageDef {
-                section: 1,
-                source:  CompletionSource::Extracted {
+                section:         1,
+                source:          CompletionSource::Extracted {
                     asset_id: 1,
                     path:     "foo.1".into(),
                 },
+                output_dir_flag: None,
             },
             ManPageDef {
-                section: 1,
-                source:  CompletionSource::Extracted {
+                section:         1,
+                source:          CompletionSource::Extracted {
                     asset_id: 1,
                     path:     "foo.1".into(), // same path
                 },
+                output_dir_flag: None,
             },
         ];
         has_error(
@@ -768,18 +774,20 @@ mod tests {
         // one SelfGenerated + one Extracted — allowed even for the "same" man page
         app.man_pages = vec![
             ManPageDef {
-                section: 1,
-                source:  CompletionSource::SelfGenerated {
+                section:         1,
+                source:          CompletionSource::SelfGenerated {
                     binary_id: 1,
                     command:   "man".into(),
                 },
+                output_dir_flag: None,
             },
             ManPageDef {
-                section: 1,
-                source:  CompletionSource::Extracted {
+                section:         1,
+                source:          CompletionSource::Extracted {
                     asset_id: 1,
                     path:     "foo.1".into(),
                 },
+                output_dir_flag: None,
             },
         ];
         no_errors(&make_registry(vec![app]).collect_rule_errors());
@@ -791,19 +799,21 @@ mod tests {
     fn rule6_mp_self_gen_global_ok() {
         let mut app_a = make_app("aaa");
         app_a.man_pages = vec![ManPageDef {
-            section: 1,
-            source:  CompletionSource::SelfGenerated {
+            section:         1,
+            source:          CompletionSource::SelfGenerated {
                 binary_id: 1,
                 command:   "man".into(),
             },
+            output_dir_flag: None,
         }];
         let mut app_b = make_app("bbb");
         app_b.man_pages = vec![ManPageDef {
-            section: 1,
-            source:  CompletionSource::SelfGenerated {
+            section:         1,
+            source:          CompletionSource::SelfGenerated {
                 binary_id: 1,
                 command:   "man".into(),
             },
+            output_dir_flag: None,
         }];
         // binary names differ (aaa vs bbb), so no global conflict
         no_errors(&make_registry(vec![app_a, app_b]).collect_rule_errors());
@@ -814,20 +824,22 @@ mod tests {
         let mut app_a = make_app("app-a");
         app_a.binaries[0].name = "shared".into();
         app_a.man_pages = vec![ManPageDef {
-            section: 1,
-            source:  CompletionSource::SelfGenerated {
+            section:         1,
+            source:          CompletionSource::SelfGenerated {
                 binary_id: 1,
                 command:   "man".into(),
             },
+            output_dir_flag: None,
         }];
         let mut app_b = make_app("app-b");
         app_b.binaries[0].name = "shared".into();
         app_b.man_pages = vec![ManPageDef {
-            section: 1,
-            source:  CompletionSource::SelfGenerated {
+            section:         1,
+            source:          CompletionSource::SelfGenerated {
                 binary_id: 1,
                 command:   "man".into(),
             },
+            output_dir_flag: None,
         }];
         let errors = make_registry(vec![app_a, app_b]).collect_rule_errors();
         has_error(&errors, "conflicts with app");
@@ -837,19 +849,21 @@ mod tests {
     fn rule6_mp_extracted_global_ok() {
         let mut app_a = make_app("aaa");
         app_a.man_pages = vec![ManPageDef {
-            section: 1,
-            source:  CompletionSource::Extracted {
+            section:         1,
+            source:          CompletionSource::Extracted {
                 asset_id: 1,
                 path:     "aaa.1".into(),
             },
+            output_dir_flag: None,
         }];
         let mut app_b = make_app("bbb");
         app_b.man_pages = vec![ManPageDef {
-            section: 1,
-            source:  CompletionSource::Extracted {
+            section:         1,
+            source:          CompletionSource::Extracted {
                 asset_id: 1,
                 path:     "bbb.1".into(), // different path
             },
+            output_dir_flag: None,
         }];
         no_errors(&make_registry(vec![app_a, app_b]).collect_rule_errors());
     }
@@ -858,19 +872,21 @@ mod tests {
     fn rule6_mp_extracted_global_conflict() {
         let mut app_a = make_app("aaa");
         app_a.man_pages = vec![ManPageDef {
-            section: 1,
-            source:  CompletionSource::Extracted {
+            section:         1,
+            source:          CompletionSource::Extracted {
                 asset_id: 1,
                 path:     "shared.1".into(),
             },
+            output_dir_flag: None,
         }];
         let mut app_b = make_app("bbb");
         app_b.man_pages = vec![ManPageDef {
-            section: 1,
-            source:  CompletionSource::Extracted {
+            section:         1,
+            source:          CompletionSource::Extracted {
                 asset_id: 1,
                 path:     "shared.1".into(), // same path
             },
+            output_dir_flag: None,
         }];
         has_error(
             &make_registry(vec![app_a, app_b]).collect_rule_errors(),
@@ -923,11 +939,12 @@ mod tests {
     fn existing_unknown_binary_id_in_mp() {
         let mut app = make_app("foo");
         app.man_pages = vec![ManPageDef {
-            section: 1,
-            source:  CompletionSource::SelfGenerated {
+            section:         1,
+            source:          CompletionSource::SelfGenerated {
                 binary_id: 99, // does not exist
                 command:   "man".into(),
             },
+            output_dir_flag: None,
         }];
         has_error(
             &make_registry(vec![app]).collect_rule_errors(),
@@ -939,11 +956,12 @@ mod tests {
     fn existing_unknown_asset_id_in_mp() {
         let mut app = make_app("foo");
         app.man_pages = vec![ManPageDef {
-            section: 1,
-            source:  CompletionSource::Extracted {
+            section:         1,
+            source:          CompletionSource::Extracted {
                 asset_id: 99, // does not exist
                 path:     "foo.1".into(),
             },
+            output_dir_flag: None,
         }];
         has_error(
             &make_registry(vec![app]).collect_rule_errors(),
@@ -970,12 +988,13 @@ mod tests {
     fn existing_duplicate_asset_ids() {
         let mut app = make_app("foo");
         app.assets.push(AppAssetDef {
-            id:          1, // same as existing
-            asset_type:  AssetType::Deb,
-            starts_with: None,
-            contains:    None,
-            ends_with:   None,
-            equals:      Some("foo.deb".into()),
+            id:           1, // same as existing
+            asset_type:   AssetType::Deb,
+            starts_with:  None,
+            contains:     None,
+            not_contains: None,
+            ends_with:    None,
+            equals:       Some("foo.deb".into()),
         });
         has_error(&make_registry(vec![app]).collect_rule_errors(), "duplicate asset ids");
     }

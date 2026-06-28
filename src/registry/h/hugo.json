@@ -17,6 +17,7 @@
       "id": 1,
       "type": "archive",
       "starts_with": "hugo_",
+      "not_contains": "extended",
       "ends_with": "_linux-amd64.tar.gz"
     }
   ],
@@ -48,7 +49,8 @@
       "section": 1,
       "self_generated": {
         "binary_id": 1,
-        "command": "gen man"
+        "command": "gen man",
+        "output_dir_flag": "--dir"
       }
     }
   ]

@@ -21,12 +21,13 @@ pub struct AppBinaryDef {
 
 #[derive(Debug, Clone)]
 pub struct AppAssetDef {
-    pub id:          u32,
-    pub asset_type:  AssetType,
-    pub starts_with: Option<String>,
-    pub contains:    Option<String>,
-    pub ends_with:   Option<String>,
-    pub equals:      Option<String>,
+    pub id:           u32,
+    pub asset_type:   AssetType,
+    pub starts_with:  Option<String>,
+    pub contains:     Option<String>,
+    pub not_contains: Option<String>,
+    pub ends_with:    Option<String>,
+    pub equals:       Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -57,8 +58,9 @@ pub enum CompletionSource {
 
 #[derive(Debug, Clone)]
 pub struct ManPageDef {
-    pub section: u8,
-    pub source:  CompletionSource,
+    pub section:         u8,
+    pub source:          CompletionSource,
+    pub output_dir_flag: Option<String>,
 }
 
 impl AppEntry {

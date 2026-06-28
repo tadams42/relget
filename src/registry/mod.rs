@@ -5,6 +5,7 @@ mod loader;
 #[allow(clippy::module_inception)]
 mod registry;
 
+#[allow(unused_imports)]
 pub use app_entry::{
     AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ManPageDef,
     ShellCompletionDef, ShellKind,

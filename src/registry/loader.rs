@@ -46,13 +46,14 @@ struct RawBinaryDef {
 
 #[derive(Deserialize)]
 struct RawAssetDef {
-    id:          u32,
+    id:           u32,
     #[serde(rename = "type")]
-    asset_type:  String,
-    starts_with: Option<String>,
-    contains:    Option<String>,
-    ends_with:   Option<String>,
-    equals:      Option<String>,
+    asset_type:   String,
+    starts_with:  Option<String>,
+    contains:     Option<String>,
+    not_contains: Option<String>,
+    ends_with:    Option<String>,
+    equals:       Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -71,8 +72,10 @@ struct RawManPageDef {
 
 #[derive(Deserialize)]
 struct RawSelfGeneratedDef {
-    binary_id: u32,
-    command:   String,
+    binary_id:       u32,
+    command:         String,
+    #[serde(default)]
+    output_dir_flag: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -159,6 +162,7 @@ fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
                 asset_type,
                 starts_with: a.starts_with,
                 contains: a.contains,
+                not_contains: a.not_contains,
                 ends_with: a.ends_with,
                 equals: a.equals,
             })
@@ -179,10 +183,15 @@ fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
         .man_pages
         .into_iter()
         .map(|mp| {
+            let output_dir_flag = mp
+                .self_generated
+                .as_ref()
+                .and_then(|sg| sg.output_dir_flag.clone());
             let source = parse_completion_source(mp.self_generated, mp.extracted, path)?;
             Ok(ManPageDef {
                 section: mp.section,
                 source,
+                output_dir_flag,
             })
         })
         .collect::<Result<Vec<_>>>()?;

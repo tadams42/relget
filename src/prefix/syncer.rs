@@ -4,7 +4,7 @@ use std::path::Path;
 use anyhow::Result;
 
 use super::{helpers, installer, uninstaller};
-use crate::{Registry, AppEntry};
+use crate::{AppEntry, Registry};
 
 pub(super) fn sync(
     prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
@@ -74,8 +74,7 @@ pub(super) fn compute_sync_changes(
     let to_uninstall: Vec<String> = entries
         .iter()
         .filter(|e| {
-            !selected_set.contains(e.id.as_str())
-                && installed_binaries.contains(e.main_exe_name())
+            !selected_set.contains(e.id.as_str()) && installed_binaries.contains(e.main_exe_name())
         })
         .map(|e| e.id.clone())
         .collect();
@@ -86,7 +85,7 @@ pub(super) fn compute_sync_changes(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{AppBinaryDef, AppAssetDef, AssetType};
+    use crate::{AppAssetDef, AppBinaryDef, AssetType};
 
     fn make_entry(id: &str, exe_name: &str) -> AppEntry {
         AppEntry {
@@ -102,12 +101,13 @@ mod tests {
                 is_main:         true,
             }],
             assets:            vec![AppAssetDef {
-                id:          1,
-                asset_type:  AssetType::Archive,
-                starts_with: None,
-                contains:    None,
-                ends_with:   None,
-                equals:      None,
+                id:           1,
+                asset_type:   AssetType::Archive,
+                starts_with:  None,
+                contains:     None,
+                not_contains: None,
+                ends_with:    None,
+                equals:       None,
             }],
             shell_completions: vec![],
             man_pages:         vec![],

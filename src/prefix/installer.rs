@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 use anyhow::{Result, anyhow};
 
 use super::helpers;
-use crate::{RateLimitError, Registry, AppEntry, create_app};
+use crate::{AppEntry, RateLimitError, Registry, create_app};
 
 pub(super) fn install(
     prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
@@ -177,7 +177,7 @@ pub(super) fn filter_to_installed(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{AppBinaryDef, AssetType, AppAssetDef};
+    use crate::{AppAssetDef, AppBinaryDef, AssetType};
 
     fn make_entry(id: &str, exe_name: &str) -> AppEntry {
         AppEntry {
@@ -193,12 +193,13 @@ mod tests {
                 is_main:         true,
             }],
             assets:            vec![AppAssetDef {
-                id:          1,
-                asset_type:  AssetType::Archive,
-                starts_with: None,
-                contains:    None,
-                ends_with:   None,
-                equals:      None,
+                id:           1,
+                asset_type:   AssetType::Archive,
+                starts_with:  None,
+                contains:     None,
+                not_contains: None,
+                ends_with:    None,
+                equals:       None,
             }],
             shell_completions: vec![],
             man_pages:         vec![],
