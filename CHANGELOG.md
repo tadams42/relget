@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added JSONC support for registry data files
 - feat: migrated caddy to GenericApp using batch {{ tmp-dir }} man page generator
 - fix: handle tarball sentinel in GenericApp download
 - feat: replaced 121 hand-written App implementations with GenericApp

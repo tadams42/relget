@@ -1246,6 +1246,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "json_comments"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9dbbfed4e59ba9750e15ba154fdfd9329cee16ff3df539c2666b70f58cc32105"
+
+[[package]]
 name = "jsonschema"
 version = "0.46.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1734,6 +1740,7 @@ dependencies = [
  "clap_complete",
  "env_logger",
  "flate2",
+ "json_comments",
  "jsonschema",
  "log",
  "once_cell",

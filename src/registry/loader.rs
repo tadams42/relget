@@ -1,4 +1,5 @@
 use anyhow::{Context, Result, anyhow, bail};
+use json_comments::StripComments;
 use rust_embed::RustEmbed;
 use serde::Deserialize;
 
@@ -11,6 +12,7 @@ use super::category_entry::CategoryEntry;
 #[derive(RustEmbed)]
 #[folder = "src/registry/"]
 #[include = "**/*.json"]
+#[include = "**/*.jsonc"]
 pub(super) struct RegistryFiles;
 
 // ===== Private raw deserialization types =====
@@ -90,7 +92,7 @@ pub(super) fn is_app_path(path: &str) -> bool {
         (Some(dir), Some(file)) => {
             dir.len() == 1
                 && dir.chars().all(|c| c.is_ascii_lowercase())
-                && file.ends_with(".json")
+                && file.ends_with(".jsonc")
                 && !file.contains('/')
         }
         _ => false,
@@ -204,11 +206,15 @@ fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
 
 // ===== Public loading functions =====
 
+fn from_jsonc_slice<T: serde::de::DeserializeOwned>(data: &[u8], ctx: &str) -> Result<T> {
+    let reader = StripComments::new(data);
+    serde_json::from_reader(reader).with_context(|| format!("parsing {}", ctx))
+}
+
 pub(super) fn load_raw_categories() -> Result<Vec<CategoryEntry>> {
-    let cat_file = RegistryFiles::get("categories.json")
-        .ok_or_else(|| anyhow!("categories.json not embedded"))?;
-    let raw_cats: RawCategories =
-        serde_json::from_slice(&cat_file.data).context("parsing categories.json")?;
+    let cat_file = RegistryFiles::get("categories.jsonc")
+        .ok_or_else(|| anyhow!("categories.jsonc not embedded"))?;
+    let raw_cats: RawCategories = from_jsonc_slice(&cat_file.data, "categories.jsonc")?;
     Ok(raw_cats.categories)
 }
 
@@ -222,8 +228,7 @@ pub(super) fn load_raw_apps() -> Result<Vec<AppEntry>> {
     let mut apps = Vec::new();
     for path in &paths {
         let file = RegistryFiles::get(path).expect("file was just listed");
-        let raw: RawApp =
-            serde_json::from_slice(&file.data).with_context(|| format!("parsing {}", path))?;
+        let raw: RawApp = from_jsonc_slice(&file.data, path)?;
         apps.push(convert_app(raw, path).with_context(|| format!("converting {}", path))?);
     }
     Ok(apps)
