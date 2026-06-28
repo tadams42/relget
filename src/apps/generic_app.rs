@@ -278,9 +278,18 @@ impl App for GenericApp {
         // Download all defined assets
         let mut downloaded: HashMap<u32, (String, Vec<u8>)> = HashMap::new();
         for asset_def in &self.entry.assets {
-            let name = release.find_asset(|a| Self::matches_asset(asset_def, a))?;
+            // "tarball" is a sentinel that bypasses find_asset and fetches the source tarball
+            let is_tarball = asset_def.equals.as_deref() == Some("tarball");
+            let name = if is_tarball {
+                "tarball".to_owned()
+            } else {
+                release.find_asset(|a| Self::matches_asset(asset_def, a))?
+            };
             let cached = self.client.download_asset(owner, repo, &name)?;
-            downloaded.insert(asset_def.id, (name, cached.data));
+            // ArchiveExtractor needs a recognizable extension; tarball is always .tar.gz
+            let archive_name =
+                if is_tarball { format!("{}.tar.gz", cached.name) } else { name };
+            downloaded.insert(asset_def.id, (archive_name, cached.data));
         }
 
         // Collect asset IDs used exclusively for content (completions/man pages)

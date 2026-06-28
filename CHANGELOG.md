@@ -1,5 +1,6 @@
 ## unreleased
 
+- fix: handle tarball sentinel in GenericApp download
 - feat: replaced 121 hand-written App implementations with GenericApp
 - feat: removed qsv-all
 - feat: added registry validation rules and unit tests
