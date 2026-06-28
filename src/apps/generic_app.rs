@@ -252,6 +252,11 @@ impl App for GenericApp {
             .entry
             .man_pages
             .iter()
+            .filter(|mp| {
+                // Batch generators ({{ tmp-dir }}) produce a dynamic set of files at runtime;
+                // the extracted entries alongside them serve as the static list for assets()/uninstaller
+                !matches!(&mp.source, CompletionSource::SelfGenerated { command, .. } if command.contains("{{ tmp-dir }}"))
+            })
             .map(|mp| {
                 let file_name = match &mp.source {
                     CompletionSource::SelfGenerated { binary_id, .. } => {
@@ -295,6 +300,11 @@ impl App for GenericApp {
             downloaded.insert(asset_def.id, (archive_name, cached.data));
         }
 
+        // Detect batch man page generator — generates multiple files to a tmpdir at runtime
+        let has_batch_man_gen = self.entry.man_pages.iter().any(|mp| {
+            matches!(&mp.source, CompletionSource::SelfGenerated { command, .. } if command.contains("{{ tmp-dir }}"))
+        });
+
         // Collect asset IDs used exclusively for content (completions/man pages)
         let content_asset_ids: HashSet<u32> = self
             .entry
@@ -307,6 +317,11 @@ impl App for GenericApp {
                 }
             })
             .chain(self.entry.man_pages.iter().filter_map(|mp| {
+                // When a batch generator is present, extracted entries are metadata-only
+                // (never downloaded), so exclude their asset_ids from this protection set
+                if has_batch_man_gen {
+                    return None;
+                }
                 match &mp.source {
                     CompletionSource::Extracted { asset_id, .. } => Some(*asset_id),
                     _ => None,
@@ -367,9 +382,9 @@ impl App for GenericApp {
                 if let CompletionSource::SelfGenerated { binary_id, command } = &mp.source {
                     let bin_name = self.binary_name_by_id(*binary_id);
                     let exe_path = tmp.path().join(bin_name);
-                    let filename = format!("{}.{}", bin_name, mp.section);
 
-                    let data = if command.contains("{{ tmp-dir }}") {
+                    if command.contains("{{ tmp-dir }}") {
+                        // Batch generator: writes multiple files into tmpdir; collect all of them
                         let man_tmp = tempfile::tempdir()?;
                         let dir_str = man_tmp.path().to_str().context("non-UTF8 temp dir")?;
                         let args: Vec<String> = command
@@ -378,14 +393,28 @@ impl App for GenericApp {
                             .collect();
                         let args_refs: Vec<&str> = args.iter().map(String::as_str).collect();
                         run_cmd(&exe_path, &args_refs)?;
-                        std::fs::read(man_tmp.path().join(&filename))
-                            .with_context(|| format!("reading generated man page {filename}"))?
+                        for dir_entry in std::fs::read_dir(man_tmp.path())? {
+                            let dir_entry = dir_entry?;
+                            let path = dir_entry.path();
+                            if !path.is_file() {
+                                continue;
+                            }
+                            let filename = path
+                                .file_name()
+                                .and_then(|f| f.to_str())
+                                .map(str::to_owned)
+                                .ok_or_else(|| {
+                                    anyhow::anyhow!("non-UTF8 filename in man page tmpdir")
+                                })?;
+                            let data = std::fs::read(&path)?;
+                            man_pages.push(ManPage::new_with_data(mp.section, filename, data));
+                        }
                     } else {
+                        let filename = format!("{}.{}", bin_name, mp.section);
                         let args: Vec<&str> = command.split_whitespace().collect();
-                        run_cmd(&exe_path, &args)?
-                    };
-
-                    man_pages.push(ManPage::new_with_data(mp.section, filename, data));
+                        let data = run_cmd(&exe_path, &args)?;
+                        man_pages.push(ManPage::new_with_data(mp.section, filename, data));
+                    }
                 }
             }
         }
@@ -411,21 +440,23 @@ impl App for GenericApp {
             }
         }
 
-        // Extracted man pages
-        for mp in &self.entry.man_pages {
-            if let CompletionSource::Extracted { asset_id, path } = &mp.source {
-                let (asset_name, asset_data) = downloaded
-                    .get(asset_id)
-                    .expect("registry validates asset_id");
-                let asset_def = self
-                    .entry
-                    .assets
-                    .iter()
-                    .find(|a| a.id == *asset_id)
-                    .expect("registry validates asset_id");
-                let data = Self::extract_man_page(asset_def, asset_name, asset_data, path)?;
-                let filename = Self::man_filename_from_path(path);
-                man_pages.push(ManPage::new_with_data(mp.section, filename, data));
+        // Extracted man pages — skipped when a batch generator has already handled them
+        if !has_batch_man_gen {
+            for mp in &self.entry.man_pages {
+                if let CompletionSource::Extracted { asset_id, path } = &mp.source {
+                    let (asset_name, asset_data) = downloaded
+                        .get(asset_id)
+                        .expect("registry validates asset_id");
+                    let asset_def = self
+                        .entry
+                        .assets
+                        .iter()
+                        .find(|a| a.id == *asset_id)
+                        .expect("registry validates asset_id");
+                    let data = Self::extract_man_page(asset_def, asset_name, asset_data, path)?;
+                    let filename = Self::man_filename_from_path(path);
+                    man_pages.push(ManPage::new_with_data(mp.section, filename, data));
+                }
             }
         }
 

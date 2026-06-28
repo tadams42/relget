@@ -3,7 +3,6 @@ use std::sync::Arc;
 use super::App;
 use super::coding::RustAnalyzer;
 use super::generic_app::GenericApp;
-use super::http::Caddy;
 use crate::{GithubClient, Registry, RelgetClient};
 
 pub fn create_app(
@@ -14,10 +13,6 @@ pub fn create_app(
         RustAnalyzer::ID => {
             let client: Arc<dyn RelgetClient> = Arc::new(GithubClient::new(gh_token, offline));
             Some(Box::new(RustAnalyzer::new(client)))
-        }
-        Caddy::ID => {
-            let client: Arc<dyn RelgetClient> = Arc::new(GithubClient::new(gh_token, offline));
-            Some(Box::new(Caddy::new(client)))
         }
         _ => {
             let entry = Registry::global()

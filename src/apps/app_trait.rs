@@ -1,25 +1,12 @@
-use std::fs;
-use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
 use anyhow::{Context, Result};
 
-use super::app_assets::{AppAssets, BIN_MODE, Completion, Shell};
+use super::app_assets::AppAssets;
 use crate::AppVersion;
 
 const DEFAULT_VERSION_ARG: &str = "--version";
-
-pub fn with_temp_exe<F, T>(exe_name: &str, data: &[u8], f: F) -> Result<T>
-where
-    F: FnOnce(&Path) -> Result<T>,
-{
-    let tmp = tempfile::tempdir()?;
-    let exe_path = tmp.path().join(exe_name);
-    fs::write(&exe_path, data)?;
-    fs::set_permissions(&exe_path, fs::Permissions::from_mode(BIN_MODE))?;
-    f(&exe_path)
-}
 
 pub fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
     let out = Command::new(exe_path)
@@ -27,32 +14,6 @@ pub fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
         .output()
         .with_context(|| format!("Running {:?} {:?}", exe_path, args))?;
     Ok(out.stdout)
-}
-
-pub fn gen_completions_with_shell_arg(
-    exe_name: &str, data: &[u8], prefix_args: &[&str],
-) -> Result<Vec<Completion>> {
-    with_temp_exe(exe_name, data, |exe| {
-        let mut completions = Vec::new();
-        let shells = [
-            (Shell::Zsh, "zsh"),
-            (Shell::Bash, "bash"),
-            (Shell::Fish, "fish"),
-        ];
-        for (shell, shell_name) in &shells {
-            let mut args: Vec<&str> = prefix_args.to_vec();
-            args.push(shell_name);
-            let stdout = run_cmd(exe, &args)?;
-            completions.push(Completion::new_with_data(*shell, exe_name, stdout));
-        }
-        Ok(completions)
-    })
-}
-
-pub fn gen_completions_subcommand(
-    exe_name: &str, data: &[u8], subcommand: &str,
-) -> Result<Vec<Completion>> {
-    gen_completions_with_shell_arg(exe_name, data, &[subcommand])
 }
 
 /// Describes a single installable CLI application sourced from a GitHub, GitLab, or Codeberg
