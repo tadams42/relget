@@ -1,0 +1,24 @@
+{
+  "id": "difftastic",
+  "category_id": "git",
+  "description": "Structural diff tool that understands code syntax",
+  "url": "https://github.com/Wilfred/difftastic",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "difft",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "difft-x86_64-unknown-linux-musl.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

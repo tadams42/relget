@@ -1,0 +1,30 @@
+{
+  "id": "age",
+  "category_id": "encryption",
+  "description": "Simple, modern and secure file encryption tool",
+  "url": "https://github.com/FiloSottile/age",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "age",
+      "version_cmdline": "--version",
+      "is_main": true
+    },
+    {
+      "id": 2,
+      "name": "age-keygen",
+      "version_cmdline": "--version",
+      "is_main": false
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "ends_with": "-linux-amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

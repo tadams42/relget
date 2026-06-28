@@ -1,0 +1,25 @@
+{
+  "id": "miller",
+  "category_id": "data_processing",
+  "description": "Like `awk`, `sed`, `cut`, `join`, and `sort` for name-indexed data such as `CSV`, `TSV`, and tabular `JSON`.",
+  "url": "https://github.com/johnkerl/miller",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "mlr",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "miller-",
+      "ends_with": "-linux-amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

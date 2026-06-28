@@ -1,0 +1,55 @@
+{
+  "id": "caddy",
+  "category_id": "http",
+  "description": "Fast, automatic HTTPS web server with TLS (pretender to the Nginx throne)",
+  "url": "https://github.com/caddyserver/caddy",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "caddy",
+      "version_cmdline": "version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "caddy_",
+      "ends_with": "_linux_amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 8,
+      "self_generated": {
+        "binary_id": 1,
+        "command": "manpage --directory ."
+      }
+    }
+  ]
+}

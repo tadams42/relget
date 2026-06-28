@@ -1,0 +1,24 @@
+{
+  "id": "sttr",
+  "category_id": "files",
+  "description": "Cross-platform CLI to perform various string operations",
+  "url": "https://github.com/abhimanyu003/sttr",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "sttr",
+      "version_cmdline": "version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "sttr_Linux_x86_64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "diskwatch",
+  "category_id": "system",
+  "description": "Single-host disk diagnostics in your terminal. The terminal you open when the disk light won't stop blinking — before you reach for iostat, iotop, smartctl, lsblk, df, du, and a panic.",
+  "url": "https://github.com/matthart1983/diskwatch",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "diskwatch",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "diskwatch-linux-x86_64-static.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

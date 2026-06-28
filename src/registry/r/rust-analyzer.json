@@ -1,0 +1,24 @@
+{
+  "id": "rust-analyzer",
+  "category_id": "coding",
+  "description": "Rust language server providing IDE integration",
+  "url": "https://github.com/rust-lang/rust-analyzer",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "rust-analyzer",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "rust-analyzer-x86_64-unknown-linux-gnu.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

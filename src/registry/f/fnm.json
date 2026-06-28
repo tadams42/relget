@@ -1,0 +1,46 @@
+{
+  "id": "fnm",
+  "category_id": "dev_envs",
+  "description": "Fast and simple Node.js version manager",
+  "url": "https://github.com/Schniz/fnm",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "fnm",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "fnm-linux.zip"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions --shell bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions --shell zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions --shell fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

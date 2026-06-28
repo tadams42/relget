@@ -1,0 +1,55 @@
+{
+  "id": "deadbranch",
+  "category_id": "coding",
+  "description": "Clean up stale git branches safely",
+  "url": "https://github.com/armgabrielyan/deadbranch",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "deadbranch",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "contains": "x86_64-unknown-linux-musl",
+      "ends_with": ".tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 1,
+        "path": "deadbranch.1"
+      }
+    }
+  ]
+}

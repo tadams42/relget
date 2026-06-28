@@ -1,0 +1,24 @@
+{
+  "id": "fx",
+  "category_id": "data_processing",
+  "description": "Interactive TUI for viewing JSON/YAML/TOML",
+  "url": "https://github.com/antonmedv/fx",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "fx",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "binary",
+      "equals": "fx_linux_amd64"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "mailpit",
+  "category_id": "coding",
+  "description": "Email and SMTP testing tool with a web interface to view captured emails",
+  "url": "https://github.com/axllent/mailpit",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "mailpit",
+      "version_cmdline": "version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "mailpit-linux-amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

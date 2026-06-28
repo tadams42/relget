@@ -1,0 +1,25 @@
+{
+  "id": "lazyjournal",
+  "category_id": "logging",
+  "description": "TUI for browsing systemd journal and Docker logs",
+  "url": "https://github.com/Lifailon/lazyjournal",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "lazyjournal",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "binary",
+      "starts_with": "lazyjournal",
+      "ends_with": "linux-amd64"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

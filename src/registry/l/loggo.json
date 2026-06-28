@@ -1,0 +1,19 @@
+{
+  "id": "loggo",
+  "category_id": "logging",
+  "description": "Aggregate local or remote SSH log streams into a single TUI; works best with structured JSON logs",
+  "url": "https://github.com/aurc/loggo",
+  "has_musl": false,
+  "binaries": [
+    { "id": 1, "name": "loggo", "version_cmdline": "version", "is_main": true }
+  ],
+  "assets": [
+    { "id": 1, "type": "archive", "contains": "linux_amd64", "ends_with": ".tar.gz" }
+  ],
+  "shell_completions": [
+    { "shell": "bash", "self_generated": { "binary_id": 1, "command": "completion bash" } },
+    { "shell": "zsh", "self_generated": { "binary_id": 1, "command": "completion zsh" } },
+    { "shell": "fish", "self_generated": { "binary_id": 1, "command": "completion fish" } }
+  ],
+  "man_pages": []
+}

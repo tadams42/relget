@@ -1,0 +1,38 @@
+{
+  "id": "fend",
+  "category_id": "coding",
+  "description": "Arbitrary-precision unit-aware calculator",
+  "url": "https://github.com/printfn/fend",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "fend",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "fend-",
+      "ends_with": "-linux-x86_64-musl.zip"
+    },
+    {
+      "id": 2,
+      "type": "binary",
+      "equals": "fend.1"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 2,
+        "path": "fend.1"
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "jqp",
+  "category_id": "data_processing",
+  "description": "JSON viewer with interactive entry and execution of `gojq` filter expressions (similar to `jid` but uses `gojq`)",
+  "url": "https://github.com/noahgorstein/jqp",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "jqp",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "jqp_Linux_x86_64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

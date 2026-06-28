@@ -1,0 +1,72 @@
+{
+  "id": "yazi",
+  "category_id": "files",
+  "description": "Blazing fast terminal file manager with asynchronous I/O and a lot of features",
+  "url": "https://github.com/sxyazi/yazi",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "yazi",
+      "version_cmdline": "--version",
+      "is_main": true
+    },
+    {
+      "id": 2,
+      "name": "ya",
+      "version_cmdline": "--version"
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "yazi-x86_64-unknown-linux-musl.zip"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "_yazi"
+      }
+    },
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 1,
+        "path": "yazi.bash"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 1,
+        "path": "yazi.fish"
+      }
+    },
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "_ya"
+      }
+    },
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 1,
+        "path": "ya.bash"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 1,
+        "path": "ya.fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": "asciinema",
+  "category_id": "docs_diag",
+  "description": "Record and replay terminal sessions as lightweight `asciicast` files",
+  "url": "https://github.com/asciinema/asciinema",
+  "has_musl": true,
+  "binaries": [
+    { "id": 1, "name": "asciinema", "version_cmdline": "--version", "is_main": true }
+  ],
+  "assets": [
+    { "id": 1, "type": "binary", "equals": "asciinema-x86_64-unknown-linux-musl" }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

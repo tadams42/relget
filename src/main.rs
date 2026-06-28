@@ -4,7 +4,7 @@ use anyhow::Result;
 use clap::builder::styling::{AnsiColor, Effects, Styles};
 use clap::{Args, CommandFactory, FromArgMatches, Parser, Subcommand};
 use clap_complete::{Shell, generate};
-use relget::{Prefix, all_apps_identifiers};
+use relget::{Prefix, Registry, all_apps_identifiers};
 
 fn main() -> Result<()> {
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info"))
@@ -66,6 +66,7 @@ pub fn execute_cli(cli: &Cli) -> Result<()> {
         Commands::Completions { shell } => {
             generate(*shell, &mut Cli::command(), "relget", &mut std::io::stdout())
         }
+        Commands::Registry(args) => registry_command(args)?,
     }
 
     Ok(())
@@ -199,6 +200,29 @@ pub fn install_apps_command(args: &InstallArgs, offline: bool) -> Result<()> {
     prefix.install(&args.apps, args.configured_set.as_deref(), offline)
 }
 
+#[derive(Args)]
+pub struct RegistryArgs {
+    #[command(subcommand)]
+    pub command: RegistrySubcommands,
+}
+
+#[derive(Subcommand)]
+pub enum RegistrySubcommands {
+    /// Validate all registry JSON files against their schemas
+    Validate,
+}
+
+pub fn registry_command(args: &RegistryArgs) -> Result<()> {
+    match &args.command {
+        RegistrySubcommands::Validate => {
+            let registry = Registry::load()?;
+            registry.validate()?;
+            println!("Registry valid. {} apps validated.", registry.apps.len());
+        }
+    }
+    Ok(())
+}
+
 pub fn list_apps_ids_command() {
     for id in all_apps_identifiers() {
         println!("{}", id);
@@ -259,6 +283,8 @@ pub enum Commands {
     /// Apps already at the latest version are skipped in both cases.
     #[command(verbatim_doc_comment)]
     Update(UpdateArgs),
+    /// Work with the declarative JSON-based app registry
+    Registry(RegistryArgs),
 }
 
 #[cfg(test)]

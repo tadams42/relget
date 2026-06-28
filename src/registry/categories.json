@@ -1,0 +1,69 @@
+{
+  "categories": [
+    {
+      "id": "coding",
+      "title": "Coding",
+      "description": "Linters, formatters and various coding helpers."
+    },
+    {
+      "id": "containers",
+      "title": "Containers",
+      "description": "Docker and container management tools."
+    },
+    {
+      "id": "data_processing",
+      "title": "Data Processing",
+      "description": "Tools for processing JSON, YAML, CSV and other data formats."
+    },
+    {
+      "id": "dev_envs",
+      "title": "Development Environments",
+      "description": "Tools for managing development environments and language toolchains."
+    },
+    {
+      "id": "docs_diag",
+      "title": "Documentation and Diagrams",
+      "description": "Documentation generators, diagram tools and related utilities."
+    },
+    {
+      "id": "encryption",
+      "title": "Encryption and Secrets",
+      "description": "Encryption tools and secrets management utilities."
+    },
+    {
+      "id": "files",
+      "title": "Files",
+      "description": "File management, search and manipulation tools."
+    },
+    {
+      "id": "git",
+      "title": "Git",
+      "description": "Git utilities and extensions."
+    },
+    {
+      "id": "http",
+      "title": "HTTP",
+      "description": "HTTP clients and server tools."
+    },
+    {
+      "id": "logging",
+      "title": "Logging",
+      "description": "Log viewers and log processing tools."
+    },
+    {
+      "id": "networking",
+      "title": "Networking",
+      "description": "Networking and DNS tools."
+    },
+    {
+      "id": "shell",
+      "title": "Shell",
+      "description": "Shell improvements, completions and productivity tools."
+    },
+    {
+      "id": "system",
+      "title": "System",
+      "description": "System monitoring and resource management utilities."
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "rclone",
+  "category_id": "files",
+  "description": "`rsync` for cloud storage (S3, GDrive, Dropbox, and more)",
+  "url": "https://github.com/rclone/rclone",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "rclone",
+      "version_cmdline": "version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "rclone-",
+      "ends_with": "-linux-amd64.zip"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash -"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh -"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish -"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 1,
+        "path": "rclone.1"
+      }
+    }
+  ]
+}

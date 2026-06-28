@@ -1,0 +1,80 @@
+{
+  "id": "eza",
+  "category_id": "files",
+  "description": "Modern replacement for `ls` with icons and git integration",
+  "url": "https://github.com/eza-community/eza",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "eza",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "eza_x86_64-unknown-linux-musl.tar.gz"
+    },
+    {
+      "id": 2,
+      "type": "archive",
+      "starts_with": "completions-",
+      "ends_with": ".tar.gz"
+    },
+    {
+      "id": 3,
+      "type": "archive",
+      "starts_with": "man-",
+      "ends_with": ".tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 2,
+        "path": "_eza"
+      }
+    },
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 2,
+        "path": "eza"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 2,
+        "path": "eza.fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 3,
+        "path": "eza.1"
+      }
+    },
+    {
+      "section": 5,
+      "extracted": {
+        "asset_id": 3,
+        "path": "eza_colors.5"
+      }
+    },
+    {
+      "section": 5,
+      "extracted": {
+        "asset_id": 3,
+        "path": "eza_colors-explanation.5"
+      }
+    }
+  ]
+}

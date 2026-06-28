@@ -1,0 +1,37 @@
+{
+  "id": "jaq",
+  "category_id": "data_processing",
+  "description": "Alternative to `jq` with fewer features but faster - for extremely large files.",
+  "url": "https://github.com/01mf02/jaq",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "jaq",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "binary",
+      "equals": "jaq-x86_64-unknown-linux-musl"
+    },
+    {
+      "id": 2,
+      "type": "binary",
+      "equals": "jaq.1"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 2,
+        "path": "jaq.1"
+      }
+    }
+  ]
+}

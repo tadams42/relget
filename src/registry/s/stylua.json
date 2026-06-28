@@ -1,0 +1,24 @@
+{
+  "id": "stylua",
+  "category_id": "coding",
+  "description": "Opinionated Lua code formatter",
+  "url": "https://github.com/JohnnyMorganz/stylua",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "stylua",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "stylua-linux-x86_64.zip"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

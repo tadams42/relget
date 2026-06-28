@@ -1,0 +1,24 @@
+{
+  "id": "trash-cli-rs",
+  "category_id": "files",
+  "description": "Safe `rm` replacement that moves files to the trash",
+  "url": "https://github.com/orf/trash",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "trash",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "trash-Linux-musl-x86_64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

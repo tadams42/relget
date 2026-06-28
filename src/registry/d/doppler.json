@@ -1,0 +1,47 @@
+{
+  "id": "doppler",
+  "category_id": "encryption",
+  "description": "Secrets manager CLI — sync env vars and secrets across teams, deployments and cloud providers.",
+  "url": "https://github.com/DopplerHQ/cli",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "doppler",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "doppler_",
+      "ends_with": "_linux_amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

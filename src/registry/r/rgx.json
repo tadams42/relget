@@ -1,0 +1,24 @@
+{
+  "id": "rgx",
+  "category_id": "coding",
+  "description": "Regex debugger for the terminal — step-through execution, 3 engines, code generation. Similar to `https://regexr.com/` and `https://regex101.com/` but works locally, in TUI",
+  "url": "https://github.com/brevity1swos/rgx",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "rgx",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "rgx-cli-x86_64-unknown-linux-gnu.tar.xz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

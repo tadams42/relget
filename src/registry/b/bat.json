@@ -1,0 +1,55 @@
+{
+  "id": "bat",
+  "category_id": "files",
+  "description": "`cat` clone with syntax highlighting and git integration",
+  "url": "https://github.com/sharkdp/bat",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "bat",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "bat-",
+      "ends_with": "-x86_64-unknown-linux-musl.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "--completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "--completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "--completion fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 1,
+        "path": "bat.1"
+      }
+    }
+  ]
+}

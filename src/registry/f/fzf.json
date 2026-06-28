@@ -1,0 +1,23 @@
+{
+  "id": "fzf",
+  "category_id": "shell",
+  "description": "General-purpose command-line fuzzy finder",
+  "url": "https://github.com/junegunn/fzf",
+  "has_musl": false,
+  "binaries": [
+    { "id": 1, "name": "fzf", "version_cmdline": "--version", "is_main": true }
+  ],
+  "assets": [
+    { "id": 1, "type": "archive", "starts_with": "fzf-", "ends_with": "-linux_amd64.tar.gz" },
+    { "id": 2, "type": "archive", "equals": "tarball" }
+  ],
+  "shell_completions": [
+    { "shell": "bash", "self_generated": { "binary_id": 1, "command": "--bash" } },
+    { "shell": "zsh", "self_generated": { "binary_id": 1, "command": "--zsh" } },
+    { "shell": "fish", "self_generated": { "binary_id": 1, "command": "--fish" } }
+  ],
+  "man_pages": [
+    { "section": 1, "extracted": { "asset_id": 2, "path": "fzf.1" } },
+    { "section": 1, "extracted": { "asset_id": 2, "path": "fzf-tmux.1" } }
+  ]
+}

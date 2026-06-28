@@ -3,6 +3,7 @@ mod archive;
 mod clients;
 mod config;
 mod prefix;
+mod registry;
 mod version;
 
 pub use apps::{
@@ -15,4 +16,5 @@ pub use clients::{
 };
 pub use config::Config;
 pub use prefix::Prefix;
+pub use registry::{Registry, RegistryApp, RegistryCategory};
 pub use version::AppVersion;

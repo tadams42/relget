@@ -1,0 +1,24 @@
+{
+  "id": "dry",
+  "category_id": "containers",
+  "description": "Terminal UI for managing Docker containers and images very similar to `d4s`",
+  "url": "https://github.com/moncho/dry",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "dry",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "binary",
+      "equals": "dry-linux-amd64"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

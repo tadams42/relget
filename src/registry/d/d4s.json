@@ -1,0 +1,25 @@
+{
+  "id": "d4s",
+  "category_id": "containers",
+  "description": "Terminal UI for managing Docker containers and images, browsing running containers and viewing their logs. OP feature: a single key opens shell inside of selected container.",
+  "url": "https://github.com/jr-k/d4s",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "d4s",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "d4s",
+      "ends_with": "linux_amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

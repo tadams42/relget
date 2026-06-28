@@ -49,3 +49,4 @@ once_cell = "1"
 toml = "1"
 zstd = "0.13"
 rust-embed = { version = "8", features = ["debug-embed", "include-exclude"] }
+jsonschema = "0.46"

@@ -1,0 +1,190 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["id", "category_id", "url", "has_musl", "binaries", "assets"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "minLength": 1
+    },
+    "has_musl": {
+      "type": "boolean"
+    },
+    "binaries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "version_cmdline"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version_cmdline": {
+            "type": "string",
+            "minLength": 1
+          },
+          "is_main": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": ["archive", "deb", "binary"]
+          },
+          "starts_with": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contains": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ends_with": {
+            "type": "string",
+            "minLength": 1
+          },
+          "equals": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "anyOf": [
+          { "required": ["starts_with"] },
+          { "required": ["contains"] },
+          { "required": ["ends_with"] },
+          { "required": ["equals"] }
+        ]
+      }
+    },
+    "shell_completions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["shell"],
+        "additionalProperties": false,
+        "properties": {
+          "shell": {
+            "type": "string",
+            "enum": ["bash", "zsh", "fish"]
+          },
+          "self_generated": {
+            "type": "object",
+            "required": ["binary_id", "command"],
+            "additionalProperties": false,
+            "properties": {
+              "binary_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "command": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "extracted": {
+            "type": "object",
+            "required": ["asset_id", "path"],
+            "additionalProperties": false,
+            "properties": {
+              "asset_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "oneOf": [
+          { "required": ["self_generated"] },
+          { "required": ["extracted"] }
+        ]
+      }
+    },
+    "man_pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["section"],
+        "additionalProperties": false,
+        "properties": {
+          "section": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8
+          },
+          "self_generated": {
+            "type": "object",
+            "required": ["binary_id", "command"],
+            "additionalProperties": false,
+            "properties": {
+              "binary_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "command": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "extracted": {
+            "type": "object",
+            "required": ["asset_id", "path"],
+            "additionalProperties": false,
+            "properties": {
+              "asset_id": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "oneOf": [
+          { "required": ["self_generated"] },
+          { "required": ["extracted"] }
+        ]
+      }
+    }
+  }
+}

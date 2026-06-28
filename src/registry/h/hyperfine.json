@@ -1,0 +1,55 @@
+{
+  "id": "hyperfine",
+  "category_id": "coding",
+  "description": "Command-line benchmarking tool",
+  "url": "https://github.com/sharkdp/hyperfine",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "hyperfine",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "hyperfine-",
+      "ends_with": "-x86_64-unknown-linux-musl.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 1,
+        "path": "hyperfine.bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "_hyperfine"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 1,
+        "path": "hyperfine.fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 1,
+        "path": "hyperfine.1"
+      }
+    }
+  ]
+}

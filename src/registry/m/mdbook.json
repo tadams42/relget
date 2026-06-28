@@ -1,0 +1,47 @@
+{
+  "id": "mdbook",
+  "category_id": "docs_diag",
+  "description": "Create books from Markdown source files",
+  "url": "https://github.com/rust-lang/mdBook",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "mdbook",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "mdbook-",
+      "ends_with": "-x86_64-unknown-linux-gnu.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

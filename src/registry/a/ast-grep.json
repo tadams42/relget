@@ -1,0 +1,73 @@
+{
+  "id": "ast-grep",
+  "category_id": "coding",
+  "description": "Fast code search, lint, and rewriting using AST patterns",
+  "url": "https://github.com/ast-grep/ast-grep",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "ast-grep",
+      "version_cmdline": "--version",
+      "is_main": true
+    },
+    {
+      "id": 2,
+      "name": "sg",
+      "version_cmdline": "--version",
+      "is_main": false
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "app-x86_64-unknown-linux-gnu.zip"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completions fish"
+      }
+    },
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 2,
+        "command": "completions bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 2,
+        "command": "completions zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 2,
+        "command": "completions fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

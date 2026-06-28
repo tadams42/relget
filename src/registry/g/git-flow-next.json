@@ -1,0 +1,47 @@
+{
+  "id": "git-flow-next",
+  "category_id": "git",
+  "description": "Modern reimplementation of git-flow in Go",
+  "url": "https://github.com/gittower/git-flow-next",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "git-flow",
+      "version_cmdline": "version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "git-flow-next-",
+      "ends_with": "-linux-amd64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "completion fish"
+      }
+    }
+  ],
+  "man_pages": []
+}

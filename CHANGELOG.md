@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added JSON-based declarative app registry with schema validation
 - feat: added relget app in coding category
 - feat: added deadbranch app in coding category
 - feat: added diskwatch app in system category

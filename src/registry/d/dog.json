@@ -1,0 +1,25 @@
+{
+  "id": "dog",
+  "category_id": "networking",
+  "description": "A command-line DNS client (better `dig`). Unmaintained, see `doggo` instead",
+  "url": "https://github.com/ogham/dog",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "dog",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "dog-",
+      "ends_with": "-x86_64-unknown-linux-gnu.zip"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

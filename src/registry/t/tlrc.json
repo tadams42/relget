@@ -1,0 +1,55 @@
+{
+  "id": "tlrc",
+  "category_id": "docs_diag",
+  "description": "Official [tldr-pages](https://tldr.sh/) client written in Rust",
+  "url": "https://github.com/tldr-pages/tlrc",
+  "has_musl": false,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "tldr",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "tlrc-",
+      "ends_with": "-x86_64-unknown-linux-gnu.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "extracted": {
+        "asset_id": 1,
+        "path": "tldr.bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "extracted": {
+        "asset_id": 1,
+        "path": "_tldr"
+      }
+    },
+    {
+      "shell": "fish",
+      "extracted": {
+        "asset_id": 1,
+        "path": "tldr.fish"
+      }
+    }
+  ],
+  "man_pages": [
+    {
+      "section": 1,
+      "extracted": {
+        "asset_id": 1,
+        "path": "tldr.1"
+      }
+    }
+  ]
+}

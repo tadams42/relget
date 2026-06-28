@@ -1,0 +1,24 @@
+{
+  "id": "sqruff",
+  "category_id": "coding",
+  "description": "Fast SQL formatter and linter",
+  "url": "https://github.com/quarylabs/sqruff",
+  "has_musl": true,
+  "binaries": [
+    {
+      "id": 1,
+      "name": "sqruff",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "sqruff-linux-x86_64-musl.tar.gz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

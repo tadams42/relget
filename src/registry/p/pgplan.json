@@ -1,0 +1,15 @@
+{
+  "id": "pgplan",
+  "category_id": "docs_diag",
+  "description": "CLI tool for analyzing PostgreSQL query plans",
+  "url": "https://github.com/JacobArthurs/pgplan",
+  "has_musl": false,
+  "binaries": [
+    { "id": 1, "name": "pgplan", "version_cmdline": "--version", "is_main": true }
+  ],
+  "assets": [
+    { "id": 1, "type": "archive", "equals": "pgplan_linux_amd64.tar.gz" }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}
