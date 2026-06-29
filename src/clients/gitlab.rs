@@ -56,7 +56,7 @@ impl RelgetClient for GitlabClient {
             return Err(anyhow!(RateLimitError { site: "GitLab" }));
         }
 
-        log::info!("app={} msg=Fetching latest GitLab release", repo);
+        log::info!("app={} msg=Fetching latest GitLab release metadata", repo);
         let encoded = format!("{}%2F{}", owner, repo);
         let url = format!("{}/{}/releases?per_page=100&page=1", GL_API_URL, encoded);
 

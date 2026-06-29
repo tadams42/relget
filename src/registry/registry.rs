@@ -56,12 +56,12 @@ impl Registry {
         let cat_validator = jsonschema::validator_for(&cat_schema)
             .map_err(|e| anyhow!("failed to compile categories.schema.json: {}", e))?;
 
-        let cat_file = loader::RegistryFiles::get("categories.json")
-            .ok_or_else(|| anyhow!("categories.json not embedded"))?;
+        let cat_file = loader::RegistryFiles::get("categories.jsonc")
+            .ok_or_else(|| anyhow!("categories.jsonc not embedded"))?;
         let cat_value: serde_json::Value =
-            serde_json::from_slice(&cat_file.data).context("parsing categories.json")?;
+            loader::from_jsonc_slice(&cat_file.data, "categories.jsonc")?;
         for error in cat_validator.iter_errors(&cat_value) {
-            errors.push(format!("categories.json: {error}"));
+            errors.push(format!("categories.jsonc: {error}"));
         }
 
         let mut app_paths: Vec<String> = loader::RegistryFiles::iter()
@@ -72,7 +72,7 @@ impl Registry {
 
         for path in &app_paths {
             let file = loader::RegistryFiles::get(path).expect("file was just listed");
-            let value: serde_json::Value = match serde_json::from_slice(&file.data) {
+            let value: serde_json::Value = match loader::from_jsonc_slice(&file.data, path) {
                 Ok(v) => v,
                 Err(e) => {
                     errors.push(format!("{path}: invalid JSON: {e}"));

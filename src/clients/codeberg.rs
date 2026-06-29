@@ -49,7 +49,7 @@ impl RelgetClient for CodebergClient {
             return Err(anyhow!(RateLimitError { site: "Codeberg" }));
         }
 
-        log::info!("app={} msg=Fetching latest Codeberg release", repo);
+        log::info!("app={} msg=Fetching latest Codeberg release metadata", repo);
         let url = format!("{}/{}/{}/releases?limit=100&page=1", CB_API_URL, owner, repo);
 
         let mut req = ureq::get(&url)

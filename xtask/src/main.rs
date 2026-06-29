@@ -20,7 +20,14 @@ fn main() {
 }
 
 const NOISE_PREFIXES: &[&str] = &[
-    "build:", "ci:", "docs:", "chore:", "refact:", "refactor", "test",
+    "build:",
+    "ci:",
+    "docs:",
+    "chore:",
+    "refact:",
+    "refactor",
+    "test",
+    "Merge branch",
 ];
 
 fn update_changelog() {

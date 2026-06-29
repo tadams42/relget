@@ -1,5 +1,6 @@
 ## unreleased
 
+- fix: used from_jsonc_slice in validate_json_schemas to strip comments
 - feat: added declarative released_version_parse, removed App trait and apps_factory
 - feat: added JSONC support for registry data files
 - feat: migrated caddy to GenericApp using batch {{ tmp-dir }} man page generator

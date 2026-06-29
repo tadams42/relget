@@ -46,7 +46,7 @@ impl RelgetClient for GithubClient {
             return Err(anyhow!(RateLimitError { site: "GitHub" }));
         }
 
-        log::info!("app={} msg=Fetching latest GitHub release", repo);
+        log::info!("app={} msg=Fetching latest GitHub release metadata", repo);
         let url = format!("{}/{}/{}/releases?per_page=100&page=1", GH_API_URL, owner, repo);
 
         let mut req = ureq::get(&url)

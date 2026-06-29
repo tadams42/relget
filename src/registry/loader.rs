@@ -222,7 +222,7 @@ fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
 
 // ===== Public loading functions =====
 
-fn from_jsonc_slice<T: serde::de::DeserializeOwned>(data: &[u8], ctx: &str) -> Result<T> {
+pub(super) fn from_jsonc_slice<T: serde::de::DeserializeOwned>(data: &[u8], ctx: &str) -> Result<T> {
     let reader = StripComments::new(data);
     serde_json::from_reader(reader).with_context(|| format!("parsing {}", ctx))
 }
