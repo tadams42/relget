@@ -3,7 +3,6 @@
   "category_id": "docs_diag",
   "description": "Powerful diagram scripting language that turns text to diagrams. More complex and capable than `mermaid`, less complex than `PlantUML`.",
   "url": "https://github.com/terrastruct/d2",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

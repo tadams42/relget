@@ -3,7 +3,6 @@
   "category_id": "encryption",
   "description": "Encrypted overlay filesystem written in Go. Fast, security-audited, actively\nmaintained. It encrypts files and obfuscates file and directory names. It is\nusable for encrypting individual files and whole directories that are then\nsynced to various cloud storage providers (`Google Drive`, `OneDrive`, ...) It\ndoesn't hide overall count of files or structure of directories.\n\nTo achieve maximum privacy you can also use\n[CryFS](https://github.com/cryfs/cryfs). That one encrypts everything into\nseries of equally sized blocks, completely hiding folder structure. This is much\n(!!) slower process.\n\nEncrypting each file individually (like `gocryptfs`) makes syncing to cloud\ndrive is reliable and efficient. Encrypting whole storage as many small blocks,\nmeans that sync to cloud drive will have to transfer more data each time than\nwould strictly be needed.\n",
   "url": "https://github.com/rfjakob/gocryptfs",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

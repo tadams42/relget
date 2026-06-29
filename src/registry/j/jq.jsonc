@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "Lightweight command-line JSON processor, golden standard for all other tools. Implements it's own query language for JSON",
   "url": "https://github.com/jqlang/jq",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

@@ -3,7 +3,6 @@
   "category_id": "docs_diag",
   "description": "Fast and flexible static site generator",
   "url": "https://github.com/gohugoio/hugo",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

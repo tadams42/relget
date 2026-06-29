@@ -3,7 +3,6 @@
   "category_id": "logging",
   "description": "TUI for browsing systemd journal and Docker logs",
   "url": "https://github.com/Lifailon/lazyjournal",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

@@ -3,7 +3,6 @@
   "category_id": "git",
   "description": "Detect secrets and sensitive data in git repositories",
   "url": "https://github.com/gitleaks/gitleaks",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

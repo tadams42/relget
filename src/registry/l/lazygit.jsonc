@@ -3,7 +3,6 @@
   "category_id": "git",
   "description": "Simple terminal UI for `git` commands",
   "url": "https://github.com/jesseduffield/lazygit",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

@@ -3,12 +3,20 @@
   "category_id": "shell",
   "description": "Parallel command runner with stdin/args dispatch and rate limiting",
   "url": "https://github.com/aaronriekenberg/rust-parallel",
-  "has_musl": false,
   "binaries": [
-    { "id": 1, "name": "rust-parallel", "version_cmdline": "--version", "is_main": true }
+    {
+      "id": 1,
+      "name": "rust-parallel",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
   ],
   "assets": [
-    { "id": 1, "type": "archive", "equals": "rust-parallel-x86_64-unknown-linux-gnu.tar.gz" }
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "rust-parallel-x86_64-unknown-linux-gnu.tar.gz"
+    }
   ],
   "shell_completions": [],
   "man_pages": []

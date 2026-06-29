@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "CSV/TSV toolkit for data exploration, similar to `qsv` but smaller in scope and feature set.",
   "url": "https://github.com/ribbondz/rsv",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

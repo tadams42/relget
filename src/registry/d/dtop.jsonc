@@ -3,7 +3,6 @@
   "category_id": "containers",
   "description": "Terminal dashboard for Docker that monitors multiple hosts in real-time",
   "url": "https://github.com/amir20/dtop",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

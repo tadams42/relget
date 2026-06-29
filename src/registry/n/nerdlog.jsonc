@@ -3,7 +3,6 @@
   "category_id": "logging",
   "description": "SSH to (one or more) remote host(s), and live view one or more logs in TUI\n",
   "url": "https://github.com/dimonomid/nerdlog",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

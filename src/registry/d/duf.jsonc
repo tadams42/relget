@@ -3,7 +3,6 @@
   "category_id": "system",
   "description": "Disk Usage/Free Utility — human-friendly `df` alternative",
   "url": "https://github.com/muesli/duf",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

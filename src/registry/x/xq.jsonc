@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "Command-line XML and HTML processor using XPath",
   "url": "https://github.com/sibprogrammer/xq",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

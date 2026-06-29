@@ -3,7 +3,6 @@
   "category_id": "logging",
   "description": "Tries really hard to figure out structure in unstructured log input; aggregates into TUI with syntax highlighting, filtering, and SQL querying",
   "url": "https://github.com/tstack/lnav",
-  "has_musl": true,
   "binaries": [
     { "id": 1, "name": "lnav", "version_cmdline": "--version", "is_main": true }
   ],

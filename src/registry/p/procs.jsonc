@@ -3,7 +3,6 @@
   "category_id": "system",
   "description": "Modern replacement for ps with colored output and search",
   "url": "https://github.com/dalance/procs",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

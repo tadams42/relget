@@ -3,7 +3,6 @@
   "category_id": "files",
   "description": "Modern replacement for `ls` with icons and git integration",
   "url": "https://github.com/eza-community/eza",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

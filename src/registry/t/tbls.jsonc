@@ -3,7 +3,6 @@
   "category_id": "docs_diag",
   "description": "CI-friendly tool to document a database schema",
   "url": "https://github.com/k1LoW/tbls",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

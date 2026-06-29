@@ -97,7 +97,6 @@
   "category_id": "files",
   "description": "Blazing fast terminal file manager with asynchronous I/O and a lot of features",
   "url": "https://github.com/sxyazi/yazi",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

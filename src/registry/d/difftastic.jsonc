@@ -3,7 +3,6 @@
   "category_id": "git",
   "description": "Structural diff tool that understands code syntax",
   "url": "https://github.com/Wilfred/difftastic",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

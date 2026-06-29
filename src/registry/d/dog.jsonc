@@ -3,7 +3,6 @@
   "category_id": "networking",
   "description": "A command-line DNS client (better `dig`). Unmaintained, see `doggo` instead",
   "url": "https://github.com/ogham/dog",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

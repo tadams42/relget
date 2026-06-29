@@ -3,7 +3,6 @@
   "category_id": "dev_envs",
   "description": "Dotfiles manager across multiple machines, think `ansible` but for dotfiles",
   "url": "https://github.com/twpayne/chezmoi",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

@@ -3,17 +3,34 @@
   "category_id": "shell",
   "description": "Minimal, blazing-fast, infinitely customizable shell prompt",
   "url": "https://github.com/starship/starship",
-  "has_musl": true,
   "binaries": [
-    { "id": 1, "name": "starship", "version_cmdline": "--version", "is_main": true }
+    {
+      "id": 1,
+      "name": "starship",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
   ],
   "assets": [
-    { "id": 1, "type": "archive", "equals": "starship-x86_64-unknown-linux-musl.tar.gz" }
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "starship-x86_64-unknown-linux-musl.tar.gz"
+    }
   ],
   "shell_completions": [
-    { "shell": "bash", "self_generated": { "binary_id": 1, "command": "completions bash" } },
-    { "shell": "zsh", "self_generated": { "binary_id": 1, "command": "completions zsh" } },
-    { "shell": "fish", "self_generated": { "binary_id": 1, "command": "completions fish" } }
+    {
+      "shell": "bash",
+      "self_generated": { "binary_id": 1, "command": "completions bash" }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": { "binary_id": 1, "command": "completions zsh" }
+    },
+    {
+      "shell": "fish",
+      "self_generated": { "binary_id": 1, "command": "completions fish" }
+    }
   ],
   "man_pages": []
 }

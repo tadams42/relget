@@ -3,7 +3,6 @@
   "category_id": "files",
   "description": "Cross-platform CLI to perform various string operations",
   "url": "https://github.com/abhimanyu003/sttr",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

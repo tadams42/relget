@@ -3,7 +3,6 @@
   "category_id": "http",
   "description": "Fast, automatic HTTPS web server with TLS (pretender to the Nginx throne)",
   "url": "https://github.com/caddyserver/caddy",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,
@@ -53,30 +52,69 @@
     },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy.8" } },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-adapt.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-add-package.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-build-info.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-completion.8" } },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-add-package.8" }
+    },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-build-info.8" }
+    },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-completion.8" }
+    },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-environ.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-file-server.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-file-server-export-template.8" } },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-file-server.8" }
+    },
+    {
+      "section": 8,
+      "extracted": {
+        "asset_id": 1,
+        "path": "caddy-file-server-export-template.8"
+      }
+    },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-fmt.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-hash-password.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-list-modules.8" } },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-hash-password.8" }
+    },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-list-modules.8" }
+    },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-manpage.8" } },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-reload.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-remove-package.8" } },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-remove-package.8" }
+    },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-respond.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-reverse-proxy.8" } },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-reverse-proxy.8" }
+    },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-run.8" } },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-start.8" } },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-stop.8" } },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-storage.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-storage-export.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-storage-import.8" } },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-storage-export.8" }
+    },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-storage-import.8" }
+    },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-trust.8" } },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-untrust.8" } },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-upgrade.8" } },
-    { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-validate.8" } },
+    {
+      "section": 8,
+      "extracted": { "asset_id": 1, "path": "caddy-validate.8" }
+    },
     { "section": 8, "extracted": { "asset_id": 1, "path": "caddy-version.8" } }
   ]
 }

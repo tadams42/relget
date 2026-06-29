@@ -3,7 +3,6 @@
   "category_id": "files",
   "description": "Safe `rm` replacement that moves files to the trash",
   "url": "https://github.com/orf/trash",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

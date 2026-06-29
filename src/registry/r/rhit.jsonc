@@ -3,7 +3,6 @@
   "category_id": "logging",
   "description": "Reads nginx log files in their standard location, does some analysis and tells you about it in pretty tables in your console, storing and polluting nothing. Not so useful for viewing individual logs, but gives some useful metrics that are calculated from logs.",
   "url": "https://github.com/canop/rhit",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

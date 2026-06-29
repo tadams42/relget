@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Creates database dump from your production data and then restores it to your local development environment, replacing sensitive stuff with fake data.",
   "url": "https://github.com/Qovery/replibyte",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

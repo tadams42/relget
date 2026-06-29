@@ -3,7 +3,6 @@
   "category_id": "networking",
   "description": "The boring SSH tunnel manager. Uses local SSH config and keys to manage SSH tunnels in more human-friendly way.",
   "url": "https://github.com/alebeck/boring",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

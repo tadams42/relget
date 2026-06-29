@@ -3,7 +3,6 @@
   "category_id": "files",
   "description": "`rsync` for cloud storage (S3, GDrive, Dropbox, and more)",
   "url": "https://github.com/rclone/rclone",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

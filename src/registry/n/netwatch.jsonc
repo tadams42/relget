@@ -3,7 +3,6 @@
   "category_id": "system",
   "description": "See what your network is actually doing — live, in your terminal. A network monitor that reads encrypted traffic, names the process behind every connection, and catches malware calling home. One binary. Zero config.",
   "url": "https://github.com/matthart1983/netwatch",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

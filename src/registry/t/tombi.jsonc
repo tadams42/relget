@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Modern, minimalist TOML linter and opinionated formatter. Not an LSP.",
   "url": "https://github.com/tombi-toml/tombi",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

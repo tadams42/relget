@@ -3,12 +3,16 @@
   "category_id": "shell",
   "description": "Command-line tool to generate extended regular expressions (ranges, CIDRs, alternations)",
   "url": "https://github.com/tadams42/rgxg",
-  "has_musl": true,
   "binaries": [
     { "id": 1, "name": "rgxg", "version_cmdline": "-v", "is_main": true }
   ],
   "assets": [
-    { "id": 1, "type": "archive", "starts_with": "rgxg-", "ends_with": "x86_64-unknown-linux-musl.tar.gz" }
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "rgxg-",
+      "ends_with": "x86_64-unknown-linux-musl.tar.gz"
+    }
   ],
   "shell_completions": [
     { "shell": "bash", "extracted": { "asset_id": 1, "path": "rgxg.bash" } },

@@ -138,24 +138,6 @@ src/registry/<first-letter-of-id>/<app-id>.jsonc
 For example: `src/registry/b/bat.jsonc`. The file name (without `.jsonc`) must match the `id`
 field and must be globally unique in the registry.
 
-Valid `category_id` values (from `src/registry/categories.jsonc`):
-
-| `category_id`    | Title                        |
-| ---------------- | ---------------------------- |
-| `coding`         | Coding                       |
-| `containers`     | Containers                   |
-| `data_processing`| Data Processing              |
-| `dev_envs`       | Development Environments     |
-| `docs_diag`      | Documentation and Diagrams   |
-| `encryption`     | Encryption and Secrets       |
-| `files`          | Files                        |
-| `git`            | Git                          |
-| `http`           | HTTP                         |
-| `logging`        | Logging                      |
-| `networking`     | Networking                   |
-| `shell`          | Shell                        |
-| `system`         | System                       |
-
 ### Registry file structure
 
 ```jsonc
@@ -163,7 +145,7 @@ Valid `category_id` values (from `src/registry/categories.jsonc`):
   // Required. Must match the filename (without .jsonc) and be globally unique.
   "id": "myapp",
 
-  // Required. Must match a category id in categories.jsonc.
+  // Required. Must match a category id in `src/registry/categories.jsonc`.
   "category_id": "files",
 
   // Optional but encouraged.
@@ -172,10 +154,6 @@ Valid `category_id` values (from `src/registry/categories.jsonc`):
   // Forge URL. Determines which API client is used automatically:
   // github.com → GithubClient, codeberg.org → CodebergClient, gitlab.com → GitlabClient
   "url": "https://github.com/owner/myapp",
-
-  // Whether a musl build is available. Informational — the actual musl asset
-  // is selected via the assets[] entries below.
-  "has_musl": true,
 
   // One entry per binary that gets installed. At least one entry required.
   "binaries": [
@@ -268,8 +246,8 @@ which files to remove. Any `asset_id` is fine for these metadata entries. See
 ### Preference rules
 
 - **Architecture**: always choose the `x86_64` Linux artifact.
-- **musl vs glibc**: prefer musl builds when available; set `"has_musl": true` and point the
-  asset matcher at the musl archive.
+- **musl vs glibc**: prefer musl builds when available; point the asset matcher at the
+  musl archive.
 - **Generated vs extracted**: if the binary can self-generate man pages or shell completions,
   prefer `self_generated` — the output is always current. Only use `extracted` when the binary
   can't generate them.

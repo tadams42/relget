@@ -3,7 +3,6 @@
   "category_id": "git",
   "description": "Modern reimplementation of git-flow in Go",
   "url": "https://github.com/gittower/git-flow-next",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

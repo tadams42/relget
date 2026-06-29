@@ -3,7 +3,6 @@
   "category_id": "files",
   "description": "Human-friendly and fast alternative to `cut` (and sometimes `awk`)",
   "url": "https://github.com/theryangeary/choose",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

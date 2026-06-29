@@ -366,7 +366,6 @@ mod tests {
             category_id:            "test".into(),
             description:            None,
             url:                    "https://example.com".into(),
-            has_musl:               false,
             binaries:               vec![AppBinaryDef {
                 id:              1,
                 name:            id.into(),

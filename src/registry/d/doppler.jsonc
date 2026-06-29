@@ -3,7 +3,6 @@
   "category_id": "encryption",
   "description": "Secrets manager CLI — sync env vars and secrets across teams, deployments and cloud providers.",
   "url": "https://github.com/DopplerHQ/cli",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

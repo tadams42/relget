@@ -3,7 +3,6 @@
   "category_id": "http",
   "description": "Run and test HTTP requests defined in plain text",
   "url": "https://github.com/Orange-OpenSource/hurl",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

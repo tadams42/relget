@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Clean up stale git branches safely",
   "url": "https://github.com/armgabrielyan/deadbranch",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

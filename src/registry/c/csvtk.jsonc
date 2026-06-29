@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "Cross-platform, efficient and practical CSV/TSV toolkit",
   "url": "https://github.com/shenwei356/csvtk",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

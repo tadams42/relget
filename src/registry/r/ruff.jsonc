@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Extremely fast Python linter and code formatter from authors of `uv`",
   "url": "https://github.com/astral-sh/ruff",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

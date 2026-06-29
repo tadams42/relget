@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Zero-config tool to make locally trusted development certificates",
   "url": "https://github.com/FiloSottile/mkcert",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

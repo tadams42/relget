@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "JSON viewer with interactive entry and execution of `gojq` filter expressions (similar to `jid` but uses `gojq`)",
   "url": "https://github.com/noahgorstein/jqp",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

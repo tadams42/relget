@@ -3,7 +3,6 @@
   "category_id": "dev_envs",
   "description": "Fast and simple Node.js version manager",
   "url": "https://github.com/Schniz/fnm",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

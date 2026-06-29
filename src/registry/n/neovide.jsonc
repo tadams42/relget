@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "GPU-accelerated GUI frontend for Neovim",
   "url": "https://github.com/neovide/neovide",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

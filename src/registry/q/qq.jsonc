@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "inspired by `jq`, multi-format processor (`JSON`, `YAML`, `TOML`, `XML`, `HCL`, `CSV`, `INI` and more)",
   "url": "https://github.com/JFryy/qq",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Installs and updates CLI utilities directly from GitHub, GitLab and Codeberg releases",
   "url": "https://github.com/tadams42/relget",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

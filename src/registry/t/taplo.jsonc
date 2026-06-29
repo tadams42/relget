@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Highly comprehensive, all-in-one TOML toolkit. It operates as a fully-featured Language Server Protocol (LSP), formatter, and linter. Natively supports JSON Schema validation applied to TOML files and extensive formatting configuration. `Even Better TOML` for VSCode is built on top of it.",
   "url": "https://github.com/tamasfe/taplo",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

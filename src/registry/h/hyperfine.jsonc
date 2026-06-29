@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Command-line benchmarking tool",
   "url": "https://github.com/sharkdp/hyperfine",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

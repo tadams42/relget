@@ -3,7 +3,6 @@
   "category_id": "files",
   "description": "Recursive regex search, a faster `grep`",
   "url": "https://github.com/BurntSushi/ripgrep",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "interactive viewing and filtering of tabular data (CSV, TSV, PSV, Parquet, and Arrow IPC)",
   "url": "https://github.com/shshemi/tabiew",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "JSON viewer with interactive entry and execution of `jq` filter expressions",
   "url": "https://github.com/simeji/jid",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

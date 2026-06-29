@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Fast code search, lint, and rewriting using AST patterns",
   "url": "https://github.com/ast-grep/ast-grep",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

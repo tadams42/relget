@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Fast and accurate code counter with complexity calculations - better `cloc`",
   "url": "https://github.com/boyter/scc",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

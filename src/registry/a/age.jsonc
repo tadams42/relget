@@ -3,7 +3,6 @@
   "category_id": "encryption",
   "description": "Simple, modern and secure file encryption tool",
   "url": "https://github.com/FiloSottile/age",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

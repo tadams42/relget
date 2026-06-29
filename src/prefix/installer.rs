@@ -186,7 +186,6 @@ mod tests {
             category_id:            String::new(),
             description:            None,
             url:                    String::new(),
-            has_musl:               false,
             binaries:               vec![AppBinaryDef {
                 id:              1,
                 name:            exe_name.to_string(),

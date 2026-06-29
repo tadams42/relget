@@ -53,10 +53,10 @@ pub(super) fn doctor(apps: &[AppEntry], offline: bool) -> Result<()> {
             }
         }
 
-        if !app.has_musl && release_musl {
+        if !app.has_declared_musl() && release_musl {
             flags.push(DoctorFlag::MuslNowAvailable);
         }
-        if app.has_musl && !release_musl {
+        if app.has_declared_musl() && !release_musl {
             flags.push(DoctorFlag::MuslNoLongerAvailable);
         }
 

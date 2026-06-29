@@ -3,7 +3,6 @@
   "category_id": "encryption",
   "description": "Rust implementation of the `age` encryption tool",
   "url": "https://github.com/str4d/rage",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

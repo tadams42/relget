@@ -3,7 +3,6 @@
   "category_id": "files",
   "description": "Intuitive find-and-replace command, a `sed` alternative",
   "url": "https://github.com/chmln/sd",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

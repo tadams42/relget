@@ -3,7 +3,6 @@
   "category_id": "docs_diag",
   "description": "Create books from Markdown source files",
   "url": "https://github.com/rust-lang/mdBook",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

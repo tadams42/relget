@@ -3,12 +3,16 @@
   "category_id": "shell",
   "description": "xargs alternative that supports arguments ordering",
   "url": "https://github.com/jacek-kurlit/axe",
-  "has_musl": false,
   "binaries": [
     { "id": 1, "name": "axe", "version_cmdline": "--version", "is_main": true }
   ],
   "assets": [
-    { "id": 1, "type": "archive", "starts_with": "axe-", "ends_with": "-x86_64-unknown-linux-gnu.tar.gz" }
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "axe-",
+      "ends_with": "-x86_64-unknown-linux-gnu.tar.gz"
+    }
   ],
   "shell_completions": [],
   "man_pages": []

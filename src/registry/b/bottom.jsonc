@@ -3,7 +3,6 @@
   "category_id": "system",
   "description": "Graphical process/system monitor for the terminal (`htop`/`top` alternative)",
   "url": "https://github.com/ClementTsang/bottom",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

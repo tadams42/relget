@@ -3,7 +3,6 @@
   "category_id": "system",
   "description": "A monitor of resources (`top` / `htop` alternative)",
   "url": "https://github.com/aristocratos/btop",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

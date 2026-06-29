@@ -3,7 +3,6 @@
   "category_id": "files",
   "description": "Simple, fast, user-friendly alternative to `find`",
   "url": "https://github.com/sharkdp/fd",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

@@ -3,7 +3,6 @@
   "category_id": "containers",
   "description": "Top-like interface for container metrics",
   "url": "https://github.com/bcicen/ctop",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

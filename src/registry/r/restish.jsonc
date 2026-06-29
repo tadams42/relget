@@ -3,7 +3,6 @@
   "category_id": "http",
   "description": "CLI for interacting with REST-ish HTTP APIs, `curl` alternative",
   "url": "https://github.com/rest-sh/restish",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

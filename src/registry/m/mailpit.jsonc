@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Email and SMTP testing tool with a web interface to view captured emails",
   "url": "https://github.com/axllent/mailpit",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

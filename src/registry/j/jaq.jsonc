@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "Alternative to `jq` with fewer features but faster - for extremely large files.",
   "url": "https://github.com/01mf02/jaq",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

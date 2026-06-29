@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Extremely fast Python type checker from authors of `uv`. Currently in `beta`.",
   "url": "https://github.com/astral-sh/ty",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Rust language server providing IDE integration",
   "url": "https://github.com/rust-lang/rust-analyzer",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

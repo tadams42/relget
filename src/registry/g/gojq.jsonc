@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "Pure Go implementation of `jq` with extended features",
   "url": "https://github.com/itchyny/gojq",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

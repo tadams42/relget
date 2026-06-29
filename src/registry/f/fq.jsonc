@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "`jq` for binary formats — tool, language and decoders for working with binary and text formats",
   "url": "https://github.com/wader/fq",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

@@ -10,7 +10,6 @@ pub struct AppEntry {
     pub category_id:            String,
     pub description:            Option<String>,
     pub url:                    String,
-    pub has_musl:               bool,
     pub binaries:               Vec<AppBinaryDef>,
     pub assets:                 Vec<AppAssetDef>,
     pub shell_completions:      Vec<ShellCompletionDef>,
@@ -89,5 +88,14 @@ impl AppEntry {
         self.shell_completions
             .iter()
             .any(|sc| matches!(sc.source, CompletionSource::Extracted { .. }))
+    }
+
+    pub fn has_declared_musl(&self) -> bool {
+        self.assets.iter().any(|a| {
+            [&a.starts_with, &a.contains, &a.ends_with, &a.equals]
+                .into_iter()
+                .filter_map(|f| f.as_deref())
+                .any(|s| s.contains("musl"))
+        })
     }
 }

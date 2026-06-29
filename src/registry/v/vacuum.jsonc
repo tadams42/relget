@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "World's fastest OpenAPI 3 / Swagger linter and quality tool",
   "url": "https://github.com/daveshanley/vacuum",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

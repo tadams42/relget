@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "like `jq` but for YAML. In newer versions it can also work with JSON, XML and CSV",
   "url": "https://github.com/mikefarah/yq",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

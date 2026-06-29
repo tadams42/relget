@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Arbitrary-precision unit-aware calculator",
   "url": "https://github.com/printfn/fend",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

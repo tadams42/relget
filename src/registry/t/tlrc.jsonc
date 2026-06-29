@@ -3,7 +3,6 @@
   "category_id": "docs_diag",
   "description": "Official [tldr-pages](https://tldr.sh/) client written in Rust",
   "url": "https://github.com/tldr-pages/tlrc",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

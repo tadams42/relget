@@ -35,7 +35,6 @@ struct RawApp {
     category_id:            String,
     description:            Option<String>,
     url:                    String,
-    has_musl:               bool,
     binaries:               Vec<RawBinaryDef>,
     assets:                 Vec<RawAssetDef>,
     #[serde(default)]
@@ -211,7 +210,6 @@ fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
         category_id: raw.category_id,
         description: raw.description,
         url: raw.url,
-        has_musl: raw.has_musl,
         binaries,
         assets,
         shell_completions,
@@ -222,7 +220,9 @@ fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
 
 // ===== Public loading functions =====
 
-pub(super) fn from_jsonc_slice<T: serde::de::DeserializeOwned>(data: &[u8], ctx: &str) -> Result<T> {
+pub(super) fn from_jsonc_slice<T: serde::de::DeserializeOwned>(
+    data: &[u8], ctx: &str,
+) -> Result<T> {
     let reader = StripComments::new(data);
     serde_json::from_reader(reader).with_context(|| format!("parsing {}", ctx))
 }
@@ -271,7 +271,6 @@ mod tests {
             "id": "foo",
             "category_id": "test",
             "url": "https://github.com/foo/bar",
-            "has_musl": false,
             "binaries": [
                 { "id": 1, "name": "foo", "version_cmdline": "--version", "is_main": true }
             ],
@@ -306,13 +305,6 @@ mod tests {
     fn schema_app_missing_url() {
         let mut app = minimal_app();
         app.as_object_mut().unwrap().remove("url");
-        assert!(!app_validator().is_valid(&app));
-    }
-
-    #[test]
-    fn schema_app_missing_has_musl() {
-        let mut app = minimal_app();
-        app.as_object_mut().unwrap().remove("has_musl");
         assert!(!app_validator().is_valid(&app));
     }
 
@@ -673,7 +665,6 @@ mod tests {
             "category_id": "test",
             "description": "A multi-binary app",
             "url": "https://github.com/example/multi",
-            "has_musl": true,
             "binaries": [
                 { "id": 1, "name": "multi", "version_cmdline": "--version", "is_main": true },
                 { "id": 2, "name": "multix", "version_cmdline": "version" }

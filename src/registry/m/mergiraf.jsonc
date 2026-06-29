@@ -3,7 +3,6 @@
   "category_id": "git",
   "description": "Syntax-aware merge driver for `git` - in many cases makes conflict resolution much easier",
   "url": "https://codeberg.org/mergiraf/mergiraf",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

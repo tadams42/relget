@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Regex debugger for the terminal — step-through execution, 3 engines, code generation. Similar to `https://regexr.com/` and `https://regex101.com/` but works locally, in TUI",
   "url": "https://github.com/brevity1swos/rgx",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

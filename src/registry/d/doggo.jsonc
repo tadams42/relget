@@ -3,7 +3,6 @@
   "category_id": "networking",
   "description": "Command-line DNS client for humans, inspired by `dog` but written in Go",
   "url": "https://github.com/mr-karan/doggo",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

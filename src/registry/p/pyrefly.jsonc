@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "New, fast Python type checker from Meta",
   "url": "https://github.com/facebook/pyrefly",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

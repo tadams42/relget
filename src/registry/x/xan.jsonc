@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "Command line tool for processing CSV files optimized to be extremely fast (forked from `BurntSushi/xsv` which is now archived)",
   "url": "https://github.com/medialab/xan",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

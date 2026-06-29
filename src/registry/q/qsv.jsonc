@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "High-performance CSV data-wrangling toolkit",
   "url": "https://github.com/dathere/qsv",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

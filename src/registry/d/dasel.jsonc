@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "Query and modify data in JSON, YAML, TOML, XML, CSV, HCL, INI and KDL.",
   "url": "https://github.com/TomWright/dasel",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

@@ -3,17 +3,28 @@
   "category_id": "logging",
   "description": "Aggregates log input and serves a self-hosted embedded Web UI for viewing and filtering; supports files, stdin, sockets and REST API",
   "url": "https://github.com/logdyhq/logdy-core",
-  "has_musl": false,
   "binaries": [
-    { "id": 1, "name": "logdy", "version_cmdline": "--version", "is_main": true }
+    {
+      "id": 1,
+      "name": "logdy",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
   ],
-  "assets": [
-    { "id": 1, "type": "binary", "equals": "logdy_linux_amd64" }
-  ],
+  "assets": [{ "id": 1, "type": "binary", "equals": "logdy_linux_amd64" }],
   "shell_completions": [
-    { "shell": "bash", "self_generated": { "binary_id": 1, "command": "completion bash" } },
-    { "shell": "zsh", "self_generated": { "binary_id": 1, "command": "completion zsh" } },
-    { "shell": "fish", "self_generated": { "binary_id": 1, "command": "completion fish" } }
+    {
+      "shell": "bash",
+      "self_generated": { "binary_id": 1, "command": "completion bash" }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": { "binary_id": 1, "command": "completion zsh" }
+    },
+    {
+      "shell": "fish",
+      "self_generated": { "binary_id": 1, "command": "completion fish" }
+    }
   ],
   "man_pages": []
 }

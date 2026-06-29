@@ -3,7 +3,6 @@
   "category_id": "coding",
   "description": "Generates regular expressions from user-provided test strings",
   "url": "https://github.com/pemistahl/grex",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

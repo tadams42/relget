@@ -3,7 +3,6 @@
   "category_id": "http",
   "description": "curl frontend that adds HTTPie-style formatting and usability",
   "url": "https://github.com/rs/curlie",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

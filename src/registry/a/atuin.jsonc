@@ -3,17 +3,43 @@
   "category_id": "shell",
   "description": "Shell history search backed by SQLite with sync",
   "url": "https://github.com/atuinsh/atuin",
-  "has_musl": false,
   "binaries": [
-    { "id": 1, "name": "atuin", "version_cmdline": "--version", "is_main": true }
+    {
+      "id": 1,
+      "name": "atuin",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
   ],
   "assets": [
-    { "id": 1, "type": "archive", "equals": "atuin-x86_64-unknown-linux-gnu.tar.gz" }
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "atuin-x86_64-unknown-linux-gnu.tar.gz"
+    }
   ],
   "shell_completions": [
-    { "shell": "bash", "self_generated": { "binary_id": 1, "command": "gen-completions --shell bash" } },
-    { "shell": "zsh", "self_generated": { "binary_id": 1, "command": "gen-completions --shell zsh" } },
-    { "shell": "fish", "self_generated": { "binary_id": 1, "command": "gen-completions --shell fish" } }
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "gen-completions --shell bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "gen-completions --shell zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "gen-completions --shell fish"
+      }
+    }
   ],
   "man_pages": []
 }

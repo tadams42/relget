@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "Fast querying of `JSON`, `YAML`, `TOML`, `JSONL`, `CBOR` and `MessagePack` using path expressions.",
   "url": "https://github.com/micahkepe/jsongrep",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

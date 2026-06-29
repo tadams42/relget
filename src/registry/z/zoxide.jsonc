@@ -3,12 +3,21 @@
   "category_id": "shell",
   "description": "Smarter cd command with frecency-based directory jumping",
   "url": "https://github.com/ajeetdsouza/zoxide",
-  "has_musl": true,
   "binaries": [
-    { "id": 1, "name": "zoxide", "version_cmdline": "--version", "is_main": true }
+    {
+      "id": 1,
+      "name": "zoxide",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
   ],
   "assets": [
-    { "id": 1, "type": "archive", "starts_with": "zoxide-", "ends_with": "-x86_64-unknown-linux-musl.tar.gz" }
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "zoxide-",
+      "ends_with": "-x86_64-unknown-linux-musl.tar.gz"
+    }
   ],
   "shell_completions": [],
   "man_pages": [

@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "Like `awk`, `sed`, `cut`, `join`, and `sort` for name-indexed data such as `CSV`, `TSV`, and tabular `JSON`.",
   "url": "https://github.com/johnkerl/miller",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

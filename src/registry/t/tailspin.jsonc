@@ -3,7 +3,6 @@
   "category_id": "logging",
   "description": "better `tail`: tries to colorizes any kind of input thrown at it\n",
   "url": "https://github.com/bensadeh/tailspin",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

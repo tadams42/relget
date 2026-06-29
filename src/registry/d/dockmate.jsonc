@@ -3,7 +3,6 @@
   "category_id": "containers",
   "description": "Terminal UI for managing Docker containers and images",
   "url": "https://github.com/shubh-io/DockMate",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

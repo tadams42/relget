@@ -3,7 +3,6 @@
   "category_id": "containers",
   "description": "Terminal UI for managing Docker containers and images, browsing running containers and viewing their logs. OP feature: a single key opens shell inside of selected container.",
   "url": "https://github.com/jr-k/d4s",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

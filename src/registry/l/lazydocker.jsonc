@@ -3,7 +3,6 @@
   "category_id": "containers",
   "description": "Terminal UI for Docker containers, images, and compose",
   "url": "https://github.com/jesseduffield/lazydocker",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

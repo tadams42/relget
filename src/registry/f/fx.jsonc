@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "Interactive TUI for viewing JSON/YAML/TOML",
   "url": "https://github.com/antonmedv/fx",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,

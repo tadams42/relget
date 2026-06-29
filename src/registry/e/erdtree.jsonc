@@ -3,7 +3,6 @@
   "category_id": "system",
   "description": "Multi-threaded filesystem tree visualizer and disk usage analyzer, gitignore-aware",
   "url": "https://github.com/solidiquis/erdtree",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

@@ -3,7 +3,6 @@
   "category_id": "dev_envs",
   "description": "Extremely fast Python package and project manager",
   "url": "https://github.com/astral-sh/uv",
-  "has_musl": true,
   "binaries": [
     {
       "id": 1,

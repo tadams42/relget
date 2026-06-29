@@ -3,7 +3,6 @@
   "category_id": "data_processing",
   "description": "diffing and patching JSON and YAML values. It supports a internal patch format, `JSON Merge Patch` and a subset of `JSON Patch`.",
   "url": "https://github.com/josephburnett/jd",
-  "has_musl": false,
   "binaries": [
     {
       "id": 1,
