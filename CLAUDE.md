@@ -17,10 +17,20 @@ cargo run -- install --apps rg --offline  # use only cached data
 
 Use `--prefix tmp/try-relget/` to avoid needing `sudo` during local testing.
 
+## Workspace layout
+
+This is a virtual Cargo workspace with three crates:
+
+- `relget/` — the main binary crate (`cargo run`, `cargo build`, `cargo test` target this by default)
+- `registry-core/` — shared library: all registry type definitions (`AppEntry`, `CategoryEntry`, etc.), `impl AppEntry` helpers, and the semantic `validate()` function
+- `xtask/` — build automation (`cargo xtask update-docs`)
+
+App definitions live in `relget/src/registry/<letter>/<app-id>.jsonc`. `relget/build.rs` validates and compiles them into an embedded binary at build time; no registry changes require touching Rust code.
+
 ## Adding a new app
 
 To add support for a new app, see the **[Contributing a new app](README.md#contributing-a-new-app)**
-section in `README.md`. All app definitions live in `src/registry/<letter>/<app-id>.jsonc` — no
+section in `README.md`. All app definitions live in `relget/src/registry/<letter>/<app-id>.jsonc` — no
 Rust code is required.
 
 ## Token handling
@@ -44,7 +54,7 @@ Tokens are optional. Without them, `relget` works anonymously (subject to API ra
 - use `cargo check --workspace` and `cargo clippy --no-deps` to lint the code
 - `cargo clippy` skips re-linting files unchanged since the last build (incremental cache); to get a
   fresh lint of all local source without recompiling dependencies use
-  `cargo clean -p relget && cargo clippy --no-deps`
+  `cargo clean -p relget -p registry-core -p xtask && cargo clippy --no-deps`
 - git commit messages should use past tense (`added foobar` instead of `add foobar`,
   `adding foobar` or `adds foobar`)
 - git commit messages should be prefixed by short category like `refact:`, `build:`,
