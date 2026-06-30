@@ -1,10 +1,12 @@
-#[derive(Debug, Clone)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ReleasedVersionParseDef {
     pub tag_starts_with: Option<String>,
     pub try_in_body:     bool,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppEntry {
     pub id:                     String,
     pub category_id:            String,
@@ -17,7 +19,7 @@ pub struct AppEntry {
     pub released_version_parse: Option<ReleasedVersionParseDef>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppBinaryDef {
     pub id:              u32,
     pub name:            String,
@@ -25,7 +27,7 @@ pub struct AppBinaryDef {
     pub is_main:         bool,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppAssetDef {
     pub id:           u32,
     pub asset_type:   AssetType,
@@ -36,33 +38,33 @@ pub struct AppAssetDef {
     pub equals:       Option<String>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AssetType {
     Archive,
     Deb,
     Binary,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ShellCompletionDef {
     pub shell:  ShellKind,
     pub source: CompletionSource,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum ShellKind {
     Bash,
     Zsh,
     Fish,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum CompletionSource {
     SelfGenerated { binary_id: u32, command: String },
     Extracted { asset_id: u32, path: String },
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ManPageDef {
     pub section: u8,
     pub source:  CompletionSource,

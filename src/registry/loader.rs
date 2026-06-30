@@ -1,253 +1,12 @@
-use anyhow::{Context, Result, anyhow, bail};
-use json_comments::StripComments;
-use rust_embed::RustEmbed;
-use serde::Deserialize;
+use anyhow::{Context, Result};
 
-use super::app_entry::{
-    AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ManPageDef,
-    ReleasedVersionParseDef, ShellCompletionDef, ShellKind,
-};
+use super::app_entry::AppEntry;
 use super::category_entry::CategoryEntry;
 
-#[derive(RustEmbed)]
-#[folder = "src/registry/"]
-#[include = "**/*.json"]
-#[include = "**/*.jsonc"]
-pub(super) struct RegistryFiles;
+static REGISTRY_BYTES: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/registry.bin"));
 
-// ===== Private raw deserialization types =====
-
-#[derive(Deserialize)]
-struct RawCategories {
-    categories: Vec<CategoryEntry>,
-}
-
-#[derive(Deserialize)]
-struct RawReleasedVersionParseDef {
-    tag_starts_with: Option<String>,
-    #[serde(default)]
-    try_in_body:     bool,
-}
-
-#[derive(Deserialize)]
-struct RawApp {
-    id:                     String,
-    category_id:            String,
-    description:            Option<String>,
-    url:                    String,
-    binaries:               Vec<RawBinaryDef>,
-    assets:                 Vec<RawAssetDef>,
-    #[serde(default)]
-    shell_completions:      Vec<RawShellCompletionDef>,
-    #[serde(default)]
-    man_pages:              Vec<RawManPageDef>,
-    released_version_parse: Option<RawReleasedVersionParseDef>,
-}
-
-#[derive(Deserialize)]
-struct RawBinaryDef {
-    id:              u32,
-    name:            String,
-    version_cmdline: String,
-    #[serde(default)]
-    is_main:         bool,
-}
-
-#[derive(Deserialize)]
-struct RawAssetDef {
-    id:           u32,
-    #[serde(rename = "type")]
-    asset_type:   String,
-    starts_with:  Option<String>,
-    contains:     Option<String>,
-    not_contains: Option<String>,
-    ends_with:    Option<String>,
-    equals:       Option<String>,
-}
-
-#[derive(Deserialize)]
-struct RawShellCompletionDef {
-    shell:          String,
-    self_generated: Option<RawSelfGeneratedDef>,
-    extracted:      Option<RawExtractedDef>,
-}
-
-#[derive(Deserialize)]
-struct RawManPageDef {
-    section:        u8,
-    self_generated: Option<RawSelfGeneratedDef>,
-    extracted:      Option<RawExtractedDef>,
-}
-
-#[derive(Deserialize)]
-struct RawSelfGeneratedDef {
-    binary_id: u32,
-    command:   String,
-}
-
-#[derive(Deserialize)]
-struct RawExtractedDef {
-    asset_id: u32,
-    path:     String,
-}
-
-// ===== Helpers =====
-
-pub(super) fn is_app_path(path: &str) -> bool {
-    let mut parts = path.splitn(2, '/');
-    match (parts.next(), parts.next()) {
-        (Some(dir), Some(file)) => {
-            dir.len() == 1
-                && dir.chars().all(|c| c.is_ascii_lowercase())
-                && file.ends_with(".jsonc")
-                && !file.contains('/')
-        }
-        _ => false,
-    }
-}
-
-fn parse_asset_type(s: &str, ctx: &str) -> Result<AssetType> {
-    match s {
-        "archive" => Ok(AssetType::Archive),
-        "deb" => Ok(AssetType::Deb),
-        "binary" => Ok(AssetType::Binary),
-        other => bail!("{}: unknown asset type '{}'", ctx, other),
-    }
-}
-
-fn parse_shell_kind(s: &str, ctx: &str) -> Result<ShellKind> {
-    match s {
-        "bash" => Ok(ShellKind::Bash),
-        "zsh" => Ok(ShellKind::Zsh),
-        "fish" => Ok(ShellKind::Fish),
-        other => bail!("{}: unknown shell '{}'", ctx, other),
-    }
-}
-
-fn parse_completion_source(
-    self_generated: Option<RawSelfGeneratedDef>, extracted: Option<RawExtractedDef>, ctx: &str,
-) -> Result<CompletionSource> {
-    match (self_generated, extracted) {
-        (Some(sg), None) => {
-            Ok(CompletionSource::SelfGenerated {
-                binary_id: sg.binary_id,
-                command:   sg.command,
-            })
-        }
-        (None, Some(ex)) => {
-            Ok(CompletionSource::Extracted {
-                asset_id: ex.asset_id,
-                path:     ex.path,
-            })
-        }
-        (Some(_), Some(_)) => bail!("{}: both self_generated and extracted specified", ctx),
-        (None, None) => bail!("{}: neither self_generated nor extracted specified", ctx),
-    }
-}
-
-fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
-    let binaries = raw
-        .binaries
-        .into_iter()
-        .map(|b| {
-            AppBinaryDef {
-                id:              b.id,
-                name:            b.name,
-                version_cmdline: b.version_cmdline,
-                is_main:         b.is_main,
-            }
-        })
-        .collect();
-
-    let assets = raw
-        .assets
-        .into_iter()
-        .map(|a| {
-            let asset_type = parse_asset_type(&a.asset_type, path)?;
-            Ok(AppAssetDef {
-                id: a.id,
-                asset_type,
-                starts_with: a.starts_with,
-                contains: a.contains,
-                not_contains: a.not_contains,
-                ends_with: a.ends_with,
-                equals: a.equals,
-            })
-        })
-        .collect::<Result<Vec<_>>>()?;
-
-    let shell_completions = raw
-        .shell_completions
-        .into_iter()
-        .map(|sc| {
-            let shell = parse_shell_kind(&sc.shell, path)?;
-            let source = parse_completion_source(sc.self_generated, sc.extracted, path)?;
-            Ok(ShellCompletionDef { shell, source })
-        })
-        .collect::<Result<Vec<_>>>()?;
-
-    let man_pages = raw
-        .man_pages
-        .into_iter()
-        .map(|mp| {
-            let source = parse_completion_source(mp.self_generated, mp.extracted, path)?;
-            Ok(ManPageDef {
-                section: mp.section,
-                source,
-            })
-        })
-        .collect::<Result<Vec<_>>>()?;
-
-    let released_version_parse = raw.released_version_parse.map(|r| {
-        ReleasedVersionParseDef {
-            tag_starts_with: r.tag_starts_with,
-            try_in_body:     r.try_in_body,
-        }
-    });
-
-    Ok(AppEntry {
-        id: raw.id,
-        category_id: raw.category_id,
-        description: raw.description,
-        url: raw.url,
-        binaries,
-        assets,
-        shell_completions,
-        man_pages,
-        released_version_parse,
-    })
-}
-
-// ===== Public loading functions =====
-
-pub(super) fn from_jsonc_slice<T: serde::de::DeserializeOwned>(
-    data: &[u8], ctx: &str,
-) -> Result<T> {
-    let reader = StripComments::new(data);
-    serde_json::from_reader(reader).with_context(|| format!("parsing {}", ctx))
-}
-
-pub(super) fn load_raw_categories() -> Result<Vec<CategoryEntry>> {
-    let cat_file = RegistryFiles::get("categories.jsonc")
-        .ok_or_else(|| anyhow!("categories.jsonc not embedded"))?;
-    let raw_cats: RawCategories = from_jsonc_slice(&cat_file.data, "categories.jsonc")?;
-    Ok(raw_cats.categories)
-}
-
-pub(super) fn load_raw_apps() -> Result<Vec<AppEntry>> {
-    let mut paths: Vec<String> = RegistryFiles::iter()
-        .map(|p| p.as_ref().to_owned())
-        .filter(|p| is_app_path(p))
-        .collect();
-    paths.sort();
-
-    let mut apps = Vec::new();
-    for path in &paths {
-        let file = RegistryFiles::get(path).expect("file was just listed");
-        let raw: RawApp = from_jsonc_slice(&file.data, path)?;
-        apps.push(convert_app(raw, path).with_context(|| format!("converting {}", path))?);
-    }
-    Ok(apps)
+pub(super) fn load_registry() -> Result<(Vec<CategoryEntry>, Vec<AppEntry>)> {
+    postcard::from_bytes(REGISTRY_BYTES).context("deserializing embedded registry")
 }
 
 // ===== Tests =====
@@ -256,13 +15,14 @@ pub(super) fn load_raw_apps() -> Result<Vec<AppEntry>> {
 mod tests {
     use serde_json::json;
 
-    use super::RegistryFiles;
-
-    // ===== Helpers =====
+    fn app_schema() -> serde_json::Value {
+        let data =
+            include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/src/registry/app.schema.json"));
+        serde_json::from_slice(data).unwrap()
+    }
 
     fn app_validator() -> jsonschema::Validator {
-        let raw = RegistryFiles::get("app.schema.json").unwrap();
-        let schema: serde_json::Value = serde_json::from_slice(&raw.data).unwrap();
+        let schema = app_schema();
         jsonschema::validator_for(&schema).unwrap()
     }
 

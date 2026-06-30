@@ -201,8 +201,6 @@ pub struct RegistryArgs {
 
 #[derive(Subcommand)]
 pub enum RegistrySubcommands {
-    /// Validate all registry JSON files against their schemas
-    Validate,
     /// Print all supported app identifiers
     ListAppsIds,
     /// Check all registry apps for potential issues against latest releases
@@ -212,11 +210,6 @@ pub enum RegistrySubcommands {
 
 pub fn registry_command(args: &RegistryArgs, offline: bool) -> Result<()> {
     match &args.command {
-        RegistrySubcommands::Validate => {
-            let registry = Registry::load()?;
-            registry.validate()?;
-            println!("Registry valid. {} apps validated.", registry.apps.len());
-        }
         RegistrySubcommands::ListAppsIds => {
             for id in Registry::global().identifiers() {
                 println!("{}", id);

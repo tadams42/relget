@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use std::sync::OnceLock;
 
-use anyhow::{Context, Result, anyhow, bail};
+use anyhow::Result;
 
 use super::app_entry::{AppEntry, CompletionSource, ShellKind};
 use super::category_entry::CategoryEntry;
@@ -19,72 +19,8 @@ pub struct Registry {
 
 impl Registry {
     pub fn load() -> Result<Self> {
-        Ok(Registry {
-            categories: loader::load_raw_categories()?,
-            apps:       loader::load_raw_apps()?,
-        })
-    }
-
-    pub fn validate(&self) -> Result<()> {
-        let mut errors = Self::validate_json_schemas()?;
-        errors.extend(self.collect_rule_errors());
-        if errors.is_empty() {
-            Ok(())
-        } else {
-            for error in &errors {
-                eprintln!("{error}");
-            }
-            bail!("registry validation failed with {} error(s)", errors.len())
-        }
-    }
-
-    fn validate_json_schemas() -> Result<Vec<String>> {
-        let mut errors: Vec<String> = Vec::new();
-
-        let app_schema_raw = loader::RegistryFiles::get("app.schema.json")
-            .ok_or_else(|| anyhow!("app.schema.json not embedded"))?;
-        let cat_schema_raw = loader::RegistryFiles::get("categories.schema.json")
-            .ok_or_else(|| anyhow!("categories.schema.json not embedded"))?;
-
-        let app_schema: serde_json::Value =
-            serde_json::from_slice(&app_schema_raw.data).context("parsing app.schema.json")?;
-        let cat_schema: serde_json::Value = serde_json::from_slice(&cat_schema_raw.data)
-            .context("parsing categories.schema.json")?;
-
-        let app_validator = jsonschema::validator_for(&app_schema)
-            .map_err(|e| anyhow!("failed to compile app.schema.json: {}", e))?;
-        let cat_validator = jsonschema::validator_for(&cat_schema)
-            .map_err(|e| anyhow!("failed to compile categories.schema.json: {}", e))?;
-
-        let cat_file = loader::RegistryFiles::get("categories.jsonc")
-            .ok_or_else(|| anyhow!("categories.jsonc not embedded"))?;
-        let cat_value: serde_json::Value =
-            loader::from_jsonc_slice(&cat_file.data, "categories.jsonc")?;
-        for error in cat_validator.iter_errors(&cat_value) {
-            errors.push(format!("categories.jsonc: {error}"));
-        }
-
-        let mut app_paths: Vec<String> = loader::RegistryFiles::iter()
-            .map(|p| p.as_ref().to_owned())
-            .filter(|p| loader::is_app_path(p))
-            .collect();
-        app_paths.sort();
-
-        for path in &app_paths {
-            let file = loader::RegistryFiles::get(path).expect("file was just listed");
-            let value: serde_json::Value = match loader::from_jsonc_slice(&file.data, path) {
-                Ok(v) => v,
-                Err(e) => {
-                    errors.push(format!("{path}: invalid JSON: {e}"));
-                    continue;
-                }
-            };
-            for error in app_validator.iter_errors(&value) {
-                errors.push(format!("{path}: {error}"));
-            }
-        }
-
-        Ok(errors)
+        let (categories, apps) = loader::load_registry()?;
+        Ok(Registry { categories, apps })
     }
 
     /// Semantic validation rules operating on the parsed Registry struct.
