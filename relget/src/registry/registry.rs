@@ -2,8 +2,7 @@ use std::sync::OnceLock;
 
 use anyhow::Result;
 
-use super::app_entry::AppEntry;
-use super::category_entry::CategoryEntry;
+use registry_core::{AppEntry, CategoryEntry};
 use super::loader;
 
 // ===== Public types =====
@@ -57,7 +56,7 @@ impl Registry {
 #[cfg(test)]
 mod tests {
     use super::Registry;
-    use crate::registry::{
+    use registry_core::{
         AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry, CompletionSource,
         ManPageDef, ShellCompletionDef, ShellKind,
     };

@@ -1,7 +1,6 @@
 use anyhow::{Context, Result};
 
-use super::app_entry::AppEntry;
-use super::category_entry::CategoryEntry;
+use registry_core::{AppEntry, CategoryEntry};
 
 static REGISTRY_BYTES: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/registry.bin"));
 

@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 
-use crate::registry::ShellKind;
+use registry_core::ShellKind;
 
 fn ensure_parent(path: &Path) -> Result<()> {
     if let Some(parent) = path.parent() {
