@@ -309,6 +309,9 @@ Git utilities and extensions.
 
 HTTP clients and server tools.
 
+- [atac](https://github.com/Julien-cpsn/ATAC)
+  TUI API client, a Postman/Insomnia alternative for the terminal
+
 - [caddy](https://github.com/caddyserver/caddy)
   Fast, automatic HTTPS web server with TLS (pretender to the Nginx throne)
 
