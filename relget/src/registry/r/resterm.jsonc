@@ -1,0 +1,23 @@
+{
+  "id": "resterm",
+  "category_id": "http",
+  "description": "Terminal REST/HTTP client",
+  "url": "https://github.com/unkn0wn-root/resterm",
+  "binaries": [
+    {
+      "id": 1,
+      "name": "resterm",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "binary",
+      "equals": "resterm_Linux_x86_64"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

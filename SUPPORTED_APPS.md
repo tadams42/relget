@@ -321,6 +321,9 @@ HTTP clients and server tools.
 - [hurl](https://github.com/Orange-OpenSource/hurl)
   Run and test HTTP requests defined in plain text
 
+- [resterm](https://github.com/unkn0wn-root/resterm)
+  Terminal REST/HTTP client
+
 - [restish](https://github.com/rest-sh/restish)
   CLI for interacting with REST-ish HTTP APIs, `curl` alternative
 

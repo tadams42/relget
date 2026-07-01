@@ -1,5 +1,7 @@
 ## unreleased
 
+- feat: added resterm registry entry
+- feat: added slumber registry entry
 - feat: added atac registry entry
 - feat: added jnv registry entry
 - feat: removed `has_musl` registry flag
