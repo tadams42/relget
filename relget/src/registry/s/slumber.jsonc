@@ -1,0 +1,23 @@
+{
+  "id": "slumber",
+  "category_id": "http",
+  "description": "Terminal-based HTTP/REST client",
+  "url": "https://github.com/LucasPickering/slumber",
+  "binaries": [
+    {
+      "id": 1,
+      "name": "slumber",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "slumber-x86_64-unknown-linux-musl.tar.xz"
+    }
+  ],
+  "shell_completions": [],
+  "man_pages": []
+}

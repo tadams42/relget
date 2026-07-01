@@ -324,6 +324,9 @@ HTTP clients and server tools.
 - [restish](https://github.com/rest-sh/restish)
   CLI for interacting with REST-ish HTTP APIs, `curl` alternative
 
+- [slumber](https://github.com/LucasPickering/slumber)
+  Terminal-based HTTP/REST client
+
 - [xh](https://github.com/ducaale/xh)
   Friendly and fast HTTP client, `HTTPie` and `curl` alternative
 

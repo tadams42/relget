@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added atac registry entry
 - feat: added jnv registry entry
 - feat: removed `has_musl` registry flag
 - fix: used from_jsonc_slice in validate_json_schemas to strip comments
