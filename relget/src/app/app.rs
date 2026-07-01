@@ -362,6 +362,7 @@ impl App {
             } else {
                 release.find_asset(|a| Self::matches_asset(asset_def, a))?
             };
+            log::info!("app={} msg=Downloading {}", self.exe_name(), name);
             let cached = self.client.download_asset(owner, repo, &name)?;
             // ArchiveExtractor needs a recognizable extension; tarball is always .tar.gz
             let archive_name = if is_tarball {
