@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added jnv registry entry
 - feat: removed `has_musl` registry flag
 - fix: used from_jsonc_slice in validate_json_schemas to strip comments
 - feat: added declarative released_version_parse, removed App trait and apps_factory

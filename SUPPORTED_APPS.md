@@ -120,6 +120,9 @@ Tools for processing JSON, YAML, CSV and other data formats.
 - [jiq](https://github.com/bellicose100xp/jiq)
   Interactive JSON query tool with real-time output and AI assistance (similar to `jid` and `jqp`).
 
+- [jnv](https://github.com/ynqa/jnv)
+  Interactive JSON viewer and `jq` filter editor (similar to `jid`, `jiq`, but written in Rust)
+
 - [jq](https://github.com/jqlang/jq)
   Lightweight command-line JSON processor, golden standard for all other tools. Implements it's own query language for JSON
 
