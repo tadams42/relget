@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.8.1 (2026-07-02)
+
 - fix: install logs now print app id instead of main binary name
 - feat: re-added [qsv-all](https://github.com/dathere/qsv) using new 'conflicts' attribute
 - feat: added optional 'conflicts' registry attribute for apps sharing binary names
