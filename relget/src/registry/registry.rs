@@ -17,8 +17,8 @@ pub struct Registry {
 
 impl Registry {
     pub fn load() -> Result<Self> {
-        let (categories, apps) = postcard::from_bytes(REGISTRY_BYTES)
-            .context("deserializing embedded registry")?;
+        let (categories, apps) =
+            postcard::from_bytes(REGISTRY_BYTES).context("deserializing embedded registry")?;
         Ok(Registry { categories, apps })
     }
 
@@ -56,11 +56,11 @@ impl Registry {
 
 #[cfg(test)]
 mod tests {
-    use serde_json::json;
     use registry_core::{
         AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry, CompletionSource,
         ManPageDef, ShellCompletionDef, ShellKind,
     };
+    use serde_json::json;
 
     use super::Registry;
 
@@ -724,8 +724,10 @@ mod tests {
     // ===== JSON Schema helpers =====
 
     fn app_schema() -> serde_json::Value {
-        let data =
-            include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/src/registry/app.schema.json"));
+        let data = include_bytes!(concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "/src/registry/schema/app.schema.json"
+        ));
         serde_json::from_slice(data).unwrap()
     }
 

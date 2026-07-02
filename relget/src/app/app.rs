@@ -268,7 +268,8 @@ impl App {
     /// Used by the uninstaller to know which files to remove. `SelfGenerated` man page entries
     /// whose command contains `{{ tmp-dir }}` are excluded: a batch generator produces a dynamic
     /// set of files at runtime, so the *extracted* sibling entries in the same registry file serve
-    /// as the authoritative static list for uninstall purposes (see `src/registry/c/caddy.jsonc`).
+    /// as the authoritative static list for uninstall purposes (see
+    /// `src/registry/data/c/caddy.jsonc`).
     pub fn assets(&self) -> Assets {
         let main_bin = self.entry.binaries.iter().find(|b| b.is_main).unwrap();
         let binary = Some(Binary::new(&main_bin.name));

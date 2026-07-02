@@ -47,7 +47,9 @@ pub(super) fn doctor(apps: &[AppEntry], offline: bool) -> Result<()> {
 
         let mut flags: Vec<DoctorFlag> = Vec::new();
 
-        if let Some(date) = published_at && date < threshold {
+        if let Some(date) = published_at
+            && date < threshold
+        {
             flags.push(DoctorFlag::PotentiallyUnmaintained);
         }
 

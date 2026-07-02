@@ -132,10 +132,10 @@ required — the registry file is all you need.
 ### File location
 
 ```
-src/registry/<first-letter-of-id>/<app-id>.jsonc
+src/registry/data/<first-letter-of-id>/<app-id>.jsonc
 ```
 
-For example: `src/registry/b/bat.jsonc`. The file name (without `.jsonc`) must match the `id`
+For example: `src/registry/data/b/bat.jsonc`. The file name (without `.jsonc`) must match the `id`
 field and must be globally unique in the registry.
 
 ### Registry file structure
@@ -145,7 +145,7 @@ field and must be globally unique in the registry.
   // Required. Must match the filename (without .jsonc) and be globally unique.
   "id": "myapp",
 
-  // Required. Must match a category id in `src/registry/categories.jsonc`.
+  // Required. Must match a category id in `src/registry/data/categories.jsonc`.
   "category_id": "files",
 
   // Optional but encouraged.
@@ -241,7 +241,7 @@ with a real temp directory path, runs the command, and collects every file writt
 When a batch generator is present, you must also list each expected man page as an `extracted`
 entry. These entries are never actually downloaded — they exist only so the uninstaller knows
 which files to remove. Any `asset_id` is fine for these metadata entries. See
-`src/registry/c/caddy.jsonc` for a complete example.
+`src/registry/data/c/caddy.jsonc` for a complete example.
 
 ### Preference rules
 
@@ -255,7 +255,7 @@ which files to remove. Any `asset_id` is fine for these metadata entries. See
 - **Using `.deb` for man pages / completions**: if the main archive doesn't include man pages
   or completions and the binary can't generate them, add a second `deb` asset and point the
   relevant `extracted` entries at it. The primary binary still comes from the tar.gz or musl
-  archive. See `src/registry/d/dust.jsonc` for an example.
+  archive. See `src/registry/data/d/dust.jsonc` for an example.
 - **Version cmdline**: download the binary locally and try `--version`, then `version`
   (subcommand style), then `-v`. Use whichever works in `version_cmdline`.
 

@@ -238,9 +238,11 @@ fn main() -> Result<()> {
     let manifest_dir = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
     let out_dir = PathBuf::from(std::env::var("OUT_DIR").unwrap());
     let registry_dir = manifest_dir.join("src/registry");
+    let schema_dir = registry_dir.join("schema");
+    let data_dir = registry_dir.join("data");
 
     // Load and compile JSON schemas
-    let app_schema_path = registry_dir.join("app.schema.json");
+    let app_schema_path = schema_dir.join("app.schema.json");
     let app_schema: serde_json::Value = serde_json::from_str(
         &std::fs::read_to_string(&app_schema_path)
             .with_context(|| format!("reading {}", app_schema_path.display()))?,
@@ -249,7 +251,7 @@ fn main() -> Result<()> {
     let app_validator = jsonschema::validator_for(&app_schema)
         .map_err(|e| anyhow!("invalid app.schema.json: {e}"))?;
 
-    let cat_schema_path = registry_dir.join("categories.schema.json");
+    let cat_schema_path = schema_dir.join("categories.schema.json");
     let cat_schema: serde_json::Value = serde_json::from_str(
         &std::fs::read_to_string(&cat_schema_path)
             .with_context(|| format!("reading {}", cat_schema_path.display()))?,
@@ -261,7 +263,7 @@ fn main() -> Result<()> {
     let mut all_errors: Vec<String> = Vec::new();
 
     // Validate and load categories
-    let cat_path = registry_dir.join("categories.jsonc");
+    let cat_path = data_dir.join("categories.jsonc");
     let cat_data =
         std::fs::read(&cat_path).with_context(|| format!("reading {}", cat_path.display()))?;
     let cat_value: serde_json::Value = match from_jsonc_slice(&cat_data, "categories.jsonc") {
@@ -282,7 +284,7 @@ fn main() -> Result<()> {
     };
 
     // Collect, validate, and convert all app files
-    let mut app_file_paths = collect_app_paths(&registry_dir)?;
+    let mut app_file_paths = collect_app_paths(&data_dir)?;
     app_file_paths.sort();
 
     let mut apps: Vec<AppEntry> = Vec::new();

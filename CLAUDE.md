@@ -7,12 +7,12 @@ Rust CLI that installs/updates CLI utilities directly from GitHub, GitLab and Co
 ```sh
 cargo build
 cargo run -- --help
-cargo run -- install --apps rg
-cargo run -- install --apps rg,bat        # comma-separated
+cargo run -- install --apps ripgrep
+cargo run -- install --apps ripgrep,bat        # comma-separated
 cargo run -- registry list-apps-ids
 cargo run -- completions zsh
-cargo run -- uninstall --apps rg
-cargo run -- install --apps rg --offline  # use only cached data
+cargo run -- uninstall --apps ripgrep
+cargo run -- install --apps ripgrep --offline  # use only cached data
 ```
 
 Use `--prefix tmp/try-relget/` to avoid needing `sudo` during local testing.
@@ -25,12 +25,12 @@ This is a virtual Cargo workspace with three crates:
 - `registry-core/` — shared library: all registry type definitions (`AppEntry`, `CategoryEntry`, etc.), `impl AppEntry` helpers, and the semantic `validate()` function
 - `xtask/` — build automation (`cargo xtask update-docs`)
 
-App definitions live in `relget/src/registry/<letter>/<app-id>.jsonc`. `relget/build.rs` validates and compiles them into an embedded binary at build time; no registry changes require touching Rust code.
+App definitions live in `relget/src/registry/data/<letter>/<app-id>.jsonc`. `relget/build.rs` validates and compiles them into an embedded binary at build time; no registry changes require touching Rust code.
 
 ## Adding a new app
 
 To add support for a new app, see the **[Contributing a new app](README.md#contributing-a-new-app)**
-section in `README.md`. All app definitions live in `relget/src/registry/<letter>/<app-id>.jsonc` — no
+section in `README.md`. All app definitions live in `relget/src/registry/data/<letter>/<app-id>.jsonc` — no
 Rust code is required.
 
 ## Token handling
