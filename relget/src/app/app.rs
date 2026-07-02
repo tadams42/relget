@@ -362,7 +362,7 @@ impl App {
             } else {
                 release.find_asset(|a| Self::matches_asset(asset_def, a))?
             };
-            log::info!("app={} msg=Downloading {}", self.exe_name(), name);
+            log::info!("app={} msg=Downloading {}", self.entry.id, name);
             let cached = self.client.download_asset(owner, repo, &name)?;
             // ArchiveExtractor needs a recognizable extension; tarball is always .tar.gz
             let archive_name = if is_tarball {
@@ -591,7 +591,7 @@ impl App {
 
     pub fn install(&self, prefix: &Path) -> Result<Vec<PathBuf>> {
         if !self.needs_install(prefix)? {
-            log::info!("app={} msg=Already at latest version", self.exe_name());
+            log::info!("app={} msg=Already at latest version", self.entry.id);
             return Ok(vec![]);
         }
         let assets = self.download()?;
@@ -608,7 +608,7 @@ impl App {
         for completion in &assets.completions {
             installed.push(completion.install(prefix)?);
         }
-        log::info!("app={} msg=Installed", self.exe_name());
+        log::info!("app={} msg=Installed", self.entry.id);
         Ok(installed)
     }
 
