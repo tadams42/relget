@@ -23,6 +23,7 @@ pub struct AppEntry {
     pub assets:                 Vec<AppAssetDef>,
     pub shell_completions:      Vec<ShellCompletionDef>,
     pub man_pages:              Vec<ManPageDef>,
+    pub conflicts:              Vec<String>,
     pub released_version_parse: Option<ReleasedVersionParseDef>,
 }
 
@@ -124,7 +125,21 @@ pub fn validate(apps: &[AppEntry], categories: &[CategoryEntry]) -> Vec<String> 
 
     let category_ids: HashSet<&str> = categories.iter().map(|c| c.id.as_str()).collect();
 
-    let mut global_binary_names: HashMap<String, String> = HashMap::new();
+    let app_ids: HashSet<&str> = apps.iter().map(|a| a.id.as_str()).collect();
+    let conflicts_of: HashMap<&str, HashSet<&str>> = apps
+        .iter()
+        .map(|a| (a.id.as_str(), a.conflicts.iter().map(String::as_str).collect()))
+        .collect();
+    let binary_names_of: HashMap<&str, HashSet<&str>> = apps
+        .iter()
+        .map(|a| (a.id.as_str(), a.binaries.iter().map(|b| b.name.as_str()).collect()))
+        .collect();
+    let mutual = |a: &str, b: &str| {
+        conflicts_of.get(a).is_some_and(|s| s.contains(b))
+            && conflicts_of.get(b).is_some_and(|s| s.contains(a))
+    };
+
+    let mut global_binary_names: HashMap<String, Vec<String>> = HashMap::new();
     let mut global_sc_gen: HashMap<(String, ShellKind), String> = HashMap::new();
     let mut global_sc_ext: HashMap<String, String> = HashMap::new();
     let mut global_mp_gen: HashMap<(String, String), String> = HashMap::new();
@@ -164,21 +179,42 @@ pub fn validate(apps: &[AppEntry], categories: &[CategoryEntry]) -> Vec<String> 
             ));
         }
 
+        for c in &app.conflicts {
+            if c == app_id {
+                errors.push(format!("{app_id}: conflicts lists itself"));
+                continue;
+            }
+            if !app_ids.contains(c.as_str()) {
+                errors.push(format!("{app_id}: conflicts references unknown app '{c}'"));
+                continue;
+            }
+            if !conflicts_of[c.as_str()].contains(app_id.as_str()) {
+                errors.push(format!(
+                    "{app_id}: conflict with '{c}' is not mutual ('{c}' must also list \
+                     '{app_id}' in conflicts)"
+                ));
+            } else if app_id.as_str() < c.as_str() // report each pair once
+                && binary_names_of[app_id.as_str()] == binary_names_of[c.as_str()]
+            {
+                errors.push(format!(
+                    "{app_id}: conflicts with '{c}' but their binary name sets are identical; \
+                     conflicting apps must have distinguishable binaries"
+                ));
+            }
+        }
+
         for b in &app.binaries {
-            match global_binary_names.entry(b.name.clone()) {
-                std::collections::hash_map::Entry::Vacant(e) => {
-                    e.insert(app_id.clone());
-                }
-                std::collections::hash_map::Entry::Occupied(e) => {
-                    let other = e.get();
-                    if other != app_id {
-                        errors.push(format!(
-                            "{app_id}: binary name '{}' conflicts with app '{other}'",
-                            b.name
-                        ));
-                    }
+            let holders = global_binary_names.entry(b.name.clone()).or_default();
+            for other in holders.iter() {
+                if other != app_id && !mutual(app_id, other) {
+                    errors.push(format!(
+                        "{app_id}: binary name '{}' conflicts with app '{other}' (apps sharing \
+                         a binary name must list each other in 'conflicts')",
+                        b.name
+                    ));
                 }
             }
+            holders.push(app_id.clone());
         }
 
         let mut sc_gen_seen: HashSet<(u32, ShellKind)> = HashSet::new();
@@ -363,6 +399,7 @@ mod tests {
             }],
             shell_completions:      vec![],
             man_pages:              vec![],
+            conflicts:              vec![],
             released_version_parse: None,
         }
     }
@@ -422,6 +459,129 @@ mod tests {
         // binary in app_b named "shared" conflicts with app_a's binary
         app_b.binaries[0].name = "shared".into();
         has_error(&validate(&[app_a, app_b], &test_categories()), "conflicts with app");
+    }
+
+    // Rule 7: conflicts (apps sharing binary names must mutually declare each other)
+
+    /// Two apps sharing a main binary name, distinguishable by app_b's extra binary.
+    fn make_conflicting_pair() -> (AppEntry, AppEntry) {
+        let mut app_a = make_app("app-a");
+        app_a.binaries[0].name = "shared".into();
+        app_a.conflicts = vec!["app-b".into()];
+        let mut app_b = make_app("app-b");
+        app_b.binaries[0].name = "shared".into();
+        app_b.binaries.push(AppBinaryDef {
+            id:              2,
+            name:            "shared-extra".into(),
+            version_cmdline: "--version".into(),
+            is_main:         false,
+        });
+        app_b.conflicts = vec!["app-a".into()];
+        (app_a, app_b)
+    }
+
+    #[test]
+    fn rule7_mutual_shared_main_binary_ok() {
+        let (app_a, app_b) = make_conflicting_pair();
+        no_errors(&validate(&[app_a, app_b], &test_categories()));
+    }
+
+    #[test]
+    fn rule7_mutual_shared_secondary_binary_ok() {
+        // the shared name is on a non-main binary of app_b
+        let (app_a, mut app_b) = make_conflicting_pair();
+        app_b.binaries[0].name = "app-b".into();
+        app_b.binaries[1].name = "shared".into();
+        no_errors(&validate(&[app_a, app_b], &test_categories()));
+    }
+
+    #[test]
+    fn rule7_one_sided_listing_errors() {
+        let (app_a, mut app_b) = make_conflicting_pair();
+        app_b.conflicts = vec![];
+        let errors = validate(&[app_a, app_b], &test_categories());
+        has_error(&errors, "is not mutual");
+        has_error(&errors, "conflicts with app");
+    }
+
+    #[test]
+    fn rule7_asymmetry_without_shared_binary_errors() {
+        let mut app_a = make_app("app-a");
+        app_a.conflicts = vec!["app-b".into()];
+        let app_b = make_app("app-b");
+        has_error(&validate(&[app_a, app_b], &test_categories()), "is not mutual");
+    }
+
+    #[test]
+    fn rule7_unknown_app_errors() {
+        let mut app = make_app("foo");
+        app.conflicts = vec!["nonexistent".into()];
+        has_error(
+            &validate(&[app], &test_categories()),
+            "conflicts references unknown app 'nonexistent'",
+        );
+    }
+
+    #[test]
+    fn rule7_self_reference_errors() {
+        let mut app = make_app("foo");
+        app.conflicts = vec!["foo".into()];
+        has_error(&validate(&[app], &test_categories()), "conflicts lists itself");
+    }
+
+    #[test]
+    fn rule7_identical_binary_sets_errors() {
+        let (app_a, mut app_b) = make_conflicting_pair();
+        app_b.binaries.pop(); // both apps now have exactly {"shared"}
+        let errors = validate(&[app_a, app_b], &test_categories());
+        has_error(&errors, "binary name sets are identical");
+        let count = errors
+            .iter()
+            .filter(|e| e.contains("binary name sets are identical"))
+            .count();
+        assert_eq!(count, 1, "identical-sets error should be reported once per pair");
+    }
+
+    #[test]
+    fn rule7_three_way_group_ok() {
+        let mut app_a = make_app("app-a");
+        app_a.binaries[0].name = "shared".into();
+        app_a.conflicts = vec!["app-b".into(), "app-c".into()];
+        let (_, mut app_b) = make_conflicting_pair();
+        app_b.conflicts = vec!["app-a".into(), "app-c".into()];
+        let mut app_c = make_app("app-c");
+        app_c.binaries[0].name = "shared".into();
+        app_c.binaries.push(AppBinaryDef {
+            id:              2,
+            name:            "shared-c".into(),
+            version_cmdline: "--version".into(),
+            is_main:         false,
+        });
+        app_c.conflicts = vec!["app-a".into(), "app-b".into()];
+        no_errors(&validate(&[app_a, app_b, app_c], &test_categories()));
+    }
+
+    #[test]
+    fn rule7_three_way_missing_one_pair_errors() {
+        // app-b and app-c share "shared" but do not list each other
+        let mut app_a = make_app("app-a");
+        app_a.binaries[0].name = "shared".into();
+        app_a.conflicts = vec!["app-b".into(), "app-c".into()];
+        let (_, mut app_b) = make_conflicting_pair();
+        app_b.conflicts = vec!["app-a".into()];
+        let mut app_c = make_app("app-c");
+        app_c.binaries[0].name = "shared".into();
+        app_c.binaries.push(AppBinaryDef {
+            id:              2,
+            name:            "shared-c".into(),
+            version_cmdline: "--version".into(),
+            is_main:         false,
+        });
+        app_c.conflicts = vec!["app-a".into()];
+        has_error(
+            &validate(&[app_a, app_b, app_c], &test_categories()),
+            "binary name 'shared' conflicts with app 'app-b'",
+        );
     }
 
     // Rule 3: shell_completions uniqueness within app

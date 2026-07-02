@@ -40,6 +40,8 @@ struct RawApp {
     shell_completions:      Vec<RawShellCompletionDef>,
     #[serde(default)]
     man_pages:              Vec<RawManPageDef>,
+    #[serde(default)]
+    conflicts:              Vec<String>,
     released_version_parse: Option<RawReleasedVersionParseDef>,
 }
 
@@ -205,6 +207,7 @@ fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
         assets,
         shell_completions,
         man_pages,
+        conflicts: raw.conflicts,
         released_version_parse,
     })
 }

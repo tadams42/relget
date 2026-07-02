@@ -204,6 +204,40 @@ mod tests {
     }
 
     #[test]
+    fn schema_conflicts_optional() {
+        // minimal_app has no "conflicts" key and must stay valid
+        assert!(app_validator().is_valid(&minimal_app()));
+    }
+
+    #[test]
+    fn schema_conflicts_valid() {
+        let mut app = minimal_app();
+        app["conflicts"] = json!(["qsv"]);
+        assert!(app_validator().is_valid(&app));
+    }
+
+    #[test]
+    fn schema_conflicts_empty_array() {
+        let mut app = minimal_app();
+        app["conflicts"] = json!([]);
+        assert!(!app_validator().is_valid(&app));
+    }
+
+    #[test]
+    fn schema_conflicts_empty_string() {
+        let mut app = minimal_app();
+        app["conflicts"] = json!([""]);
+        assert!(!app_validator().is_valid(&app));
+    }
+
+    #[test]
+    fn schema_conflicts_duplicate_entries() {
+        let mut app = minimal_app();
+        app["conflicts"] = json!(["qsv", "qsv"]);
+        assert!(!app_validator().is_valid(&app));
+    }
+
+    #[test]
     fn schema_assets_empty_array() {
         let mut app = minimal_app();
         app["assets"] = json!([]);

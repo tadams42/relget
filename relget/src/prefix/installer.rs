@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Result, anyhow};
@@ -12,6 +12,7 @@ pub(super) fn install(
     log::info!("prefix={:?} msg=Installing", prefix_path);
 
     let selected = helpers::select_apps(apps, configured_set)?;
+    helpers::check_install_conflicts(prefix_path, &selected, Registry::global().entries())?;
     let installed = install_apps(prefix_path, &selected, offline)?;
 
     if !installed.is_empty() {
@@ -59,13 +60,7 @@ pub(super) fn update(
     } else {
         let selected = helpers::select_apps(apps, configured_set)?;
         let entries = Registry::global().entries();
-        let bin_dir = prefix_path.join("bin");
-        let owned: HashSet<String> = selected
-            .iter()
-            .filter_map(|id| entries.iter().find(|e| &e.id == id))
-            .filter(|e| bin_dir.join(e.main_exe_name()).exists())
-            .map(|e| e.main_exe_name().to_owned())
-            .collect();
+        let owned = helpers::bin_names_on_disk(prefix_path);
         let installed_binaries: HashSet<&str> = owned.iter().map(String::as_str).collect();
         let filtered = filter_to_installed(&selected, entries, &installed_binaries);
         if filtered.is_empty() {
@@ -123,53 +118,34 @@ pub(super) fn install_apps(
 }
 
 /// Auto-detect path: given the set of binary names present in the prefix, return the app IDs
-/// that should be updated. Entries appearing first in `entries` win on exe_name collisions;
-/// a warning is logged when a collision involves an installed binary.
+/// that should be updated. Within a conflict group only the app that actually occupies the
+/// prefix is targeted.
 pub(super) fn resolve_update_targets(
     installed_binaries: &HashSet<&str>, entries: &[AppEntry],
 ) -> Vec<String> {
-    let mut exe_to_id: HashMap<&str, &str> = HashMap::new();
-    for entry in entries {
-        let exe = entry.main_exe_name();
-        if exe_to_id.contains_key(exe) {
-            if installed_binaries.contains(exe) {
-                let winner = exe_to_id[exe];
-                log::warn!(
-                    "exe_name={} winner={} duplicate={} msg=ambiguous exe_name; re-run with \
-                    --apps {} to update the other",
-                    exe,
-                    winner,
-                    entry.id,
-                    entry.id
-                );
-            }
-        } else {
-            exe_to_id.insert(exe, &entry.id);
-        }
-    }
-
-    exe_to_id
+    entries
         .iter()
-        .filter(|(exe, _)| installed_binaries.contains(**exe))
-        .map(|(_, id)| id.to_string())
+        .filter(|e| {
+            helpers::occupying_app_id(e, entries, installed_binaries) == Some(e.id.as_str())
+        })
+        .map(|e| e.id.clone())
         .collect()
 }
 
-/// Explicit path: keep only those selected app IDs whose binary is present in the prefix.
+/// Explicit path: keep only those selected app IDs that occupy the prefix.
 pub(super) fn filter_to_installed(
     selected: &[String], entries: &[AppEntry], installed_binaries: &HashSet<&str>,
 ) -> Vec<String> {
     selected
         .iter()
         .filter(|id| {
-            let present = entries
-                .iter()
-                .find(|e| &e.id == *id)
-                .is_some_and(|e| installed_binaries.contains(e.main_exe_name()));
-            if !present {
+            let occupied = entries.iter().find(|e| &e.id == *id).is_some_and(|e| {
+                helpers::occupying_app_id(e, entries, installed_binaries) == Some(id.as_str())
+            });
+            if !occupied {
                 log::warn!("app={} msg=not installed, skipping", id);
             }
-            present
+            occupied
         })
         .cloned()
         .collect()
@@ -180,18 +156,24 @@ mod tests {
     use super::*;
     use crate::{AppAssetDef, AppBinaryDef, AssetType};
 
-    fn make_entry(id: &str, exe_name: &str) -> AppEntry {
+    fn make_group_entry(id: &str, binaries: &[&str], conflicts: &[&str]) -> AppEntry {
         AppEntry {
             id:                     id.to_string(),
             category_id:            String::new(),
             description:            None,
             url:                    String::new(),
-            binaries:               vec![AppBinaryDef {
-                id:              1,
-                name:            exe_name.to_string(),
-                version_cmdline: String::new(),
-                is_main:         true,
-            }],
+            binaries:               binaries
+                .iter()
+                .enumerate()
+                .map(|(i, name)| {
+                    AppBinaryDef {
+                        id:              i as u32 + 1,
+                        name:            name.to_string(),
+                        version_cmdline: String::new(),
+                        is_main:         i == 0,
+                    }
+                })
+                .collect(),
             assets:                 vec![AppAssetDef {
                 id:           1,
                 asset_type:   AssetType::Archive,
@@ -203,8 +185,21 @@ mod tests {
             }],
             shell_completions:      vec![],
             man_pages:              vec![],
+            conflicts:              conflicts.iter().map(|c| c.to_string()).collect(),
             released_version_parse: None,
         }
+    }
+
+    fn make_entry(id: &str, exe_name: &str) -> AppEntry { make_group_entry(id, &[exe_name], &[]) }
+
+    /// qsv-style group: "qsv" and "qsv-all" share the main binary "qsv";
+    /// "qsv-all" additionally installs "qsvdp" and "qsvlite".
+    fn qsv_group() -> Vec<AppEntry> {
+        vec![
+            make_group_entry("qsv", &["qsv"], &["qsv-all"]),
+            make_group_entry("qsv-all", &["qsv", "qsvdp", "qsvlite"], &["qsv"]),
+            make_entry("rg", "rg"),
+        ]
     }
 
     #[test]
@@ -224,12 +219,27 @@ mod tests {
     }
 
     #[test]
-    fn resolve_collision_keeps_first_entry() {
-        let entries = vec![make_entry("qsv", "qsv"), make_entry("qsv_all", "qsv")];
+    fn resolve_picks_small_occupant_of_conflict_group() {
+        let entries = qsv_group();
         let installed = HashSet::from(["qsv"]);
         let result = resolve_update_targets(&installed, &entries);
-        assert_eq!(result.len(), 1);
-        assert_eq!(result[0], "qsv");
+        assert_eq!(result, ["qsv"]);
+    }
+
+    #[test]
+    fn resolve_picks_large_occupant_of_conflict_group() {
+        let entries = qsv_group();
+        let installed = HashSet::from(["qsv", "qsvdp", "qsvlite"]);
+        let result = resolve_update_targets(&installed, &entries);
+        assert_eq!(result, ["qsv-all"]);
+    }
+
+    #[test]
+    fn resolve_partial_large_set_falls_back_to_small() {
+        let entries = qsv_group();
+        let installed = HashSet::from(["qsv", "qsvdp"]); // qsvlite missing
+        let result = resolve_update_targets(&installed, &entries);
+        assert_eq!(result, ["qsv"]);
     }
 
     #[test]
@@ -274,5 +284,24 @@ mod tests {
         let selected = vec!["rg".to_string(), "bat".to_string()];
         let result = filter_to_installed(&selected, &entries, &installed);
         assert_eq!(result, ["rg", "bat"]);
+    }
+
+    #[test]
+    fn filter_drops_conflicting_app_that_does_not_occupy_prefix() {
+        // qsv-all occupies the prefix; `update --apps qsv` must not touch it
+        let entries = qsv_group();
+        let installed = HashSet::from(["qsv", "qsvdp", "qsvlite"]);
+        let selected = vec!["qsv".to_string()];
+        let result = filter_to_installed(&selected, &entries, &installed);
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn filter_keeps_conflicting_app_that_occupies_prefix() {
+        let entries = qsv_group();
+        let installed = HashSet::from(["qsv", "qsvdp", "qsvlite"]);
+        let selected = vec!["qsv-all".to_string()];
+        let result = filter_to_installed(&selected, &entries, &installed);
+        assert_eq!(result, ["qsv-all"]);
     }
 }

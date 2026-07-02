@@ -155,6 +155,9 @@ field and must be globally unique in the registry.
   // github.com → GithubClient, codeberg.org → CodebergClient, gitlab.com → GitlabClient
   "url": "https://github.com/owner/myapp",
 
+  // Optional. Ids of apps this app shares binary names with — see "conflicts" below.
+  // "conflicts": ["myapp-all"],
+
   // One entry per binary that gets installed. At least one entry required.
   "binaries": [
     {
@@ -226,6 +229,26 @@ let you override that behavior:
   "try_in_body": false
 }
 ```
+
+### `conflicts` — apps sharing binary names
+
+Binary names must normally be unique across the whole registry. When two apps genuinely provide
+the same binary (e.g. [`qsv`](src/registry/data/q/qsv.jsonc) and
+[`qsv-all`](src/registry/data/q/qsv-all.jsonc) both install a `qsv` executable), each of them
+must list the other in `conflicts`:
+
+```jsonc
+// in qsv.jsonc
+"conflicts": ["qsv-all"],
+// in qsv-all.jsonc
+"conflicts": ["qsv"],
+```
+
+The declaration must be mutual, may only reference existing app ids, and the conflicting apps
+must differ in at least one binary name so `relget` can tell which one is installed. At most one
+app of a conflict group can be installed into a prefix at a time: `install` refuses to install an
+app while a conflicting one is present (uninstall it first, or use `sync` which replaces it), and
+`update` only touches the app that actually occupies the prefix.
 
 ### `{{ tmp-dir }}` — batch man page generators
 
