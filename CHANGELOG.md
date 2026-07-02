@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: re-added [qsv-all](https://github.com/dathere/qsv) using new 'conflicts' attribute
 - feat: added optional 'conflicts' registry attribute for apps sharing binary names
 
 ## v0.8.0 (2026-07-02)
