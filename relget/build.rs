@@ -1,12 +1,23 @@
+//!  All registry type definitions (`AppEntry`, `CategoryEntry`, etc.), `impl AppEntry` helpers, and
+//! the ! semantic `validate()` function live in `relget/src/registry/types.rs`. That file is shared
+//! between ! the runtime crate (as a normal module) and `relget/build.rs` (via `#[path]`
+//! inclusion), so the ! build script and the binary agree on one set of types and one validation
+//! implementation — it must ! stay self-contained (std + serde only).
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};
 use json_comments::StripComments;
-use registry_core::{
+use serde::Deserialize;
+use types::{
     AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry, CompletionSource, ManPageDef,
     ReleasedVersionParseDef, ShellCompletionDef, ShellKind,
 };
-use serde::Deserialize;
+
+// Shared with the runtime crate (`relget::registry::types`) so build.rs and the
+// binary agree on one set of type definitions and one `validate()` implementation.
+#[path = "src/registry/types.rs"]
+#[allow(dead_code)] // runtime-only helpers (impl AppEntry) are unused here
+mod types;
 
 // ===== Raw deserialization types =====
 
@@ -324,7 +335,7 @@ fn main() -> Result<()> {
     }
 
     // Semantic validation
-    all_errors.extend(registry_core::validate(&apps, &categories));
+    all_errors.extend(types::validate(&apps, &categories));
 
     if !all_errors.is_empty() {
         for e in &all_errors {

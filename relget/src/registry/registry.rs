@@ -1,7 +1,8 @@
 use std::sync::OnceLock;
 
 use anyhow::{Context, Result};
-use registry_core::{AppEntry, CategoryEntry};
+
+use super::types::{AppEntry, CategoryEntry};
 
 static REGISTRY_BYTES: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/registry.bin"));
 
@@ -26,7 +27,7 @@ impl Registry {
     /// Returns a list of error strings; empty means valid.
     /// Public to allow unit testing with synthetic data.
     pub fn collect_rule_errors(&self) -> Vec<String> {
-        registry_core::validate(&self.apps, &self.categories)
+        super::types::validate(&self.apps, &self.categories)
     }
 }
 
@@ -56,13 +57,13 @@ impl Registry {
 
 #[cfg(test)]
 mod tests {
-    use registry_core::{
-        AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry, CompletionSource,
-        ManPageDef, ShellCompletionDef, ShellKind,
-    };
     use serde_json::json;
 
     use super::Registry;
+    use crate::registry::types::{
+        AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry, CompletionSource,
+        ManPageDef, ShellCompletionDef, ShellKind,
+    };
 
     // ===== Helpers =====
 

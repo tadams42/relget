@@ -14,5 +14,5 @@ pub use clients::{
 pub use config::Config;
 pub use prefix::Prefix;
 pub use registry::Registry;
-pub use registry_core::{AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry};
+pub use registry::types::{AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry};
 pub use version::AppVersion;

@@ -1,5 +1,5 @@
 [workspace]
-members         = ["relget", "registry-core", "xtask"]
+members         = ["relget", "xtask"]
 default-members = ["relget"]
 resolver        = "2"
 

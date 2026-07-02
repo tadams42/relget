@@ -1,7 +1,7 @@
 use anyhow::{Result, anyhow};
 use chrono::{DateTime, Duration, Utc};
-use registry_core::AppEntry;
 
+use super::types::AppEntry;
 use crate::{CodebergClient, Config, GithubClient, GitlabClient, ReleaseMetadata, RelgetClient};
 
 pub(super) fn doctor(apps: &[AppEntry], offline: bool) -> Result<()> {

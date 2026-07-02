@@ -3,7 +3,8 @@ use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
-use registry_core::ShellKind;
+
+use crate::registry::types::ShellKind;
 
 fn ensure_parent(path: &Path) -> Result<()> {
     if let Some(parent) = path.parent() {

@@ -5,9 +5,11 @@ use std::process::Command;
 use std::sync::Arc;
 
 use anyhow::{Context, Result, bail};
-use registry_core::{AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ShellKind};
 
 use super::assets::BIN_MODE;
+use crate::registry::types::{
+    AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ShellKind,
+};
 use crate::{
     AppVersion, ArchiveExtractor, Assets, Binary, CodebergClient, GithubClient, GitlabClient,
     ManPage, Registry, RelgetClient, ShellCompletion,
