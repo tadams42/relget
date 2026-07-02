@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.8.0 (2026-07-02)
+
 - feat: added resterm registry entry
 - feat: added slumber registry entry
 - feat: added atac registry entry
