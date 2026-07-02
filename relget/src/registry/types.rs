@@ -1,3 +1,8 @@
+// All registry type definitions (`AppEntry`, `CategoryEntry`, etc.), `impl AppEntry` helpers, and
+// the semantic `validate()` function live in `relget/src/registry/types.rs`. That file is shared
+// between the runtime crate (as a normal module) and `relget/build.rs` (via `#[path]` inclusion),
+// so the build script and the binary agree on one set of types and one validation implementation —
+// it must stay self-contained (std + serde only).
 use std::collections::{HashMap, HashSet};
 
 use serde::{Deserialize, Serialize};
@@ -112,6 +117,8 @@ impl AppEntry {
 }
 
 /// Returns a list of semantic rule violations; empty means valid.
+/// Not called by the runtime crate itself — only by `build.rs` and unit tests.
+#[cfg_attr(not(test), allow(dead_code))]
 pub fn validate(apps: &[AppEntry], categories: &[CategoryEntry]) -> Vec<String> {
     let mut errors: Vec<String> = Vec::new();
 
@@ -315,4 +322,656 @@ pub fn validate(apps: &[AppEntry], categories: &[CategoryEntry]) -> Vec<String> 
     }
 
     errors
+}
+
+// ===== Tests =====
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ===== Helpers =====
+
+    fn test_categories() -> Vec<CategoryEntry> {
+        vec![CategoryEntry {
+            id:          "test".into(),
+            title:       "Test".into(),
+            description: None,
+        }]
+    }
+
+    fn make_app(id: &str) -> AppEntry {
+        AppEntry {
+            id:                     id.into(),
+            category_id:            "test".into(),
+            description:            None,
+            url:                    "https://example.com".into(),
+            binaries:               vec![AppBinaryDef {
+                id:              1,
+                name:            id.into(),
+                version_cmdline: "--version".into(),
+                is_main:         true,
+            }],
+            assets:                 vec![AppAssetDef {
+                id:           1,
+                asset_type:   AssetType::Archive,
+                starts_with:  None,
+                contains:     None,
+                not_contains: None,
+                ends_with:    None,
+                equals:       Some("foo.tar.gz".into()),
+            }],
+            shell_completions:      vec![],
+            man_pages:              vec![],
+            released_version_parse: None,
+        }
+    }
+
+    fn no_errors(errors: &[String]) {
+        assert!(errors.is_empty(), "expected no errors but got: {errors:#?}");
+    }
+
+    fn has_error(errors: &[String], fragment: &str) {
+        assert!(
+            errors.iter().any(|e| e.contains(fragment)),
+            "expected error containing {fragment:?} but got: {errors:#?}"
+        );
+    }
+
+    // ===== Semantic rule tests =====
+
+    // Rule 1: binary name uniqueness within app
+
+    #[test]
+    fn rule1_binary_names_unique_within_app_ok() {
+        let mut app = make_app("foo");
+        app.binaries.push(AppBinaryDef {
+            id:              2,
+            name:            "foox".into(),
+            version_cmdline: "--version".into(),
+            is_main:         false,
+        });
+        no_errors(&validate(&[app], &test_categories()));
+    }
+
+    #[test]
+    fn rule1_binary_names_duplicate_within_app() {
+        let mut app = make_app("foo");
+        app.binaries.push(AppBinaryDef {
+            id:              2,
+            name:            "foo".into(), // same name as binary id=1
+            version_cmdline: "--version".into(),
+            is_main:         false,
+        });
+        has_error(&validate(&[app], &test_categories()), "duplicate binary name");
+    }
+
+    // Rule 2: binary name uniqueness globally
+
+    #[test]
+    fn rule2_binary_names_unique_globally_ok() {
+        let app_a = make_app("aaa");
+        let app_b = make_app("bbb");
+        no_errors(&validate(&[app_a, app_b], &test_categories()));
+    }
+
+    #[test]
+    fn rule2_binary_names_conflict_globally() {
+        let app_a = make_app("shared");
+        let mut app_b = make_app("other");
+        // binary in app_b named "shared" conflicts with app_a's binary
+        app_b.binaries[0].name = "shared".into();
+        has_error(&validate(&[app_a, app_b], &test_categories()), "conflicts with app");
+    }
+
+    // Rule 3: shell_completions uniqueness within app
+
+    #[test]
+    fn rule3_sc_self_gen_unique_key_ok() {
+        let mut app = make_app("foo");
+        app.shell_completions = vec![
+            ShellCompletionDef {
+                shell:  ShellKind::Bash,
+                source: CompletionSource::SelfGenerated {
+                    binary_id: 1,
+                    command:   "completions bash".into(),
+                },
+            },
+            ShellCompletionDef {
+                shell:  ShellKind::Zsh,
+                source: CompletionSource::SelfGenerated {
+                    binary_id: 1,
+                    command:   "completions zsh".into(),
+                },
+            },
+        ];
+        no_errors(&validate(&[app], &test_categories()));
+    }
+
+    #[test]
+    fn rule3_sc_self_gen_duplicate_key() {
+        let mut app = make_app("foo");
+        app.shell_completions = vec![
+            ShellCompletionDef {
+                shell:  ShellKind::Bash,
+                source: CompletionSource::SelfGenerated {
+                    binary_id: 1,
+                    command:   "completions bash".into(),
+                },
+            },
+            ShellCompletionDef {
+                shell:  ShellKind::Bash, // same binary_id + shell
+                source: CompletionSource::SelfGenerated {
+                    binary_id: 1,
+                    command:   "completions bash".into(),
+                },
+            },
+        ];
+        has_error(
+            &validate(&[app], &test_categories()),
+            "duplicate self_generated completion",
+        );
+    }
+
+    #[test]
+    fn rule3_sc_extracted_unique_path_ok() {
+        let mut app = make_app("foo");
+        app.shell_completions = vec![
+            ShellCompletionDef {
+                shell:  ShellKind::Bash,
+                source: CompletionSource::Extracted {
+                    asset_id: 1,
+                    path:     "foo.bash".into(),
+                },
+            },
+            ShellCompletionDef {
+                shell:  ShellKind::Zsh,
+                source: CompletionSource::Extracted {
+                    asset_id: 1,
+                    path:     "_foo".into(),
+                },
+            },
+        ];
+        no_errors(&validate(&[app], &test_categories()));
+    }
+
+    #[test]
+    fn rule3_sc_extracted_duplicate_path() {
+        let mut app = make_app("foo");
+        app.shell_completions = vec![
+            ShellCompletionDef {
+                shell:  ShellKind::Bash,
+                source: CompletionSource::Extracted {
+                    asset_id: 1,
+                    path:     "foo.bash".into(),
+                },
+            },
+            ShellCompletionDef {
+                shell:  ShellKind::Bash,
+                source: CompletionSource::Extracted {
+                    asset_id: 1,
+                    path:     "foo.bash".into(), // same path
+                },
+            },
+        ];
+        has_error(
+            &validate(&[app], &test_categories()),
+            "duplicate extracted completion path",
+        );
+    }
+
+    #[test]
+    fn rule3_sc_mixed_types_same_shell_ok() {
+        let mut app = make_app("foo");
+        // one SelfGenerated + one Extracted for bash — both are allowed
+        app.shell_completions = vec![
+            ShellCompletionDef {
+                shell:  ShellKind::Bash,
+                source: CompletionSource::SelfGenerated {
+                    binary_id: 1,
+                    command:   "completions bash".into(),
+                },
+            },
+            ShellCompletionDef {
+                shell:  ShellKind::Bash,
+                source: CompletionSource::Extracted {
+                    asset_id: 1,
+                    path:     "foo.bash".into(),
+                },
+            },
+        ];
+        no_errors(&validate(&[app], &test_categories()));
+    }
+
+    // Rule 4: shell_completions global uniqueness
+
+    #[test]
+    fn rule4_sc_self_gen_global_ok() {
+        let mut app_a = make_app("aaa");
+        app_a.shell_completions = vec![ShellCompletionDef {
+            shell:  ShellKind::Bash,
+            source: CompletionSource::SelfGenerated {
+                binary_id: 1,
+                command:   "completions bash".into(),
+            },
+        }];
+        let mut app_b = make_app("bbb");
+        app_b.shell_completions = vec![ShellCompletionDef {
+            shell:  ShellKind::Bash,
+            source: CompletionSource::SelfGenerated {
+                binary_id: 1,
+                command:   "completions bash".into(),
+            },
+        }];
+        // binary names differ (aaa vs bbb), so no conflict
+        no_errors(&validate(&[app_a, app_b], &test_categories()));
+    }
+
+    #[test]
+    fn rule4_sc_self_gen_global_conflict() {
+        // Both apps define a bash SelfGenerated completion for a binary named "shared"
+        let mut app_a = make_app("app-a");
+        app_a.binaries[0].name = "shared".into();
+        app_a.shell_completions = vec![ShellCompletionDef {
+            shell:  ShellKind::Bash,
+            source: CompletionSource::SelfGenerated {
+                binary_id: 1,
+                command:   "completions bash".into(),
+            },
+        }];
+        let mut app_b = make_app("app-b");
+        app_b.binaries[0].name = "shared".into();
+        app_b.shell_completions = vec![ShellCompletionDef {
+            shell:  ShellKind::Bash,
+            source: CompletionSource::SelfGenerated {
+                binary_id: 1,
+                command:   "completions bash".into(),
+            },
+        }];
+        // Both apps have a binary named "shared" → conflicts on both binary names and completions
+        let errors = validate(&[app_a, app_b], &test_categories());
+        has_error(&errors, "conflicts with app");
+    }
+
+    #[test]
+    fn rule4_sc_extracted_global_ok() {
+        let mut app_a = make_app("aaa");
+        app_a.shell_completions = vec![ShellCompletionDef {
+            shell:  ShellKind::Bash,
+            source: CompletionSource::Extracted {
+                asset_id: 1,
+                path:     "aaa.bash".into(),
+            },
+        }];
+        let mut app_b = make_app("bbb");
+        app_b.shell_completions = vec![ShellCompletionDef {
+            shell:  ShellKind::Bash,
+            source: CompletionSource::Extracted {
+                asset_id: 1,
+                path:     "bbb.bash".into(), // different path
+            },
+        }];
+        no_errors(&validate(&[app_a, app_b], &test_categories()));
+    }
+
+    #[test]
+    fn rule4_sc_extracted_global_conflict() {
+        let mut app_a = make_app("aaa");
+        app_a.shell_completions = vec![ShellCompletionDef {
+            shell:  ShellKind::Bash,
+            source: CompletionSource::Extracted {
+                asset_id: 1,
+                path:     "shared.bash".into(),
+            },
+        }];
+        let mut app_b = make_app("bbb");
+        app_b.shell_completions = vec![ShellCompletionDef {
+            shell:  ShellKind::Bash,
+            source: CompletionSource::Extracted {
+                asset_id: 1,
+                path:     "shared.bash".into(), // same path
+            },
+        }];
+        has_error(
+            &validate(&[app_a, app_b], &test_categories()),
+            "extracted completion path 'shared.bash' conflicts with app",
+        );
+    }
+
+    // Rule 5: man_pages uniqueness within app
+
+    #[test]
+    fn rule5_mp_self_gen_unique_key_ok() {
+        let mut app = make_app("foo");
+        app.man_pages = vec![
+            ManPageDef {
+                section: 1,
+                source:  CompletionSource::SelfGenerated {
+                    binary_id: 1,
+                    command:   "man --section 1".into(),
+                },
+            },
+            ManPageDef {
+                section: 5,
+                source:  CompletionSource::SelfGenerated {
+                    binary_id: 1,
+                    command:   "man --section 5".into(), // different command
+                },
+            },
+        ];
+        no_errors(&validate(&[app], &test_categories()));
+    }
+
+    #[test]
+    fn rule5_mp_self_gen_duplicate_key() {
+        let mut app = make_app("foo");
+        app.man_pages = vec![
+            ManPageDef {
+                section: 1,
+                source:  CompletionSource::SelfGenerated {
+                    binary_id: 1,
+                    command:   "man".into(),
+                },
+            },
+            ManPageDef {
+                section: 1,
+                source:  CompletionSource::SelfGenerated {
+                    binary_id: 1,
+                    command:   "man".into(), // same binary_id + command
+                },
+            },
+        ];
+        has_error(
+            &validate(&[app], &test_categories()),
+            "duplicate self_generated man page",
+        );
+    }
+
+    #[test]
+    fn rule5_mp_extracted_unique_path_ok() {
+        let mut app = make_app("foo");
+        app.man_pages = vec![
+            ManPageDef {
+                section: 1,
+                source:  CompletionSource::Extracted {
+                    asset_id: 1,
+                    path:     "foo.1".into(),
+                },
+            },
+            ManPageDef {
+                section: 5,
+                source:  CompletionSource::Extracted {
+                    asset_id: 1,
+                    path:     "foo.5".into(),
+                },
+            },
+        ];
+        no_errors(&validate(&[app], &test_categories()));
+    }
+
+    #[test]
+    fn rule5_mp_extracted_duplicate_path() {
+        let mut app = make_app("foo");
+        app.man_pages = vec![
+            ManPageDef {
+                section: 1,
+                source:  CompletionSource::Extracted {
+                    asset_id: 1,
+                    path:     "foo.1".into(),
+                },
+            },
+            ManPageDef {
+                section: 1,
+                source:  CompletionSource::Extracted {
+                    asset_id: 1,
+                    path:     "foo.1".into(), // same path
+                },
+            },
+        ];
+        has_error(
+            &validate(&[app], &test_categories()),
+            "duplicate extracted man page path",
+        );
+    }
+
+    #[test]
+    fn rule5_mp_mixed_types_ok() {
+        let mut app = make_app("foo");
+        // one SelfGenerated + one Extracted — allowed even for the "same" man page
+        app.man_pages = vec![
+            ManPageDef {
+                section: 1,
+                source:  CompletionSource::SelfGenerated {
+                    binary_id: 1,
+                    command:   "man".into(),
+                },
+            },
+            ManPageDef {
+                section: 1,
+                source:  CompletionSource::Extracted {
+                    asset_id: 1,
+                    path:     "foo.1".into(),
+                },
+            },
+        ];
+        no_errors(&validate(&[app], &test_categories()));
+    }
+
+    // Rule 6: man_pages global uniqueness
+
+    #[test]
+    fn rule6_mp_self_gen_global_ok() {
+        let mut app_a = make_app("aaa");
+        app_a.man_pages = vec![ManPageDef {
+            section: 1,
+            source:  CompletionSource::SelfGenerated {
+                binary_id: 1,
+                command:   "man".into(),
+            },
+        }];
+        let mut app_b = make_app("bbb");
+        app_b.man_pages = vec![ManPageDef {
+            section: 1,
+            source:  CompletionSource::SelfGenerated {
+                binary_id: 1,
+                command:   "man".into(),
+            },
+        }];
+        // binary names differ (aaa vs bbb), so no global conflict
+        no_errors(&validate(&[app_a, app_b], &test_categories()));
+    }
+
+    #[test]
+    fn rule6_mp_self_gen_global_conflict() {
+        let mut app_a = make_app("app-a");
+        app_a.binaries[0].name = "shared".into();
+        app_a.man_pages = vec![ManPageDef {
+            section: 1,
+            source:  CompletionSource::SelfGenerated {
+                binary_id: 1,
+                command:   "man".into(),
+            },
+        }];
+        let mut app_b = make_app("app-b");
+        app_b.binaries[0].name = "shared".into();
+        app_b.man_pages = vec![ManPageDef {
+            section: 1,
+            source:  CompletionSource::SelfGenerated {
+                binary_id: 1,
+                command:   "man".into(),
+            },
+        }];
+        let errors = validate(&[app_a, app_b], &test_categories());
+        has_error(&errors, "conflicts with app");
+    }
+
+    #[test]
+    fn rule6_mp_extracted_global_ok() {
+        let mut app_a = make_app("aaa");
+        app_a.man_pages = vec![ManPageDef {
+            section: 1,
+            source:  CompletionSource::Extracted {
+                asset_id: 1,
+                path:     "aaa.1".into(),
+            },
+        }];
+        let mut app_b = make_app("bbb");
+        app_b.man_pages = vec![ManPageDef {
+            section: 1,
+            source:  CompletionSource::Extracted {
+                asset_id: 1,
+                path:     "bbb.1".into(), // different path
+            },
+        }];
+        no_errors(&validate(&[app_a, app_b], &test_categories()));
+    }
+
+    #[test]
+    fn rule6_mp_extracted_global_conflict() {
+        let mut app_a = make_app("aaa");
+        app_a.man_pages = vec![ManPageDef {
+            section: 1,
+            source:  CompletionSource::Extracted {
+                asset_id: 1,
+                path:     "shared.1".into(),
+            },
+        }];
+        let mut app_b = make_app("bbb");
+        app_b.man_pages = vec![ManPageDef {
+            section: 1,
+            source:  CompletionSource::Extracted {
+                asset_id: 1,
+                path:     "shared.1".into(), // same path
+            },
+        }];
+        has_error(
+            &validate(&[app_a, app_b], &test_categories()),
+            "extracted man page path 'shared.1' conflicts with app",
+        );
+    }
+
+    // Pre-existing cross-reference rules
+
+    #[test]
+    fn existing_category_id_not_found() {
+        let mut app = make_app("foo");
+        app.category_id = "nonexistent".into();
+        has_error(&validate(&[app], &test_categories()), "unknown category_id");
+    }
+
+    #[test]
+    fn existing_unknown_binary_id_in_sc() {
+        let mut app = make_app("foo");
+        app.shell_completions = vec![ShellCompletionDef {
+            shell:  ShellKind::Bash,
+            source: CompletionSource::SelfGenerated {
+                binary_id: 99, // does not exist
+                command:   "completions bash".into(),
+            },
+        }];
+        has_error(
+            &validate(&[app], &test_categories()),
+            "references unknown binary_id 99",
+        );
+    }
+
+    #[test]
+    fn existing_unknown_asset_id_in_sc() {
+        let mut app = make_app("foo");
+        app.shell_completions = vec![ShellCompletionDef {
+            shell:  ShellKind::Bash,
+            source: CompletionSource::Extracted {
+                asset_id: 99, // does not exist
+                path:     "foo.bash".into(),
+            },
+        }];
+        has_error(
+            &validate(&[app], &test_categories()),
+            "references unknown asset_id 99",
+        );
+    }
+
+    #[test]
+    fn existing_unknown_binary_id_in_mp() {
+        let mut app = make_app("foo");
+        app.man_pages = vec![ManPageDef {
+            section: 1,
+            source:  CompletionSource::SelfGenerated {
+                binary_id: 99, // does not exist
+                command:   "man".into(),
+            },
+        }];
+        has_error(
+            &validate(&[app], &test_categories()),
+            "references unknown binary_id 99",
+        );
+    }
+
+    #[test]
+    fn existing_unknown_asset_id_in_mp() {
+        let mut app = make_app("foo");
+        app.man_pages = vec![ManPageDef {
+            section: 1,
+            source:  CompletionSource::Extracted {
+                asset_id: 99, // does not exist
+                path:     "foo.1".into(),
+            },
+        }];
+        has_error(
+            &validate(&[app], &test_categories()),
+            "references unknown asset_id 99",
+        );
+    }
+
+    #[test]
+    fn existing_duplicate_binary_ids() {
+        let mut app = make_app("foo");
+        app.binaries.push(AppBinaryDef {
+            id:              1, // same as existing
+            name:            "foox".into(),
+            version_cmdline: "--version".into(),
+            is_main:         false,
+        });
+        has_error(&validate(&[app], &test_categories()), "duplicate binary ids");
+    }
+
+    #[test]
+    fn existing_duplicate_asset_ids() {
+        let mut app = make_app("foo");
+        app.assets.push(AppAssetDef {
+            id:           1, // same as existing
+            asset_type:   AssetType::Deb,
+            starts_with:  None,
+            contains:     None,
+            not_contains: None,
+            ends_with:    None,
+            equals:       Some("foo.deb".into()),
+        });
+        has_error(&validate(&[app], &test_categories()), "duplicate asset ids");
+    }
+
+    #[test]
+    fn existing_is_main_missing() {
+        let mut app = make_app("foo");
+        app.binaries[0].is_main = false;
+        has_error(
+            &validate(&[app], &test_categories()),
+            "expected exactly 1 binary with is_main=true, found 0",
+        );
+    }
+
+    #[test]
+    fn existing_is_main_two() {
+        let mut app = make_app("foo");
+        app.binaries.push(AppBinaryDef {
+            id:              2,
+            name:            "foox".into(),
+            version_cmdline: "--version".into(),
+            is_main:         true, // second is_main
+        });
+        has_error(
+            &validate(&[app], &test_categories()),
+            "expected exactly 1 binary with is_main=true, found 2",
+        );
+    }
 }

@@ -64,5 +64,8 @@ Tokens are optional. Without them, `relget` works anonymously (subject to API ra
   `adding foobar` or `adds foobar`)
 - git commit messages should be prefixed by short category like `refact:`, `build:`,
   `ci:`, `feat:`, `docs:`, `chore:` and similar
+- when adding new app into registry, commit message should contain Markdown syntax link
+  to app's repository. That way, when `CHANGELOG.md` is generated and viewed in `GitHub`
+  it contains nicely formatted links to added apps.
 
 We use `cargo xtask update-docs` to keep `CHANGELOG.md` and `SUPPORTED_APPS.md` up to date. This means that after each `git commit` you should run `cargo xtask update-docs` and then fold changes into that latest commit. Note that our `xtask` doesn't put all commits into `CHANGELOG.md`: the ones with prefixes defined `NOISE_PREFIXES` in `xtask/main.rs` are skipped.

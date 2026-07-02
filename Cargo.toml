@@ -1,7 +1,7 @@
 [workspace]
-members         = ["relget", "xtask"]
+members = ["relget", "xtask"]
 default-members = ["relget"]
-resolver        = "2"
+resolver = "3"
 
 [workspace.metadata.release]
 publish = false

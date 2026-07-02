@@ -1,8 +1,3 @@
-//!  All registry type definitions (`AppEntry`, `CategoryEntry`, etc.), `impl AppEntry` helpers, and
-//! the ! semantic `validate()` function live in `relget/src/registry/types.rs`. That file is shared
-//! between ! the runtime crate (as a normal module) and `relget/build.rs` (via `#[path]`
-//! inclusion), so the ! build script and the binary agree on one set of types and one validation
-//! implementation — it must ! stay self-contained (std + serde only).
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};
