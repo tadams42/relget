@@ -2,11 +2,11 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result, anyhow, bail};
 use json_comments::StripComments;
-use serde::Deserialize;
 use registry_core::{
-    AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry,
-    CompletionSource, ManPageDef, ReleasedVersionParseDef, ShellCompletionDef, ShellKind,
+    AppAssetDef, AppBinaryDef, AppEntry, AssetType, CategoryEntry, CompletionSource, ManPageDef,
+    ReleasedVersionParseDef, ShellCompletionDef, ShellKind,
 };
+use serde::Deserialize;
 
 // ===== Raw deserialization types =====
 

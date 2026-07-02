@@ -27,28 +27,28 @@ pub struct Config;
 
 impl Config {
     pub fn github_token() -> Result<Option<String>> {
-        if let Ok(t) = std::env::var("RELGET_GHB_TOKEN") {
-            if !t.is_empty() {
-                return Ok(Some(t));
-            }
+        if let Ok(t) = std::env::var("RELGET_GHB_TOKEN")
+            && !t.is_empty()
+        {
+            return Ok(Some(t));
         }
         Ok(load_config()?.github_token)
     }
 
     pub fn codeberg_token() -> Result<Option<String>> {
-        if let Ok(t) = std::env::var("RELGET_CDB_TOKEN") {
-            if !t.is_empty() {
-                return Ok(Some(t));
-            }
+        if let Ok(t) = std::env::var("RELGET_CDB_TOKEN")
+            && !t.is_empty()
+        {
+            return Ok(Some(t));
         }
         Ok(load_config()?.codeberg_token)
     }
 
     pub fn gitlab_token() -> Result<Option<String>> {
-        if let Ok(t) = std::env::var("RELGET_GLB_TOKEN") {
-            if !t.is_empty() {
-                return Ok(Some(t));
-            }
+        if let Ok(t) = std::env::var("RELGET_GLB_TOKEN")
+            && !t.is_empty()
+        {
+            return Ok(Some(t));
         }
         Ok(load_config()?.gitlab_token)
     }

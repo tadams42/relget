@@ -283,12 +283,12 @@ impl RelgetCache {
         }
 
         let path = self.repo_cache_dir(owner, repo).join("release.json");
-        if let Some(json) = load_release_from_disk(&path) {
-            if !json.is_expired() {
-                log::debug!("owner={} repo={} msg=disk-cache-hit", owner, repo);
-                self.releases.insert(key, json.clone());
-                return Some(json);
-            }
+        if let Some(json) = load_release_from_disk(&path)
+            && !json.is_expired()
+        {
+            log::debug!("owner={} repo={} msg=disk-cache-hit", owner, repo);
+            self.releases.insert(key, json.clone());
+            return Some(json);
         }
 
         None
@@ -349,19 +349,19 @@ impl RelgetCache {
         let path = self
             .repo_cache_dir(owner, repo)
             .join(disk_filename(name, api_id));
-        if path.exists() {
-            if let Ok(data) = std::fs::read(&path) {
-                log::debug!("asset={} msg=disk-cache-hit", name);
-                let asset = CachedFile {
-                    api_id,
-                    owner: owner.to_string(),
-                    repo: repo.to_string(),
-                    name: name.to_string(),
-                    data,
-                };
-                self.assets.insert(key, asset.clone());
-                return Some(asset);
-            }
+        if path.exists()
+            && let Ok(data) = std::fs::read(&path)
+        {
+            log::debug!("asset={} msg=disk-cache-hit", name);
+            let asset = CachedFile {
+                api_id,
+                owner: owner.to_string(),
+                repo: repo.to_string(),
+                name: name.to_string(),
+                data,
+            };
+            self.assets.insert(key, asset.clone());
+            return Some(asset);
         }
 
         None
@@ -416,20 +416,20 @@ fn load_release_from_disk(path: &Path) -> Option<ReleaseMetadata> {
 /// `body`.  Returns `None` if none of the fields yield a parseable version.
 fn extract_version(data: &Value) -> Option<AppVersion> {
     for field in &["tag_name", "name"] {
-        if let Some(s) = data[field].as_str() {
-            if let Some(v) = AppVersion::parse(s) {
-                return Some(v);
-            }
+        if let Some(s) = data[field].as_str()
+            && let Some(v) = AppVersion::parse(s)
+        {
+            return Some(v);
         }
     }
 
     if let Some(body) = data["body"].as_str() {
         let re = regex::Regex::new(r"\d+\.\d+\.\d+").ok()?;
         for line in body.lines() {
-            if let Some(m) = re.find(line) {
-                if let Some(v) = AppVersion::parse(m.as_str()) {
-                    return Some(v);
-                }
+            if let Some(m) = re.find(line)
+                && let Some(v) = AppVersion::parse(m.as_str())
+            {
+                return Some(v);
             }
         }
     }

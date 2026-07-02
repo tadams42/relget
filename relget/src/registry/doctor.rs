@@ -1,7 +1,7 @@
 use anyhow::{Result, anyhow};
 use chrono::{DateTime, Duration, Utc};
-
 use registry_core::AppEntry;
+
 use crate::{CodebergClient, Config, GithubClient, GitlabClient, ReleaseMetadata, RelgetClient};
 
 pub(super) fn doctor(apps: &[AppEntry], offline: bool) -> Result<()> {
@@ -47,10 +47,8 @@ pub(super) fn doctor(apps: &[AppEntry], offline: bool) -> Result<()> {
 
         let mut flags: Vec<DoctorFlag> = Vec::new();
 
-        if let Some(date) = published_at {
-            if date < threshold {
-                flags.push(DoctorFlag::PotentiallyUnmaintained);
-            }
+        if let Some(date) = published_at && date < threshold {
+            flags.push(DoctorFlag::PotentiallyUnmaintained);
         }
 
         if !app.has_declared_musl() && release_musl {

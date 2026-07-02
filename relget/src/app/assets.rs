@@ -3,7 +3,6 @@ use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
-
 use registry_core::ShellKind;
 
 fn ensure_parent(path: &Path) -> Result<()> {

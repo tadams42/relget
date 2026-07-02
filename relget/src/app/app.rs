@@ -5,9 +5,9 @@ use std::process::Command;
 use std::sync::Arc;
 
 use anyhow::{Context, Result, bail};
+use registry_core::{AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ShellKind};
 
 use super::assets::BIN_MODE;
-use registry_core::{AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ShellKind};
 use crate::{
     AppVersion, ArchiveExtractor, Assets, Binary, CodebergClient, GithubClient, GitlabClient,
     ManPage, Registry, RelgetClient, ShellCompletion,
@@ -144,12 +144,11 @@ impl App {
                 }
 
                 // Single-member archive (handles single-file .gz like dasel)
-                if let Ok(members) = extractor.members() {
-                    if members.len() == 1 {
-                        if let Ok(extracted) = extractor.extract(&members[0]) {
-                            return Ok(extracted);
-                        }
-                    }
+                if let Ok(members) = extractor.members()
+                    && members.len() == 1
+                    && let Ok(extracted) = extractor.extract(&members[0])
+                {
+                    return Ok(extracted);
                 }
             }
         }
@@ -254,14 +253,12 @@ impl App {
             }
             _ => self.client.latest_release(owner, repo)?,
         };
-        if let Some(cfg) = &self.entry.released_version_parse {
-            if cfg.try_in_body {
-                if let Some(body) = release.data["body"].as_str() {
-                    if let Some(v) = AppVersion::find_in(body) {
-                        return Ok(v);
-                    }
-                }
-            }
+        if let Some(cfg) = &self.entry.released_version_parse
+            && cfg.try_in_body
+            && let Some(body) = release.data["body"].as_str()
+            && let Some(v) = AppVersion::find_in(body)
+        {
+            return Ok(v);
         }
         release.version()
     }
@@ -615,10 +612,10 @@ impl App {
     pub fn uninstall(&self, prefix: &Path) -> Vec<PathBuf> {
         let assets = self.assets();
         let mut removed = Vec::new();
-        if let Some(bin) = &assets.binary {
-            if let Some(uninstalled) = bin.uninstall(prefix) {
-                removed.push(uninstalled);
-            }
+        if let Some(bin) = &assets.binary
+            && let Some(uninstalled) = bin.uninstall(prefix)
+        {
+            removed.push(uninstalled);
         }
         for bin in &assets.other_bins {
             if let Some(uninstalled) = bin.uninstall(prefix) {
