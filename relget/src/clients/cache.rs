@@ -112,13 +112,13 @@ pub struct ReleaseMetadata {
 }
 
 impl ReleaseMetadata {
-    pub fn new(owner: &str, repo: &str, data: Value) -> Result<Self> {
-        Ok(Self {
+    pub fn new(owner: &str, repo: &str, data: Value) -> Self {
+        Self {
             owner: owner.to_string(),
             repo: repo.to_string(),
             data,
             downloaded_at: Utc::now(),
-        })
+        }
     }
 
     pub fn version(&self) -> Result<AppVersion> {
@@ -541,7 +541,7 @@ mod tests {
 
     #[test]
     fn is_expired_false_for_fresh_metadata() {
-        let m = ReleaseMetadata::new("o", "r", json!({})).unwrap();
+        let m = ReleaseMetadata::new("o", "r", json!({}));
         assert!(!m.is_expired());
     }
 

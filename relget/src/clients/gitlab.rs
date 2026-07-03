@@ -96,7 +96,7 @@ impl RelgetClient for GitlabClient {
             .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
 
         let normalized = normalize_gitlab_release(data);
-        let release = ReleaseMetadata::new(owner, repo, normalized)?;
+        let release = ReleaseMetadata::new(owner, repo, normalized);
         CACHE.lock().unwrap().store_release(release.clone())?;
         Ok(release)
     }

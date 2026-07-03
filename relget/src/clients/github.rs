@@ -83,7 +83,7 @@ impl RelgetClient for GithubClient {
             })
             .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
 
-        let release = ReleaseMetadata::new(owner, repo, data)?;
+        let release = ReleaseMetadata::new(owner, repo, data);
         CACHE.lock().unwrap().store_release(release.clone())?;
         Ok(release)
     }
