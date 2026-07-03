@@ -1798,7 +1798,6 @@ dependencies = [
  "json_comments",
  "jsonschema",
  "log",
- "once_cell",
  "postcard",
  "regex",
  "serde",

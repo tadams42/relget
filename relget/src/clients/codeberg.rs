@@ -1,15 +1,14 @@
-use std::sync::Mutex;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{LazyLock, Mutex};
 
 use anyhow::{Context, Result, anyhow};
-use once_cell::sync::Lazy;
 
 use super::cache::{CachedFile, ReleaseMetadata, RelgetCache};
 use super::client_trait::RelgetClient;
 use super::rate_limit::RateLimitError;
 
-static CACHE: Lazy<Mutex<RelgetCache>> =
-    Lazy::new(|| Mutex::new(RelgetCache::new_with_prefix("codeberg")));
+static CACHE: LazyLock<Mutex<RelgetCache>> =
+    LazyLock::new(|| Mutex::new(RelgetCache::new_with_prefix("codeberg")));
 static RATE_LIMITED: AtomicBool = AtomicBool::new(false);
 
 const CB_API_URL: &str = "https://codeberg.org/api/v1/repos";
