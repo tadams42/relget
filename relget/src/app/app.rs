@@ -81,7 +81,7 @@ impl App {
             && def.equals.as_deref().is_none_or(|s| name == s)
     }
 
-    fn app_name_from_path(path: &str, shell: &ShellKind) -> String {
+    fn app_name_from_path(path: &str, shell: ShellKind) -> String {
         let base = Path::new(path)
             .file_name()
             .map(|f| f.to_string_lossy().into_owned())
@@ -289,10 +289,10 @@ impl App {
                         self.binary_name_by_id(*binary_id).to_owned()
                     }
                     CompletionSource::Extracted { path, .. } => {
-                        Self::app_name_from_path(path, &sc.shell)
+                        Self::app_name_from_path(path, sc.shell)
                     }
                 };
-                ShellCompletion::new(sc.shell.clone(), app_name)
+                ShellCompletion::new(sc.shell, app_name)
             })
             .collect();
 
@@ -439,11 +439,7 @@ impl App {
                     let exe_path = tmp.path().join(bin_name);
                     let args: Vec<&str> = command.split_whitespace().collect();
                     let data = run_cmd(&exe_path, &args)?;
-                    completions.push(ShellCompletion::new_with_data(
-                        sc.shell.clone(),
-                        bin_name,
-                        data,
-                    ));
+                    completions.push(ShellCompletion::new_with_data(sc.shell, bin_name, data));
                 }
             }
 
@@ -502,8 +498,8 @@ impl App {
                     .expect("registry validates asset_id");
                 let data = Self::extract_from_asset(asset_def, asset_name, asset_data, path)?;
                 completions.push(ShellCompletion::new_with_data(
-                    sc.shell.clone(),
-                    Self::app_name_from_path(path, &sc.shell),
+                    sc.shell,
+                    Self::app_name_from_path(path, sc.shell),
                     data,
                 ));
             }

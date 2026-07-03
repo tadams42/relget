@@ -46,7 +46,7 @@ pub struct AppAssetDef {
     pub equals:       Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum AssetType {
     Archive,
     Deb,
@@ -59,7 +59,7 @@ pub struct ShellCompletionDef {
     pub source: CompletionSource,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum ShellKind {
     Bash,
     Zsh,
@@ -228,7 +228,7 @@ pub fn validate(apps: &[AppEntry], categories: &[CategoryEntry]) -> Vec<String> 
                             "{app_id}: shell_completion references unknown binary_id {binary_id}"
                         ));
                     }
-                    if !sc_gen_seen.insert((*binary_id, sc.shell.clone())) {
+                    if !sc_gen_seen.insert((*binary_id, sc.shell)) {
                         errors.push(format!(
                             "{app_id}: duplicate self_generated completion for \
                              binary_id={binary_id} shell={:?}",
@@ -241,7 +241,7 @@ pub fn validate(apps: &[AppEntry], categories: &[CategoryEntry]) -> Vec<String> 
                         .find(|b| b.id == *binary_id)
                         .map(|b| b.name.clone());
                     if let Some(name) = bin_name {
-                        let gkey = (name.clone(), sc.shell.clone());
+                        let gkey = (name.clone(), sc.shell);
                         match global_sc_gen.entry(gkey) {
                             std::collections::hash_map::Entry::Vacant(e) => {
                                 e.insert(app_id.clone());
