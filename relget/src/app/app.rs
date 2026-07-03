@@ -17,6 +17,9 @@ use crate::{
     ManPage, Registry, RelgetClient, ShellCompletion,
 };
 
+/// Downloaded release assets keyed by registry asset id: `(archive_name, cached_file)`.
+type DownloadedAssets = HashMap<u32, (String, Arc<CachedFile>)>;
+
 fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
     let out = Command::new(exe_path)
         .args(args)
@@ -351,8 +354,29 @@ impl App {
         let (owner, repo) = Self::owner_repo(&self.entry.url);
         let release = self.client.latest_release(owner, repo)?;
 
-        // Download all defined assets
-        let mut downloaded: HashMap<u32, (String, Arc<CachedFile>)> = HashMap::new();
+        let downloaded = self.download_release_assets(&release, owner, repo)?;
+        let binary_data = self.extract_binaries(&downloaded)?;
+
+        let (mut completions, mut man_pages) = self.generate_self_generated(&binary_data)?;
+        completions.extend(self.extract_bundled_completions(&downloaded)?);
+        man_pages.extend(self.extract_bundled_man_pages(&downloaded)?);
+
+        Ok(self.assemble_assets(binary_data, completions, man_pages))
+    }
+
+    /// True when a self-generated man page command writes multiple files into a temp dir
+    /// (`{{ tmp-dir }}` placeholder); the `extracted` man page entries are then metadata-only.
+    fn has_batch_man_page_generator(&self) -> bool {
+        self.entry.man_pages.iter().any(|mp| {
+            matches!(&mp.source, CompletionSource::SelfGenerated { command, .. } if command.contains("{{ tmp-dir }}"))
+        })
+    }
+
+    /// Downloads every asset defined in the registry entry, keyed by asset id.
+    fn download_release_assets(
+        &self, release: &crate::ReleaseMetadata, owner: &str, repo: &str,
+    ) -> Result<DownloadedAssets> {
+        let mut downloaded: DownloadedAssets = HashMap::new();
         for asset_def in &self.entry.assets {
             // "tarball" is a sentinel that bypasses find_asset and fetches the source tarball
             let is_tarball = asset_def.equals.as_deref() == Some("tarball");
@@ -371,13 +395,14 @@ impl App {
             };
             downloaded.insert(asset_def.id, (archive_name, cached));
         }
+        Ok(downloaded)
+    }
 
-        // Detect batch man page generator — generates multiple files to a tmpdir at runtime
-        let has_batch_man_gen = self.entry.man_pages.iter().any(|mp| {
-            matches!(&mp.source, CompletionSource::SelfGenerated { command, .. } if command.contains("{{ tmp-dir }}"))
-        });
-
-        // Collect asset IDs used exclusively for content (completions/man pages)
+    /// Extracts every registry-declared binary from the downloaded assets, keyed by name.
+    fn extract_binaries(&self, downloaded: &DownloadedAssets) -> Result<HashMap<String, Vec<u8>>> {
+        // Asset IDs used exclusively for content (completions/man pages) must not be
+        // consumed by the Binary-asset fallback in extract_binary_data.
+        let has_batch_man_gen = self.has_batch_man_page_generator();
         let content_asset_ids: HashSet<u32> = self
             .entry
             .shell_completions
@@ -401,19 +426,20 @@ impl App {
             }))
             .collect();
 
-        // Extract all binaries
         let mut binary_data: HashMap<String, Vec<u8>> = HashMap::new();
         for bin in &self.entry.binaries {
-            let data = Self::extract_binary_data(
-                bin,
-                &self.entry.assets,
-                &downloaded,
-                &content_asset_ids,
-            )?;
+            let data =
+                Self::extract_binary_data(bin, &self.entry.assets, downloaded, &content_asset_ids)?;
             binary_data.insert(bin.name.clone(), data);
         }
+        Ok(binary_data)
+    }
 
-        // Run self-generated completions and man pages with all binaries in a temp dir
+    /// Runs all self-generated completion and man page commands against the extracted
+    /// binaries, staged into a shared temp dir.
+    fn generate_self_generated(
+        &self, binary_data: &HashMap<String, Vec<u8>>,
+    ) -> Result<(Vec<ShellCompletion>, Vec<ManPage>)> {
         let mut completions: Vec<ShellCompletion> = Vec::new();
         let mut man_pages: Vec<ManPage> = Vec::new();
 
@@ -427,67 +453,84 @@ impl App {
                 .man_pages
                 .iter()
                 .any(|mp| matches!(mp.source, CompletionSource::SelfGenerated { .. }));
+        if !has_self_gen {
+            return Ok((completions, man_pages));
+        }
 
-        if has_self_gen {
-            let tmp = tempfile::tempdir()?;
-            for (name, data) in &binary_data {
-                let path = tmp.path().join(name);
-                std::fs::write(&path, data)?;
-                std::fs::set_permissions(&path, std::fs::Permissions::from_mode(BIN_MODE))?;
+        let tmp = tempfile::tempdir()?;
+        for (name, data) in binary_data {
+            let path = tmp.path().join(name);
+            std::fs::write(&path, data)?;
+            std::fs::set_permissions(&path, std::fs::Permissions::from_mode(BIN_MODE))?;
+        }
+
+        for sc in &self.entry.shell_completions {
+            if let CompletionSource::SelfGenerated { binary_id, command } = &sc.source {
+                let bin_name = self.binary_name_by_id(*binary_id);
+                let exe_path = tmp.path().join(bin_name);
+                let args: Vec<&str> = command.split_whitespace().collect();
+                let data = run_cmd(&exe_path, &args)?;
+                completions.push(ShellCompletion::new_with_data(sc.shell, bin_name, data));
             }
+        }
 
-            for sc in &self.entry.shell_completions {
-                if let CompletionSource::SelfGenerated { binary_id, command } = &sc.source {
-                    let bin_name = self.binary_name_by_id(*binary_id);
-                    let exe_path = tmp.path().join(bin_name);
+        for mp in &self.entry.man_pages {
+            if let CompletionSource::SelfGenerated { binary_id, command } = &mp.source {
+                let bin_name = self.binary_name_by_id(*binary_id);
+                let exe_path = tmp.path().join(bin_name);
+
+                if command.contains("{{ tmp-dir }}") {
+                    man_pages
+                        .extend(Self::generate_batch_man_pages(&exe_path, command, mp.section)?);
+                } else {
+                    let filename = format!("{}.{}", bin_name, mp.section);
                     let args: Vec<&str> = command.split_whitespace().collect();
                     let data = run_cmd(&exe_path, &args)?;
-                    completions.push(ShellCompletion::new_with_data(sc.shell, bin_name, data));
-                }
-            }
-
-            for mp in &self.entry.man_pages {
-                if let CompletionSource::SelfGenerated { binary_id, command } = &mp.source {
-                    let bin_name = self.binary_name_by_id(*binary_id);
-                    let exe_path = tmp.path().join(bin_name);
-
-                    if command.contains("{{ tmp-dir }}") {
-                        // Batch generator: writes multiple files into tmpdir; collect all of them
-                        let man_tmp = tempfile::tempdir()?;
-                        let dir_str = man_tmp.path().to_str().context("non-UTF8 temp dir")?;
-                        let args: Vec<String> = command
-                            .split_whitespace()
-                            .map(|t| t.replace("{{ tmp-dir }}", dir_str))
-                            .collect();
-                        let args_refs: Vec<&str> = args.iter().map(String::as_str).collect();
-                        run_cmd(&exe_path, &args_refs)?;
-                        for dir_entry in std::fs::read_dir(man_tmp.path())? {
-                            let dir_entry = dir_entry?;
-                            let path = dir_entry.path();
-                            if !path.is_file() {
-                                continue;
-                            }
-                            let filename = path
-                                .file_name()
-                                .and_then(|f| f.to_str())
-                                .map(str::to_owned)
-                                .ok_or_else(|| {
-                                    anyhow::anyhow!("non-UTF8 filename in man page tmpdir")
-                                })?;
-                            let data = std::fs::read(&path)?;
-                            man_pages.push(ManPage::new_with_data(mp.section, filename, data));
-                        }
-                    } else {
-                        let filename = format!("{}.{}", bin_name, mp.section);
-                        let args: Vec<&str> = command.split_whitespace().collect();
-                        let data = run_cmd(&exe_path, &args)?;
-                        man_pages.push(ManPage::new_with_data(mp.section, filename, data));
-                    }
+                    man_pages.push(ManPage::new_with_data(mp.section, filename, data));
                 }
             }
         }
 
-        // Extracted completions
+        Ok((completions, man_pages))
+    }
+
+    /// Batch generator: the command writes multiple man page files into a fresh temp dir
+    /// (substituted for `{{ tmp-dir }}`); collect all of them.
+    fn generate_batch_man_pages(
+        exe_path: &Path, command: &str, section: u8,
+    ) -> Result<Vec<ManPage>> {
+        let man_tmp = tempfile::tempdir()?;
+        let dir_str = man_tmp.path().to_str().context("non-UTF8 temp dir")?;
+        let args: Vec<String> = command
+            .split_whitespace()
+            .map(|t| t.replace("{{ tmp-dir }}", dir_str))
+            .collect();
+        let args_refs: Vec<&str> = args.iter().map(String::as_str).collect();
+        run_cmd(exe_path, &args_refs)?;
+
+        let mut man_pages = Vec::new();
+        for dir_entry in std::fs::read_dir(man_tmp.path())? {
+            let dir_entry = dir_entry?;
+            let path = dir_entry.path();
+            if !path.is_file() {
+                continue;
+            }
+            let filename = path
+                .file_name()
+                .and_then(|f| f.to_str())
+                .map(str::to_owned)
+                .ok_or_else(|| anyhow::anyhow!("non-UTF8 filename in man page tmpdir"))?;
+            let data = std::fs::read(&path)?;
+            man_pages.push(ManPage::new_with_data(section, filename, data));
+        }
+        Ok(man_pages)
+    }
+
+    /// Extracts registry-declared `extracted` shell completions from downloaded assets.
+    fn extract_bundled_completions(
+        &self, downloaded: &DownloadedAssets,
+    ) -> Result<Vec<ShellCompletion>> {
+        let mut completions = Vec::new();
         for sc in &self.entry.shell_completions {
             if let CompletionSource::Extracted { asset_id, path } = &sc.source {
                 let (asset_name, file) = downloaded
@@ -507,28 +550,40 @@ impl App {
                 ));
             }
         }
+        Ok(completions)
+    }
 
-        // Extracted man pages — skipped when a batch generator has already handled them
-        if !has_batch_man_gen {
-            for mp in &self.entry.man_pages {
-                if let CompletionSource::Extracted { asset_id, path } = &mp.source {
-                    let (asset_name, file) = downloaded
-                        .get(asset_id)
-                        .expect("registry validates asset_id");
-                    let asset_def = self
-                        .entry
-                        .assets
-                        .iter()
-                        .find(|a| a.id == *asset_id)
-                        .expect("registry validates asset_id");
-                    let data = Self::extract_man_page(asset_def, asset_name, &file.data, path)?;
-                    let filename = Self::man_filename_from_path(path);
-                    man_pages.push(ManPage::new_with_data(mp.section, filename, data));
-                }
+    /// Extracts registry-declared `extracted` man pages from downloaded assets. Returns
+    /// nothing when a batch generator already produced the real files at runtime.
+    fn extract_bundled_man_pages(&self, downloaded: &DownloadedAssets) -> Result<Vec<ManPage>> {
+        let mut man_pages = Vec::new();
+        if self.has_batch_man_page_generator() {
+            return Ok(man_pages);
+        }
+        for mp in &self.entry.man_pages {
+            if let CompletionSource::Extracted { asset_id, path } = &mp.source {
+                let (asset_name, file) = downloaded
+                    .get(asset_id)
+                    .expect("registry validates asset_id");
+                let asset_def = self
+                    .entry
+                    .assets
+                    .iter()
+                    .find(|a| a.id == *asset_id)
+                    .expect("registry validates asset_id");
+                let data = Self::extract_man_page(asset_def, asset_name, &file.data, path)?;
+                let filename = Self::man_filename_from_path(path);
+                man_pages.push(ManPage::new_with_data(mp.section, filename, data));
             }
         }
+        Ok(man_pages)
+    }
 
-        // Assemble result
+    /// Splits extracted binaries into main / other and packages everything as [`Assets`].
+    fn assemble_assets(
+        &self, mut binary_data: HashMap<String, Vec<u8>>, completions: Vec<ShellCompletion>,
+        man_pages: Vec<ManPage>,
+    ) -> Assets {
         let main_name = self.entry.main_exe_name().to_owned();
         let main_data = binary_data
             .remove(&main_name)
@@ -547,12 +602,12 @@ impl App {
             })
             .collect();
 
-        Ok(Assets {
+        Assets {
             binary,
             other_bins,
             completions,
             man_pages,
-        })
+        }
     }
 
     /// Returns the version of the currently installed binary, or `None` if not installed.

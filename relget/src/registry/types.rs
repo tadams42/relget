@@ -124,7 +124,6 @@ pub fn validate(apps: &[AppEntry], categories: &[CategoryEntry]) -> Vec<String> 
     let mut errors: Vec<String> = Vec::new();
 
     let category_ids: HashSet<&str> = categories.iter().map(|c| c.id.as_str()).collect();
-
     let app_ids: HashSet<&str> = apps.iter().map(|a| a.id.as_str()).collect();
     let conflicts_of: HashMap<&str, HashSet<&str>> = apps
         .iter()
@@ -134,230 +133,264 @@ pub fn validate(apps: &[AppEntry], categories: &[CategoryEntry]) -> Vec<String> 
         .iter()
         .map(|a| (a.id.as_str(), a.binaries.iter().map(|b| b.name.as_str()).collect()))
         .collect();
+
+    let mut globals = GlobalUniqueness::default();
+
+    for app in apps {
+        validate_basics(app, &category_ids, &mut errors);
+        validate_conflicts(app, &app_ids, &conflicts_of, &binary_names_of, &mut errors);
+        validate_binary_names(app, &conflicts_of, &mut globals, &mut errors);
+        validate_shell_completions(app, &mut globals, &mut errors);
+        validate_man_pages(app, &mut globals, &mut errors);
+    }
+
+    errors
+}
+
+/// Cross-app uniqueness registries filled while iterating apps: which app owns each
+/// binary name, self-generated completion/man-page key, and extracted path.
+#[derive(Default)]
+struct GlobalUniqueness {
+    binary_names: HashMap<String, Vec<String>>,
+    sc_gen:       HashMap<(String, ShellKind), String>,
+    sc_ext:       HashMap<String, String>,
+    mp_gen:       HashMap<(String, String), String>,
+    mp_ext:       HashMap<String, String>,
+}
+
+/// Per-app structural rules: known category, unique binary/asset ids and names,
+/// exactly one main binary.
+fn validate_basics(app: &AppEntry, category_ids: &HashSet<&str>, errors: &mut Vec<String>) {
+    let app_id = &app.id;
+
+    if !category_ids.contains(app.category_id.as_str()) {
+        errors.push(format!("{app_id}: unknown category_id '{}'", app.category_id));
+    }
+
+    let binary_ids: HashSet<u32> = app.binaries.iter().map(|b| b.id).collect();
+    if binary_ids.len() != app.binaries.len() {
+        errors.push(format!("{app_id}: duplicate binary ids"));
+    }
+
+    let mut seen: HashSet<&str> = HashSet::new();
+    for b in &app.binaries {
+        if !seen.insert(b.name.as_str()) {
+            errors.push(format!("{app_id}: duplicate binary name '{}'", b.name));
+        }
+    }
+
+    let asset_ids: HashSet<u32> = app.assets.iter().map(|a| a.id).collect();
+    if asset_ids.len() != app.assets.len() {
+        errors.push(format!("{app_id}: duplicate asset ids"));
+    }
+
+    let main_count = app.binaries.iter().filter(|b| b.is_main).count();
+    if main_count != 1 {
+        errors.push(format!(
+            "{app_id}: expected exactly 1 binary with is_main=true, found {main_count}"
+        ));
+    }
+}
+
+/// `conflicts` list rules: no self-reference, all targets exist, listings are mutual, and
+/// conflicting apps have distinguishable binary sets.
+fn validate_conflicts(
+    app: &AppEntry, app_ids: &HashSet<&str>, conflicts_of: &HashMap<&str, HashSet<&str>>,
+    binary_names_of: &HashMap<&str, HashSet<&str>>, errors: &mut Vec<String>,
+) {
+    let app_id = &app.id;
+    for c in &app.conflicts {
+        if c == app_id {
+            errors.push(format!("{app_id}: conflicts lists itself"));
+            continue;
+        }
+        if !app_ids.contains(c.as_str()) {
+            errors.push(format!("{app_id}: conflicts references unknown app '{c}'"));
+            continue;
+        }
+        if !conflicts_of[c.as_str()].contains(app_id.as_str()) {
+            errors.push(format!(
+                "{app_id}: conflict with '{c}' is not mutual ('{c}' must also list \
+                 '{app_id}' in conflicts)"
+            ));
+        } else if app_id.as_str() < c.as_str() // report each pair once
+            && binary_names_of[app_id.as_str()] == binary_names_of[c.as_str()]
+        {
+            errors.push(format!(
+                "{app_id}: conflicts with '{c}' but their binary name sets are identical; \
+                 conflicting apps must have distinguishable binaries"
+            ));
+        }
+    }
+}
+
+/// Global binary-name uniqueness: apps may share a binary name only when they mutually
+/// declare each other in `conflicts`.
+fn validate_binary_names(
+    app: &AppEntry, conflicts_of: &HashMap<&str, HashSet<&str>>, globals: &mut GlobalUniqueness,
+    errors: &mut Vec<String>,
+) {
+    let app_id = &app.id;
     let mutual = |a: &str, b: &str| {
         conflicts_of.get(a).is_some_and(|s| s.contains(b))
             && conflicts_of.get(b).is_some_and(|s| s.contains(a))
     };
-
-    let mut global_binary_names: HashMap<String, Vec<String>> = HashMap::new();
-    let mut global_sc_gen: HashMap<(String, ShellKind), String> = HashMap::new();
-    let mut global_sc_ext: HashMap<String, String> = HashMap::new();
-    let mut global_mp_gen: HashMap<(String, String), String> = HashMap::new();
-    let mut global_mp_ext: HashMap<String, String> = HashMap::new();
-
-    for app in apps {
-        let app_id = &app.id;
-
-        if !category_ids.contains(app.category_id.as_str()) {
-            errors.push(format!("{app_id}: unknown category_id '{}'", app.category_id));
-        }
-
-        let binary_ids: HashSet<u32> = app.binaries.iter().map(|b| b.id).collect();
-        let asset_ids: HashSet<u32> = app.assets.iter().map(|a| a.id).collect();
-
-        if binary_ids.len() != app.binaries.len() {
-            errors.push(format!("{app_id}: duplicate binary ids"));
-        }
-
-        {
-            let mut seen: HashSet<&str> = HashSet::new();
-            for b in &app.binaries {
-                if !seen.insert(b.name.as_str()) {
-                    errors.push(format!("{app_id}: duplicate binary name '{}'", b.name));
-                }
-            }
-        }
-
-        if asset_ids.len() != app.assets.len() {
-            errors.push(format!("{app_id}: duplicate asset ids"));
-        }
-
-        let main_count = app.binaries.iter().filter(|b| b.is_main).count();
-        if main_count != 1 {
-            errors.push(format!(
-                "{app_id}: expected exactly 1 binary with is_main=true, found {main_count}"
-            ));
-        }
-
-        for c in &app.conflicts {
-            if c == app_id {
-                errors.push(format!("{app_id}: conflicts lists itself"));
-                continue;
-            }
-            if !app_ids.contains(c.as_str()) {
-                errors.push(format!("{app_id}: conflicts references unknown app '{c}'"));
-                continue;
-            }
-            if !conflicts_of[c.as_str()].contains(app_id.as_str()) {
+    for b in &app.binaries {
+        let holders = globals.binary_names.entry(b.name.clone()).or_default();
+        for other in holders.iter() {
+            if other != app_id && !mutual(app_id, other) {
                 errors.push(format!(
-                    "{app_id}: conflict with '{c}' is not mutual ('{c}' must also list \
-                     '{app_id}' in conflicts)"
-                ));
-            } else if app_id.as_str() < c.as_str() // report each pair once
-                && binary_names_of[app_id.as_str()] == binary_names_of[c.as_str()]
-            {
-                errors.push(format!(
-                    "{app_id}: conflicts with '{c}' but their binary name sets are identical; \
-                     conflicting apps must have distinguishable binaries"
+                    "{app_id}: binary name '{}' conflicts with app '{other}' (apps sharing \
+                     a binary name must list each other in 'conflicts')",
+                    b.name
                 ));
             }
         }
+        holders.push(app_id.clone());
+    }
+}
 
-        for b in &app.binaries {
-            let holders = global_binary_names.entry(b.name.clone()).or_default();
-            for other in holders.iter() {
-                if other != app_id && !mutual(app_id, other) {
+/// Shell-completion rules: sources reference known binary/asset ids, and each
+/// self-generated key / extracted path is unique within the app and across apps.
+fn validate_shell_completions(
+    app: &AppEntry, globals: &mut GlobalUniqueness, errors: &mut Vec<String>,
+) {
+    let app_id = &app.id;
+    let binary_ids: HashSet<u32> = app.binaries.iter().map(|b| b.id).collect();
+    let asset_ids: HashSet<u32> = app.assets.iter().map(|a| a.id).collect();
+
+    let mut gen_seen: HashSet<(u32, ShellKind)> = HashSet::new();
+    let mut ext_seen: HashSet<String> = HashSet::new();
+
+    for sc in &app.shell_completions {
+        match &sc.source {
+            CompletionSource::SelfGenerated { binary_id, .. } => {
+                if !binary_ids.contains(binary_id) {
                     errors.push(format!(
-                        "{app_id}: binary name '{}' conflicts with app '{other}' (apps sharing \
-                         a binary name must list each other in 'conflicts')",
-                        b.name
+                        "{app_id}: shell_completion references unknown binary_id {binary_id}"
                     ));
                 }
-            }
-            holders.push(app_id.clone());
-        }
-
-        let mut sc_gen_seen: HashSet<(u32, ShellKind)> = HashSet::new();
-        let mut sc_ext_seen: HashSet<String> = HashSet::new();
-
-        for sc in &app.shell_completions {
-            match &sc.source {
-                CompletionSource::SelfGenerated { binary_id, .. } => {
-                    if !binary_ids.contains(binary_id) {
-                        errors.push(format!(
-                            "{app_id}: shell_completion references unknown binary_id {binary_id}"
-                        ));
-                    }
-                    if !sc_gen_seen.insert((*binary_id, sc.shell)) {
-                        errors.push(format!(
-                            "{app_id}: duplicate self_generated completion for \
-                             binary_id={binary_id} shell={:?}",
-                            sc.shell
-                        ));
-                    }
-                    let bin_name = app
-                        .binaries
-                        .iter()
-                        .find(|b| b.id == *binary_id)
-                        .map(|b| b.name.clone());
-                    if let Some(name) = bin_name {
-                        let gkey = (name.clone(), sc.shell);
-                        match global_sc_gen.entry(gkey) {
-                            std::collections::hash_map::Entry::Vacant(e) => {
-                                e.insert(app_id.clone());
-                            }
-                            std::collections::hash_map::Entry::Occupied(e) => {
-                                let other = e.get();
-                                if other != app_id {
-                                    errors.push(format!(
-                                        "{app_id}: self_generated completion for '{name}' \
-                                         {:?} conflicts with app '{other}'",
-                                        sc.shell
-                                    ));
-                                }
-                            }
-                        }
-                    }
+                if !gen_seen.insert((*binary_id, sc.shell)) {
+                    errors.push(format!(
+                        "{app_id}: duplicate self_generated completion for \
+                         binary_id={binary_id} shell={:?}",
+                        sc.shell
+                    ));
                 }
-                CompletionSource::Extracted { asset_id, path } => {
-                    if !asset_ids.contains(asset_id) {
-                        errors.push(format!(
-                            "{app_id}: shell_completion references unknown asset_id {asset_id}"
-                        ));
-                    }
-                    if !sc_ext_seen.insert(path.clone()) {
-                        errors.push(format!(
-                            "{app_id}: duplicate extracted completion path '{path}'"
-                        ));
-                    }
-                    match global_sc_ext.entry(path.clone()) {
-                        std::collections::hash_map::Entry::Vacant(e) => {
-                            e.insert(app_id.clone());
-                        }
-                        std::collections::hash_map::Entry::Occupied(e) => {
-                            let other = e.get();
-                            if other != app_id {
-                                errors.push(format!(
-                                    "{app_id}: extracted completion path '{path}' conflicts \
-                                     with app '{other}'"
-                                ));
-                            }
-                        }
-                    }
+                let bin_name = app
+                    .binaries
+                    .iter()
+                    .find(|b| b.id == *binary_id)
+                    .map(|b| b.name.clone());
+                if let Some(name) = bin_name {
+                    claim_unique(
+                        &mut globals.sc_gen,
+                        (name.clone(), sc.shell),
+                        app_id,
+                        errors,
+                        || {
+                            format!(
+                                "{app_id}: self_generated completion for '{name}' {:?}",
+                                sc.shell
+                            )
+                        },
+                    );
                 }
             }
-        }
-
-        let mut mp_gen_seen: HashSet<(u32, String)> = HashSet::new();
-        let mut mp_ext_seen: HashSet<String> = HashSet::new();
-
-        for mp in &app.man_pages {
-            match &mp.source {
-                CompletionSource::SelfGenerated { binary_id, command } => {
-                    if !binary_ids.contains(binary_id) {
-                        errors.push(format!(
-                            "{app_id}: man_page references unknown binary_id {binary_id}"
-                        ));
-                    }
-                    if !mp_gen_seen.insert((*binary_id, command.clone())) {
-                        errors.push(format!(
-                            "{app_id}: duplicate self_generated man page for \
-                             binary_id={binary_id} command='{command}'"
-                        ));
-                    }
-                    let bin_name = app
-                        .binaries
-                        .iter()
-                        .find(|b| b.id == *binary_id)
-                        .map(|b| b.name.clone());
-                    if let Some(name) = bin_name {
-                        let gkey = (name.clone(), command.clone());
-                        match global_mp_gen.entry(gkey) {
-                            std::collections::hash_map::Entry::Vacant(e) => {
-                                e.insert(app_id.clone());
-                            }
-                            std::collections::hash_map::Entry::Occupied(e) => {
-                                let other = e.get();
-                                if other != app_id {
-                                    errors.push(format!(
-                                        "{app_id}: self_generated man page for '{name}' \
-                                         command='{command}' conflicts with app '{other}'"
-                                    ));
-                                }
-                            }
-                        }
-                    }
+            CompletionSource::Extracted { asset_id, path } => {
+                if !asset_ids.contains(asset_id) {
+                    errors.push(format!(
+                        "{app_id}: shell_completion references unknown asset_id {asset_id}"
+                    ));
                 }
-                CompletionSource::Extracted { asset_id, path } => {
-                    if !asset_ids.contains(asset_id) {
-                        errors.push(format!(
-                            "{app_id}: man_page references unknown asset_id {asset_id}"
-                        ));
-                    }
-                    if !mp_ext_seen.insert(path.clone()) {
-                        errors
-                            .push(format!("{app_id}: duplicate extracted man page path '{path}'"));
-                    }
-                    match global_mp_ext.entry(path.clone()) {
-                        std::collections::hash_map::Entry::Vacant(e) => {
-                            e.insert(app_id.clone());
-                        }
-                        std::collections::hash_map::Entry::Occupied(e) => {
-                            let other = e.get();
-                            if other != app_id {
-                                errors.push(format!(
-                                    "{app_id}: extracted man page path '{path}' conflicts \
-                                     with app '{other}'"
-                                ));
-                            }
-                        }
-                    }
+                if !ext_seen.insert(path.clone()) {
+                    errors.push(format!("{app_id}: duplicate extracted completion path '{path}'"));
                 }
+                claim_unique(&mut globals.sc_ext, path.clone(), app_id, errors, || {
+                    format!("{app_id}: extracted completion path '{path}'")
+                });
             }
         }
     }
+}
 
-    errors
+/// Man-page rules: sources reference known binary/asset ids, and each self-generated
+/// key / extracted path is unique within the app and across apps.
+fn validate_man_pages(app: &AppEntry, globals: &mut GlobalUniqueness, errors: &mut Vec<String>) {
+    let app_id = &app.id;
+    let binary_ids: HashSet<u32> = app.binaries.iter().map(|b| b.id).collect();
+    let asset_ids: HashSet<u32> = app.assets.iter().map(|a| a.id).collect();
+
+    let mut gen_seen: HashSet<(u32, String)> = HashSet::new();
+    let mut ext_seen: HashSet<String> = HashSet::new();
+
+    for mp in &app.man_pages {
+        match &mp.source {
+            CompletionSource::SelfGenerated { binary_id, command } => {
+                if !binary_ids.contains(binary_id) {
+                    errors.push(format!(
+                        "{app_id}: man_page references unknown binary_id {binary_id}"
+                    ));
+                }
+                if !gen_seen.insert((*binary_id, command.clone())) {
+                    errors.push(format!(
+                        "{app_id}: duplicate self_generated man page for \
+                         binary_id={binary_id} command='{command}'"
+                    ));
+                }
+                let bin_name = app
+                    .binaries
+                    .iter()
+                    .find(|b| b.id == *binary_id)
+                    .map(|b| b.name.clone());
+                if let Some(name) = bin_name {
+                    claim_unique(
+                        &mut globals.mp_gen,
+                        (name.clone(), command.clone()),
+                        app_id,
+                        errors,
+                        || {
+                            format!(
+                                "{app_id}: self_generated man page for '{name}' \
+                                 command='{command}'"
+                            )
+                        },
+                    );
+                }
+            }
+            CompletionSource::Extracted { asset_id, path } => {
+                if !asset_ids.contains(asset_id) {
+                    errors
+                        .push(format!("{app_id}: man_page references unknown asset_id {asset_id}"));
+                }
+                if !ext_seen.insert(path.clone()) {
+                    errors.push(format!("{app_id}: duplicate extracted man page path '{path}'"));
+                }
+                claim_unique(&mut globals.mp_ext, path.clone(), app_id, errors, || {
+                    format!("{app_id}: extracted man page path '{path}'")
+                });
+            }
+        }
+    }
+}
+
+/// Records `key` as owned by `app_id` in a global registry; if a *different* app already
+/// claimed it, pushes "<describe()> conflicts with app '<other>'".
+fn claim_unique<K: std::hash::Hash + Eq>(
+    registry: &mut HashMap<K, String>, key: K, app_id: &str, errors: &mut Vec<String>,
+    describe: impl Fn() -> String,
+) {
+    match registry.entry(key) {
+        std::collections::hash_map::Entry::Vacant(e) => {
+            e.insert(app_id.to_owned());
+        }
+        std::collections::hash_map::Entry::Occupied(e) => {
+            let other = e.get();
+            if other != app_id {
+                errors.push(format!("{} conflicts with app '{other}'", describe()));
+            }
+        }
+    }
 }
 
 // ===== Tests =====
