@@ -3,13 +3,13 @@ use std::path::Path;
 
 use anyhow::{Context, Result, anyhow};
 
-pub struct ArchiveExtractor {
+pub struct ArchiveExtractor<'a> {
     archive_name: String,
-    data:         Vec<u8>,
+    data:         &'a [u8],
 }
 
-impl ArchiveExtractor {
-    pub fn new(archive_name: impl Into<String>, data: Vec<u8>) -> Self {
+impl<'a> ArchiveExtractor<'a> {
+    pub fn new(archive_name: impl Into<String>, data: &'a [u8]) -> Self {
         Self {
             archive_name: archive_name.into(),
             data,
@@ -96,7 +96,7 @@ impl ArchiveExtractor {
     // ── tar helpers ──────────────────────────────────────────────────────────
 
     fn open_tar(&self) -> Result<tar::Archive<Box<dyn Read + '_>>> {
-        let cursor = Cursor::new(&self.data);
+        let cursor = Cursor::new(self.data);
         let n = self.name().to_lowercase();
 
         let reader: Box<dyn Read> = if n.ends_with(".tar.gz") {
@@ -146,7 +146,7 @@ impl ArchiveExtractor {
     // ── zip helpers ──────────────────────────────────────────────────────────
 
     fn zip_members(&self) -> Result<Vec<String>> {
-        let cursor = Cursor::new(&self.data);
+        let cursor = Cursor::new(self.data);
         let mut archive = zip::ZipArchive::new(cursor)?;
         Ok((0..archive.len())
             .filter_map(|i| {
@@ -161,7 +161,7 @@ impl ArchiveExtractor {
     }
 
     fn zip_extract(&self, member: &str) -> Result<Vec<u8>> {
-        let cursor = Cursor::new(&self.data);
+        let cursor = Cursor::new(self.data);
         let mut archive = zip::ZipArchive::new(cursor)?;
         let mut file = archive
             .by_name(member)
@@ -174,7 +174,7 @@ impl ArchiveExtractor {
     // ── ar/deb helpers ───────────────────────────────────────────────────────
 
     fn ar_members(&self) -> Result<Vec<String>> {
-        let cursor = Cursor::new(&self.data);
+        let cursor = Cursor::new(self.data);
         let mut archive = ar::Archive::new(cursor);
         let mut members = Vec::new();
         while let Some(entry) = archive.next_entry() {
@@ -186,7 +186,7 @@ impl ArchiveExtractor {
     }
 
     fn ar_extract(&self, member: &str) -> Result<Vec<u8>> {
-        let cursor = Cursor::new(&self.data);
+        let cursor = Cursor::new(self.data);
         let mut archive = ar::Archive::new(cursor);
         while let Some(entry) = archive.next_entry() {
             let mut entry = entry?;
@@ -203,7 +203,7 @@ impl ArchiveExtractor {
     // ── single-file decompressors ────────────────────────────────────────────
 
     fn gz_decompress(&self) -> Result<Vec<u8>> {
-        let cursor = Cursor::new(&self.data);
+        let cursor = Cursor::new(self.data);
         let mut decoder = flate2::read::GzDecoder::new(cursor);
         let mut buf = Vec::new();
         decoder.read_to_end(&mut buf)?;
@@ -211,7 +211,7 @@ impl ArchiveExtractor {
     }
 
     fn xz_decompress(&self) -> Result<Vec<u8>> {
-        let cursor = Cursor::new(&self.data);
+        let cursor = Cursor::new(self.data);
         let mut decoder = xz2::read::XzDecoder::new(cursor);
         let mut buf = Vec::new();
         decoder.read_to_end(&mut buf)?;
@@ -225,21 +225,21 @@ mod tests {
 
     #[test]
     fn members_unsupported_extension_returns_err() {
-        let e = ArchiveExtractor::new("app.exe", vec![]);
+        let e = ArchiveExtractor::new("app.exe", &[]);
         assert!(e.members().is_err());
     }
 
     #[test]
     fn members_gz_only_returns_inner_name_without_decompressing() {
         // members() strips the .gz suffix without touching the data bytes.
-        let e = ArchiveExtractor::new("app-linux.gz", vec![]);
+        let e = ArchiveExtractor::new("app-linux.gz", &[]);
         let names = e.members().unwrap();
         assert_eq!(names, vec!["app-linux"]);
     }
 
     #[test]
     fn members_xz_only_returns_inner_name_without_decompressing() {
-        let e = ArchiveExtractor::new("app-linux.xz", vec![]);
+        let e = ArchiveExtractor::new("app-linux.xz", &[]);
         let names = e.members().unwrap();
         assert_eq!(names, vec!["app-linux"]);
     }
@@ -249,7 +249,7 @@ mod tests {
         // .tar.gz must not fall through to the gz-only branch.
         // It will fail to parse as a tar (empty data), but the error must be a tar error, not a
         // "unsupported" error, which proves it was dispatched to the tar handler.
-        let e = ArchiveExtractor::new("app.tar.gz", vec![]);
+        let e = ArchiveExtractor::new("app.tar.gz", &[]);
         let err = e.members().unwrap_err();
         assert!(
             !err.to_string().contains("Unsupported archive type"),

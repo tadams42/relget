@@ -135,7 +135,7 @@ impl App {
             .filter(|a| !matches!(a.asset_type, AssetType::Binary))
         {
             if let Some((name, data)) = downloaded.get(&asset_def.id) {
-                let extractor = ArchiveExtractor::new(name.as_str(), data.clone());
+                let extractor = ArchiveExtractor::new(name.as_str(), data);
 
                 if let Ok(extracted) = extractor.extract_by_filename(&binary_def.name) {
                     return Ok(extracted);
@@ -176,7 +176,7 @@ impl App {
         if matches!(asset_def.asset_type, AssetType::Binary) {
             Ok(asset_data.to_vec())
         } else {
-            let extractor = ArchiveExtractor::new(asset_name, asset_data.to_vec());
+            let extractor = ArchiveExtractor::new(asset_name, asset_data);
             let filename = Path::new(path)
                 .file_name()
                 .and_then(|f| f.to_str())
@@ -193,7 +193,7 @@ impl App {
         if matches!(asset_def.asset_type, AssetType::Binary) {
             return Ok(asset_data.to_vec());
         }
-        let extractor = ArchiveExtractor::new(asset_name, asset_data.to_vec());
+        let extractor = ArchiveExtractor::new(asset_name, asset_data);
         let filename = Path::new(path)
             .file_name()
             .and_then(|f| f.to_str())
@@ -206,7 +206,7 @@ impl App {
         if !filename.ends_with(".gz") {
             let gz_name = format!("{filename}.gz");
             if let Ok(compressed) = extractor.extract_by_filename(&gz_name) {
-                let decompressor = ArchiveExtractor::new("inner.gz", compressed);
+                let decompressor = ArchiveExtractor::new("inner.gz", &compressed);
                 return decompressor.extract("inner");
             }
         }
