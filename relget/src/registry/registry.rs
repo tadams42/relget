@@ -10,32 +10,35 @@ static REGISTRY_BYTES: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/registr
 
 #[derive(Debug, Clone)]
 pub struct Registry {
-    pub categories: Vec<CategoryEntry>,
-    pub apps:       Vec<AppEntry>,
+    categories: Vec<CategoryEntry>,
+    apps:       Vec<AppEntry>,
 }
 
 static REGISTRY: OnceLock<Registry> = OnceLock::new();
 
 impl Registry {
-    pub fn global() -> &'static Self {
+    fn global() -> &'static Self {
         REGISTRY.get_or_init(|| Self::load().expect("failed to load registry"))
     }
 
-    pub fn entries(&self) -> &[AppEntry] { &self.apps }
+    pub fn entries() -> &'static [AppEntry] { &Self::global().apps }
 
-    pub fn identifiers(&self) -> Vec<&str> {
-        let mut ids: Vec<&str> = self.apps.iter().map(|a| a.id.as_str()).collect();
-        ids.sort_unstable();
-        ids
+    pub fn identifiers() -> Vec<&'static str> {
+        Self::global().apps.iter().map(|a| a.id.as_str()).collect()
     }
 
-    pub fn categories(&self) -> &[CategoryEntry] { &self.categories }
+    pub fn categories() -> &'static [CategoryEntry] { &Self::global().categories }
 
-    pub fn doctor(&self, offline: bool) -> Result<()> { super::doctor::doctor(&self.apps, offline) }
+    pub fn doctor(offline: bool) -> Result<()> {
+        super::doctor::doctor(&Self::global().apps, offline)
+    }
 
     fn load() -> Result<Self> {
-        let (categories, apps) =
+        let (categories, mut apps): (Vec<CategoryEntry>, Vec<AppEntry>) =
             postcard::from_bytes(REGISTRY_BYTES).context("deserializing embedded registry")?;
+
+        apps.sort_unstable_by(|a, b| a.id.cmp(&b.id));
+
         Ok(Registry { categories, apps })
     }
 }
@@ -557,18 +560,14 @@ mod tests {
     #[test]
     fn registry_ids_are_unique() {
         use std::collections::HashSet;
-        let ids: Vec<_> = Registry::global()
-            .entries()
-            .iter()
-            .map(|a| a.id.as_str())
-            .collect();
-        let unique: HashSet<_> = ids.iter().copied().collect();
+        let ids: Vec<_> = Registry::entries().iter().map(|a| a.id.clone()).collect();
+        let unique: HashSet<_> = ids.iter().cloned().collect();
         assert_eq!(ids.len(), unique.len(), "duplicate app ids in registry");
     }
 
     #[test]
     fn identifiers_is_sorted() {
-        let ids = Registry::global().identifiers();
+        let ids = Registry::identifiers();
         let sorted = ids.windows(2).all(|w| w[0] <= w[1]);
         assert!(sorted, "identifiers() is not sorted");
     }

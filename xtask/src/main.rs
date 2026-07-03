@@ -104,8 +104,7 @@ fn update_supported_apps() {
 
     let mut lines: Vec<String> = vec!["# Supported apps".into(), String::new()];
 
-    let registry = Registry::global();
-    for cat in registry.categories() {
+    for cat in Registry::categories() {
         lines.push(format!("## {}", cat.title));
         lines.push(String::new());
 
@@ -114,8 +113,7 @@ fn update_supported_apps() {
             lines.push(String::new());
         }
 
-        let mut apps: Vec<_> = registry
-            .entries()
+        let mut apps: Vec<_> = Registry::entries()
             .iter()
             .filter(|e| e.category_id == cat.id)
             .collect();

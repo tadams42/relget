@@ -2,6 +2,7 @@ mod helpers;
 mod installer;
 mod syncer;
 mod uninstaller;
+mod updater;
 
 use std::path::PathBuf;
 
@@ -30,7 +31,7 @@ impl Prefix {
     pub fn update(
         &self, apps: &[String], configured_set: Option<&str>, offline: bool,
     ) -> Result<()> {
-        installer::update(&self.path, apps, configured_set, offline)
+        updater::update(&self.path, apps, configured_set, offline)
     }
 
     pub fn sync(&self, apps: &[String], configured_set: Option<&str>, offline: bool) -> Result<()> {

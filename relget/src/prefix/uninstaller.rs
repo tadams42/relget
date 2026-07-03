@@ -24,7 +24,7 @@ pub(super) fn uninstall(
 }
 
 pub(super) fn uninstall_apps(prefix_path: &Path, selected: &[String]) -> Result<Vec<PathBuf>> {
-    let entries = Registry::global().entries();
+    let entries = Registry::entries();
     let owned = helpers::bin_names_on_disk(prefix_path);
     let on_disk: HashSet<&str> = owned.iter().map(String::as_str).collect();
 

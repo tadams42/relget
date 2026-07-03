@@ -40,13 +40,9 @@ impl App {
         id: &str, gh_token: Option<String>, cb_token: Option<String>, gl_token: Option<String>,
         offline: bool,
     ) -> Option<Self> {
-        let entry = Registry::global()
-            .entries()
-            .iter()
-            .find(|e| e.id == id)?
-            .clone();
-        let client = Self::client_for(&entry, gh_token, cb_token, gl_token, offline);
-        Some(Self::new(entry, client))
+        let entry = Registry::entries().iter().find(|e| e.id == id)?;
+        let client = Self::client_for(entry, gh_token, cb_token, gl_token, offline);
+        Some(Self::new(entry.clone(), client))
     }
 
     pub fn client_for(

@@ -85,7 +85,7 @@ pub(super) fn doctor(apps: &[AppEntry], offline: bool) -> Result<()> {
 fn load_token(provider: &str, token: Option<String>) -> Result<Option<String>> {
     match &token {
         Some(_) => log::info!("msg={provider}-token-loaded"),
-        None => log::warn!("msg={provider} token not found; app may hit API rate limits"),
+        None => log::warn!("msg={provider} token not found; relget may hit API rate limits"),
     }
     Ok(token)
 }

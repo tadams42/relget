@@ -211,11 +211,11 @@ pub enum RegistrySubcommands {
 pub fn registry_command(args: &RegistryArgs, offline: bool) -> Result<()> {
     match &args.command {
         RegistrySubcommands::ListAppsIds => {
-            for id in Registry::global().identifiers() {
+            for id in Registry::identifiers() {
                 println!("{}", id);
             }
         }
-        RegistrySubcommands::Doctor(_) => Registry::global().doctor(offline)?,
+        RegistrySubcommands::Doctor(_) => Registry::doctor(offline)?,
     }
     Ok(())
 }

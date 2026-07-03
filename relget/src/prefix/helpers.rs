@@ -9,7 +9,7 @@ pub(super) fn get_github_token() -> Result<Option<String>> {
     let token = Config::github_token()?;
     match &token {
         Some(_) => log::info!("msg=github-token-loaded"),
-        None => log::warn!("msg=github token not found; app may hit API rate limits"),
+        None => log::warn!("msg=github token not found; relget may hit API rate limits"),
     }
     Ok(token)
 }
@@ -18,7 +18,7 @@ pub(super) fn get_codeberg_token() -> Result<Option<String>> {
     let token = Config::codeberg_token()?;
     match &token {
         Some(_) => log::info!("msg=codeberg-token-loaded"),
-        None => log::warn!("msg=codeberg token not found; app may hit API rate limits"),
+        None => log::warn!("msg=codeberg token not found; relget may hit API rate limits"),
     }
     Ok(token)
 }
@@ -27,7 +27,7 @@ pub(super) fn get_gitlab_token() -> Result<Option<String>> {
     let token = Config::gitlab_token()?;
     match &token {
         Some(_) => log::info!("msg=gitlab-token-loaded"),
-        None => log::warn!("msg=gitlab token not found; app may hit API rate limits"),
+        None => log::warn!("msg=gitlab token not found; relget may hit API rate limits"),
     }
     Ok(token)
 }
@@ -35,7 +35,7 @@ pub(super) fn get_gitlab_token() -> Result<Option<String>> {
 pub(super) fn select_apps(
     user_chosen: &[String], configured_set: Option<&str>,
 ) -> Result<Vec<String>> {
-    let known = Registry::global().identifiers();
+    let known = Registry::identifiers();
 
     if let Some(set_name) = configured_set {
         let apps = Config::configured_set(set_name)?;
@@ -156,8 +156,10 @@ pub(super) fn check_install_conflicts(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::{AppAssetDef, AppBinaryDef, AssetType};
+    use std::collections::HashSet;
+
+    use super::{find_selection_conflict, occupying_app_id, select_apps};
+    use crate::{AppAssetDef, AppBinaryDef, AppEntry, AssetType};
 
     fn make_entry(id: &str, binaries: &[&str], conflicts: &[&str]) -> AppEntry {
         AppEntry {

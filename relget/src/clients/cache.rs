@@ -439,10 +439,11 @@ fn extract_version(data: &Value) -> Option<AppVersion> {
 
 #[cfg(test)]
 mod tests {
-    use chrono::Duration;
-    use serde_json::json;
+    use chrono::{Duration, Utc};
+    use serde_json::{Value, json};
 
-    use super::*;
+    use super::ReleaseMetadata;
+    use crate::AppVersion;
 
     fn metadata_from(data: Value) -> ReleaseMetadata {
         ReleaseMetadata {

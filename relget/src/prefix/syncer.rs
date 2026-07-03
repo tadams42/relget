@@ -10,7 +10,7 @@ pub(super) fn sync(
     prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
 ) -> Result<()> {
     let selected = helpers::select_apps(apps, configured_set)?;
-    let entries = Registry::global().entries();
+    let entries = Registry::entries();
 
     if let Some((a, b)) = helpers::find_selection_conflict(&selected, entries) {
         return Err(anyhow!(
@@ -59,7 +59,7 @@ pub(super) fn sync(
 
 /// Compute the install/uninstall sets needed to reconcile the prefix with `selected`.
 /// Returns `(to_install, to_uninstall)`.
-pub(super) fn compute_sync_changes(
+fn compute_sync_changes(
     selected: &[String], entries: &[AppEntry], installed_binaries: &HashSet<&str>,
 ) -> (Vec<String>, Vec<String>) {
     let selected_set: HashSet<&str> = selected.iter().map(String::as_str).collect();
@@ -88,8 +88,10 @@ pub(super) fn compute_sync_changes(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::{AppAssetDef, AppBinaryDef, AssetType};
+    use std::collections::HashSet;
+
+    use super::compute_sync_changes;
+    use crate::{AppAssetDef, AppBinaryDef, AppEntry, AssetType};
 
     fn make_group_entry(id: &str, binaries: &[&str], conflicts: &[&str]) -> AppEntry {
         AppEntry {
