@@ -1,5 +1,6 @@
 ## unreleased
 
+- fix: version parse stops at a non-numeric component instead of treating it as zero
 - fix: install/update/sync now exit non-zero when any app fails to install
 - fix: uninstall now distinguishes missing files from real removal errors
 - fix: cached assets are now served even after a rate limit was hit

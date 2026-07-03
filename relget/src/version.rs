@@ -55,24 +55,17 @@ impl AppVersion {
         }
         // Replace hyphens with dots for versions like "1.2.3-4"
         let s = s.replace('-', ".");
-        let parts: Vec<u64> = s
-            .split('.')
-            .take(3)
-            .map(|p| {
-                let num: String = p.chars().take_while(|c| c.is_ascii_digit()).collect();
-                num.parse::<u64>().unwrap_or(0)
-            })
-            .collect();
-
-        if parts.is_empty() {
-            return None;
+        // Components parse up to their first non-digit ("3rc1" → 3). A component with no
+        // leading digit at all ends the parse: "1.x.3" is (1, 0, 0), not (1, 0, 3).
+        let mut nums = [0u64; 3];
+        for (slot, part) in nums.iter_mut().zip(s.split('.')) {
+            let digits: String = part.chars().take_while(char::is_ascii_digit).collect();
+            let Ok(num) = digits.parse::<u64>() else {
+                break;
+            };
+            *slot = num;
         }
-
-        Some(AppVersion(
-            *parts.first().unwrap_or(&0),
-            *parts.get(1).unwrap_or(&0),
-            *parts.get(2).unwrap_or(&0),
-        ))
+        Some(AppVersion(nums[0], nums[1], nums[2]))
     }
 }
 
@@ -114,6 +107,22 @@ mod tests {
     #[test]
     fn parse_empty_returns_none() {
         assert_eq!(AppVersion::parse(""), None);
+    }
+
+    #[test]
+    fn parse_stops_at_non_numeric_component() {
+        // "1.x.3" must not silently become 1.0.3
+        assert_eq!(AppVersion::parse("1.x.3"), Some(AppVersion(1, 0, 0)));
+    }
+
+    #[test]
+    fn parse_component_trailing_junk_is_trimmed() {
+        assert_eq!(AppVersion::parse("1.2.3rc1"), Some(AppVersion(1, 2, 3)));
+    }
+
+    #[test]
+    fn parse_prerelease_suffix_defaults_patch_to_zero() {
+        assert_eq!(AppVersion::parse("1.2-rc1"), Some(AppVersion(1, 2, 0)));
     }
 
     #[test]
