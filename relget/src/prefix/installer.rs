@@ -31,9 +31,9 @@ pub(super) fn install_apps(
         (None, None, None)
     } else {
         (
-            helpers::get_github_token()?,
-            helpers::get_codeberg_token()?,
-            helpers::get_gitlab_token()?,
+            crate::Config::github_token()?,
+            crate::Config::codeberg_token()?,
+            crate::Config::gitlab_token()?,
         )
     };
     let mut installed = Vec::new();

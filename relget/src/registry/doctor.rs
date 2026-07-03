@@ -9,9 +9,9 @@ pub(super) fn doctor(apps: &[AppEntry], offline: bool) -> Result<()> {
         (None, None, None)
     } else {
         (
-            load_token("github", Config::github_token()?)?,
-            load_token("codeberg", Config::codeberg_token()?)?,
-            load_token("gitlab", Config::gitlab_token()?)?,
+            Config::github_token()?,
+            Config::codeberg_token()?,
+            Config::gitlab_token()?,
         )
     };
 
@@ -80,14 +80,6 @@ pub(super) fn doctor(apps: &[AppEntry], offline: bool) -> Result<()> {
     use std::io::IsTerminal;
     print_table(&flagged, std::io::stdout().is_terminal());
     Ok(())
-}
-
-fn load_token(provider: &str, token: Option<String>) -> Result<Option<String>> {
-    match &token {
-        Some(_) => log::info!("msg={provider}-token-loaded"),
-        None => log::warn!("msg={provider} token not found; relget may hit API rate limits"),
-    }
-    Ok(token)
 }
 
 enum DoctorFlag {

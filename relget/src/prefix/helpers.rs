@@ -5,33 +5,6 @@ use anyhow::{Result, anyhow};
 
 use crate::{AppEntry, Config, Registry};
 
-pub(super) fn get_github_token() -> Result<Option<String>> {
-    let token = Config::github_token()?;
-    match &token {
-        Some(_) => log::info!("msg=github-token-loaded"),
-        None => log::warn!("msg=github token not found; relget may hit API rate limits"),
-    }
-    Ok(token)
-}
-
-pub(super) fn get_codeberg_token() -> Result<Option<String>> {
-    let token = Config::codeberg_token()?;
-    match &token {
-        Some(_) => log::info!("msg=codeberg-token-loaded"),
-        None => log::warn!("msg=codeberg token not found; relget may hit API rate limits"),
-    }
-    Ok(token)
-}
-
-pub(super) fn get_gitlab_token() -> Result<Option<String>> {
-    let token = Config::gitlab_token()?;
-    match &token {
-        Some(_) => log::info!("msg=gitlab-token-loaded"),
-        None => log::warn!("msg=gitlab token not found; relget may hit API rate limits"),
-    }
-    Ok(token)
-}
-
 pub(super) fn select_apps(
     user_chosen: &[String], configured_set: Option<&str>,
 ) -> Result<Vec<String>> {
