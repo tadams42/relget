@@ -1,6 +1,7 @@
 mod cache;
 mod client_trait;
 mod codeberg;
+mod forge;
 mod github;
 mod gitlab;
 mod rate_limit;

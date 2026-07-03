@@ -1,17 +1,36 @@
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::AtomicBool;
 use std::sync::{Arc, LazyLock, Mutex};
 
-use anyhow::{Context, Result, anyhow};
+use anyhow::Result;
 
 use super::cache::{CachedFile, ReleaseMetadata, RelgetCache};
 use super::client_trait::RelgetClient;
-use super::rate_limit::RateLimitError;
+use super::forge::Forge;
 
 static CACHE: LazyLock<Mutex<RelgetCache>> =
     LazyLock::new(|| Mutex::new(RelgetCache::new_with_prefix("codeberg")));
 static RATE_LIMITED: AtomicBool = AtomicBool::new(false);
 
-const CB_API_URL: &str = "https://codeberg.org/api/v1/repos";
+static CODEBERG: Forge = Forge {
+    site:               "Codeberg",
+    cache:              &CACHE,
+    rate_limited:       &RATE_LIMITED,
+    accept:             "application/json",
+    rate_limit_codes:   &[429],
+    releases_url:       |owner, repo| {
+        format!("https://codeberg.org/api/v1/repos/{owner}/{repo}/releases?limit=100&page=1")
+    },
+    auth_header:        |token| ("Authorization", format!("token {token}")),
+    auth_on_download:   true,
+    release_ok:         |r| {
+        r["assets"].as_array().is_some_and(|a| !a.is_empty())
+            && !r["draft"].as_bool().unwrap_or(false)
+            && !r["prerelease"].as_bool().unwrap_or(false)
+    },
+    normalize:          |data| data,
+    default_tag_filter: |_| true,
+    source_tarball:     false,
+};
 
 pub struct CodebergClient {
     pub token:   Option<String>,
@@ -24,133 +43,16 @@ impl CodebergClient {
 
 impl RelgetClient for CodebergClient {
     fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
-        self.latest_release_where(owner, repo, &|_| true)
+        CODEBERG.latest_release(self.token.as_deref(), self.offline, owner, repo)
     }
 
-    /// Like `latest_release`, but only considers releases whose `tag_name` satisfies
-    /// `tag_filter`. See [`RelgetClient::latest_release_where`] for rationale.
     fn latest_release_where(
         &self, owner: &str, repo: &str, tag_filter: &dyn Fn(&str) -> bool,
     ) -> Result<ReleaseMetadata> {
-        {
-            let mut cache = CACHE.lock().unwrap();
-            if self.offline {
-                return cache.get_release_any_age(owner, repo).ok_or_else(|| {
-                    anyhow!("offline mode: no cached release for {}/{}", owner, repo)
-                });
-            }
-            if let Some(r) = cache.get_release(owner, repo) {
-                return Ok(r);
-            }
-        }
-
-        if RATE_LIMITED.load(Ordering::Relaxed) {
-            return Err(anyhow!(RateLimitError { site: "Codeberg" }));
-        }
-
-        log::info!("app={} msg=Fetching latest Codeberg release metadata", repo);
-        let url = format!("{}/{}/{}/releases?limit=100&page=1", CB_API_URL, owner, repo);
-
-        let mut req = ureq::get(&url)
-            .header("Accept", "application/json")
-            .header("User-Agent", "relget");
-        if let Some(token) = &self.token {
-            req = req.header("Authorization", &format!("token {}", token));
-        }
-        let response = match req.call() {
-            Ok(r) => r,
-            Err(ureq::Error::StatusCode(429)) => {
-                RATE_LIMITED.store(true, Ordering::Relaxed);
-                return Err(anyhow!(RateLimitError { site: "Codeberg" }));
-            }
-            Err(e) => {
-                return Err(anyhow::Error::from(e)).with_context(|| {
-                    format!("Can't fetch Codeberg release info for {}/{}", owner, repo)
-                });
-            }
-        };
-        let releases: Vec<serde_json::Value> = response
-            .into_body()
-            .read_json()
-            .with_context(|| format!("Invalid JSON from Codeberg for {}/{}", owner, repo))?;
-
-        let data = releases
-            .into_iter()
-            .find(|r| {
-                r["assets"]
-                    .as_array()
-                    .map(|a| !a.is_empty())
-                    .unwrap_or(false)
-                    && !r["draft"].as_bool().unwrap_or(false)
-                    && !r["prerelease"].as_bool().unwrap_or(false)
-                    && r["tag_name"].as_str().is_none_or(&tag_filter)
-            })
-            .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
-
-        let release = ReleaseMetadata::new(owner, repo, data);
-        CACHE.lock().unwrap().store_release(release.clone())?;
-        Ok(release)
+        CODEBERG.latest_release_where(self.token.as_deref(), self.offline, owner, repo, tag_filter)
     }
 
     fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<Arc<CachedFile>> {
-        let release = self.latest_release(owner, repo)?;
-
-        let asset_id = release
-            .asset_id(name)
-            .ok_or_else(|| anyhow!("No such asset '{}' in {}/{}", name, owner, repo))?;
-
-        {
-            let mut cache = CACHE.lock().unwrap();
-            if let Some(a) = cache.get_asset(owner, repo, name, asset_id) {
-                return Ok(a);
-            }
-        }
-
-        if self.offline {
-            return Err(anyhow!(
-                "offline mode: no cached asset '{}' for {}/{}",
-                name,
-                owner,
-                repo
-            ));
-        }
-
-        // Checked only after the cache tiers: an already-downloaded asset must stay
-        // available even when the API is rate-limited.
-        if RATE_LIMITED.load(Ordering::Relaxed) {
-            return Err(anyhow!(RateLimitError { site: "Codeberg" }));
-        }
-
-        let url = release
-            .asset_download_url(name)
-            .ok_or_else(|| anyhow!("No download URL for asset '{}' in {}/{}", name, owner, repo))?;
-
-        if !url.starts_with("http:") && !url.starts_with("https:") {
-            return Err(anyhow!("Unsafe URL scheme: {}", url));
-        }
-
-        log::info!("app={} msg=Downloading {}", repo, name);
-        let mut req = ureq::get(&url).header("User-Agent", "relget");
-        if let Some(token) = &self.token {
-            req = req.header("Authorization", &format!("token {}", token));
-        }
-        let buf = req
-            .call()
-            .with_context(|| format!("Couldn't download '{}' from Codeberg", name))?
-            .into_body()
-            .into_with_config()
-            .limit(500 * 1024 * 1024)
-            .read_to_vec()
-            .with_context(|| format!("Couldn't read downloaded asset '{}'", name))?;
-        log::info!("app={} msg=Downloaded {}", repo, name);
-
-        let asset = CachedFile {
-            api_id: asset_id,
-            owner:  owner.to_string(),
-            repo:   repo.to_string(),
-            name:   name.to_string(),
-            data:   buf,
-        };
-        CACHE.lock().unwrap().store_asset(asset)
+        CODEBERG.download_asset(self.token.as_deref(), self.offline, owner, repo, name)
     }
 }

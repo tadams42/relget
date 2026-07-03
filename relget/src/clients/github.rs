@@ -1,16 +1,33 @@
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::AtomicBool;
 use std::sync::{Arc, LazyLock, Mutex};
 
-use anyhow::{Context, Result, anyhow};
+use anyhow::Result;
 
 use super::cache::{CachedFile, ReleaseMetadata, RelgetCache};
 use super::client_trait::RelgetClient;
-use super::rate_limit::RateLimitError;
+use super::forge::Forge;
 
 static CACHE: LazyLock<Mutex<RelgetCache>> = LazyLock::new(|| Mutex::new(RelgetCache::new()));
 static RATE_LIMITED: AtomicBool = AtomicBool::new(false);
 
-const GH_API_URL: &str = "https://api.github.com/repos";
+static GITHUB: Forge = Forge {
+    site:               "GitHub",
+    cache:              &CACHE,
+    rate_limited:       &RATE_LIMITED,
+    accept:             "application/vnd.github+json",
+    // GitHub reports rate limiting as 403 as well as 429
+    rate_limit_codes:   &[429, 403],
+    releases_url:       |owner, repo| {
+        format!("https://api.github.com/repos/{owner}/{repo}/releases?per_page=100&page=1")
+    },
+    auth_header:        |token| ("Authorization", format!("Bearer {token}")),
+    // browser_download_url is publicly fetchable and may redirect to a CDN
+    auth_on_download:   false,
+    release_ok:         |r| r["assets"].as_array().is_some_and(|a| !a.is_empty()),
+    normalize:          |data| data,
+    default_tag_filter: |tag| tag != "nightly",
+    source_tarball:     true,
+};
 
 pub struct GithubClient {
     pub token:   Option<String>,
@@ -23,139 +40,16 @@ impl GithubClient {
 
 impl RelgetClient for GithubClient {
     fn latest_release(&self, owner: &str, repo: &str) -> Result<ReleaseMetadata> {
-        self.latest_release_where(owner, repo, &|tag| tag != "nightly")
+        GITHUB.latest_release(self.token.as_deref(), self.offline, owner, repo)
     }
 
     fn latest_release_where(
         &self, owner: &str, repo: &str, tag_filter: &dyn Fn(&str) -> bool,
     ) -> Result<ReleaseMetadata> {
-        {
-            let mut cache = CACHE.lock().unwrap();
-            if self.offline {
-                return cache.get_release_any_age(owner, repo).ok_or_else(|| {
-                    anyhow!("offline mode: no cached release for {}/{}", owner, repo)
-                });
-            }
-            if let Some(r) = cache.get_release(owner, repo) {
-                return Ok(r);
-            }
-        }
-
-        if RATE_LIMITED.load(Ordering::Relaxed) {
-            return Err(anyhow!(RateLimitError { site: "GitHub" }));
-        }
-
-        log::info!("app={} msg=Fetching latest GitHub release metadata", repo);
-        let url = format!("{}/{}/{}/releases?per_page=100&page=1", GH_API_URL, owner, repo);
-
-        let mut req = ureq::get(&url)
-            .header("Accept", "application/vnd.github+json")
-            .header("User-Agent", "relget");
-        if let Some(token) = &self.token {
-            req = req.header("Authorization", &format!("Bearer {}", token));
-        }
-        let response = match req.call() {
-            Ok(r) => r,
-            Err(ureq::Error::StatusCode(429 | 403)) => {
-                RATE_LIMITED.store(true, Ordering::Relaxed);
-                return Err(anyhow!(RateLimitError { site: "GitHub" }));
-            }
-            Err(e) => {
-                return Err(anyhow::Error::from(e)).with_context(|| {
-                    format!("Can't fetch GitHub release info for {}/{}", owner, repo)
-                });
-            }
-        };
-
-        let releases: Vec<serde_json::Value> = response
-            .into_body()
-            .read_json()
-            .with_context(|| format!("Invalid JSON from GitHub for {}/{}", owner, repo))?;
-
-        let data = releases
-            .into_iter()
-            .find(|r| {
-                r["assets"]
-                    .as_array()
-                    .map(|a| !a.is_empty())
-                    .unwrap_or(false)
-                    && r["tag_name"].as_str().is_none_or(&tag_filter)
-            })
-            .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
-
-        let release = ReleaseMetadata::new(owner, repo, data);
-        CACHE.lock().unwrap().store_release(release.clone())?;
-        Ok(release)
+        GITHUB.latest_release_where(self.token.as_deref(), self.offline, owner, repo, tag_filter)
     }
 
     fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<Arc<CachedFile>> {
-        let release = self.latest_release(owner, repo)?;
-
-        let api_id = if name == "tarball" {
-            release.api_id().unwrap_or(0)
-        } else {
-            release
-                .asset_id(name)
-                .ok_or_else(|| anyhow!("No such asset '{}' in {}/{}", name, owner, repo))?
-        };
-
-        {
-            let mut cache = CACHE.lock().unwrap();
-            if let Some(a) = cache.get_asset(owner, repo, name, api_id) {
-                return Ok(a);
-            }
-        }
-
-        if self.offline {
-            return Err(anyhow!(
-                "offline mode: no cached asset '{}' for {}/{}",
-                name,
-                owner,
-                repo
-            ));
-        }
-
-        // Checked only after the cache tiers: an already-downloaded asset must stay
-        // available even when the API is rate-limited.
-        if RATE_LIMITED.load(Ordering::Relaxed) {
-            return Err(anyhow!(RateLimitError { site: "GitHub" }));
-        }
-
-        let url = if name == "tarball" {
-            release
-                .tarball_url()
-                .ok_or_else(|| anyhow!("No tarball URL for {}/{}", owner, repo))?
-        } else {
-            release.asset_download_url(name).ok_or_else(|| {
-                anyhow!("No download URL for asset '{}' in {}/{}", name, owner, repo)
-            })?
-        };
-
-        if !url.starts_with("http:") && !url.starts_with("https:") {
-            return Err(anyhow!("Unsafe URL scheme: {}", url));
-        }
-
-        log::info!("app={} msg=Downloading {}", repo, name);
-        let resp = ureq::get(&url)
-            .header("User-Agent", "relget")
-            .call()
-            .with_context(|| format!("Couldn't download '{}' from GitHub", name))?;
-
-        let buf = resp
-            .into_body()
-            .into_with_config()
-            .limit(500 * 1024 * 1024)
-            .read_to_vec()
-            .with_context(|| format!("Couldn't read downloaded asset '{}'", name))?;
-        log::info!("app={} msg=Downloaded {}", repo, name);
-
-        let asset = CachedFile {
-            api_id,
-            owner: owner.to_string(),
-            repo: repo.to_string(),
-            name: name.to_string(),
-            data: buf,
-        };
-        CACHE.lock().unwrap().store_asset(asset)
+        GITHUB.download_asset(self.token.as_deref(), self.offline, owner, repo, name)
     }
 }

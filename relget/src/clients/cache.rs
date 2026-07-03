@@ -12,7 +12,7 @@
 //! Each provider (GitHub, Codeberg, GitLab) creates its own [`RelgetCache`]
 //! instance via [`RelgetCache::new`] (GitHub) or [`RelgetCache::new_with_prefix`]
 //! (Codeberg / GitLab).  In practice each provider module wraps its instance in a
-//! `Lazy<Mutex<RelgetCache>>` singleton so the cache persists across calls within
+//! `LazyLock<Mutex<RelgetCache>>` singleton so the cache persists across calls within
 //! one process.
 //!
 //! On-disk layout:
@@ -208,7 +208,7 @@ pub struct CachedFile {
 /// - [`RelgetCache::new_with_prefix("codeberg")`](Self::new_with_prefix) for Codeberg
 /// - [`RelgetCache::new_with_prefix("gitlab")`](Self::new_with_prefix) for GitLab
 ///
-/// Each provider module wraps its instance in a `Lazy<Mutex<RelgetCache>>`
+/// Each provider module wraps its instance in a `LazyLock<Mutex<RelgetCache>>`
 /// singleton so the cache persists for the lifetime of the process.
 ///
 /// See the [module-level documentation](self) for the full architecture,
