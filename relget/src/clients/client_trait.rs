@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use anyhow::Result;
 
 use super::cache::{CachedFile, ReleaseMetadata};
@@ -30,5 +32,5 @@ pub trait RelgetClient {
     /// Downloads a named release asset for `owner/repo`, returning its bytes.
     ///
     /// Pass `"tarball"` as `name` to download the source tarball instead of a release asset.
-    fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<CachedFile>;
+    fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<Arc<CachedFile>>;
 }

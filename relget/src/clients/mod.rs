@@ -5,7 +5,7 @@ mod github;
 mod gitlab;
 mod rate_limit;
 
-pub use cache::ReleaseMetadata;
+pub use cache::{CachedFile, ReleaseMetadata};
 pub use client_trait::RelgetClient;
 pub use codeberg::CodebergClient;
 pub use github::GithubClient;

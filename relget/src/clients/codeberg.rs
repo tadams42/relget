@@ -1,5 +1,5 @@
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{LazyLock, Mutex};
+use std::sync::{Arc, LazyLock, Mutex};
 
 use anyhow::{Context, Result, anyhow};
 
@@ -92,7 +92,7 @@ impl RelgetClient for CodebergClient {
         Ok(release)
     }
 
-    fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<CachedFile> {
+    fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<Arc<CachedFile>> {
         if RATE_LIMITED.load(Ordering::Relaxed) {
             return Err(anyhow!(RateLimitError { site: "Codeberg" }));
         }
@@ -149,7 +149,6 @@ impl RelgetClient for CodebergClient {
             name:   name.to_string(),
             data:   buf,
         };
-        CACHE.lock().unwrap().store_asset(asset.clone())?;
-        Ok(asset)
+        CACHE.lock().unwrap().store_asset(asset)
     }
 }

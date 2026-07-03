@@ -79,6 +79,7 @@
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 use anyhow::{Context, Result, anyhow};
 use chrono::{DateTime, Duration, Utc};
@@ -214,7 +215,9 @@ pub struct CachedFile {
 /// caching policies, and typical caller patterns.
 pub struct RelgetCache {
     releases:  HashMap<String, ReleaseMetadata>,
-    assets:    HashMap<String, CachedFile>,
+    // Arc-shared so cache hits and store_asset hand out the (potentially hundreds of
+    // MB) payload without copying it.
+    assets:    HashMap<String, Arc<CachedFile>>,
     cache_dir: PathBuf,
 }
 
@@ -338,12 +341,12 @@ impl RelgetCache {
     /// is treated as a named release asset filename.
     pub fn get_asset(
         &mut self, owner: &str, repo: &str, name: &str, api_id: u64,
-    ) -> Option<CachedFile> {
+    ) -> Option<Arc<CachedFile>> {
         let key = Self::asset_key(api_id, name);
 
         if let Some(a) = self.assets.get(&key) {
             log::debug!("asset={} msg=memory-cache-hit", name);
-            return Some(a.clone());
+            return Some(Arc::clone(a));
         }
 
         let path = self
@@ -353,32 +356,34 @@ impl RelgetCache {
             && let Ok(data) = std::fs::read(&path)
         {
             log::debug!("asset={} msg=disk-cache-hit", name);
-            let asset = CachedFile {
+            let asset = Arc::new(CachedFile {
                 api_id,
                 owner: owner.to_string(),
                 repo: repo.to_string(),
                 name: name.to_string(),
                 data,
-            };
-            self.assets.insert(key, asset.clone());
+            });
+            self.assets.insert(key, Arc::clone(&asset));
             return Some(asset);
         }
 
         None
     }
 
-    /// Writes `asset` to disk then inserts it into the memory cache (write-through).
+    /// Writes `asset` to disk then inserts it into the memory cache (write-through),
+    /// returning the shared handle so callers don't have to copy the payload.
     ///
     /// Use `asset.name = "tarball"` for source-code tarballs; any other name is
     /// stored with an `"asset."` filename prefix.
-    pub fn store_asset(&mut self, asset: CachedFile) -> Result<()> {
+    pub fn store_asset(&mut self, asset: CachedFile) -> Result<Arc<CachedFile>> {
         let dir = self.repo_cache_dir(&asset.owner, &asset.repo);
         std::fs::create_dir_all(&dir)?;
         let path = dir.join(disk_filename(&asset.name, asset.api_id));
         std::fs::write(&path, &asset.data)?;
         let key = Self::asset_key(asset.api_id, &asset.name);
-        self.assets.insert(key, asset);
-        Ok(())
+        let asset = Arc::new(asset);
+        self.assets.insert(key, Arc::clone(&asset));
+        Ok(asset)
     }
 }
 

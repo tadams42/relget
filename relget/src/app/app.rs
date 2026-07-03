@@ -7,6 +7,7 @@ use std::sync::Arc;
 use anyhow::{Context, Result, bail};
 
 use super::assets::BIN_MODE;
+use crate::clients::CachedFile;
 use crate::registry::types::{
     AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ShellKind,
 };
@@ -127,15 +128,15 @@ impl App {
 
     fn extract_binary_data(
         binary_def: &AppBinaryDef, assets: &[AppAssetDef],
-        downloaded: &HashMap<u32, (String, Vec<u8>)>, content_asset_ids: &HashSet<u32>,
+        downloaded: &HashMap<u32, (String, Arc<CachedFile>)>, content_asset_ids: &HashSet<u32>,
     ) -> Result<Vec<u8>> {
         // Try archive/deb assets in id order
         for asset_def in assets
             .iter()
             .filter(|a| !matches!(a.asset_type, AssetType::Binary))
         {
-            if let Some((name, data)) = downloaded.get(&asset_def.id) {
-                let extractor = ArchiveExtractor::new(name.as_str(), data);
+            if let Some((name, file)) = downloaded.get(&asset_def.id) {
+                let extractor = ArchiveExtractor::new(name.as_str(), &file.data);
 
                 if let Ok(extracted) = extractor.extract_by_filename(&binary_def.name) {
                     return Ok(extracted);
@@ -159,8 +160,8 @@ impl App {
             if content_asset_ids.contains(&asset_def.id) {
                 continue;
             }
-            if let Some((_, data)) = downloaded.get(&asset_def.id) {
-                return Ok(data.clone());
+            if let Some((_, file)) = downloaded.get(&asset_def.id) {
+                return Ok(file.data.clone());
             }
         }
 
@@ -349,7 +350,7 @@ impl App {
         let release = self.client.latest_release(owner, repo)?;
 
         // Download all defined assets
-        let mut downloaded: HashMap<u32, (String, Vec<u8>)> = HashMap::new();
+        let mut downloaded: HashMap<u32, (String, Arc<CachedFile>)> = HashMap::new();
         for asset_def in &self.entry.assets {
             // "tarball" is a sentinel that bypasses find_asset and fetches the source tarball
             let is_tarball = asset_def.equals.as_deref() == Some("tarball");
@@ -366,7 +367,7 @@ impl App {
             } else {
                 name
             };
-            downloaded.insert(asset_def.id, (archive_name, cached.data));
+            downloaded.insert(asset_def.id, (archive_name, cached));
         }
 
         // Detect batch man page generator — generates multiple files to a tmpdir at runtime
@@ -487,7 +488,7 @@ impl App {
         // Extracted completions
         for sc in &self.entry.shell_completions {
             if let CompletionSource::Extracted { asset_id, path } = &sc.source {
-                let (asset_name, asset_data) = downloaded
+                let (asset_name, file) = downloaded
                     .get(asset_id)
                     .expect("registry validates asset_id");
                 let asset_def = self
@@ -496,7 +497,7 @@ impl App {
                     .iter()
                     .find(|a| a.id == *asset_id)
                     .expect("registry validates asset_id");
-                let data = Self::extract_from_asset(asset_def, asset_name, asset_data, path)?;
+                let data = Self::extract_from_asset(asset_def, asset_name, &file.data, path)?;
                 completions.push(ShellCompletion::new_with_data(
                     sc.shell,
                     Self::app_name_from_path(path, sc.shell),
@@ -509,7 +510,7 @@ impl App {
         if !has_batch_man_gen {
             for mp in &self.entry.man_pages {
                 if let CompletionSource::Extracted { asset_id, path } = &mp.source {
-                    let (asset_name, asset_data) = downloaded
+                    let (asset_name, file) = downloaded
                         .get(asset_id)
                         .expect("registry validates asset_id");
                     let asset_def = self
@@ -518,7 +519,7 @@ impl App {
                         .iter()
                         .find(|a| a.id == *asset_id)
                         .expect("registry validates asset_id");
-                    let data = Self::extract_man_page(asset_def, asset_name, asset_data, path)?;
+                    let data = Self::extract_man_page(asset_def, asset_name, &file.data, path)?;
                     let filename = Self::man_filename_from_path(path);
                     man_pages.push(ManPage::new_with_data(mp.section, filename, data));
                 }
