@@ -89,10 +89,6 @@ impl RelgetClient for GithubClient {
     }
 
     fn download_asset(&self, owner: &str, repo: &str, name: &str) -> Result<Arc<CachedFile>> {
-        if RATE_LIMITED.load(Ordering::Relaxed) {
-            return Err(anyhow!(RateLimitError { site: "GitHub" }));
-        }
-
         let release = self.latest_release(owner, repo)?;
 
         let api_id = if name == "tarball" {
@@ -117,6 +113,12 @@ impl RelgetClient for GithubClient {
                 owner,
                 repo
             ));
+        }
+
+        // Checked only after the cache tiers: an already-downloaded asset must stay
+        // available even when the API is rate-limited.
+        if RATE_LIMITED.load(Ordering::Relaxed) {
+            return Err(anyhow!(RateLimitError { site: "GitHub" }));
         }
 
         let url = if name == "tarball" {
