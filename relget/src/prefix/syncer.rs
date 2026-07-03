@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use std::path::Path;
 
-use anyhow::{Result, anyhow};
+use anyhow::{Result, anyhow, bail};
 
 use super::{helpers, installer, uninstaller};
 use crate::{AppEntry, Registry};
@@ -45,12 +45,15 @@ pub(super) fn sync(
 
     if !to_install.is_empty() {
         log::info!("count={} prefix={:?} msg=Installing", to_install.len(), prefix_path);
-        let installed = installer::install_apps(prefix_path, &to_install, offline)?;
+        let (installed, failed) = installer::install_apps(prefix_path, &to_install, offline)?;
         if !installed.is_empty() {
             println!("Installed files:");
             for path in installed {
                 println!("- {}", path.display());
             }
+        }
+        if failed > 0 {
+            bail!("{failed} app(s) failed to install");
         }
     }
 

@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use anyhow::{Result, anyhow};
+use anyhow::{Result, anyhow, bail};
 
 use super::helpers;
 use crate::{App, RateLimitError, Registry};
@@ -12,7 +12,7 @@ pub(super) fn install(
 
     let selected = helpers::select_apps(apps, configured_set)?;
     helpers::check_install_conflicts(prefix_path, &selected, Registry::entries())?;
-    let installed = install_apps(prefix_path, &selected, offline)?;
+    let (installed, failed) = install_apps(prefix_path, &selected, offline)?;
 
     if !installed.is_empty() {
         println!("Installed files:");
@@ -20,13 +20,19 @@ pub(super) fn install(
             println!("- {}", path.display());
         }
     }
+    if failed > 0 {
+        bail!("{failed} app(s) failed to install");
+    }
 
     Ok(())
 }
 
+/// Installs `selected` apps, returning the installed file paths and the number of hard
+/// failures. Rate-limit and offline cache misses are deliberate soft skips (logged as
+/// warnings) and do not count as failures.
 pub(super) fn install_apps(
     prefix_path: &Path, selected: &[String], offline: bool,
-) -> Result<Vec<PathBuf>> {
+) -> Result<(Vec<PathBuf>, usize)> {
     let (gh_token, cb_token, gl_token) = if offline {
         (None, None, None)
     } else {
@@ -37,6 +43,7 @@ pub(super) fn install_apps(
         )
     };
     let mut installed = Vec::new();
+    let mut failed = 0;
     for app_id in selected {
         let app =
             App::from_id(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
@@ -50,9 +57,10 @@ pub(super) fn install_apps(
                     log::warn!("app={} msg=Skipping (offline, no cached data): {:#}", app_id, e);
                 } else {
                     log::error!("app={} msg=Install failed: {:#}", app_id, e);
+                    failed += 1;
                 }
             }
         }
     }
-    Ok(installed)
+    Ok((installed, failed))
 }

@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use std::path::Path;
 
-use anyhow::Result;
+use anyhow::{Result, bail};
 
 use super::{helpers, installer};
 use crate::{AppEntry, Registry};
@@ -52,7 +52,7 @@ pub(super) fn update(
     };
 
     log::info!("count={} prefix={:?} msg=Updating", to_update.len(), prefix_path);
-    let installed = installer::install_apps(prefix_path, &to_update, offline)?;
+    let (installed, failed) = installer::install_apps(prefix_path, &to_update, offline)?;
     if installed.is_empty() {
         println!("All apps already at latest version.");
     } else {
@@ -60,6 +60,9 @@ pub(super) fn update(
         for path in installed {
             println!("- {}", path.display());
         }
+    }
+    if failed > 0 {
+        bail!("{failed} app(s) failed to update");
     }
 
     Ok(())
