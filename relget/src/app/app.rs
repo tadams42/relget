@@ -9,7 +9,8 @@ use anyhow::{Context, Result, bail};
 use super::assets::BIN_MODE;
 use crate::clients::CachedFile;
 use crate::registry::types::{
-    AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ShellKind,
+    AppAssetDef, AppBinaryDef, AppEntry, AssetType, CompletionSource, ReleasedVersionParseDef,
+    ShellKind,
 };
 use crate::{
     AppVersion, ArchiveExtractor, Assets, Binary, CodebergClient, GithubClient, GitlabClient,
@@ -245,8 +246,10 @@ impl App {
     pub fn released_version(&self) -> Result<AppVersion> {
         let (owner, repo) = Self::owner_repo(&self.entry.url);
         let release = match &self.entry.released_version_parse {
-            Some(cfg) if cfg.tag_starts_with.is_some() => {
-                let prefix = cfg.tag_starts_with.as_deref().unwrap();
+            Some(ReleasedVersionParseDef {
+                tag_starts_with: Some(prefix),
+                ..
+            }) => {
                 self.client
                     .latest_release_where(owner, repo, &|tag| tag.starts_with(prefix))?
             }
@@ -270,8 +273,7 @@ impl App {
     /// as the authoritative static list for uninstall purposes (see
     /// `src/registry/data/c/caddy.jsonc`).
     pub fn assets(&self) -> Assets {
-        let main_bin = self.entry.binaries.iter().find(|b| b.is_main).unwrap();
-        let binary = Some(Binary::new(&main_bin.name));
+        let binary = Some(Binary::new(self.entry.main_exe_name()));
         let other_bins: Vec<Binary> = self
             .entry
             .binaries
@@ -527,16 +529,20 @@ impl App {
         }
 
         // Assemble result
-        let main_def = self.entry.binaries.iter().find(|b| b.is_main).unwrap();
-        let main_data = binary_data.remove(&main_def.name).unwrap();
-        let binary = Some(Binary::new_with_data(&main_def.name, main_data));
+        let main_name = self.entry.main_exe_name().to_owned();
+        let main_data = binary_data
+            .remove(&main_name)
+            .expect("all registry binaries were extracted above");
+        let binary = Some(Binary::new_with_data(&main_name, main_data));
         let other_bins: Vec<Binary> = self
             .entry
             .binaries
             .iter()
             .filter(|b| !b.is_main)
             .map(|b| {
-                let data = binary_data.remove(&b.name).unwrap();
+                let data = binary_data
+                    .remove(&b.name)
+                    .expect("all registry binaries were extracted above");
                 Binary::new_with_data(&b.name, data)
             })
             .collect();

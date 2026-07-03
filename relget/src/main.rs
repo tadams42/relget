@@ -103,7 +103,7 @@ pub fn update_command(args: &UpdateArgs, offline: bool) -> Result<()> {
 #[derive(Args)]
 pub struct SyncArgs {
     /// Install prefix (e.g. /usr/local or ~/.local)
-    #[arg(short = 'p', long, default_value = Prefix:: DEFAULT_PREFIX)]
+    #[arg(short = 'p', long, default_value = Prefix::DEFAULT_PREFIX)]
     pub prefix: PathBuf,
 
     /// App(s) to sync; comma-separated.

@@ -10,8 +10,7 @@ pub(super) fn uninstall(
     prefix_path: &Path, apps: &[String], configured_set: Option<&str>,
 ) -> Result<()> {
     let selected = helpers::select_apps(apps, configured_set)?;
-    let validated = helpers::select_apps(&selected, None)?;
-    let removed = uninstall_apps(prefix_path, &validated)?;
+    let removed = uninstall_apps(prefix_path, &selected)?;
     if removed.is_empty() {
         println!("No files removed.");
     } else {
