@@ -423,18 +423,7 @@ fn extract_version(data: &Value) -> Option<AppVersion> {
         }
     }
 
-    if let Some(body) = data["body"].as_str() {
-        let re = regex::Regex::new(r"\d+\.\d+\.\d+").ok()?;
-        for line in body.lines() {
-            if let Some(m) = re.find(line)
-                && let Some(v) = AppVersion::parse(m.as_str())
-            {
-                return Some(v);
-            }
-        }
-    }
-
-    None
+    data["body"].as_str().and_then(AppVersion::find_in)
 }
 
 #[cfg(test)]

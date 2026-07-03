@@ -26,7 +26,6 @@ env_logger = "0.11"
 xdg = "3"
 chrono = { version = "0.4.45", features = ["serde"] }
 tempfile = "3"
-regex = "1.12.4"
 toml = "1"
 zstd = "0.13"
 postcard = { version = "1", features = ["alloc"] }
