@@ -47,7 +47,7 @@ pub(super) fn uninstall_apps(prefix_path: &Path, selected: &[String]) -> Result<
 
         let app = App::from_id(app_id, None, None, None, false)
             .ok_or_else(|| anyhow::anyhow!("Unknown app '{}'", app_id))?;
-        removed.extend(app.uninstall(prefix_path));
+        removed.extend(app.uninstall(prefix_path)?);
     }
     Ok(removed)
 }

@@ -13,6 +13,16 @@ fn ensure_parent(path: &Path) -> Result<()> {
     Ok(())
 }
 
+/// Removes `path`, returning it on success and `None` when it didn't exist.
+/// Any other failure (e.g. permission denied) is a real error, not "not installed".
+fn remove_if_exists(path: PathBuf) -> Result<Option<PathBuf>> {
+    match fs::remove_file(&path) {
+        Ok(()) => Ok(Some(path)),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        Err(e) => Err(e).with_context(|| format!("Removing {path:?}")),
+    }
+}
+
 pub const BIN_MODE: u32 = 0o755;
 pub const DOC_MODE: u32 = 0o644;
 
@@ -51,13 +61,8 @@ impl Binary {
         Ok(dest)
     }
 
-    pub fn uninstall(&self, prefix: &Path) -> Option<PathBuf> {
-        let path = self.install_path(prefix);
-        if fs::remove_file(&path).is_ok() {
-            Some(path)
-        } else {
-            None
-        }
+    pub fn uninstall(&self, prefix: &Path) -> Result<Option<PathBuf>> {
+        remove_if_exists(self.install_path(prefix))
     }
 }
 
@@ -97,13 +102,8 @@ impl ManPage {
         Ok(dest)
     }
 
-    pub fn uninstall(&self, prefix: &Path) -> Option<PathBuf> {
-        let path = self.install_path(prefix);
-        if fs::remove_file(&path).is_ok() {
-            Some(path)
-        } else {
-            None
-        }
+    pub fn uninstall(&self, prefix: &Path) -> Result<Option<PathBuf>> {
+        remove_if_exists(self.install_path(prefix))
     }
 }
 
@@ -174,13 +174,8 @@ impl ShellCompletion {
         Ok(dest)
     }
 
-    pub fn uninstall(&self, prefix: &Path) -> Option<PathBuf> {
-        let path = self.install_path(prefix);
-        if fs::remove_file(&path).is_ok() {
-            Some(path)
-        } else {
-            None
-        }
+    pub fn uninstall(&self, prefix: &Path) -> Result<Option<PathBuf>> {
+        remove_if_exists(self.install_path(prefix))
     }
 }
 

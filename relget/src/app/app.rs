@@ -605,29 +605,29 @@ impl App {
         Ok(installed)
     }
 
-    pub fn uninstall(&self, prefix: &Path) -> Vec<PathBuf> {
+    pub fn uninstall(&self, prefix: &Path) -> Result<Vec<PathBuf>> {
         let assets = self.assets();
         let mut removed = Vec::new();
         if let Some(bin) = &assets.binary
-            && let Some(uninstalled) = bin.uninstall(prefix)
+            && let Some(uninstalled) = bin.uninstall(prefix)?
         {
             removed.push(uninstalled);
         }
         for bin in &assets.other_bins {
-            if let Some(uninstalled) = bin.uninstall(prefix) {
+            if let Some(uninstalled) = bin.uninstall(prefix)? {
                 removed.push(uninstalled);
             }
         }
         for man in &assets.man_pages {
-            if let Some(uninstalled) = man.uninstall(prefix) {
+            if let Some(uninstalled) = man.uninstall(prefix)? {
                 removed.push(uninstalled);
             }
         }
         for comp in &assets.completions {
-            if let Some(uninstalled) = comp.uninstall(prefix) {
+            if let Some(uninstalled) = comp.uninstall(prefix)? {
                 removed.push(uninstalled);
             }
         }
-        removed
+        Ok(removed)
     }
 }

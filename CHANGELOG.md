@@ -1,5 +1,6 @@
 ## unreleased
 
+- fix: uninstall now distinguishes missing files from real removal errors
 - fix: cached assets are now served even after a rate limit was hit
 
 ## v0.8.1 (2026-07-02)
