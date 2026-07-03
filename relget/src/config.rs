@@ -66,10 +66,7 @@ impl Config {
 
     pub fn configured_set(name: &str) -> Result<Vec<String>> {
         config()?.sets.get(name).cloned().ok_or_else(|| {
-            anyhow!(
-                "no configured set '{}' found in ~/.config/relget/config.toml under [sets]",
-                name
-            )
+            anyhow!("no configured set '{name}' found in ~/.config/relget/config.toml under [sets]")
         })
     }
 }

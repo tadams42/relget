@@ -58,9 +58,9 @@ impl Forge {
         {
             let mut cache = self.cache.lock().unwrap();
             if offline {
-                return cache.get_release_any_age(owner, repo).ok_or_else(|| {
-                    anyhow!("offline mode: no cached release for {}/{}", owner, repo)
-                });
+                return cache
+                    .get_release_any_age(owner, repo)
+                    .ok_or_else(|| anyhow!("offline mode: no cached release for {owner}/{repo}"));
             }
             if let Some(r) = cache.get_release(owner, repo) {
                 return Ok(r);
@@ -102,7 +102,7 @@ impl Forge {
         let data = releases
             .into_iter()
             .find(|r| (self.release_ok)(r) && r["tag_name"].as_str().is_none_or(tag_filter))
-            .ok_or_else(|| anyhow!("No release with assets for {}/{}", owner, repo))?;
+            .ok_or_else(|| anyhow!("No release with assets for {owner}/{repo}"))?;
 
         let release = ReleaseMetadata::new(owner, repo, (self.normalize)(data));
         self.cache.lock().unwrap().store_release(release.clone())?;
@@ -120,7 +120,7 @@ impl Forge {
         } else {
             release
                 .asset_id(name)
-                .ok_or_else(|| anyhow!("No such asset '{}' in {}/{}", name, owner, repo))?
+                .ok_or_else(|| anyhow!("No such asset '{name}' in {owner}/{repo}"))?
         };
 
         {
@@ -131,12 +131,7 @@ impl Forge {
         }
 
         if offline {
-            return Err(anyhow!(
-                "offline mode: no cached asset '{}' for {}/{}",
-                name,
-                owner,
-                repo
-            ));
+            return Err(anyhow!("offline mode: no cached asset '{name}' for {owner}/{repo}"));
         }
 
         // Checked only after the cache tiers: an already-downloaded asset must stay
@@ -148,18 +143,18 @@ impl Forge {
         let url = if is_tarball {
             release
                 .tarball_url()
-                .ok_or_else(|| anyhow!("No tarball URL for {}/{}", owner, repo))?
+                .ok_or_else(|| anyhow!("No tarball URL for {owner}/{repo}"))?
         } else {
-            release.asset_download_url(name).ok_or_else(|| {
-                anyhow!("No download URL for asset '{}' in {}/{}", name, owner, repo)
-            })?
+            release
+                .asset_download_url(name)
+                .ok_or_else(|| anyhow!("No download URL for asset '{name}' in {owner}/{repo}"))?
         };
 
         if !url.starts_with("http:") && !url.starts_with("https:") {
-            return Err(anyhow!("Unsafe URL scheme: {}", url));
+            return Err(anyhow!("Unsafe URL scheme: {url}"));
         }
 
-        log::info!("app={} msg=Downloading {}", repo, name);
+        log::info!("app={repo} msg=Downloading {name}");
         let mut req = ureq::get(&url).header("User-Agent", "relget");
         if self.auth_on_download
             && let Some(token) = token
@@ -174,8 +169,8 @@ impl Forge {
             .into_with_config()
             .limit(DOWNLOAD_LIMIT)
             .read_to_vec()
-            .with_context(|| format!("Couldn't read downloaded asset '{}'", name))?;
-        log::info!("app={} msg=Downloaded {}", repo, name);
+            .with_context(|| format!("Couldn't read downloaded asset '{name}'"))?;
+        log::info!("app={repo} msg=Downloaded {name}");
 
         let asset = CachedFile {
             api_id,

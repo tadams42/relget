@@ -125,7 +125,10 @@ mod tests {
             }],
             shell_completions:      vec![],
             man_pages:              vec![],
-            conflicts:              conflicts.iter().map(|c| c.to_string()).collect(),
+            conflicts:              conflicts
+                .iter()
+                .map(std::string::ToString::to_string)
+                .collect(),
             released_version_parse: None,
         }
     }

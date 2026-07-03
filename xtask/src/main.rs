@@ -48,7 +48,7 @@ fn update_changelog() {
         .to_string();
 
     let log_output = std::process::Command::new("git")
-        .args(["log", &format!("{}..HEAD", tag), "--format=%s"])
+        .args(["log", &format!("{tag}..HEAD"), "--format=%s"])
         .current_dir(project_root())
         .output()
         .expect("failed to run git log");
@@ -64,7 +64,7 @@ fn update_changelog() {
         .lines()
         .filter(|l| !l.is_empty())
         .filter(|l| !NOISE_PREFIXES.iter().any(|p| l.starts_with(p)))
-        .map(|l| format!("- {}", l))
+        .map(|l| format!("- {l}"))
         .collect();
 
     let changelog_path = project_root().join("CHANGELOG.md");
@@ -79,17 +79,23 @@ fn update_changelog() {
     let idx_end = lines[idx_start + 1..]
         .iter()
         .position(|l| l.starts_with("## "))
-        .map(|rel| idx_start + 1 + rel)
-        .unwrap_or(lines.len());
+        .map_or(lines.len(), |rel| idx_start + 1 + rel);
 
-    let mut new_lines: Vec<String> = lines[..=idx_start].iter().map(|l| l.to_string()).collect();
+    let mut new_lines: Vec<String> = lines[..=idx_start]
+        .iter()
+        .map(std::string::ToString::to_string)
+        .collect();
     new_lines.push(String::new());
     new_lines.extend(bullet_lines);
     new_lines.push(String::new());
-    new_lines.extend(lines[idx_end..].iter().map(|l| l.to_string()));
+    new_lines.extend(
+        lines[idx_end..]
+            .iter()
+            .map(std::string::ToString::to_string),
+    );
 
     fs::write(&changelog_path, new_lines.join("\n") + "\n").expect("failed to write CHANGELOG.md");
-    println!("CHANGELOG.md updated (commits since {}).", tag);
+    println!("CHANGELOG.md updated (commits since {tag}).");
 }
 
 fn project_root() -> PathBuf {

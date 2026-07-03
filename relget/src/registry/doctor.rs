@@ -36,11 +36,9 @@ pub(super) fn doctor(apps: &[AppEntry], offline: bool) -> Result<()> {
         let published_at = release_date(&release);
         let version_str = release
             .version()
-            .map(|v| v.to_string())
-            .unwrap_or_else(|_| "unknown".to_string());
+            .map_or_else(|_| "unknown".to_string(), |v| v.to_string());
         let date_str = published_at
-            .map(|d| d.format("%Y-%m-%d").to_string())
-            .unwrap_or_else(|| "unknown".to_string());
+            .map_or_else(|| "unknown".to_string(), |d| d.format("%Y-%m-%d").to_string());
 
         let asset_names = release.asset_names();
         let release_musl = release_has_x86_musl(&asset_names);
@@ -140,12 +138,12 @@ fn fetch_release(
     offline: bool,
 ) -> Result<ReleaseMetadata> {
     let (host, owner, repo) =
-        parse_url_parts(url).ok_or_else(|| anyhow!("cannot parse url: {}", url))?;
+        parse_url_parts(url).ok_or_else(|| anyhow!("cannot parse url: {url}"))?;
     let client: Box<dyn RelgetClient> = match host {
         "github.com" => Box::new(GithubClient::new(gh_token, offline)),
         "codeberg.org" => Box::new(CodebergClient::new(cb_token, offline)),
         "gitlab.com" => Box::new(GitlabClient::new(gl_token, offline)),
-        h => return Err(anyhow!("unknown host: {}", h)),
+        h => return Err(anyhow!("unknown host: {h}")),
     };
     client.latest_release(owner, repo)
 }

@@ -38,14 +38,13 @@ pub(super) fn uninstall_apps(prefix_path: &Path, selected: &[String]) -> Result<
         });
         if occupied_by_other {
             log::warn!(
-                "app={} msg=not installed (a conflicting app occupies the prefix), skipping",
-                app_id
+                "app={app_id} msg=not installed (a conflicting app occupies the prefix), skipping"
             );
             continue;
         }
 
         let app = App::from_id(app_id, None, None, None, false)
-            .ok_or_else(|| anyhow::anyhow!("Unknown app '{}'", app_id))?;
+            .ok_or_else(|| anyhow::anyhow!("Unknown app '{app_id}'"))?;
         removed.extend(app.uninstall(prefix_path)?);
     }
     Ok(removed)

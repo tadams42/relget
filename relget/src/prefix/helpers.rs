@@ -14,7 +14,7 @@ pub(super) fn select_apps(
         let apps = Config::configured_set(set_name)?;
         for app in &apps {
             if !known.contains(&app.as_str()) {
-                return Err(anyhow!("Unknown app '{}' in configured set '{}'", app, set_name));
+                return Err(anyhow!("Unknown app '{app}' in configured set '{set_name}'"));
             }
         }
         return Ok(apps);
@@ -29,7 +29,7 @@ pub(super) fn select_apps(
 
     for app in user_chosen {
         if !known.contains(&app.as_str()) {
-            return Err(anyhow!("Unknown app '{}'", app));
+            return Err(anyhow!("Unknown app '{app}'"));
         }
     }
     Ok(user_chosen.to_vec())
@@ -41,7 +41,7 @@ pub(super) fn bin_names_on_disk(prefix_path: &Path) -> HashSet<String> {
         return HashSet::new();
     };
     dir_entries
-        .filter_map(|e| e.ok())
+        .filter_map(std::result::Result::ok)
         .filter(|e| e.path().is_file())
         .map(|e| e.file_name().to_string_lossy().into_owned())
         .collect()
@@ -163,7 +163,10 @@ mod tests {
             }],
             shell_completions:      vec![],
             man_pages:              vec![],
-            conflicts:              conflicts.iter().map(|c| c.to_string()).collect(),
+            conflicts:              conflicts
+                .iter()
+                .map(std::string::ToString::to_string)
+                .collect(),
             released_version_parse: None,
         }
     }

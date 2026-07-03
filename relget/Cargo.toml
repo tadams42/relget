@@ -8,6 +8,9 @@ license = "MIT"
 name = "relget"
 path = "src/main.rs"
 
+[lints]
+workspace = true
+
 [dependencies]
 clap = { version = "4", features = ["derive"] }
 clap_complete = "4.6.5"

@@ -24,7 +24,7 @@ fn run_cmd(exe_path: &Path, args: &[&str]) -> Result<Vec<u8>> {
     let out = Command::new(exe_path)
         .args(args)
         .output()
-        .with_context(|| format!("Running {:?} {:?}", exe_path, args))?;
+        .with_context(|| format!("Running {exe_path:?} {args:?}"))?;
     Ok(out.stdout)
 }
 
@@ -65,7 +65,7 @@ impl App {
     }
 
     fn owner_repo(url: &str) -> (&str, &str) {
-        let without_scheme = url.split_once("://").map(|(_, rest)| rest).unwrap_or(url);
+        let without_scheme = url.split_once("://").map_or(url, |(_, rest)| rest);
         let mut parts = without_scheme.splitn(3, '/');
         let _host = parts.next().unwrap_or("");
         let owner = parts.next().unwrap_or("");
@@ -89,8 +89,7 @@ impl App {
     fn app_name_from_path(path: &str, shell: ShellKind) -> String {
         let base = Path::new(path)
             .file_name()
-            .map(|f| f.to_string_lossy().into_owned())
-            .unwrap_or_else(|| path.to_owned());
+            .map_or_else(|| path.to_owned(), |f| f.to_string_lossy().into_owned());
         match shell {
             ShellKind::Zsh => {
                 if let Some(s) = base.strip_prefix('_') {
@@ -117,8 +116,7 @@ impl App {
     fn man_filename_from_path(path: &str) -> String {
         Path::new(path)
             .file_name()
-            .map(|f| f.to_string_lossy().into_owned())
-            .unwrap_or_else(|| path.to_owned())
+            .map_or_else(|| path.to_owned(), |f| f.to_string_lossy().into_owned())
     }
 
     fn binary_name_by_id(&self, id: u32) -> &str {
@@ -215,7 +213,7 @@ impl App {
                 return decompressor.extract("inner");
             }
         }
-        bail!("Cannot extract man page '{}' from asset '{}'", filename, asset_name)
+        bail!("Cannot extract man page '{filename}' from asset '{asset_name}'")
     }
 }
 
@@ -227,8 +225,7 @@ impl App {
             .binaries
             .iter()
             .find(|b| b.is_main)
-            .map(|b| b.version_cmdline.as_str())
-            .unwrap_or("--version")
+            .map_or("--version", |b| b.version_cmdline.as_str())
     }
 
     /// Returns the version of the latest release on the forge.
@@ -629,7 +626,7 @@ impl App {
             Ok(o) => {
                 let stdout = String::from_utf8_lossy(&o.stdout);
                 let stderr = String::from_utf8_lossy(&o.stderr);
-                let combined = format!("{}{}", stdout, stderr);
+                let combined = format!("{stdout}{stderr}");
                 Ok(AppVersion::find_in(&combined))
             }
         }

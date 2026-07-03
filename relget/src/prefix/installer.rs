@@ -8,7 +8,7 @@ use crate::{App, RateLimitError, Registry};
 pub(super) fn install(
     prefix_path: &Path, apps: &[String], configured_set: Option<&str>, offline: bool,
 ) -> Result<()> {
-    log::info!("prefix={:?} msg=Installing", prefix_path);
+    log::info!("prefix={prefix_path:?} msg=Installing");
 
     let selected = helpers::select_apps(apps, configured_set)?;
     helpers::check_install_conflicts(prefix_path, &selected, Registry::entries())?;
@@ -47,16 +47,16 @@ pub(super) fn install_apps(
     for app_id in selected {
         let app =
             App::from_id(app_id, gh_token.clone(), cb_token.clone(), gl_token.clone(), offline)
-                .ok_or_else(|| anyhow!("Unknown app '{}'", app_id))?;
+                .ok_or_else(|| anyhow!("Unknown app '{app_id}'"))?;
         match app.install(prefix_path) {
             Ok(paths) => installed.extend(paths),
             Err(e) => {
                 if e.chain().any(|cause| cause.is::<RateLimitError>()) {
                     log::warn!("app={} msg=Skipping (rate limit): {}", app_id, e.root_cause());
                 } else if offline {
-                    log::warn!("app={} msg=Skipping (offline, no cached data): {:#}", app_id, e);
+                    log::warn!("app={app_id} msg=Skipping (offline, no cached data): {e:#}");
                 } else {
-                    log::error!("app={} msg=Install failed: {:#}", app_id, e);
+                    log::error!("app={app_id} msg=Install failed: {e:#}");
                     failed += 1;
                 }
             }

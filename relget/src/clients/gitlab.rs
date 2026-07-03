@@ -80,7 +80,9 @@ fn normalize_gitlab_release(mut data: Value) -> Value {
     let normalized: Vec<Value> = links
         .into_iter()
         .map(|mut link| {
-            let url = link["direct_asset_url"].as_str().map(|s| s.to_string());
+            let url = link["direct_asset_url"]
+                .as_str()
+                .map(std::string::ToString::to_string);
             if let (Some(obj), Some(url)) = (link.as_object_mut(), url) {
                 obj.insert("browser_download_url".to_string(), Value::String(url));
             }

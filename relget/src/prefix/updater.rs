@@ -13,7 +13,7 @@ pub(super) fn update(
         let bin_dir = prefix_path.join("bin");
         let owned: HashSet<String> = std::fs::read_dir(&bin_dir)
             .map_err(|e| anyhow::anyhow!("cannot read {}: {}", bin_dir.display(), e))?
-            .filter_map(|e| e.ok())
+            .filter_map(std::result::Result::ok)
             .filter_map(|e| {
                 let path = e.path();
                 if path.is_file() {
@@ -79,7 +79,7 @@ fn filter_to_installed(
                 helpers::occupying_app_id(e, entries, installed_binaries) == Some(id.as_str())
             });
             if !occupied {
-                log::warn!("app={} msg=not installed, skipping", id);
+                log::warn!("app={id} msg=not installed, skipping");
             }
             occupied
         })
@@ -136,7 +136,10 @@ mod tests {
             }],
             shell_completions:      vec![],
             man_pages:              vec![],
-            conflicts:              conflicts.iter().map(|c| c.to_string()).collect(),
+            conflicts:              conflicts
+                .iter()
+                .map(std::string::ToString::to_string)
+                .collect(),
             released_version_parse: None,
         }
     }

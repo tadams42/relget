@@ -66,12 +66,7 @@ impl<'a> ArchiveExtractor<'a> {
         let members = self.members()?;
         let member = members
             .iter()
-            .find(|m| {
-                Path::new(m)
-                    .file_name()
-                    .map(|f| f == filename)
-                    .unwrap_or(false)
-            })
+            .find(|m| Path::new(m).file_name().is_some_and(|f| f == filename))
             .cloned()
             .ok_or_else(|| anyhow!("Can't find '{}' in '{}'", filename, self.archive_name))?;
         self.extract(&member)

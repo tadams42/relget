@@ -133,7 +133,7 @@ impl ReleaseMetadata {
             .as_array()
             .map(|a| {
                 a.iter()
-                    .filter_map(|v| v["name"].as_str().map(|s| s.to_string()))
+                    .filter_map(|v| v["name"].as_str().map(std::string::ToString::to_string))
                     .collect()
             })
             .unwrap_or_default()
@@ -151,7 +151,9 @@ impl ReleaseMetadata {
     pub fn asset_download_url(&self, name: &str) -> Option<String> {
         self.data["assets"].as_array()?.iter().find_map(|v| {
             if v["name"].as_str() == Some(name) {
-                v["browser_download_url"].as_str().map(|s| s.to_string())
+                v["browser_download_url"]
+                    .as_str()
+                    .map(std::string::ToString::to_string)
             } else {
                 None
             }
@@ -171,7 +173,9 @@ impl ReleaseMetadata {
 
     /// URL of the source-code tarball (`tarball_url` field), if present.
     pub fn tarball_url(&self) -> Option<String> {
-        self.data["tarball_url"].as_str().map(|s| s.to_string())
+        self.data["tarball_url"]
+            .as_str()
+            .map(std::string::ToString::to_string)
     }
 
     /// Numeric API ID of the release itself (`id` field), used as the tarball cache key.
@@ -248,7 +252,7 @@ impl RelgetCache {
     }
 
     /// In-memory and on-disk lookup key for a release: `"releases/{owner}/{repo}"`.
-    fn release_key(owner: &str, repo: &str) -> String { format!("releases/{}/{}", owner, repo) }
+    fn release_key(owner: &str, repo: &str) -> String { format!("releases/{owner}/{repo}") }
 
     /// In-memory lookup key for an asset: `"assets/asset.{id}"` for release
     /// assets, `"assets/tarball.{id}"` for source tarballs.
@@ -279,7 +283,7 @@ impl RelgetCache {
 
         if let Some(r) = self.releases.get(&key) {
             if !r.is_expired() {
-                log::debug!("owner={} repo={} msg=memory-cache-hit", owner, repo);
+                log::debug!("owner={owner} repo={repo} msg=memory-cache-hit");
                 return Some(r.clone());
             }
             self.releases.remove(&key);
@@ -289,7 +293,7 @@ impl RelgetCache {
         if let Some(json) = load_release_from_disk(&path)
             && !json.is_expired()
         {
-            log::debug!("owner={} repo={} msg=disk-cache-hit", owner, repo);
+            log::debug!("owner={owner} repo={repo} msg=disk-cache-hit");
             self.releases.insert(key, json.clone());
             return Some(json);
         }
@@ -345,7 +349,7 @@ impl RelgetCache {
         let key = Self::asset_key(api_id, name);
 
         if let Some(a) = self.assets.get(&key) {
-            log::debug!("asset={} msg=memory-cache-hit", name);
+            log::debug!("asset={name} msg=memory-cache-hit");
             return Some(Arc::clone(a));
         }
 
@@ -355,7 +359,7 @@ impl RelgetCache {
         if path.exists()
             && let Ok(data) = std::fs::read(&path)
         {
-            log::debug!("asset={} msg=disk-cache-hit", name);
+            log::debug!("asset={name} msg=disk-cache-hit");
             let asset = Arc::new(CachedFile {
                 api_id,
                 owner: owner.to_string(),
@@ -395,9 +399,9 @@ impl RelgetCache {
 /// `"tarball"`) and `"asset.{api_id}"` for all named release assets.
 fn disk_filename(name: &str, api_id: u64) -> String {
     if name == "tarball" {
-        format!("tarball.{}", api_id)
+        format!("tarball.{api_id}")
     } else {
-        format!("asset.{}", api_id)
+        format!("asset.{api_id}")
     }
 }
 
