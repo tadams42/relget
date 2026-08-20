@@ -140,7 +140,7 @@ impl App {
             if let Some((name, file)) = downloaded.get(&asset_def.id) {
                 let extractor = ArchiveExtractor::new(name.as_str(), &file.data);
 
-                if let Ok(extracted) = extractor.extract_by_filename(&binary_def.name) {
+                if let Ok(extracted) = extractor.extract_by_path(&binary_def.name) {
                     return Ok(extracted);
                 }
 
@@ -179,12 +179,7 @@ impl App {
         if matches!(asset_def.asset_type, AssetType::Binary) {
             Ok(asset_data.to_vec())
         } else {
-            let extractor = ArchiveExtractor::new(asset_name, asset_data);
-            let filename = Path::new(path)
-                .file_name()
-                .and_then(|f| f.to_str())
-                .unwrap_or(path);
-            extractor.extract_by_filename(filename)
+            ArchiveExtractor::new(asset_name, asset_data).extract_by_path(path)
         }
     }
 
@@ -197,23 +192,20 @@ impl App {
             return Ok(asset_data.to_vec());
         }
         let extractor = ArchiveExtractor::new(asset_name, asset_data);
-        let filename = Path::new(path)
-            .file_name()
-            .and_then(|f| f.to_str())
-            .unwrap_or(path);
         // Direct extraction first
-        if let Ok(data) = extractor.extract_by_filename(filename) {
+        if let Ok(data) = extractor.extract_by_path(path) {
             return Ok(data);
         }
-        // If not found and path doesn't end in .gz, try the compressed form
-        if !filename.ends_with(".gz") {
-            let gz_name = format!("{filename}.gz");
-            if let Ok(compressed) = extractor.extract_by_filename(&gz_name) {
+        // If not found and path doesn't end in .gz, try the compressed form (debs ship man pages
+        // gzipped)
+        if !path.ends_with(".gz") {
+            let gz_path = format!("{path}.gz");
+            if let Ok(compressed) = extractor.extract_by_path(&gz_path) {
                 let decompressor = ArchiveExtractor::new("inner.gz", &compressed);
                 return decompressor.extract("inner");
             }
         }
-        bail!("Cannot extract man page '{filename}' from asset '{asset_name}'")
+        bail!("Cannot extract man page '{path}' from asset '{asset_name}'")
     }
 }
 

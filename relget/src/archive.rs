@@ -47,7 +47,7 @@ impl<'a> ArchiveExtractor<'a> {
         } else if self.is_zip() {
             self.zip_members()
         } else if self.is_ar_deb() {
-            self.ar_members()
+            self.deb_members()
         } else if self.is_gzip_only() {
             // Single compressed file — name without the .gz suffix
             let name = self.name();
@@ -62,15 +62,37 @@ impl<'a> ArchiveExtractor<'a> {
         }
     }
 
-    pub fn extract_by_filename(&self, filename: &str) -> Result<Vec<u8>> {
+    /// Extracts the member matching `path`.
+    ///
+    /// `path` comes from the registry and may be either a bare file name (`dust.1`) or a
+    /// relative path (`usr/share/bash-completion/completions/dust`). A path match is tried first —
+    /// the member either equals `path` or ends with `/path` — so that a registry entry can
+    /// disambiguate archives holding several files with the same base name (a `.deb` ships
+    /// `usr/bin/dust` next to `usr/share/bash-completion/completions/dust`). Matching on the
+    /// base name alone is the fallback, which is what a bare file name relies on.
+    pub fn extract_by_path(&self, path: &str) -> Result<Vec<u8>> {
         let members = self.members()?;
+        let suffix = format!("/{path}");
         let member = members
             .iter()
-            .find(|m| Path::new(m).file_name().is_some_and(|f| f == filename))
+            .find(|m| {
+                let m = Self::normalize(m);
+                m == path || m.ends_with(&suffix)
+            })
+            .or_else(|| {
+                let base = Path::new(path).file_name();
+                members
+                    .iter()
+                    .find(|m| Path::new(m.as_str()).file_name() == base)
+            })
             .cloned()
-            .ok_or_else(|| anyhow!("Can't find '{}' in '{}'", filename, self.archive_name))?;
+            .ok_or_else(|| anyhow!("Can't find '{}' in '{}'", path, self.archive_name))?;
         self.extract(&member)
     }
+
+    /// Strips the `./` prefix tar members are often stored with, so that member paths compare
+    /// against registry paths.
+    fn normalize(member: &str) -> &str { member.strip_prefix("./").unwrap_or(member) }
 
     pub fn extract(&self, member: &str) -> Result<Vec<u8>> {
         if self.is_tar() {
@@ -78,7 +100,7 @@ impl<'a> ArchiveExtractor<'a> {
         } else if self.is_zip() {
             self.zip_extract(member)
         } else if self.is_ar_deb() {
-            self.ar_extract(member)
+            self.deb_extract(member)
         } else if self.is_gzip_only() {
             self.gz_decompress()
         } else if self.is_xz_only() {
@@ -180,6 +202,30 @@ impl<'a> ArchiveExtractor<'a> {
         Ok(members)
     }
 
+    /// A `.deb` is an `ar` archive whose payload is a nested `data.tar.*`. Both `members()` and
+    /// `extract()` see through to that payload, so a `deb` asset behaves like the tarball it
+    /// wraps and registry paths refer to the installed layout (`usr/bin/dust`).
+    fn deb_data_tar(&self) -> Result<(String, Vec<u8>)> {
+        let member = self
+            .ar_members()?
+            .into_iter()
+            .find(|m| m.trim_end_matches('/').starts_with("data.tar"))
+            .ok_or_else(|| anyhow!("Can't find 'data.tar' in '{}'", self.name()))?;
+        let data = self.ar_extract(&member)?;
+        // GNU ar terminates identifiers with '/'; the tar dispatch matches on the extension.
+        Ok((member.trim_end_matches('/').to_owned(), data))
+    }
+
+    fn deb_members(&self) -> Result<Vec<String>> {
+        let (name, data) = self.deb_data_tar()?;
+        ArchiveExtractor::new(name, &data).members()
+    }
+
+    fn deb_extract(&self, member: &str) -> Result<Vec<u8>> {
+        let (name, data) = self.deb_data_tar()?;
+        ArchiveExtractor::new(name, &data).extract(member)
+    }
+
     fn ar_extract(&self, member: &str) -> Result<Vec<u8>> {
         let cursor = Cursor::new(self.data);
         let mut archive = ar::Archive::new(cursor);
@@ -237,6 +283,81 @@ mod tests {
         let e = ArchiveExtractor::new("app-linux.xz", &[]);
         let names = e.members().unwrap();
         assert_eq!(names, vec!["app-linux"]);
+    }
+
+    /// Builds an uncompressed tar with one file per `(path, contents)` pair.
+    fn tar_with(entries: &[(&str, &[u8])]) -> Vec<u8> {
+        let mut builder = tar::Builder::new(Vec::new());
+        for (path, contents) in entries {
+            let mut header = tar::Header::new_gnu();
+            header.set_size(contents.len() as u64);
+            header.set_mode(0o644);
+            header.set_cksum();
+            builder.append_data(&mut header, path, *contents).unwrap();
+        }
+        builder.into_inner().unwrap()
+    }
+
+    /// Builds a `.deb`: an `ar` archive wrapping `debian-binary` and an uncompressed `data.tar`.
+    fn deb_with(entries: &[(&str, &[u8])]) -> Vec<u8> {
+        let data_tar = tar_with(entries);
+        let mut builder = ar::Builder::new(Vec::new());
+        builder
+            .append(&ar::Header::new(b"debian-binary".to_vec(), 4), &b"2.0\n"[..])
+            .unwrap();
+        builder
+            .append(
+                &ar::Header::new(b"data.tar".to_vec(), data_tar.len() as u64),
+                data_tar.as_slice(),
+            )
+            .unwrap();
+        builder.into_inner().unwrap()
+    }
+
+    #[test]
+    fn deb_members_see_through_to_the_nested_data_tar() {
+        let deb = deb_with(&[("./usr/bin/foo", b"elf")]);
+        let e = ArchiveExtractor::new("foo_1.0_amd64.deb", &deb);
+        // Not debian-binary / data.tar — the ar wrapper is transparent.
+        assert_eq!(e.members().unwrap(), vec!["usr/bin/foo"]);
+        assert_eq!(e.extract_by_path("usr/bin/foo").unwrap(), b"elf");
+    }
+
+    #[test]
+    fn extract_by_path_prefers_the_full_path_over_a_colliding_base_name() {
+        // A deb ships the completion script and the executable under the same base name, with
+        // the completion first — base-name matching alone would install the wrong one.
+        let deb = deb_with(&[
+            ("./usr/share/bash-completion/completions/dust", b"# completion"),
+            ("./usr/bin/dust", b"elf"),
+        ]);
+        let e = ArchiveExtractor::new("du-dust_1.2.5-1_amd64.deb", &deb);
+        assert_eq!(
+            e.extract_by_path("usr/share/bash-completion/completions/dust")
+                .unwrap(),
+            b"# completion"
+        );
+        assert_eq!(e.extract_by_path("usr/bin/dust").unwrap(), b"elf");
+    }
+
+    #[test]
+    fn extract_by_path_falls_back_to_the_base_name() {
+        // Registry paths that don't mirror the archive layout still resolve by base name.
+        let tar = tar_with(&[("pkg-1.0/completion/foo.bash", b"# completion")]);
+        let e = ArchiveExtractor::new("pkg.tar", &tar);
+        assert_eq!(
+            e.extract_by_path("build/completion/foo.bash").unwrap(),
+            b"# completion"
+        );
+        assert_eq!(e.extract_by_path("foo.bash").unwrap(), b"# completion");
+    }
+
+    #[test]
+    fn extract_by_path_missing_member_names_the_archive() {
+        let deb = deb_with(&[("./usr/bin/foo", b"elf")]);
+        let e = ArchiveExtractor::new("foo_1.0_amd64.deb", &deb);
+        let err = e.extract_by_path("_foo").unwrap_err().to_string();
+        assert!(err.contains("_foo") && err.contains("foo_1.0_amd64.deb"), "{err}");
     }
 
     #[test]

@@ -93,26 +93,15 @@
       "ends_with": "_amd64.deb"
     }
   ],
+  // The .deb ships only bash completions — no `_dust` or `dust.fish` — and the binary has no
+  // flag to generate them. Paths are the deb's installed layout so that `dust` the completion
+  // isn't confused with `dust` the executable.
   "shell_completions": [
     {
       "shell": "bash",
       "extracted": {
         "asset_id": 2,
-        "path": "dust"
-      }
-    },
-    {
-      "shell": "zsh",
-      "extracted": {
-        "asset_id": 2,
-        "path": "_dust"
-      }
-    },
-    {
-      "shell": "fish",
-      "extracted": {
-        "asset_id": 2,
-        "path": "dust.fish"
+        "path": "usr/share/bash-completion/completions/dust"
       }
     }
   ],
@@ -121,7 +110,7 @@
       "section": 1,
       "extracted": {
         "asset_id": 2,
-        "path": "dust.1"
+        "path": "usr/share/man/man1/dust.1"
       }
     }
   ]
