@@ -15,8 +15,8 @@
     {
       "id": 1,
       "type": "archive",
-      "starts_with": "doggo_",
-      "ends_with": "_Linux_x86_64.tar.gz"
+      "starts_with": "doggo",
+      "ends_with": "-linux-x86_64.tar.gz"
     }
   ],
   "shell_completions": [],
