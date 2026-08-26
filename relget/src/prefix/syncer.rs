@@ -109,6 +109,7 @@ mod tests {
                     AppBinaryDef {
                         id:              i as u32 + 1,
                         name:            name.to_string(),
+                        archive_paths:   vec![],
                         version_cmdline: String::new(),
                         is_main:         i == 0,
                     }

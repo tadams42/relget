@@ -7,6 +7,8 @@
     {
       "id": 1,
       "name": "yq",
+      // Since v4.53 the tarball ships the binary under its platform-suffixed name.
+      "archive_paths": ["yq_linux_amd64"],
       "version_cmdline": "--version",
       "is_main": true
     }

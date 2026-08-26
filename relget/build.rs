@@ -49,6 +49,8 @@ struct RawApp {
 struct RawBinaryDef {
     id:              u32,
     name:            String,
+    #[serde(default)]
+    archive_paths:   Vec<String>,
     version_cmdline: String,
     #[serde(default)]
     is_main:         bool,
@@ -146,6 +148,7 @@ fn convert_app(raw: RawApp, path: &str) -> Result<AppEntry> {
             AppBinaryDef {
                 id:              b.id,
                 name:            b.name,
+                archive_paths:   b.archive_paths,
                 version_cmdline: b.version_cmdline,
                 is_main:         b.is_main,
             }

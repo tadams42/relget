@@ -1,5 +1,7 @@
 ## unreleased
 
+- feat: added `archive_paths` so a binary can be found under other names in an asset
+
 ## v0.8.2 (2026-08-25)
 
 - fix: `doggo` registry description didn't work for latest release

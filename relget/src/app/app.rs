@@ -128,6 +128,12 @@ impl App {
             .expect("registry validation ensures binary_id exists")
     }
 
+    /// Paths to look for inside an asset for `binary_def`, in the order they are tried.
+    fn binary_candidates(binary_def: &AppBinaryDef) -> impl Iterator<Item = &str> {
+        std::iter::once(binary_def.name.as_str())
+            .chain(binary_def.archive_paths.iter().map(String::as_str))
+    }
+
     fn extract_binary_data(
         binary_def: &AppBinaryDef, assets: &[AppAssetDef],
         downloaded: &HashMap<u32, (String, Arc<CachedFile>)>, content_asset_ids: &HashSet<u32>,
@@ -140,8 +146,13 @@ impl App {
             if let Some((name, file)) = downloaded.get(&asset_def.id) {
                 let extractor = ArchiveExtractor::new(name.as_str(), &file.data);
 
-                if let Ok(extracted) = extractor.extract_by_path(&binary_def.name) {
-                    return Ok(extracted);
+                // The installed name first, then the registry's declared aliases in order. Order
+                // matters: `extract_by_path` falls back to base-name matching, so a later
+                // candidate can collide with a man page or completion shipped alongside.
+                for candidate in Self::binary_candidates(binary_def) {
+                    if let Ok(extracted) = extractor.extract_by_path(candidate) {
+                        return Ok(extracted);
+                    }
                 }
 
                 // Single-member archive (handles single-file .gz like dasel)
@@ -168,8 +179,11 @@ impl App {
         }
 
         bail!(
-            "Cannot extract binary '{}': not found in any downloaded asset",
-            binary_def.name
+            "Cannot extract binary '{}' (tried: {}): not found in any downloaded asset",
+            binary_def.name,
+            Self::binary_candidates(binary_def)
+                .collect::<Vec<_>>()
+                .join(", ")
         )
     }
 
@@ -679,5 +693,183 @@ impl App {
             }
         }
         Ok(removed)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::io::Write;
+
+    use super::*;
+
+    const BIN: &[u8] = b"\x7fELF-the-real-binary";
+    const MAN: &[u8] = b".TH YQ 1";
+    const SCRIPT: &[u8] = b"#!/bin/sh\ninstall-man-page";
+
+    /// Builds a gzipped tar with one file per `(path, contents)` pair.
+    fn tar_gz_with(entries: &[(&str, &[u8])]) -> Vec<u8> {
+        let mut builder = tar::Builder::new(Vec::new());
+        for (path, contents) in entries {
+            let mut header = tar::Header::new_gnu();
+            header.set_size(contents.len() as u64);
+            header.set_mode(0o755);
+            header.set_cksum();
+            builder.append_data(&mut header, path, *contents).unwrap();
+        }
+        let tar = builder.into_inner().unwrap();
+        let mut enc = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::fast());
+        enc.write_all(&tar).unwrap();
+        enc.finish().unwrap()
+    }
+
+    /// The exact member layout of `yq_linux_amd64.tar.gz` as of yq v4.53.
+    fn yq_tar_gz() -> Vec<u8> {
+        tar_gz_with(&[
+            ("./yq_linux_amd64", BIN),
+            ("yq.1", MAN),
+            ("install-man-page.sh", SCRIPT),
+        ])
+    }
+
+    fn binary(name: &str, archive_paths: &[&str]) -> AppBinaryDef {
+        AppBinaryDef {
+            id:              1,
+            name:            name.into(),
+            archive_paths:   archive_paths.iter().map(|s| (*s).to_string()).collect(),
+            version_cmdline: "--version".into(),
+            is_main:         true,
+        }
+    }
+
+    fn asset(id: u32, asset_type: AssetType) -> AppAssetDef {
+        AppAssetDef {
+            id,
+            asset_type,
+            starts_with: None,
+            contains: None,
+            not_contains: None,
+            ends_with: None,
+            equals: None,
+        }
+    }
+
+    fn downloaded(entries: &[(u32, &str, Vec<u8>)]) -> DownloadedAssets {
+        entries
+            .iter()
+            .map(|(id, name, data)| {
+                let file = CachedFile {
+                    api_id: u64::from(*id),
+                    owner:  "mikefarah".into(),
+                    repo:   "yq".into(),
+                    name:   (*name).to_string(),
+                    data:   data.clone(),
+                };
+                (*id, ((*name).to_string(), Arc::new(file)))
+            })
+            .collect()
+    }
+
+    fn extract(
+        binary_def: &AppBinaryDef, assets: &[AppAssetDef], downloaded: &DownloadedAssets,
+    ) -> Result<Vec<u8>> {
+        App::extract_binary_data(binary_def, assets, downloaded, &HashSet::new())
+    }
+
+    #[test]
+    fn plain_name_alone_cannot_find_the_platform_suffixed_member() {
+        // Reproduces the yq breakage: no member is named `yq`, and the three-member archive
+        // rules out the single-member fallback.
+        let assets = [asset(1, AssetType::Archive)];
+        let dl = downloaded(&[(1, "yq_linux_amd64.tar.gz", yq_tar_gz())]);
+
+        let err = extract(&binary("yq", &[]), &assets, &dl).unwrap_err();
+
+        assert!(err.to_string().contains("Cannot extract binary 'yq'"), "{err}");
+    }
+
+    #[test]
+    fn archive_paths_find_the_platform_suffixed_member() {
+        let assets = [asset(1, AssetType::Archive)];
+        let dl = downloaded(&[(1, "yq_linux_amd64.tar.gz", yq_tar_gz())]);
+
+        let data = extract(&binary("yq", &["yq_linux_amd64"]), &assets, &dl).unwrap();
+
+        // Not the man page and not the installer script: a base-name misfire would pick one of
+        // those and still return `Ok`.
+        assert_eq!(data, BIN);
+    }
+
+    #[test]
+    fn name_is_tried_before_archive_paths() {
+        let assets = [asset(1, AssetType::Archive)];
+        let dl = downloaded(&[(
+            1,
+            "app.tar.gz",
+            tar_gz_with(&[("app", BIN), ("app_linux_amd64", MAN)]),
+        )]);
+
+        let data = extract(&binary("app", &["app_linux_amd64"]), &assets, &dl).unwrap();
+
+        assert_eq!(data, BIN);
+    }
+
+    #[test]
+    fn archive_paths_are_tried_in_declared_order() {
+        let assets = [asset(1, AssetType::Archive)];
+        let dl =
+            downloaded(&[(1, "app.tar.gz", tar_gz_with(&[("app_musl", BIN), ("app_gnu", MAN)]))]);
+
+        let data = extract(&binary("app", &["app_musl", "app_gnu"]), &assets, &dl).unwrap();
+
+        assert_eq!(data, BIN);
+    }
+
+    #[test]
+    fn assets_are_tried_in_id_order_and_all_candidates_run_per_asset() {
+        let assets = [asset(1, AssetType::Archive), asset(2, AssetType::Archive)];
+        let dl = downloaded(&[
+            (1, "docs.tar.gz", tar_gz_with(&[("app.1", MAN), ("README", SCRIPT)])),
+            (
+                2,
+                "app.tar.gz",
+                tar_gz_with(&[("app_linux_amd64", BIN), ("LICENSE", SCRIPT)]),
+            ),
+        ]);
+
+        let data = extract(&binary("app", &["app_linux_amd64"]), &assets, &dl).unwrap();
+
+        assert_eq!(data, BIN);
+    }
+
+    #[test]
+    fn single_member_archive_fallback_still_applies() {
+        // `dasel` ships a bare `.gz` whose only member is the platform-suffixed binary; it must
+        // keep working without declaring `archive_paths`.
+        let assets = [asset(1, AssetType::Archive)];
+        let mut enc = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::fast());
+        enc.write_all(BIN).unwrap();
+        let dl = downloaded(&[(1, "dasel_linux_amd64.gz", enc.finish().unwrap())]);
+
+        let data = extract(&binary("dasel", &[]), &assets, &dl).unwrap();
+
+        assert_eq!(data, BIN);
+    }
+
+    #[test]
+    fn raw_binary_asset_fallback_still_applies() {
+        // `jq` publishes the executable as a bare asset, matched after every archive fails.
+        let assets = [asset(1, AssetType::Archive), asset(2, AssetType::Binary)];
+        let dl = downloaded(&[
+            (
+                1,
+                "jq-1.8.tar.gz",
+                tar_gz_with(&[("jq-1.8/jq.1", MAN), ("jq-1.8/README", SCRIPT)]),
+            ),
+            (2, "jq-linux-amd64", BIN.to_vec()),
+        ]);
+
+        let data = extract(&binary("jq", &[]), &assets, &dl).unwrap();
+
+        assert_eq!(data, BIN);
     }
 }

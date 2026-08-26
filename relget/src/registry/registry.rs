@@ -207,6 +207,47 @@ mod tests {
     }
 
     #[test]
+    fn schema_binaries_archive_paths_optional() {
+        // minimal_app declares no "archive_paths" and must stay valid
+        assert!(app_validator().is_valid(&minimal_app()));
+    }
+
+    #[test]
+    fn schema_binaries_archive_paths_valid() {
+        let mut app = minimal_app();
+        app["binaries"][0]["archive_paths"] = json!(["foo_linux_amd64"]);
+        assert!(app_validator().is_valid(&app));
+    }
+
+    #[test]
+    fn schema_binaries_archive_paths_empty_array() {
+        let mut app = minimal_app();
+        app["binaries"][0]["archive_paths"] = json!([]);
+        assert!(!app_validator().is_valid(&app));
+    }
+
+    #[test]
+    fn schema_binaries_archive_paths_empty_entry() {
+        let mut app = minimal_app();
+        app["binaries"][0]["archive_paths"] = json!([""]);
+        assert!(!app_validator().is_valid(&app));
+    }
+
+    #[test]
+    fn schema_binaries_archive_paths_duplicate_entries() {
+        let mut app = minimal_app();
+        app["binaries"][0]["archive_paths"] = json!(["foo_linux_amd64", "foo_linux_amd64"]);
+        assert!(!app_validator().is_valid(&app));
+    }
+
+    #[test]
+    fn schema_binaries_archive_paths_not_an_array() {
+        let mut app = minimal_app();
+        app["binaries"][0]["archive_paths"] = json!("foo_linux_amd64");
+        assert!(!app_validator().is_valid(&app));
+    }
+
+    #[test]
     fn schema_conflicts_optional() {
         // minimal_app has no "conflicts" key and must stay valid
         assert!(app_validator().is_valid(&minimal_app()));

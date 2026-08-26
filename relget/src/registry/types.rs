@@ -31,6 +31,10 @@ pub struct AppEntry {
 pub struct AppBinaryDef {
     pub id:              u32,
     pub name:            String,
+    /// Extra paths to look for inside a downloaded asset when the archive member isn't named
+    /// `name` (`yq` ships `yq_linux_amd64`). Tried in order, after `name`. The binary is always
+    /// installed as `name`.
+    pub archive_paths:   Vec<String>,
     pub version_cmdline: String,
     pub is_main:         bool,
 }
@@ -177,6 +181,7 @@ fn validate_basics(app: &AppEntry, category_ids: &HashSet<&str>, errors: &mut Ve
         if !seen.insert(b.name.as_str()) {
             errors.push(format!("{app_id}: duplicate binary name '{}'", b.name));
         }
+        validate_archive_paths(app_id, b, errors);
     }
 
     let asset_ids: HashSet<u32> = app.assets.iter().map(|a| a.id).collect();
@@ -189,6 +194,28 @@ fn validate_basics(app: &AppEntry, category_ids: &HashSet<&str>, errors: &mut Ve
         errors.push(format!(
             "{app_id}: expected exactly 1 binary with is_main=true, found {main_count}"
         ));
+    }
+}
+
+/// `archive_paths` are looked up inside a downloaded asset, so unlike `name` they are local to one
+/// binary — two apps may legitimately both ship `bin/app`. Only the in-binary rules apply: no empty
+/// entries, no duplicates, and no entry repeating `name` (which is already tried first).
+fn validate_archive_paths(app_id: &str, binary: &AppBinaryDef, errors: &mut Vec<String>) {
+    let mut seen: HashSet<&str> = HashSet::new();
+    for path in &binary.archive_paths {
+        let name = &binary.name;
+        if path.trim().is_empty() {
+            errors.push(format!("{app_id}: empty archive_paths entry for binary '{name}'"));
+        } else if path == name {
+            errors.push(format!(
+                "{app_id}: archive_paths entry '{path}' for binary '{name}' repeats its name, \
+                 which is always tried first"
+            ));
+        } else if !seen.insert(path.as_str()) {
+            errors.push(format!(
+                "{app_id}: duplicate archive_paths entry '{path}' for binary '{name}'"
+            ));
+        }
     }
 }
 
@@ -418,6 +445,7 @@ mod tests {
             binaries:               vec![AppBinaryDef {
                 id:              1,
                 name:            id.into(),
+                archive_paths:   vec![],
                 version_cmdline: "--version".into(),
                 is_main:         true,
             }],
@@ -458,6 +486,7 @@ mod tests {
         app.binaries.push(AppBinaryDef {
             id:              2,
             name:            "foox".into(),
+            archive_paths:   vec![],
             version_cmdline: "--version".into(),
             is_main:         false,
         });
@@ -470,10 +499,52 @@ mod tests {
         app.binaries.push(AppBinaryDef {
             id:              2,
             name:            "foo".into(), // same name as binary id=1
+            archive_paths:   vec![],
             version_cmdline: "--version".into(),
             is_main:         false,
         });
         has_error(&validate(&[app], &test_categories()), "duplicate binary name");
+    }
+
+    // archive_paths: per-binary lookup aliases
+
+    #[test]
+    fn archive_paths_valid() {
+        let mut app = make_app("foo");
+        app.binaries[0].archive_paths = vec!["foo_linux_amd64".into(), "bin/foo".into()];
+        no_errors(&validate(&[app], &test_categories()));
+    }
+
+    #[test]
+    fn archive_paths_empty_entry() {
+        let mut app = make_app("foo");
+        app.binaries[0].archive_paths = vec!["  ".into()];
+        has_error(&validate(&[app], &test_categories()), "empty archive_paths entry");
+    }
+
+    #[test]
+    fn archive_paths_duplicate_entry() {
+        let mut app = make_app("foo");
+        app.binaries[0].archive_paths = vec!["foo_linux_amd64".into(), "foo_linux_amd64".into()];
+        has_error(&validate(&[app], &test_categories()), "duplicate archive_paths entry");
+    }
+
+    #[test]
+    fn archive_paths_repeating_the_binary_name() {
+        let mut app = make_app("foo");
+        app.binaries[0].archive_paths = vec!["foo".into()];
+        has_error(&validate(&[app], &test_categories()), "repeats its name");
+    }
+
+    #[test]
+    fn archive_paths_may_repeat_across_apps() {
+        // Unlike `name`, an archive path is internal to a tarball: two apps may both ship
+        // `bin/app` without colliding in <prefix>/bin.
+        let mut app_a = make_app("app-a");
+        app_a.binaries[0].archive_paths = vec!["bin/app".into()];
+        let mut app_b = make_app("app-b");
+        app_b.binaries[0].archive_paths = vec!["bin/app".into()];
+        no_errors(&validate(&[app_a, app_b], &test_categories()));
     }
 
     // Rule 2: binary name uniqueness globally
@@ -506,6 +577,7 @@ mod tests {
         app_b.binaries.push(AppBinaryDef {
             id:              2,
             name:            "shared-extra".into(),
+            archive_paths:   vec![],
             version_cmdline: "--version".into(),
             is_main:         false,
         });
@@ -587,6 +659,7 @@ mod tests {
         app_c.binaries.push(AppBinaryDef {
             id:              2,
             name:            "shared-c".into(),
+            archive_paths:   vec![],
             version_cmdline: "--version".into(),
             is_main:         false,
         });
@@ -607,6 +680,7 @@ mod tests {
         app_c.binaries.push(AppBinaryDef {
             id:              2,
             name:            "shared-c".into(),
+            archive_paths:   vec![],
             version_cmdline: "--version".into(),
             is_main:         false,
         });
@@ -1122,6 +1196,7 @@ mod tests {
         app.binaries.push(AppBinaryDef {
             id:              1, // same as existing
             name:            "foox".into(),
+            archive_paths:   vec![],
             version_cmdline: "--version".into(),
             is_main:         false,
         });
@@ -1159,6 +1234,7 @@ mod tests {
         app.binaries.push(AppBinaryDef {
             id:              2,
             name:            "foox".into(),
+            archive_paths:   vec![],
             version_cmdline: "--version".into(),
             is_main:         true, // second is_main
         });

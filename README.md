@@ -163,11 +163,18 @@ field and must be globally unique in the registry.
     {
       "id": 1,              // Numeric id; referenced by shell_completions[].binary_id
                             // and man_pages[].binary_id entries.
-      "name": "myapp",     // Exact binary filename as it appears in the release archive.
+      "name": "myapp",     // Name the binary is installed under, in <prefix>/bin. Also the
+                            // first path looked for inside a downloaded asset.
+      // Optional. Extra paths to look for inside a downloaded asset, tried in order after
+      // "name", for projects whose archive member isn't named after the binary. The binary
+      // is still installed as "name". Order matters: lookup falls back to base-name
+      // matching, so a later entry can collide with a man page or completion script
+      // shipped alongside the executable.
+      // "archive_paths": ["myapp_linux_amd64"],
       "version_cmdline": "--version", // Arg(s) to pass to get the version string.
                             // Try --version, then version (subcommand), then -v.
       "is_main": true       // Exactly one binary must be true. Its version is used for
-                            // update checks and its name is the installed exe name.
+                            // update checks and its name is the app's main exe name.
     }
     // Additional binaries (e.g. "uvx", "hurlfmt") follow the same shape with is_main: false.
   ],
