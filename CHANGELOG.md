@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.8.3 (2026-09-21)
+
 - fix: [netwatch](https://github.com/matthart1983/netwatch) asset name and archive member changed
 - fix: [difftastic](https://github.com/Wilfred/difftastic) asset name gained a version
 - feat: added `archive_paths` so a binary can be found under other names in an asset
