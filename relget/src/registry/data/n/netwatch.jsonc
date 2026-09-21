@@ -7,6 +7,8 @@
     {
       "id": 1,
       "name": "netwatch",
+      // The tarball ships the binary under its platform-suffixed name.
+      "archive_paths": ["netwatch-linux-x86_64"],
       "version_cmdline": "--version",
       "is_main": true
     }
@@ -15,7 +17,7 @@
     {
       "id": 1,
       "type": "archive",
-      "equals": "netwatch-linux-x86_64-static.tar.gz"
+      "equals": "netwatch-linux-x86_64.tar.gz"
     }
   ],
   "shell_completions": [],
