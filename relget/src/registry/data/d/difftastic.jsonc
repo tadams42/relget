@@ -15,7 +15,9 @@
     {
       "id": 1,
       "type": "archive",
-      "equals": "difft-x86_64-unknown-linux-musl.tar.gz"
+      // Since 0.71.0 the asset name carries the version (`difft-0.71.0-x86_64-...`).
+      "starts_with": "difft-",
+      "ends_with": "-x86_64-unknown-linux-musl.tar.gz"
     }
   ],
   "shell_completions": [],
