@@ -1,0 +1,23 @@
+{
+  "id": "tuios",
+  "category_id": "terminal_multiplexers",
+  "description": "Terminal window manager aware of coding agents: tiling panes, workspaces, persistent sessions (libghostty-backed build)",
+  "url": "https://github.com/Gaurav-Gosain/tuios",
+  "binaries": [
+    { "id": 1, "name": "tuios", "version_cmdline": "--version", "is_main": true }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "starts_with": "tuios-ghostty_",
+      "ends_with": "_Linux_x86_64.tar.gz"
+    }
+  ],
+  "shell_completions": [
+    { "shell": "bash", "self_generated": { "binary_id": 1, "command": "completion bash" } },
+    { "shell": "zsh", "self_generated": { "binary_id": 1, "command": "completion zsh" } },
+    { "shell": "fish", "self_generated": { "binary_id": 1, "command": "completion fish" } }
+  ],
+  "man_pages": []
+}

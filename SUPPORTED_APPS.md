@@ -459,6 +459,9 @@ System monitoring and resource management utilities.
 
 Terminal multiplexers, workspace managers and session tools.
 
+- [tuios](https://github.com/Gaurav-Gosain/tuios)
+  Terminal window manager aware of coding agents: tiling panes, workspaces, persistent sessions (libghostty-backed build)
+
 - [zellij](https://github.com/zellij-org/zellij)
   Terminal workspace (multiplexer) with batteries included: layouts, floating panes, plugins and a web client
 

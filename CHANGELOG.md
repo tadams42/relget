@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added [tuios](https://github.com/Gaurav-Gosain/tuios)
 - feat: added [zellij](https://github.com/zellij-org/zellij) in new "Terminal Multiplexers" category
 
 ## v0.8.3 (2026-09-21)
