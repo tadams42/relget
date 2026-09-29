@@ -23,7 +23,11 @@ static GITHUB: Forge = Forge {
     auth_header:        |token| ("Authorization", format!("Bearer {token}")),
     // browser_download_url is publicly fetchable and may redirect to a CDN
     auth_on_download:   false,
-    release_ok:         |r| r["assets"].as_array().is_some_and(|a| !a.is_empty()),
+    // Some repos (e.g. herdr) publish prereleases more often than stable releases
+    release_ok:         |r| {
+        r["assets"].as_array().is_some_and(|a| !a.is_empty())
+            && !r["prerelease"].as_bool().unwrap_or(false)
+    },
     normalize:          |data| data,
     default_tag_filter: |tag| tag != "nightly",
     source_tarball:     true,
