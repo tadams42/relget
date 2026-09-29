@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.8.5 (2026-09-29)
+
 - feat: added [tree-sitter-cli](https://github.com/tree-sitter/tree-sitter)
 
 ## v0.8.4 (2026-09-29)
