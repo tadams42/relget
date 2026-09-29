@@ -64,6 +64,11 @@
       "id": "system",
       "title": "System",
       "description": "System monitoring and resource management utilities."
+    },
+    {
+      "id": "terminal_multiplexers",
+      "title": "Terminal Multiplexers",
+      "description": "Terminal multiplexers, workspace managers and session tools."
     }
   ]
 }

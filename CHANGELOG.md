@@ -1,5 +1,7 @@
 ## unreleased
 
+- feat: added [zellij](https://github.com/zellij-org/zellij) in new "Terminal Multiplexers" category
+
 ## v0.8.3 (2026-09-21)
 
 - fix: [netwatch](https://github.com/matthart1983/netwatch) asset name and archive member changed

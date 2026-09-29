@@ -455,3 +455,10 @@ System monitoring and resource management utilities.
 - [syswatch](https://github.com/matthart1983/syswatch)
   Single-host system diagnostics in your terminal. The terminal you open when something feels off — before you reach for htop, iostat, nettop, powermetrics, and a notebook full of one-liners.
 
+## Terminal Multiplexers
+
+Terminal multiplexers, workspace managers and session tools.
+
+- [zellij](https://github.com/zellij-org/zellij)
+  Terminal workspace (multiplexer) with batteries included: layouts, floating panes, plugins and a web client
+
