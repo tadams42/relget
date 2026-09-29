@@ -1,5 +1,7 @@
 ## unreleased
 
+## v0.8.4 (2026-09-29)
+
 - feat: added [herdr](https://github.com/herdrdev/herdr)
 - fix: GitHub prereleases are now skipped when picking the latest release
 - feat: added [tuios](https://github.com/Gaurav-Gosain/tuios)
