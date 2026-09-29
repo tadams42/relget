@@ -61,6 +61,9 @@ Linters, formatters and various coding helpers.
 - [tombi](https://github.com/tombi-toml/tombi)
   Modern, minimalist TOML linter and opinionated formatter. Not an LSP.
 
+- [tree-sitter-cli](https://github.com/tree-sitter/tree-sitter)
+  CLI for the Tree-sitter parser generator: generate, build, test and fuzz grammars, parse files, run syntax tree queries, and highlight or tag source code.
+
 - [ty](https://github.com/astral-sh/ty)
   Extremely fast Python type checker from authors of `uv`. Currently in `beta`.
 

@@ -1,0 +1,45 @@
+{
+  "id": "tree-sitter-cli",
+  "category_id": "coding",
+  "description": "CLI for the Tree-sitter parser generator: generate, build, test and fuzz grammars, parse files, run syntax tree queries, and highlight or tag source code.",
+  "url": "https://github.com/tree-sitter/tree-sitter",
+  "binaries": [
+    {
+      "id": 1,
+      "name": "tree-sitter",
+      "version_cmdline": "--version",
+      "is_main": true
+    }
+  ],
+  "assets": [
+    {
+      "id": 1,
+      "type": "archive",
+      "equals": "tree-sitter-cli-linux-x64.zip"
+    }
+  ],
+  "shell_completions": [
+    {
+      "shell": "bash",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "complete --shell bash"
+      }
+    },
+    {
+      "shell": "zsh",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "complete --shell zsh"
+      }
+    },
+    {
+      "shell": "fish",
+      "self_generated": {
+        "binary_id": 1,
+        "command": "complete --shell fish"
+      }
+    }
+  ],
+  "man_pages": []
+}
