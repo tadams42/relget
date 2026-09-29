@@ -459,6 +459,9 @@ System monitoring and resource management utilities.
 
 Terminal multiplexers, workspace managers and session tools.
 
+- [herdr](https://github.com/herdrdev/herdr)
+  Terminal workspace manager for AI coding agents, with persistent sessions
+
 - [tuios](https://github.com/Gaurav-Gosain/tuios)
   Terminal window manager aware of coding agents: tiling panes, workspaces, persistent sessions (libghostty-backed build)
 

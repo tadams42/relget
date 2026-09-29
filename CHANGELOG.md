@@ -1,5 +1,6 @@
 ## unreleased
 
+- feat: added [herdr](https://github.com/herdrdev/herdr)
 - fix: GitHub prereleases are now skipped when picking the latest release
 - feat: added [tuios](https://github.com/Gaurav-Gosain/tuios)
 - feat: added [zellij](https://github.com/zellij-org/zellij) in new "Terminal Multiplexers" category
